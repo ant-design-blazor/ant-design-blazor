@@ -1,7 +1,7 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
 
-<li class="@ClassMapper.Class" style="@RootMenu.OverflowItemStyle(Id, Style)" data-menu-overflow-item="@RootMenu.OverflowItemId(Id, ParentMenu == null && ParentGroup == null)" aria-hidden="@(RootMenu.IsOverflowed(Id) ? "true" : null)" inert="@RootMenu.IsOverflowed(Id)"></li>
+<li class="@ClassMapper.Class" style="@RootMenu.OverflowItemStyle(Id, Style)" data-menu-overflow-item="@RootMenu.OverflowItemId(Id, ParentMenu == null && ParentGroup == null)" aria-hidden="@(RootMenu.IsOverflowed(Id) ? "true" : null)"></li>
 
 @code {
     [CascadingParameter]
@@ -9,12 +9,14 @@
 
     [CascadingParameter] private SubMenu ParentMenu { get; set; }
     [CascadingParameter] private MenuItemGroup ParentGroup { get; set; }
-    private RenderFragment OverflowContent => @<MenuDivider Class="@Class" Style="@Style" />;
+    [Parameter] public bool Dashed { get; set; }
+    private RenderFragment OverflowContent => @<MenuDivider Class="@Class" Style="@Style" Dashed="@Dashed" />;
 
     private void setClass()
     {        
         ClassMapper.Clear()
-            .Add($"{RootMenu.PrefixCls}-item-divider");            
+            .Add($"{RootMenu.PrefixCls}-item-divider")
+            .If($"{RootMenu.PrefixCls}-item-divider-dashed", () => Dashed);
     }
 
     protected override void OnInitialized()

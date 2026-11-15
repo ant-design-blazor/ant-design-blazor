@@ -6,15 +6,17 @@
 
 @typeparam TItem
 
-<div class="@_wrapperClassMapper.Class" @ref="Ref">
-    <Spin Spinning="Loading" WrapperClassName="ant-table-spin-wrapper">
-        @if (!HidePagination && PaginationPosition.Contains("top"))
+<div class="@GetSemanticClass("root", _wrapperClassMapper.Class)" style="@GetSemanticStyle("root")" @ref="Ref">
+    <Spin Spinning="Loading">
+        @if (ShowTopPagination)
         {
             if (PaginationTemplate == null)
             {
-                <Pagination Id="@TopPaginationId"
-                            Size="@(Size == TableSize.Default ? PaginationSize.Default : PaginationSize.Small)"
-                            Class="@_paginationClass.Class"
+                <Pagination Size="@(Size == TableSize.Default ? PaginationSize.Default : PaginationSize.Small)"
+                            Id="@TopPaginationId"
+                            Class="@GetSemanticClass("pagination.root", GetPaginationClass(true))"
+                            ItemClass="@GetSemanticClass("pagination.item")"
+                            ItemStyle="@GetSemanticStyle("pagination.item")"
                             Total="_total"
                             PageSize="_pageSize"
                             Current="_pageIndex"
@@ -22,7 +24,7 @@
             }
             else
             {
-                @PaginationTemplate((_pageSize, _pageIndex, _total, _paginationClass.Class, EventCallback.Factory.Create<PaginationEventArgs>(this, HandlePageChange)))
+                @PaginationTemplate((_pageSize, _pageIndex, _total, GetSemanticClass("pagination.root", GetPaginationClass(true)), EventCallback.Factory.Create<PaginationEventArgs>(this, HandlePageChange)))
             }
         }
 
@@ -36,48 +38,77 @@
                                 @ChildContent(_fieldModel)
                             }
                         </CascadingValue>
-                    <div class="@ClassMapper.Class" @ref="_wrapperRef">
-                        @if (TitleTemplate != null || Title != null)
+                        <div class="@ClassMapper.Class" style="@GetComponentStyle("Table", Style)" @ref="_wrapperRef">
+                        @if (TitleTemplate != null)
                         {
-                            <div class="ant-table-title">
-                                @if (TitleTemplate != null)@TitleTemplate else @Title
-                            </div>
+                            <div class="@GetSemanticClass("title", "ant-table-title")" style="@GetSemanticStyle("title")">@TitleTemplate</div>
                         }
-                        <div class="ant-table-container">
+                        else if (Title != null)
+                        {
+                            <div class="@GetSemanticClass("title", "ant-table-title")" style="@GetSemanticStyle("title")">@Title</div>
+                        }
+                        <div class="@GetSemanticClass("section", "ant-table-container")" style="@GetSemanticStyle("section")">
                             @if (ScrollY != null)
                             {
-                                <div class="ant-table-header @(IsSticky?"ant-table-sticky-holder":"")" style="overflow: hidden; @StickyHolderStyle" @ref="_tableHeaderRef">
-                                    <table style="@TableLayoutStyle">
+                                <div class="ant-table-header @(IsSticky?"ant-table-sticky-holder":"")" style="overflow: hidden;@(string.IsNullOrWhiteSpace(StickyHolderStyle) ? "" : $" {StickyHolderStyle}")" @ref="_tableHeaderRef">
+                                    <table style="@(IsVirtualEnabled && ScrollX != null ? $"{TableLayoutStyle} min-width: 100%; width: {(CssSizeLength)ScrollX};" : IsVirtualEnabled && _tableWidth > 0 ? $"{TableLayoutStyle} min-width: 100%; width: {_tableWidth}px;" : ScrollX != null ? $"{TableLayoutStyle} min-width: 100%; width: {(CssSizeLength)ScrollX};" : $"{TableLayoutStyle} min-width: 100%;")">
                                         @colGroup(this, true)
                                         @header()
                                     </table>
                                 </div>
-                                <div class="ant-table-body" @ref="_tableBodyRef" style="@(ScrollX!=null?" overflow: auto scroll;":"overflow-y: scroll;") @(AutoHeight?"":$"max-height:{(CssSizeLength)ScrollY};") @((UseItemsProvider&&!AutoHeight)?$"min-height:{(CssSizeLength)ScrollY};":"") @(ScrollBarWidth == null ? "" : $"--scrollbar-width: {(CssSizeLength)_scrollBarWidth};")">
-                                    <table style="@(ScrollX!=null?$"width: {(CssSizeLength)ScrollX}; min-width: 100%;":"") @TableLayoutStyle" @ref="_tableRef">
-                                        @colGroup(this, false)
-                                        <tbody class="ant-table-tbody">
-                                            <tr aria-hidden="true" class="ant-table-measure-row" style="height: 0px; font-size: 0px;">
-                                                <CascadingValue Name="IsMeasure" Value="true" IsFixed>
-                                                    @if (_fieldModel is not null)
-                                                    {
-                                                        @ChildContent(_fieldModel)
-                                                    }
-                                                </CascadingValue>
-                                            </tr>
-                                            @body(_showItems)
-                                        </tbody>
-                                        @tfoot()
-                                    </table>
-                                </div>
+                                @if (IsVirtualEnabled)
+                                {
+                                    <div class="@GetSemanticClass("body.wrapper", "ant-table-tbody-virtual ant-table-tbody")" style="@GetSemanticStyle("body.wrapper", "position: relative;")">
+                                        <div class="ant-table-tbody-virtual-holder" @ref="_tableBodyRef" style="@($"max-height: {(CssSizeLength)ScrollY}; overflow: {(ShouldWindowVirtualItems(_showItems) ? "auto" : "hidden")}; overflow-anchor: none;")">
+                                            <div style="@($"height: {VirtualViewportHeight}; position: relative; overflow: hidden;")">
+                                                <div class="ant-table-tbody-virtual-holder-inner" style="display: flex; flex-direction: column; transform: translateY(0px); margin-left: 0px; position: absolute; left: 0px; right: 0px; top: 0px;">
+                                                    @body(_showItems)
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="ant-table-body" @ref="_tableBodyRef" style="@($"{(ScrollX != null ? "overflow: auto scroll;" : "overflow-y: scroll;")}{(AutoHeight ? "" : $" max-height: {(CssSizeLength)ScrollY};")}{(UseItemsProvider && !AutoHeight ? $" min-height: {(CssSizeLength)ScrollY};" : "")}{(ScrollBarWidth == null ? "" : $" --scrollbar-width: {(CssSizeLength)_scrollBarWidth};")}")">
+                                        <table style="@(ScrollX != null ? $"width: {(CssSizeLength)ScrollX}; min-width: 100%; {TableLayoutStyle}" : TableLayoutStyle)" @ref="_tableRef">
+                                            @colGroup(this, false)
+                                            <tbody class="@GetSemanticClass("body.wrapper", "ant-table-tbody")" style="@GetSemanticStyle("body.wrapper")">
+                                                    <tr aria-hidden="true" class="ant-table-measure-row" style="height: 0px;">
+                                                    <CascadingValue Name="IsMeasure" Value="true" IsFixed>
+                                                        @if (_fieldModel is not null)
+                                                        {
+                                                            @ChildContent(_fieldModel)
+                                                        }
+                                                    </CascadingValue>
+                                                </tr>
+                                                @body(_showItems)
+                                            </tbody>
+                                            @if (!HasFixedSummary)
+                                            {
+                                                @tfoot()
+                                            }
+                                        </table>
+                                    </div>
+                                }
+                                @if (HasFixedSummary)
+                                {
+                                    <div class="ant-table-summary" style="overflow: hidden;">
+                                        <table style="@(ScrollX != null ? $"{TableLayoutStyle} min-width: 100%; width: {(CssSizeLength)ScrollX};" : $"{TableLayoutStyle} min-width: 100%;")">
+                                            @colGroup(this, true, false)
+                                            @tfoot()
+                                        </table>
+                                    </div>
+                                }
                             }
                             else if (ScrollX != null)
                             {
-                                <div class="ant-table-content" @ref="_tableBodyRef" style="overflow: auto hidden; @(ScrollBarWidth == null ? "" : $"--scrollbar-width: {(CssSizeLength)_scrollBarWidth};")">
-                                    <table style="width: @((CssSizeLength)ScrollX); min-width: 100%; @TableLayoutStyle;" @ref="_tableRef">
+                                <div class="@GetSemanticClass("content", "ant-table-content")" @ref="_tableBodyRef" style="@GetSemanticStyle("content", $"overflow: auto hidden;{(ScrollBarWidth == null ? "" : $" --scrollbar-width: {(CssSizeLength)_scrollBarWidth};")}")">
+                                    <table style="width: @((CssSizeLength)ScrollX); min-width: 100%; @TableLayoutStyle" @ref="_tableRef">
                                         @colGroup(this, true)
                                         @header()
-                                        <tbody class="ant-table-tbody">
-                                            <tr aria-hidden="true" class="ant-table-measure-row" style="height: 0px; font-size: 0px;">
+                                        <tbody class="@GetSemanticClass("body.wrapper", "ant-table-tbody")" style="@GetSemanticStyle("body.wrapper")">
+                                            <tr aria-hidden="true" class="ant-table-measure-row" style="height: 0px;">
                                                 <CascadingValue Name="IsMeasure" Value="true" IsFixed>
                                                     @if (_fieldModel is not null)
                                                     {
@@ -93,11 +124,11 @@
                             }
                             else
                             {
-                                <div class="ant-table-content" @ref="_tableBodyRef" style="@( AutoHeight ? $"overflow-y: scroll;":$"")">
-                                    <table style="@TableLayoutStyle;@(ScrollBarWidth == null ? "" : $"--scrollbar-width: {(CssSizeLength)_scrollBarWidth};")" @ref="_tableRef">
+                                <div class="@GetSemanticClass("content", "ant-table-content")" @ref="_tableBodyRef" style="@GetSemanticStyle("content", AutoHeight ? "overflow-y: scroll;" : null)">
+                                    <table style="@TableLayoutWithScrollbar" @ref="_tableRef">
                                         @colGroup(this, true)
                                         @header()
-                                        <tbody class="ant-table-tbody">
+                                        <tbody class="@GetSemanticClass("body.wrapper", "ant-table-tbody")" style="@GetSemanticStyle("body.wrapper")">
                                             @body(_showItems)
                                         </tbody>
                                         @tfoot()
@@ -111,24 +142,28 @@
                                 </div>
                             }
                         </div>
-                        @if (FooterTemplate != null || Footer != null)
+                        @if (FooterTemplate != null)
                         {
-                            <div class="ant-table-footer">
-                                @if (FooterTemplate != null)@FooterTemplate else @Footer
-                            </div>
+                            <div class="@GetSemanticClass("footer", "ant-table-footer")" style="@GetSemanticStyle("footer")">@FooterTemplate</div>
+                        }
+                        else if (Footer != null)
+                        {
+                            <div class="@GetSemanticClass("footer", "ant-table-footer")" style="@GetSemanticStyle("footer")">@Footer</div>
                         }
                     </div>
                     </CascadingValue>
                 </CascadingValue>
             </CascadingValue>
         </CascadingValue>
-        @if (!HidePagination && PaginationPosition.Contains("bottom"))
+        @if (ShowBottomPagination)
         {
             if (PaginationTemplate == null)
             {
-                <Pagination Id="@BottomPaginationId"
-                            Size="@(Size == TableSize.Default ? PaginationSize.Default : PaginationSize.Small)"
-                            Class="@_paginationClass.Class"
+                <Pagination Size="@(Size == TableSize.Default ? PaginationSize.Default : PaginationSize.Small)"
+                            Id="@BottomPaginationId"
+                            Class="@GetSemanticClass("pagination.root", GetPaginationClass(false))"
+                            ItemClass="@GetSemanticClass("pagination.item")"
+                            ItemStyle="@GetSemanticStyle("pagination.item")"
                             Total="_total"
                             PageSize="_pageSize"
                             Current="_pageIndex"
@@ -136,7 +171,7 @@
             }
             else
             {
-                @PaginationTemplate((_pageSize,_pageIndex,_total,_paginationClass.Class, EventCallback.Factory.Create<PaginationEventArgs>(this, HandlePageChange)))
+                @PaginationTemplate((_pageSize,_pageIndex,_total,GetSemanticClass("pagination.root", GetPaginationClass(false)), EventCallback.Factory.Create<PaginationEventArgs>(this, HandlePageChange)))
             }
         }
     </Spin>
@@ -144,12 +179,6 @@
 
 @code
 {
-    /// <summary>Id of the pagination displayed above the table.</summary>
-    public const string TopPaginationId = "Table.TopPagination";
-
-    /// <summary>Id of the pagination displayed below the table.</summary>
-    public const string BottomPaginationId = "Table.BottomPagination";
-
     RenderFragment header()
     {
         if (!ShowHeader)
@@ -158,11 +187,11 @@
         }
 
         var headerRowAttributes = OnHeaderRow?.Invoke();
-        return @<thead class="ant-table-thead">
+        return @<thead class="@GetSemanticClass("header.wrapper", "ant-table-thead")" style="@GetSemanticStyle("header.wrapper")">
             <CascadingValue Name="IsHeader" Value="true" IsFixed>
              <CascadingValue Value="headerRowAttributes" Name="AntDesign.TableRow.RowAttributes">
                  <CascadingValue Value="_hasFixRight" Name="AntDesign.TableRow.HasFixRight">
-                     <CascadingValue Value="ScrollY" Name="AntDesign.TableRow.ScrollY">
+                     <CascadingValue Value="HasScrollbarPlaceholder" Name="AntDesign.TableRow.HasScrollbarPlaceholder">
                          @if (_fieldModel is not null)
                             {
                                 @if (HeaderTemplate != null)
@@ -183,17 +212,24 @@
         </thead>;
     }
 
-    static RenderFragment colGroup(Table<TItem> table, bool header)
+    static RenderFragment colGroup(Table<TItem> table, bool header, bool includeScrollbarPlaceholder = true)
     {
+        if (!table.ShouldRenderColGroup)
+        {
+            return builder => { };
+        }
+
         var realSize = (CssSizeLength)((table as ITable).ScrollBarWidth);
         return @<colgroup>
+                <CascadingValue Name="IsHeaderColGroup" Value="header" IsFixed>
                 <CascadingValue Name="IsColGroup" Value="true" IsFixed>
                 @if (_fieldModel is not null)
                 {
                     @table.ChildContent(_fieldModel)
                 }
                 </CascadingValue>
-                @if (table.ScrollY != null && header)
+                </CascadingValue>
+                @if (includeScrollbarPlaceholder && table.HasScrollbarPlaceholder && header)
                 {
                     <col style="width: @realSize; min-width: @realSize;" />
                 }
@@ -213,7 +249,7 @@
             if (UseItemsProvider&&!_isVirtualizeEmpty)
             {
                 return @<Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize TItem="RowData<TItem>"
-                    OverscanCount="10"
+                    OverscanCount="0"
                     ItemsProvider="ItemsProvider"
                     ItemContent="bodyRow()">
                         <Placeholder>
@@ -264,10 +300,11 @@
                     .ForeachLoop(bodyRow());
             }
 #if NET5_0_OR_GREATER
-        else if (EnableVirtualization)
+        else if (IsVirtualEnabled && ShouldWindowVirtualItems(showItems))
         {
                 return @<Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize TItem="RowData<TItem>"
-                 OverscanCount="10"
+                 OverscanCount="0"
+                 ItemSize="55"
                  Items="showItems.Select((data, index) => GetRowData(data, index, level, parentRowData?.Children )).ToList()"
                  ItemContent="bodyRow()">
                  </Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize>;
@@ -329,7 +366,7 @@
                 @if (!currentDataItem.HasChildren && ExpandTemplate != null && InternalRowExpandable(currentRowData) && currentRowData.Expanded)
                 {
                     <tr class="ant-table-expanded-row ant-table-expanded-row-level-1 @ExpandedRowClassName(currentRowData)"
-                        style="@(currentRowData.Expanded?"":"display: none;")">
+                        style="@(currentRowData.Expanded ? null : "display: none;")">
                         <td colspan="@(ColumnContext.Columns.Count+1)" class="ant-table-cell">
                             @ExpandTemplate(currentRowData)
                         </td>

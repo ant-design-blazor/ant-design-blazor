@@ -1,0 +1,26 @@
+<div>
+    <RadioGroup @bind-Value="_position" Style="margin-bottom: 8px;">
+        <Radio RadioButton Value="CarouselDotPosition.Top">Top</Radio>
+        <Radio RadioButton Value="CarouselDotPosition.Bottom">Bottom</Radio>
+        <Radio RadioButton Value="CarouselDotPosition.Start">Start</Radio>
+        <Radio RadioButton Value="CarouselDotPosition.End">End</Radio>
+    </RadioGroup>
+    <Carousel DotPlacement="_position">
+        <CarouselSlick>
+            <h3 style="margin:0;height:160px;color:#fff;line-height:160px;text-align:center;background:#364d79;">1</h3>
+        </CarouselSlick>
+        <CarouselSlick>
+            <h3 style="margin:0;height:160px;color:#fff;line-height:160px;text-align:center;background:#364d79;">2</h3>
+        </CarouselSlick>
+        <CarouselSlick>
+            <h3 style="margin:0;height:160px;color:#fff;line-height:160px;text-align:center;background:#364d79;">3</h3>
+        </CarouselSlick>
+        <CarouselSlick>
+            <h3 style="margin:0;height:160px;color:#fff;line-height:160px;text-align:center;background:#364d79;">4</h3>
+        </CarouselSlick>
+    </Carousel>
+</div>
+
+@code{
+    private CarouselDotPosition _position = CarouselDotPosition.Top;
+}

@@ -1,7 +1,7 @@
-<RadioGroup @bind-Value="@_sizeValue" OnChange="OnChangeSize" TValue="InputSize">
-    <Radio RadioButton Value="InputSize.Large">Large</Radio>
-    <Radio RadioButton Value="InputSize.Default">Medium</Radio>
-    <Radio RadioButton Value="InputSize.Small">Small</Radio>
+<RadioGroup @bind-Value="@_sizeValue" OnChange="OnChangeSize" TValue="string">
+    <Radio RadioButton Value="@("large")">Large</Radio>
+    <Radio RadioButton Value="@("medium")">Medium</Radio>
+    <Radio RadioButton Value="@("small")">Small</Radio>
 </RadioGroup>
 <br /><br />
 <Space Direction="SpaceDirection.Vertical" Style="width: 100%">
@@ -10,7 +10,7 @@
 		TItemValue="string"
 		TItem="string"
 		Style="width: 200px;"
-		Size="@_sizeValue"
+    Size="@SelectedSize"
 		OnSelectedItemChanged="OnSelectedItemChangedHandler">
 		<SelectOptions>
 			@foreach(var item in _items)
@@ -26,7 +26,7 @@
 		Placeholder="Please select"
 		TItemValue="string"
 		TItem="string"
-		Size="@_sizeValue"
+    Size="@SelectedSize"
 		Style="width: 100%;"
 		OnSelectedItemsChanged="OnSelectedItemsChangedHandler">
 		<SelectOptions>
@@ -43,7 +43,7 @@
 		Placeholder="Please select"
 		TItemValue="string"
 		TItem="string"
-		Size="@_sizeValue"
+    Size="@SelectedSize"
 		Style="width: 100%;"
 		OnSelectedItemsChanged="OnSelectedItemsChangedHandler">
 		<SelectOptions>
@@ -60,7 +60,13 @@
 {
 	List<string> _items;
     IEnumerable<string> _selectedValues1, _selectedValues2;
-    private InputSize _sizeValue = InputSize.Default;
+    private string _sizeValue = "medium";
+    private InputSize SelectedSize => _sizeValue switch
+    {
+        "large" => InputSize.Large,
+        "small" => InputSize.Small,
+        _ => InputSize.Default
+    };
 
 	protected override void OnInitialized()
     {
@@ -90,10 +96,10 @@
         return new string(result.ToArray());
     }
 
-    private void OnChangeSize(InputSize value)
+    private void OnChangeSize(string value)
     {
         _sizeValue = value;
-        Console.WriteLine($"selected size: ${value}");
+        Console.WriteLine($"selected size: ${SelectedSize}");
     }
 
 	private void OnSelectedItemChangedHandler(string value)

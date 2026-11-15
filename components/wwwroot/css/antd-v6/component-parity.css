@@ -6,6 +6,61 @@
   align-items: center;
 }
 
+.ant-menu-horizontal.ant-menu-root {
+  background: var(--ant-color-bg-container);
+}
+
+.ant-menu-light.ant-menu-horizontal {
+  --ant-menu-active-bar-border-width: 1px;
+}
+
+.ant-menu-light.ant-menu-horizontal > .ant-menu-item,
+.ant-menu-light.ant-menu-horizontal > .ant-menu-submenu {
+  top: var(--ant-menu-active-bar-border-width);
+  margin-top: calc(var(--ant-menu-active-bar-border-width) * -1);
+  margin-bottom: 0;
+  border-radius: var(--ant-menu-horizontal-item-border-radius);
+}
+
+.ant-table-wrapper .ant-table-tbody-virtual-holder {
+  scrollbar-width: none;
+}
+
+.ant-table-wrapper .ant-table-tbody-virtual-holder::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.ant-list-vertical .ant-list-item-extra img {
+  display: block;
+  max-width: 100%;
+}
+
+.ant-list-vertical .ant-list-item-meta-title {
+  font-weight: 400;
+}
+
+#components-table-demo-dynamic-settings .ant-form-inline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: var(--ant-margin);
+  row-gap: var(--ant-margin-xs);
+  column-gap: 0;
+}
+
+#components-table-demo-fixed-header .ant-table .ant-table-container :is(.ant-table-body, .ant-table-content) {
+  scrollbar-width: thin;
+  scrollbar-color: #eaeaea transparent;
+}
+
+#components-table-demo-fixed-columns-header .ant-table .ant-table-container :is(.ant-table-body, .ant-table-content) {
+  scrollbar-width: thin;
+  scrollbar-color: #eaeaea transparent;
+}
+
 .ant-float-btn.ant-btn {
   display: flex;
   box-sizing: border-box;
@@ -28,7 +83,6 @@
   background: var(--ant-color-bg-container);
   border: var(--ant-line-width) var(--ant-line-type) var(--ant-color-border);
   border-radius: var(--ant-border-radius);
-  box-shadow: none;
 }
 
 .ant-float-btn.ant-btn.ant-float-btn-circle {
@@ -36,7 +90,74 @@
 }
 
 .ant-float-btn.ant-btn.ant-float-btn-square {
-  border-radius: var(--ant-border-radius);
+  border-radius: var(--ant-border-radius-lg);
+}
+
+.ant-float-btn-group.ant-float-btn-group-menu-mode:not(.ant-float-btn-group-individual) > .ant-float-btn-group-list {
+  box-shadow: none;
+}
+
+.ant-float-btn-group-list {
+  display: flex;
+  flex-direction: column;
+  row-gap: 0;
+}
+
+.ant-float-btn-group-individual > .ant-float-btn-group-list {
+  row-gap: var(--ant-padding, 16px);
+}
+
+.ant-float-btn-group.ant-float-btn-group-square > .ant-float-btn-group-list {
+  row-gap: var(--ant-padding, 16px);
+  box-shadow: none;
+}
+
+.ant-float-btn-group-square > .ant-float-btn-group-list > .ant-float-btn {
+  margin: 0;
+  border-radius: var(--ant-border-radius-lg, 8px);
+  box-shadow: var(--ant-box-shadow-secondary);
+}
+
+.ant-float-btn-group-square > .ant-float-btn-group-list.ant-float-btn-group-compact {
+  gap: 0;
+}
+
+.ant-float-btn-group-compact > .ant-float-btn:not(:last-child) {
+  margin-bottom: calc(var(--ant-line-width) * -1);
+}
+
+.ant-float-btn-group-compact > .ant-float-btn:not(:first-child):not(:last-child) {
+  border-radius: 0;
+}
+
+.ant-float-btn-group-compact > .ant-float-btn:first-child:not(:last-child) {
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.ant-float-btn-group-compact > .ant-float-btn:last-child:not(:first-child) {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+/* Keep menu lists mounted and transition between the hidden offset and the
+   trigger position, matching React's CSSMotion enter/leave behavior. */
+.ant-float-btn-group-menu-mode > .ant-float-btn-group-list {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: var(--ant-float-btn-list-transform-start, translateY(var(--ant-control-height-lg)));
+  transition: opacity var(--ant-motion-duration-slow),
+    transform var(--ant-motion-duration-slow),
+    visibility 0s linear var(--ant-motion-duration-slow);
+}
+
+.ant-float-btn-group-menu-mode > .ant-float-btn-group-list-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translate(0, 0);
+  transition-delay: 0s;
 }
 
 .ant-float-btn.ant-btn:not(:disabled):not([aria-disabled="true"]):hover {
@@ -101,4 +222,14 @@
   display: block;
   width: 100%;
   height: 100%;
+}
+/* Table v6 medium size uses the MD cell padding tokens. */
+.ant-table.ant-table-css-var.ant-table-medium .ant-table-title,
+.ant-table.ant-table-css-var.ant-table-medium .ant-table-footer,
+.ant-table.ant-table-css-var.ant-table-medium .ant-table-thead > tr > th,
+.ant-table.ant-table-css-var.ant-table-medium .ant-table-tbody > tr > td,
+.ant-table.ant-table-css-var.ant-table-medium tfoot > tr > th,
+.ant-table.ant-table-css-var.ant-table-medium tfoot > tr > td {
+  padding-block: var(--ant-table-cell-padding-block-md, 8px);
+  padding-inline: var(--ant-table-cell-padding-inline-md, 8px);
 }

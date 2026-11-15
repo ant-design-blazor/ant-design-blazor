@@ -1,111 +1,34 @@
-﻿@using System.ComponentModel
 @using AntDesign.TableModels
 
-<Table @ref="table" TItem="Contact" DataSource="data" RowExpandable="@((record)=>record.Data.Name!="Not Expandable")" OnExpand="OnExpand">
-	<ColumnDefinitions>
-		<PropertyColumn Property="c=>c.Name" />
-		<PropertyColumn Property="c=>c.Age" />
-		<PropertyColumn Property="c=>c.Address" />
-		<ActionColumn Title="Action" Width="200">
-			<CellRender Context="cellData">
-				<a @onclick="@(()=> {cellData.RowData.Expanded=!cellData.RowData.Expanded;} )">
-					@(cellData.RowData.Expanded?"Collapse":"Expand")
-				</a>
-				<a>Delete</a>
-			</CellRender>
-		</ActionColumn>
-	</ColumnDefinitions>
-	<ExpandTemplate>
-        @if (context.Data is Student student)
-        {
-            <p>Student</p>
-            <p>Grade: @student.Grade</p>
-        }
-        else if (context.Data is Teacher teacher)
-        {
-            <p>Teacher</p>
-            <p>Subject: @teacher.Subject</p>
-        }
-        <p>Description: @context.Data.Description</p>
-	</ExpandTemplate>
+<Table TItem="Contact" DataSource="data" RowKey="record => record.Key" RowExpandable="@((record) => record.Data.Name != "Not Expandable")">
+    <ColumnDefinitions>
+        <PropertyColumn Property="record => record.Name" Title="Name" />
+    <PropertyColumn Property="record => record.Age" Title="Age" />
+    <PropertyColumn Property="record => record.Address" Title="Address" />
+        <ActionColumn Title="Action">
+            <a>Delete</a>
+        </ActionColumn>
+    </ColumnDefinitions>
+    <ExpandTemplate>
+        <p style="margin: 0px;">@context.Data.Description</p>
+    </ExpandTemplate>
 </Table>
 
-<br />
-
-<Button OnClick="()=> table.ExpandAll()">Expand All</Button>
-<Button OnClick="()=> table.CollapseAll()">Collapse All</Button>
-
 @code {
-    ITable table;
+    private readonly Contact[] data =
+    [
+        new() { Key = "1", Name = "John Brown", Age = 32, Address = "New York No. 1 Lake Park", Description = "My name is John Brown, I am 32 years old, living in New York No. 1 Lake Park." },
+        new() { Key = "2", Name = "Jim Green", Age = 42, Address = "London No. 1 Lake Park", Description = "My name is Jim Green, I am 42 years old, living in London No. 1 Lake Park." },
+        new() { Key = "3", Name = "Not Expandable", Age = 29, Address = "Jiangsu No. 1 Lake Park", Description = "This not expandable" },
+        new() { Key = "4", Name = "Joe Black", Age = 32, Address = "Sydney No. 1 Lake Park", Description = "My name is Joe Black, I am 32 years old, living in Sydney No. 1 Lake Park." }
+    ];
 
-    void OnExpand(RowData<Contact> args)
+    private sealed class Contact
     {
-        Console.WriteLine(args.Data.Name);
-    }
-
-    Contact[] data =
-    {
-        new Student() {
-            Key = "1",
-            Name = "John Brown",
-            Age = 32,
-            Address = "New York No. 1 Lake Park",
-            Grade = "1",
-            Description = "My name is John Brown, I am 32 years old, living in New York No. 1 Lake Park."
-        },
-        new Student() {
-            Key = "2",
-            Name = "Jim Green",
-            Age = 42,
-            Address = "London No. 1 Lake Park",
-            Grade = "2",
-            Description = "My name is Jim Green, I am 42 years old, living in London No. 1 Lake Park."
-        },
-        new Teacher() {
-            Key = "3",
-            Name = "Not Expandable",
-            Age = 29,
-            Address = "Jiangsu No. 1 Lake Park",
-            Description = "This not expandable",
-            Subject = "Chemistry"
-        },
-        new Teacher() {
-            Key = "4",
-            Name = "Joe Black",
-            Age = 32,
-            Address = "Sidney No. 1 Lake Park",
-            Description = "My name is Joe Black, I am 32 years old, living in Sidney No. 1 Lake Park.",
-            Subject = "Math"
-        }
-    };
-
-    public abstract class Contact
-    {
-        [DisplayName("Key")]
-        public string Key { get; set; }
-
-        [DisplayName("Name")]
-        public string Name { get; set; }
-
-        [DisplayName("Age")]
+        public string Key { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
         public int Age { get; set; }
-
-        [DisplayName("Address")]
-        public string Address { get; set; }
-
-        [DisplayName("Description")]
-        public string Description { get; set; }
-    }
-
-    public class Student : Contact
-    {
-        [DisplayName("Grade")]
-        public string Grade { get; set; }
-    }
-
-    public class Teacher : Contact
-    {
-        [DisplayName("Subject")]
-        public string Subject { get; set; }
+        public string Address { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
     }
 }

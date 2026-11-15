@@ -1,0 +1,12 @@
+<Carousel Autoplay="DotProgressAutoplay" AutoplaySpeed="5000">
+    @for (var slide = 1; slide <= 4; slide++)
+    {
+        <CarouselSlick>
+            <h3 style="margin:0;height:160px;color:#fff;line-height:160px;text-align:center;background:#364d79;">@slide</h3>
+        </CarouselSlick>
+    }
+</Carousel>
+
+@code {
+    private static readonly CarouselAutoplayOptions DotProgressAutoplay = new() { DotDuration = true };
+}

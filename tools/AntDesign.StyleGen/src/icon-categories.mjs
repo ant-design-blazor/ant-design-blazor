@@ -1,9 +1,10 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { createRequire } from 'node:module';
 import { dirname, join, resolve } from 'node:path';
 
 const sourceRelativePath = '.dumi/theme/builtins/IconSearch/fields.ts';
 
-export function parseAntDesignIconCategories(source, sourceLabel = sourceRelativePath) {
+export function parseAntDesignIconCategories(source, sourceLabel = sourceRelativePath, iconExportNames = []) {
   const categoryBlock = source.match(/export\s+const\s+categories\s*=\s*\{([\s\S]*?)\};/);
   if (!categoryBlock) {
     throw new Error(`Could not find the categories export in ${sourceLabel}`);
@@ -21,7 +22,17 @@ export function parseAntDesignIconCategories(source, sourceLabel = sourceRelativ
   ];
 
   for (const category of categoryNames) {
-    if (category === 'other') continue; // Computed by the icon generator from the SVG inventory.
+    if (category === 'other') {
+      // React computes `other` from `all`, which is derived from the package's
+      // export-key order. Preserve that order instead of falling back to a
+      // Blazor-side alphabetical sort.
+      const categorizedNames = new Set(rows.slice(2).map((row) => row.split('\t')[1]));
+      rows.push(...iconExportNames
+        .map((name) => name.replace(/(Outlined|Filled|TwoTone)$/, ''))
+        .filter((name, index, names) => names.indexOf(name) === index && !categorizedNames.has(name))
+        .map((name) => `${category}\t${name}`));
+      continue;
+    }
 
     const categoryArray = source.match(new RegExp(`(?:const|let)\\s+${category}\\s*=\\s*\\[([\\s\\S]*?)\\];`));
     if (!categoryArray) {
@@ -42,7 +53,9 @@ export function parseAntDesignIconCategories(source, sourceLabel = sourceRelativ
 export async function syncAntDesignIconCategories({ antdPath, outputPath }) {
   const sourcePath = resolve(antdPath, sourceRelativePath);
   const source = await readFile(sourcePath, 'utf8');
-  const tsv = parseAntDesignIconCategories(source, sourceRelativePath);
+  const requireFromAntd = createRequire(resolve(antdPath, 'package.json'));
+  const iconExports = requireFromAntd('@ant-design/icons/lib/icons');
+  const tsv = parseAntDesignIconCategories(source, sourceRelativePath, Object.keys(iconExports));
 
   const absolutePath = resolve(outputPath);
   await mkdir(dirname(absolutePath), { recursive: true });
@@ -76,7 +89,7 @@ export function generateIconCategoriesSource(tsv) {
     '',
     'public static class IconSearchCategories',
     '{',
-    `    public static IReadOnlyList<string> Categories { get; } = Array.AsReadOnly(new[] { ${[...categories, 'other'].map(quote).join(', ')} });`,
+    `    public static IReadOnlyList<string> Categories { get; } = Array.AsReadOnly(new[] { ${[...categories.filter((category) => category !== 'other'), 'other'].map(quote).join(', ')} });`,
     '    private static readonly Dictionary<string, (string Category, int Order)> Entries = new(StringComparer.Ordinal)',
     '    {',
     ...entries.map(({ category, name, order: entryOrder }) => `        [${quote(name)}] = (${quote(category)}, ${entryOrder}),`),
@@ -92,6 +105,14 @@ export function generateIconCategoriesSource(tsv) {
     '    {',
     '        var name = GetIconName(componentName);',
     '        return Entries.TryGetValue(name, out var entry) ? entry.Order : int.MaxValue;',
+    '    }',
+    '',
+    '    public static int GetThemeOrder(string componentName)',
+    '    {',
+    '        if (componentName.EndsWith("Outlined", StringComparison.Ordinal)) return 0;',
+    '        if (componentName.EndsWith("Filled", StringComparison.Ordinal)) return 1;',
+    '        if (componentName.EndsWith("TwoTone", StringComparison.Ordinal)) return 2;',
+    '        return 3;',
     '    }',
     '',
     '    private static string GetIconName(string componentName)',

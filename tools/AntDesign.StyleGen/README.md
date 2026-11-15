@@ -325,3 +325,19 @@ ID；静态 symbol ID、ARIA/HTML 引用和 SVG `href`/`url(#id)` 关系仍保�
 Basic 选项的 selector，不能混入页面底部常开的 Semantic DOM 示例或隐藏的其他下拉。
 门禁保留默认零几何容差和完整结构比较：声明 CSS 一致不代表虚拟列表的 DOM、
 ARIA 辅助树或定位已经对齐。当前报告明确保留这些差异，不忽略 role/ARIA/style 来过关。
+
+## Table 基础示例与长文档懒加载
+
+`examples/table-basic-dom-style-parity.json` 对比 Table Basic Usage 的 DOM、计算样式、
+几何与视觉样式。Table 文档会懒加载大量示例；采集器在等待目标示例渲染时会持续保持
+目标锚点位于视口内，避免前序示例展开后移动页面，使 IntersectionObserver 漏掉目标。
+Table 的固定列、固定表头、排序、分页和行选择使用独立 fixture。
+Bordered 与 Size 示例由 `examples/table-bordered-size-dom-style-parity.json` 覆盖；
+Column Defaults 与 Expand 示例由
+`examples/table-column-defaults-expand-dom-style-parity.json` 覆盖，分别包含共享列属性
+及展开/收起行状态。ColSpan and RowSpan 示例由
+`examples/table-colspan-rowspan-dom-style-parity.json` 覆盖，包括行标题单元格、分组表头，
+以及按行动态合并/跳过单元格。`examples/table-custom-empty-dom-style-parity.json` 覆盖有数据与空状态，
+并验证切换按钮、筛选列、空 SVG 和分页显隐。当前完整 Table 回归组为 13 个 demo、16 个场景，均通过 DOM、计算样式、
+几何和视觉样式比较。React v6 已移除独立的 Column Alignment 和 Custom Pagination 示例，
+因此它们不作为直接对齐目标；对应行为分别由 Column Defaults 和 Pagination Placement 覆盖。

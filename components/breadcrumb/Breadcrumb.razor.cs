@@ -31,6 +31,14 @@ namespace AntDesign
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        /// <summary>Breadcrumb entries. Use <see cref="BreadcrumbOption.Title"/> for text or a title template for custom content.</summary>
+        [Parameter]
+        public IReadOnlyList<BreadcrumbOption> Items { get; set; }
+
+        /// <summary>Values used to replace named tokens such as <c>:id</c> in item titles and links.</summary>
+        [Parameter]
+        public IDictionary<string, object> Params { get; set; } = new Dictionary<string, object>();
+
         /// <summary>
         /// Not currently used. Planned for future development.
         /// </summary>
@@ -44,6 +52,21 @@ namespace AntDesign
         /// <default value="/" />
         [Parameter]
         public string Separator { get; set; } = "/";
+
+        internal string ResolveParameter(string value)
+        {
+            if (value == null || Params == null || Params.Count == 0)
+            {
+                return value;
+            }
+
+            foreach (var parameter in Params)
+            {
+                value = value.Replace($":{parameter.Key}", parameter.Value?.ToString() ?? string.Empty);
+            }
+
+            return value;
+        }
 
         [Inject] private MenuService MenuService { get; set; }
 

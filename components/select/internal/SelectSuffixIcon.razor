@@ -3,16 +3,23 @@
 @typeparam TItemValue
 @typeparam TItem
 
-@if (ParentSelect.SuffixIcon != null)
+@if (SuffixIcon != null)
 {
     <div class="@ParentSelect.GetSemanticClass("suffix", "ant-select-suffix")" style="@ParentSelect.GetSemanticStyle("suffix")">
-        @ParentSelect.SuffixIcon
+        @SuffixIcon
     </div>
 }
 else if (Loading)
 {
     <div class="@ParentSelect.GetSemanticClass("suffix", "ant-select-suffix ant-select-suffix-loading")" style="@ParentSelect.GetSemanticStyle("suffix")">
-        <LoadingOutlined Spin />
+        @if (LoadingIcon != null)
+        {
+            @LoadingIcon
+        }
+        else
+        {
+            <LoadingOutlined Spin />
+        }
     </div>
 }
 else if (ShowArrowIcon || ParentSelect.FeedbackIcon != null)

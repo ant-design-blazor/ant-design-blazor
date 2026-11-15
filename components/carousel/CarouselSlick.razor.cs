@@ -17,7 +17,7 @@ namespace AntDesign
             {
                 if (Parent.Effect == CarouselEffect.Fade)
                 {
-                    return $"outline: none; width: {Parent.SlickWidth}px; position: relative; left: {-Parent.SlickWidth * Parent.IndexOfSlick(this)}px; opacity: {(Active ? 1 : 0)}; transition: opacity 500ms ease 0s, visibility 500ms ease 0s;";
+                    return $"outline: none; width: {Parent.SlickWidth}px; position: relative; left: {-Parent.SlickWidth * Parent.IndexOfSlick(this)}px; opacity: {(Active ? 1 : 0)}; z-index: {(Active ? 999 : 998)}; transition: opacity 500ms, visibility 500ms;";
                 }
                 else
                 {

@@ -22,12 +22,13 @@
             <PageTitle>@title</PageTitle>
             var componentTokenCount = ComponentTokenCatalog.Get(SemanticComponentKey).Count;
             var docDemos = _demoComponent.DemoList?.Where(x => x.Docs.HasValue && x.Docs.Value) ?? Enumerable.Empty<DemoItem>();
+            var renderDemos = _demos.Where(demo => !(SemanticComponentKey == "select" &&
+                string.Equals(demo.Name, "_semantic", StringComparison.OrdinalIgnoreCase))).ToList();
 
             if (_anchors.Any())
             {
                 <div class="toc-affix">
-                    <Affix OffsetTop="16">
-                        <Anchor Key="@_demoComponent.Title">
+                    <Anchor Key="@_demoComponent.Title" Affix="false" TargetOffset="80" Style="max-height: calc(100vh - 120px); overflow-x: hidden; overflow-y: auto;">
                             @foreach (var demo in _anchors)
                             {
                                 <AnchorLink Href="@($"/{CurrentLanguage}/components/{_demoComponent.Title}#{CodeBox.GetDemoId(_demoComponent.Title, demo.Name)}")" Title="@demo.Title" />
@@ -44,8 +45,7 @@
                             {
                                 <AnchorLink Href="@($"/{CurrentLanguage}/components/{_demoComponent.Title}#design-token")" Title="Design Token" />
                             }
-                        </Anchor>
-                    </Affix>
+                    </Anchor>
                 </div>
             }
 
@@ -100,7 +100,7 @@
                     <DocDemoView Demo="@docDemo" @key="@($"{_demoComponent.Title}-{docDemo.Type}")" />
                 }
 
-                @if (_demos.Any())
+                @if (renderDemos.Any())
                 {
                     <h2 data-scrollama-index="1">
                         @Localizer["app.component.examples"]
@@ -127,12 +127,12 @@
                 }
             </section>
 
-            @if (_demos.Any())
+            @if (renderDemos.Any())
             {
                 <Row Class="@_styles["demoGridRow"]">
                     @if (_demoComponent.Cols == 1 || _expanded)
                     {
-                        foreach (var demo in _demos)
+                        foreach (var demo in renderDemos)
                         {
                             <AntDesign.Col Span="24" Class="@($"code-boxes-col-1-1 {_styles["demoGridColumn"]}")">
                                 <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="demo.Type" ComponentName="@_demoComponent.Title"></CodeBox>
@@ -141,21 +141,12 @@
                     }
                     else
                     {
-                        var leftList = _demos.Where((_, i) => i % 2 == 0);
-                        var rightList = _demos.Where((_, i) => i % 2 != 0);
-
-                        <AntDesign.Col Lg="12" Md="24" Sm="24" Class="@($"code-boxes-col-2-1 {_styles["demoGridColumn"]}")">
-                            @foreach (var demo in leftList)
-                            {
+                        @foreach (var demo in renderDemos)
+                        {
+                            <AntDesign.Col Lg="12" Md="24" Sm="24" Class="@($"code-boxes-col-2-1 {_styles["demoGridColumn"]}")">
                                 <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="demo.Type" ComponentName="@_demoComponent.Title"></CodeBox>
-                            }
-                        </AntDesign.Col>
-                        <AntDesign.Col Lg="12" Md="24" Sm="24" Class="@($"code-boxes-col-2-1 {_styles["demoGridColumn"]}")">
-                            @foreach (var demo in rightList)
-                            {
-                                <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="demo.Type" ComponentName="@_demoComponent.Title"></CodeBox>
-                            }
-                        </AntDesign.Col>
+                            </AntDesign.Col>
+                        }
                     }
                 </Row>
             }
@@ -177,7 +168,21 @@
             {
                 <section class="markdown api-container semantic-dom-preview">
                     <h2>@(CurrentLanguage == "zh-CN" ? "语义 DOM" : "Semantic DOM")</h2>
-                    <SemanticDomPreview Component="@SemanticComponentKey">
+                    @if (SemanticComponentKey == "select")
+                    {
+                        <div data-parity-demo="_semantic" style="width:calc(100% - 2px);font-size:14px;line-height:22px">
+                            <DynamicComponent Type="@typeof(AntDesign.Docs.Demos.Components.Select.demo._semantic)" Parameters="@(new Dictionary<string, object> { ["Language"] = CurrentLanguage })" />
+                        </div>
+                    }
+                    else if (SemanticComponentKey == "table")
+                    {
+                        <div data-parity-demo="_semantic" style="width:calc(100% - 2px);font-size:14px;line-height:22px">
+                            <DynamicComponent Type="@typeof(AntDesign.Docs.Demos.Components.Table.demo._semantic)" />
+                        </div>
+                    }
+                    else
+                    {
+                    <SemanticDomPreview Component="@SemanticComponentKey" Language="@CurrentLanguage">
                         @if (SemanticComponentKey == "message")
                         {
                             <MessageSemanticPreview />
@@ -189,10 +194,6 @@
                         else if (SemanticComponentKey == "notification")
                         {
                             <NotificationSemanticPreview />
-                        }
-                        else if (SemanticComponentKey == "select")
-                        {
-                            <SelectSemanticPreview />
                         }
                         else if (SemanticComponentKey == "image")
                         {
@@ -218,6 +219,10 @@
                         {
                             <TooltipSemanticPreview />
                         }
+                        else if (SemanticComponentKey == "dropdown")
+                        {
+                            <DropdownSemanticPreview />
+                        }
                         else if (SemanticComponentKey is "qrcode" or "qr-code")
                         {
                             <QRCode Value="https://ant.design" Status="loading" />
@@ -227,6 +232,7 @@
                             <DynamicComponent Type="previewType" />
                         }
                     </SemanticDomPreview>
+                    }
                     @if (SemanticComponentKey == "float-button")
                     {
                         <SemanticDomPreview Component="float-button-group">
@@ -267,6 +273,9 @@
     html {
         scroll-behavior: smooth;
     }
+    .main-container-component [id] {
+        scroll-margin-top: 80px;
+    }
 </style>
 
 <style>@((MarkupString)_styles.CssText)</style>
@@ -276,19 +285,18 @@
     {
         ["root"] = new System.Collections.Generic.Dictionary<string, object>
         {
-            ["& .toc-affix"] = new System.Collections.Generic.Dictionary<string, object> { ["position"] = "absolute", ["top"] = 8, ["right"] = 20 },
-            [".ant-row-rtl & .toc-affix"] = new System.Collections.Generic.Dictionary<string, object> { ["right"] = "auto", ["left"] = 20 },
-            ["& .toc-affix .ant-affix"] = new System.Collections.Generic.Dictionary<string, object> { ["zIndex"] = 9, ["maxHeight"] = "calc(100vh - 16px)", ["overflowX"] = "hidden", ["overflowY"] = "auto", ["background"] = "#fff" },
-            ["[data-theme='dark'] & .toc-affix .ant-affix"] = new System.Collections.Generic.Dictionary<string, object> { ["background"] = "#fff" },
+            ["& .adb-docs-component-page-demo-grid-row"] = new System.Collections.Generic.Dictionary<string, object> { ["width"] = "calc(100% + 16px)" },
+            ["& .toc-affix"] = new System.Collections.Generic.Dictionary<string, object> { ["position"] = "fixed", ["top"] = 92, ["insetInlineEnd"] = 0, ["width"] = 148, ["padding"] = 0, ["borderRadius"] = "var(--ant-border-radius)", ["boxSizing"] = "border-box", ["marginInlineEnd"] = "calc(8px - 100vw + 100%)", ["zIndex"] = 10 },
+            ["& .toc-affix .ant-anchor-wrapper"] = new System.Collections.Generic.Dictionary<string, object> { ["padding"] = "var(--ant-padding-xxs)", ["backdropFilter"] = "blur(8px)" },
             ["& .toc-affix .ant-anchor"] = new System.Collections.Generic.Dictionary<string, object> { ["fontSize"] = 12 },
-            ["& .toc-affix .ant-anchor .ant-anchor-ink::before"] = new System.Collections.Generic.Dictionary<string, object> { ["width"] = 1, ["borderLeft"] = "1px solid rgba(0, 0, 0, 0.06)" },
+            ["& .toc-affix .ant-anchor .ant-anchor-ink::before"] = new System.Collections.Generic.Dictionary<string, object> { ["width"] = 1, ["borderLeft"] = "1px solid var(--ant-color-border-secondary, rgba(0, 0, 0, 0.06))" },
             ["& .toc-affix .ant-anchor .ant-anchor-link-active"] = new System.Collections.Generic.Dictionary<string, object> { ["position"] = "relative", ["zIndex"] = 2, ["marginLeft"] = -2, ["borderLeft"] = "2px solid var(--ant-primary-color)" },
             [".ant-row-rtl & .toc-affix .ant-anchor .ant-anchor-link-active"] = new System.Collections.Generic.Dictionary<string, object> { ["marginRight"] = -2, ["marginLeft"] = 0, ["borderRight"] = "2px solid var(--ant-primary-color)", ["borderLeft"] = "none" },
             ["& .toc-affix .ant-anchor .ant-anchor-ink-ball.visible"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "none" },
             ["& .toc-affix .ant-anchor .ant-anchor-link"] = new System.Collections.Generic.Dictionary<string, object> { ["padding"] = "0 0 4px 16px", ["lineHeight"] = 1.5 },
             [".ant-row-rtl & .toc-affix .ant-anchor .ant-anchor-link"] = new System.Collections.Generic.Dictionary<string, object> { ["padding"] = "0 16px 4px 0" },
             ["& .toc-affix .ant-anchor .ant-anchor-link.ant-anchor-link-active .ant-anchor-link-title"] = new System.Collections.Generic.Dictionary<string, object> { ["color"] = "var(--ant-primary-color)" },
-            ["& .toc-affix .ant-anchor .ant-anchor-link .ant-anchor-link-title"] = new System.Collections.Generic.Dictionary<string, object> { ["width"] = 110, ["color"] = "rgba(0, 0, 0, 0.85)", ["whiteSpace"] = "nowrap", ["textOverflow"] = "ellipsis" },
+            ["& .toc-affix .ant-anchor .ant-anchor-link .ant-anchor-link-title"] = new System.Collections.Generic.Dictionary<string, object> { ["width"] = 110, ["color"] = "var(--ant-color-text, rgba(0, 0, 0, 0.85))", ["whiteSpace"] = "nowrap", ["textOverflow"] = "ellipsis" },
             ["& .markdown h1 .subtitle"] = new System.Collections.Generic.Dictionary<string, object> { ["marginLeft"] = 12 },
             ["& .all-code-box-controls"] = new System.Collections.Generic.Dictionary<string, object> { ["float"] = "right" },
             ["& .docs-debug-toggle"] = new System.Collections.Generic.Dictionary<string, object> { ["marginInlineStart"] = 8, ["verticalAlign"] = "middle" },

@@ -3,15 +3,11 @@
 
 @if (!string.IsNullOrWhiteSpace(Tooltip))
 {
-    <Tooltip Title="@Tooltip" Placement="@TooltipPlacement">
-        <Unbound Context="context">
-            @RenderButton(context)
-        </Unbound>
-    </Tooltip>
+    <Tooltip Title="@Tooltip" Placement="@TooltipPlacement" Unbound="@RenderButton" />
 }
 else
 {
-    @RenderButton()
+    @RenderButton(RefBack)
 }
 
 @code {

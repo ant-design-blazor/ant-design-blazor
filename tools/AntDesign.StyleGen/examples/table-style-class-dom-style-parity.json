@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "ant-design/ant-design",
+    "revision": "599b251da933709d7b25fc9e9018ed7f4c093b96",
+    "component": "Table"
+  },
+  "config": {
+    "timeoutMs": 90000,
+    "viewport": { "width": 1280, "height": 1200, "deviceScaleFactor": 1 },
+    "colorScheme": "light",
+    "comparisonPolicy": {
+      "normalization": {
+        "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_r_[a-zA-Z0-9_-]+)$",
+        "removeAttributes": ["_bl_*", "id", "name"],
+        "removeClassPatterns": [
+          "^acss-[a-zA-Z0-9_-]+$",
+          "^css-dev-only-do-not-override-",
+          "^css-var-_[rR]_",
+          "^css-var-root$",
+          "^css-[a-zA-Z0-9]+$",
+          "^table-style-class-static-root$"
+        ],
+        "removeCommentMarkers": ["<!--!-->"],
+        "normalizeStyleAttributes": true,
+        "sortAttributes": true,
+        "sortClassTokens": true,
+        "removeInterTagWhitespace": true
+      }
+    }
+  },
+  "groups": [
+    {
+      "id": "table-style-class",
+      "component": "Table",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/table",
+        "scopeSelector": "#table-demo-style-class",
+        "rootSelector": ".ant-table-wrapper:nth-of-type(2)"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/table",
+        "scopeSelector": "#components-table-demo-style-class",
+        "rootSelector": ".ant-table-wrapper:nth-of-type(2)"
+      },
+      "styleProperties": [
+        "display", "position", "boxSizing", "width", "height", "padding",
+        "marginBottom", "flexDirection", "alignItems", "gap", "fontSize",
+        "fontWeight", "lineHeight", "color", "backgroundColor", "borderRadius",
+        "boxShadow", "borderBottomWidth", "borderBottomStyle", "borderBottomColor"
+      ],
+      "semanticNodes": [
+        { "path": "root", "selector": "$root", "minimumCount": 1 },
+        { "path": "title", "selector": ".ant-table-wrapper:nth-of-type(2) .ant-table-title", "minimumCount": 1 },
+        { "path": "header.cell", "selector": ".ant-table-wrapper:nth-of-type(2) .ant-table-thead th", "minimumCount": 4 },
+        { "path": "body.row", "selector": ".ant-table-wrapper:nth-of-type(2) .ant-table-tbody tr", "minimumCount": 3 },
+        { "path": "body.cell", "selector": ".ant-table-wrapper:nth-of-type(2) .ant-table-tbody td", "minimumCount": 12 },
+        { "path": "footer", "selector": ".ant-table-wrapper:nth-of-type(2) .ant-table-footer", "minimumCount": 1 },
+        { "path": "pagination.root", "selector": ".ant-table-wrapper:nth-of-type(2) .ant-pagination", "minimumCount": 1 }
+      ],
+      "scenarios": [{ "id": "object-and-size-function-styles" }]
+    }
+  ]
+}

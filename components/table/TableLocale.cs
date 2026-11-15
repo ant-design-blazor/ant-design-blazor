@@ -24,6 +24,8 @@ namespace AntDesign
 
         public string SortTitle { get; set; } = "Sort";
 
+        public string Sortable { get; set; } = "sortable";
+
         public string Expand { get; set; } = "Expand row";
 
         public string Collapse { get; set; } = "Collapse row";

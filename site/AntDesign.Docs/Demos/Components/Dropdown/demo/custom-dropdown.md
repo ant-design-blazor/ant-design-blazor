@@ -2,7 +2,7 @@
 order: 12
 title:
   zh-CN: 自定义下拉内容
-  en-US: Custom dropdown content
+  en-US: Custom dropdown
 ---
 
 ## zh-CN

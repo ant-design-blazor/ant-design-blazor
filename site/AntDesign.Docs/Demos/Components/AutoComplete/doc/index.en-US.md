@@ -22,3 +22,8 @@ The differences with Select are:
 `ClassNames` and `Styles` support the `root`, `input`, `popup`/`popup.root`,
 `popup.list`, and `popup.listItem` slots. The popup list and each option can be
 customized independently.
+
+## API name alignment
+
+`OnOpenChange` is the React-compatible callback name for popup visibility
+changes. The previous `OnPanelVisibleChange` parameter remains available.

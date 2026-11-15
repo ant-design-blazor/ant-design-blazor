@@ -69,24 +69,12 @@ namespace AntDesign
         [Parameter]
         public bool ArrowPointAtCenter { get; set; } = false;
 
-        /// <summary>
-        /// Delay in seconds, before tooltip is shown on mouse enter
-        /// </summary>
-        /// <default value="0.1" />
-        [Parameter]
-        public double MouseEnterDelay { get; set; } = 0.1;
-
-        /// <summary>
-        /// Delay in seconds, before tooltip is hidden on mouse leave
-        /// </summary>
-        /// <default value="0.1" />
-        [Parameter]
-        public double MouseLeaveDelay { get; set; } = 0.1;
-
         public Popover()
         {
             PrefixCls = "ant-popover";
             Placement = Placement.Top;
+            MouseEnterDelay = 0.1;
+            MouseLeaveDelay = 0.1;
         }
 
         internal override string GetOverlayEnterClass()
@@ -97,6 +85,11 @@ namespace AntDesign
         internal override string GetOverlayLeaveClass()
         {
             return "ant-zoom-big-leave ant-zoom-big-leave-active ant-zoom-big";
+        }
+
+        internal override string GetArrowClass()
+        {
+            return ArrowPointAtCenter ? $"{PrefixCls}-arrow-point-at-center" : string.Empty;
         }
 
         internal override async Task Show(int? overlayLeft = null, int? overlayTop = null)

@@ -33,6 +33,7 @@ namespace AntDesign
         private string? _formattedValueExpression;
         private bool _shouldGenerateFieldNames;
         private bool _hasInitializedParameters;
+        private bool _hasExplicitSizeParameter;
 
         private Action<object, TValue> _setValueDelegate;
 
@@ -70,7 +71,10 @@ namespace AntDesign
             set
             {
                 _formSize = value.GetValueOrDefault(AntDesign.FormSize.Default);
-                Size = _formSizeMap[_formSize];
+                if (!_hasExplicitSizeParameter)
+                {
+                    Size = _formSizeMap[_formSize];
+                }
             }
         }
 
@@ -381,6 +385,12 @@ namespace AntDesign
                 {
                     return Convert.ToString(nameAttributeValue, CultureInfo.InvariantCulture) ?? string.Empty;
                 }
+                if (!string.IsNullOrWhiteSpace(FormItem?.Name))
+                {
+                    return string.IsNullOrWhiteSpace(Form?.Name)
+                        ? FormItem.Name
+                        : $"{Form.Name}.{FormItem.Name}";
+                }
 #if NET8_0_OR_GREATER
                 if (_shouldGenerateFieldNames)
                 {
@@ -414,6 +424,7 @@ namespace AntDesign
         /// <inheritdoc />
         public override Task SetParametersAsync(ParameterView parameters)
         {
+            _hasExplicitSizeParameter = parameters.TryGetValue<InputSize>(nameof(Size), out _);
             parameters.SetParameterProperties(this);
 
             if (!_hasInitializedParameters)

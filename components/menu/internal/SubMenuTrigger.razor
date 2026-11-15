@@ -5,12 +5,11 @@
     string prefixCls = $"{SubMenuComponent.RootMenu.PrefixCls}-submenu";
 }
 <li class="@TriggerClass"
-    role="menuitem"
-    style="@SubMenuComponent.OverflowStyle(SubMenuComponent.RootMenu.GetSemanticStyle("subMenu.item", $"position:relative;{SubMenuComponent.Style}"))"
+    role="none"
+    style="@SubMenuComponent.OverflowStyle(SubMenuComponent.RootMenu.GetSemanticStyle("subMenu.item", SubMenuComponent.Style))"
     data-menu-overflow-item="@SubMenuComponent.RootMenu.OverflowItemId(SubMenuComponent.Id, SubMenuComponent.IsOverflowRoot)"
     data-menu-overflow-rest="@(SubMenuComponent.IsOverflowIndicator ? "true" : null)"
     aria-hidden="@(SubMenuComponent.OverflowHidden ? "true" : null)"
-    inert="@SubMenuComponent.OverflowHidden"
     @key="SubMenuComponent.Key"
     @ref="@Ref"
     @onclick="OnClickDiv"
@@ -21,6 +20,7 @@
 
 <CascadingValue Value="this" Name="Trigger">
     <Overlay @ref="_overlay"
+             VerticalOffset="@(SubMenuComponent.IsOverflowIndicator ? 1 : 4)"
              OverlayChildPrefixCls="@SubMenuComponent.RootMenu.PrefixCls"
              CssVarClass="@($"{SubMenuComponent.RootMenu.PrefixCls}-css-var")"
              OnOverlayMouseEnter="OnOverlayMouseEnter"

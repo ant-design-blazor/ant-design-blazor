@@ -3,6 +3,12 @@
 @typeparam TItem
 
 <div class="@ClassMapper.Class" style="@Style" Id="@Id" @ref="Ref">
+    @if (ShowPaginationAtTop)
+    {
+        <div class="@PrefixName-pagination">
+            <Pagination Total="@(DataSource?.Count() ?? 0)" Current="@GetCurrentPage(DataSource?.Count() ?? 0, GetPageSize())" PageSize="@GetPageSize()" Align="@Pagination.Align" OnChange="OnPaginationChanged" HideOnSinglePage="false" ShowSizeChanger="false" />
+        </div>
+    }
     @if (Header != null)
     {
         <div class="@PrefixName-header">
@@ -10,14 +16,14 @@
         </div>
     }
 
-    @if (DataSource?.Any() == true)
-    {
-        <Spin Spinning="Loading" WrapperClassName="ant-list-spin-wrapper">
+    <Spin Spinning="Loading">
+        @if (DataSource?.Any() == true)
+        {
             @if (Grid != null)
             {
-				  <Row Gutter="Grid.Gutter" OnBreakpoint="OnBreakpoint">
-				      @foreach (var item in DataSource)
-				      { 
+				  <Row Gutter="Grid.Gutter" Class="ant-list-container" OnBreakpoint="OnBreakpoint">
+				      @foreach (var item in GetItems())
+				      {
 				          <CascadingValue Value="this" IsFixed>
 				              @ChildContent(item)
 				          </CascadingValue>
@@ -26,8 +32,8 @@
             }
             else
             {
-                <ul class="ant-list-items">
-                    @foreach (var item in DataSource)
+                <ul class="ant-list-items ant-list-container">
+                    @foreach (var item in GetItems())
                     {
                         <CascadingValue Value="this" IsFixed>
 							@ChildContent(item)
@@ -35,12 +41,12 @@
                     }
                 </ul>
             }
-        </Spin>
-    }
-    else
-    {
-        <div style="min-height:53px" />
-    }
+        }
+        else
+        {
+            <div class="@PrefixName-empty-text"><Empty /></div>
+        }
+    </Spin>
 
     @if (Footer != null)
     {
@@ -51,6 +57,12 @@
     @if (LoadMore != null)
     {
         @LoadMore
+    }
+    @if (ShowPaginationAtBottom)
+    {
+        <div class="@PrefixName-pagination">
+            <Pagination Total="@(DataSource?.Count() ?? 0)" Current="@GetCurrentPage(DataSource?.Count() ?? 0, GetPageSize())" PageSize="@GetPageSize()" Align="@Pagination.Align" OnChange="OnPaginationChanged" HideOnSinglePage="false" ShowSizeChanger="false" />
+        </div>
     }
 
 </div>

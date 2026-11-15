@@ -1,0 +1,14 @@
+<Breadcrumb Items="_items" Separator="" />
+
+@code {
+    private readonly BreadcrumbOption[] _items =
+    [
+        new() { Title = "Location" },
+        new() { Type = "separator", Separator = ":" },
+        new() { Title = "Application Center", Href = "" },
+        new() { Type = "separator" },
+        new() { Title = "Application List", Href = "" },
+        new() { Type = "separator" },
+        new() { Title = "An Application" },
+    ];
+}

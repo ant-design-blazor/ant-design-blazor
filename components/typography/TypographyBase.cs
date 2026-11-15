@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
@@ -53,6 +54,10 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public TypographyCopyableConfig CopyConfig { get; set; }
+
+        /// <summary>Configure the position of the editable/copy action group.</summary>
+        [Parameter]
+        public TypographyActionsConfig Actions { get; set; }
 
         /// <summary>
         /// Strikethrough style
@@ -148,6 +153,8 @@ namespace AntDesign
         private bool _ellipsisExpanded;
         private TypographyEllipsisConfig _lastEllipsisConfig;
         private string _editingText;
+        private bool _copyCompleted;
+        private int _copyFeedbackVersion;
         private string _editingOriginalText;
 
         protected abstract string HtmlType { get; }
@@ -184,6 +191,7 @@ namespace AntDesign
             ClassMapper
                 .Add(PrefixName)
                 .GetIf(() => $"{PrefixName}-{Type.ToString().ToLowerInvariant()}", () => Type.HasValue)
+                .GetIf(() => $"{PrefixName}-link", () => HtmlType == "a")
                 .GetIf(() => $"{PrefixName}-{HtmlType}", () => Editing)
                 .If($"{PrefixName}-disabled", () => Disabled)
                 .If($"{PrefixName}-ellipsis", () => IsEllipsisEnabled && !IsEllipsisExpanded)
@@ -238,15 +246,37 @@ namespace AntDesign
         {
             return builder =>
             {
-                builder.OpenElement(12, "div");
-                builder.AddAttribute(13, "onclick", Copy);
-                builder.AddAttribute(14, "style", "border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;");
-                builder.AddAttribute(15, "class", $"{PrefixName}-copy {PrefixName}-action");
-                builder.AddAttribute(16, "tabindex", 0);
-                builder.AddAttribute(17, "role", "button");
-                builder.OpenComponent<Icon>(18);
-                builder.AddAttribute(19, "Type", "copy");
-                builder.AddAttribute(20, "Theme", IconThemeType.Outline);
+                var tooltipTitle = CopyConfig?.TooltipsEnabled == false
+                    ? null
+                    : CopyConfig?.Tooltips?.ElementAtOrDefault(_copyCompleted ? 1 : 0) ?? (_copyCompleted ? "Copied" : "Copy");
+                builder.OpenComponent<Tooltip>(12);
+                builder.AddAttribute(13, nameof(Tooltip.Title), tooltipTitle);
+                builder.AddAttribute(14, nameof(Tooltip.Disabled), string.IsNullOrWhiteSpace(tooltipTitle));
+                builder.AddAttribute(15, nameof(Tooltip.Unbound), (RenderFragment<ForwardRef>)(forwardRef => buttonBuilder =>
+                {
+                    buttonBuilder.OpenElement(0, "button");
+                    buttonBuilder.AddAttribute(1, "type", "button");
+                    buttonBuilder.AddAttribute(2, "aria-label", tooltipTitle ?? "Copy");
+                    buttonBuilder.AddAttribute(3, "onclick", EventCallback.Factory.Create(this, Copy));
+                    buttonBuilder.AddAttribute(4, "class", $"{PrefixName}-copy{(_copyCompleted ? $" {PrefixName}-copy-success" : string.Empty)}");
+                    if (CopyConfig?.TabIndex is int tabIndex)
+                    {
+                        buttonBuilder.AddAttribute(5, "tabindex", tabIndex);
+                    }
+                    buttonBuilder.AddElementReferenceCapture(6, reference => forwardRef.Current = reference);
+                    if ((_copyCompleted ? CopyConfig?.CopiedIcon : CopyConfig?.Icon) is RenderFragment customIcon)
+                    {
+                        buttonBuilder.AddContent(7, customIcon);
+                    }
+                    else
+                    {
+                        buttonBuilder.OpenComponent<Icon>(7);
+                        buttonBuilder.AddAttribute(8, "Type", _copyCompleted ? "check" : "copy");
+                        buttonBuilder.AddAttribute(9, "Theme", IconThemeType.Outline);
+                        buttonBuilder.CloseComponent();
+                    }
+                    buttonBuilder.CloseElement();
+                }));
                 builder.CloseComponent();
                 builder.CloseElement();
             };
@@ -402,9 +432,13 @@ namespace AntDesign
             }
             else if (Copyable && !Editing)
             {
-                builder.OpenElement(38, "span");
+            builder.OpenElement(38, "span");
                 builder.AddAttribute(39, "class", $"{PrefixName}-actions");
-                builder.AddContent(40, CopyIcon());
+            if (Actions?.Placement == TypographyActionPlacement.Start)
+            {
+                builder.AddAttribute(40, "class", $"{PrefixName}-actions {PrefixName}-actions-start");
+            }
+                builder.AddContent(41, CopyIcon());
                 builder.CloseElement();
             }
 
@@ -418,7 +452,12 @@ namespace AntDesign
             {
                 return;
             }
-            if (string.IsNullOrEmpty(CopyConfig?.Text))
+            if (CopyConfig?.TextProvider != null)
+            {
+                var text = await CopyConfig.TextProvider();
+                await this.JsInvokeAsync<object>(JSInteropConstants.Copy, text);
+            }
+            else if (string.IsNullOrEmpty(CopyConfig?.Text))
             {
                 await this.JsInvokeAsync<object>(JSInteropConstants.CopyElement, Ref);
             }
@@ -427,6 +466,18 @@ namespace AntDesign
                 await this.JsInvokeAsync<object>(JSInteropConstants.Copy, CopyConfig.Text);
             }
             CopyConfig?.OnCopy?.Invoke();
+            _copyCompleted = true;
+            var feedbackVersion = ++_copyFeedbackVersion;
+            await InvokeAsync(StateHasChanged);
+            _ = ResetCopyFeedback(feedbackVersion);
+        }
+
+        private async Task ResetCopyFeedback(int version)
+        {
+            await Task.Delay(2000);
+            if (version != _copyFeedbackVersion) return;
+            _copyCompleted = false;
+            await InvokeAsync(StateHasChanged);
         }
 
         private void ToggleEditing()
@@ -510,7 +561,30 @@ namespace AntDesign
     {
         public string Text { get; set; } = string.Empty;
 
+        public Func<Task<string>> TextProvider { get; set; }
+
+        public RenderFragment Icon { get; set; }
+
+        public RenderFragment CopiedIcon { get; set; }
+
+        public string[] Tooltips { get; set; }
+
+        public bool TooltipsEnabled { get; set; } = true;
+
+        public int? TabIndex { get; set; }
+
         public Action OnCopy { get; set; } = null;
+    }
+
+    public enum TypographyActionPlacement
+    {
+        End,
+        Start
+    }
+
+    public class TypographyActionsConfig
+    {
+        public TypographyActionPlacement Placement { get; set; } = TypographyActionPlacement.End;
     }
 
     public class TypographyEditableConfig

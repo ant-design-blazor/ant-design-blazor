@@ -22,6 +22,12 @@
     [Parameter]
     public RenderFragment ChildContent { get; set; }
 
+    /// <summary>
+    /// Fix the summary below a vertically scrollable table.
+    /// </summary>
+    [Parameter]
+    public bool Fixed { get; set; }
+
     protected override void OnInitialized()
     {
         base.OnInitialized();

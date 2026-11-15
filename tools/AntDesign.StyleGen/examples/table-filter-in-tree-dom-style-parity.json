@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "ant-design/ant-design",
+    "revision": "599b251da933709d7b25fc9e9018ed7f4c093b96",
+    "component": "Table"
+  },
+  "config": {
+    "timeoutMs": 90000,
+    "viewport": { "width": 1280, "height": 900, "deviceScaleFactor": 1 },
+    "colorScheme": "light",
+    "comparisonPolicy": {
+      "normalization": {
+        "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_r_[a-zA-Z0-9_-]+)$",
+        "removeAttributes": ["_bl_*", "id"],
+        "removeClassPatterns": [
+          "^acss-[a-zA-Z0-9_-]+$",
+          "^css-dev-only-do-not-override-",
+          "^css-var-_[rR]_",
+          "^css-[a-zA-Z0-9]+$"
+        ],
+        "removeCommentMarkers": ["<!--!-->"],
+        "sortClassTokens": true,
+        "removeInterTagWhitespace": true
+      }
+    }
+  },
+  "groups": [
+    {
+      "id": "table-filter-in-tree",
+      "component": "Table",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/table",
+        "scopeSelector": "#table-demo-filter-in-tree",
+        "rootSelector": ".ant-table-wrapper"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/table",
+        "scopeSelector": "#components-table-demo-filter-in-tree",
+        "rootSelector": ".ant-table-wrapper"
+      },
+      "styleProperties": [
+        "display", "position", "boxSizing", "width", "height", "paddingInline", "gap",
+        "alignItems", "fontSize", "fontWeight", "color", "backgroundColor", "borderRadius",
+        "borderTopWidth", "borderBottomWidth", "minWidth", "maxWidth"
+      ],
+      "semanticNodes": [
+        { "path": "root", "selector": "$root", "minimumCount": 1 },
+        { "path": "table", "selector": ".ant-table", "minimumCount": 1 },
+        { "path": "header.cell", "selector": ".ant-table-thead th", "minimumCount": 3 },
+        { "path": "body.row", "selector": ".ant-table-tbody tr", "minimumCount": 4 },
+        { "path": "body.cell", "selector": ".ant-table-tbody td", "minimumCount": 12 },
+        {
+          "path": "filter.popup",
+          "selector": ".ant-table-filter-dropdown",
+          "minimumCount": 0,
+          "portal": true,
+          "portalMatch": "nearest-trigger",
+          "portalVisible": true,
+          "portalText": "Category 1"
+        },
+        {
+          "path": "filter.search",
+          "selector": ".ant-table-filter-dropdown-search",
+          "minimumCount": 0,
+          "portal": true,
+          "portalParentPath": "filter.popup",
+          "portalVisible": true,
+          "portalText": "Category 1"
+        },
+        {
+          "path": "filter.tree",
+          "selector": ".ant-table-filter-dropdown-tree .ant-tree",
+          "minimumCount": 0,
+          "portal": true,
+          "portalParentPath": "filter.popup",
+          "portalVisible": true,
+          "portalText": "Category 1"
+        },
+        {
+          "path": "filter.tree.node",
+          "selector": ".ant-table-filter-dropdown-tree .ant-tree-treenode",
+          "minimumCount": 0,
+          "portal": true,
+          "portalParentPath": "filter.popup",
+          "portalVisible": true,
+          "portalText": "Category 1"
+        }
+      ],
+      "scenarios": [
+        { "id": "default" },
+        {
+          "id": "open-name-tree-filter",
+          "actions": [
+            {
+              "type": "click",
+              "reactSelector": "#table-demo-filter-in-tree .ant-table-thead th:first-child .ant-table-filter-trigger",
+              "blazorSelector": "#components-table-demo-filter-in-tree .ant-table-thead th:first-child .ant-table-filter-trigger"
+            },
+            {
+              "type": "waitForPortal",
+              "reactTriggerSelector": "#table-demo-filter-in-tree .ant-table-thead th:first-child .ant-table-filter-trigger",
+              "blazorTriggerSelector": "#components-table-demo-filter-in-tree .ant-table-thead th:first-child .ant-table-filter-trigger",
+              "portalSelector": ".ant-table-filter-dropdown",
+              "maxDistance": 100
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

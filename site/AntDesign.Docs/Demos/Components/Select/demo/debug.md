@@ -1,5 +1,6 @@
 ---
 order: 91
+debug: true
 title:
   zh-CN: 调试布局
   en-US: Layout edge cases

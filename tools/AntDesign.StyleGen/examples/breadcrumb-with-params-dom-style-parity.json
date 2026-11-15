@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "ant-design/ant-design",
+    "revision": "599b251da933709d7b25fc9e9018ed7f4c093b96",
+    "component": "Breadcrumb"
+  },
+  "config": {
+    "timeoutMs": 20000,
+    "viewport": { "width": 1280, "height": 900, "deviceScaleFactor": 1 },
+    "colorScheme": "light",
+    "comparisonPolicy": {
+      "normalization": {
+        "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_r_[a-zA-Z0-9_-]+)$",
+        "removeAttributes": ["_bl_*", "id"],
+        "removeClassPatterns": ["^css-dev-only-do-not-override-", "^css-var-_r_", "^css-var-_[rR]_", "^css-[a-zA-Z0-9]+$"],
+        "removeCommentMarkers": ["<!--!-->"]
+      }
+    }
+  },
+  "groups": [
+    {
+      "id": "breadcrumb-with-params-demo",
+      "component": "Breadcrumb",
+      "captureReactBeforeBlazor": true,
+      "react": {
+        "url": "http://127.0.0.1:8000/components/breadcrumb?theme=light",
+        "scopeSelector": "#breadcrumb-demo-withparams .code-box-demo",
+        "rootSelector": ".ant-breadcrumb"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5028/en-US/components/breadcrumb?theme=light",
+        "scopeSelector": "#components-breadcrumb-demo-WithParams .code-box-demo",
+        "rootSelector": ".ant-breadcrumb"
+      },
+      "styleProperties": ["display", "position", "boxSizing", "width", "height", "paddingInline", "gap", "alignItems", "lineHeight", "fontSize", "fontWeight", "color", "backgroundColor", "borderRadius", "borderTopWidth", "borderRightWidth", "borderBottomWidth", "borderLeftWidth"],
+      "semanticNodes": [
+        { "path": "root", "reactSelector": "$root", "blazorSelector": "$root", "minimumCount": 1 },
+        { "path": "item", "reactSelector": ".ant-breadcrumb-item", "blazorSelector": ".ant-breadcrumb-item", "minimumCount": 2 },
+        { "path": "separator", "reactSelector": ".ant-breadcrumb-separator", "blazorSelector": ".ant-breadcrumb-separator", "minimumCount": 1 }
+      ],
+      "scenarios": [{ "id": "default" }]
+    },
+    {
+      "id": "breadcrumb-separator-component-demo",
+      "component": "Breadcrumb",
+      "captureReactBeforeBlazor": true,
+      "react": {
+        "url": "http://127.0.0.1:8000/components/breadcrumb?theme=light",
+        "scopeSelector": "#breadcrumb-demo-separator-component .code-box-demo",
+        "rootSelector": ".ant-breadcrumb"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5028/en-US/components/breadcrumb?theme=light",
+        "scopeSelector": "#components-breadcrumb-demo-SeparatorComponent .code-box-demo",
+        "rootSelector": ".ant-breadcrumb"
+      },
+      "styleProperties": ["display", "position", "boxSizing", "width", "height", "paddingInline", "gap", "alignItems", "lineHeight", "fontSize", "fontWeight", "color", "backgroundColor", "borderRadius", "borderTopWidth", "borderRightWidth", "borderBottomWidth", "borderLeftWidth"],
+      "semanticNodes": [
+        { "path": "root", "reactSelector": "$root", "blazorSelector": "$root", "minimumCount": 1 },
+        { "path": "item", "reactSelector": ".ant-breadcrumb-item", "blazorSelector": ".ant-breadcrumb-item", "minimumCount": 4 },
+        { "path": "separator", "reactSelector": ".ant-breadcrumb-separator", "blazorSelector": ".ant-breadcrumb-separator", "minimumCount": 3 }
+      ],
+      "scenarios": [{ "id": "default" }]
+    }
+  ]
+}

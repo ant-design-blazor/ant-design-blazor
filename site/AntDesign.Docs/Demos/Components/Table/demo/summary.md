@@ -15,12 +15,17 @@ Set summary content by `SummaryRow` prop. Sync column fixed status with `Summary
 
 
 <style>
-  #components-table-demo-summary tfoot th,
-  #components-table-demo-summary tfoot td {
-    background: #fafafa;
+#components-table-demo-summary .ant-table-body,
+#components-table-demo-summary .ant-table-content {
+    scrollbar-width: thin;
+    scrollbar-color: #eaeaea transparent;
   }
-  [data-theme="dark"] #components-table-demo-summary tfoot th,
-  [data-theme="dark"] #components-table-demo-summary tfoot td {
-    background: #1d1d1d;
+
+#components-table-demo-summary .ant-table-content > table > tfoot > tr > td {
+    background: transparent;
+  }
+
+#components-table-demo-summary .ant-table-summary > table > tfoot > tr > td {
+    background: #fff;
   }
 </style>

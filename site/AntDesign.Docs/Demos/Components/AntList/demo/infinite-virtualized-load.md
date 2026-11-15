@@ -7,12 +7,12 @@ title:
 
 ## zh-CN
 
-结合 [react-virtualized](https://github.com/bvaughn/react-virtualized) 实现滚动加载无限长列表，带有虚拟化（[virtualization](https://blog.jscrambler.com/optimizing-react-rendering-through-virtualization/)）功能，能够提高数据量大时候长列表的性能。
+滚动到列表底部时自动加载下一页，并通过虚拟滚动只渲染可视区域附近的列表项，降低长列表的 DOM 数量。
 
-`virtualized` 是在大数据列表中应用的一种技术，主要是为了减少不可见区域不必要的渲染从而提高性能，特别是数据量在成千上万条效果尤为明显。[了解更多](https://blog.jscrambler.com/optimizing-react-rendering-through-virtualization/)
+虚拟滚动会用占位区域保持列表的整体高度，同时复用有限数量的可见列表项。随着滚动位置变化，列表只更新当前视口附近的数据。
 
 ## en-US
 
-An example of infinite list & virtualized loading using [react-virtualized](https://github.com/bvaughn/react-virtualized). [Learn more](https://blog.jscrambler.com/optimizing-react-rendering-through-virtualization/).
+Scroll to the bottom to append the next page. Virtual scrolling renders only the items near the viewport to keep the DOM small.
 
-`Virtualized` rendering is a technique to mount big sets of data. It reduces the amount of rendered DOM nodes by tracking and hiding whatever isn't currently visible.
+Spacer elements preserve the full list height while a small window of visible items is updated as you scroll.

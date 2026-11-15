@@ -1,4 +1,4 @@
-﻿<Table DataSource="data" OnChange="OnChange" TItem="Data">
+﻿<Table DataSource="data" OnChange="OnChange" RowKey="x => x.Key" TItem="Data">
     <Column Title="Name" DataIndex="name" TData="string" />
     <Column Title="Chinese Score" DataIndex="chinese" TData="int" SorterMultiple="3" SorterCompare="(a,b)=>a-b" />
     <Column Title="Math Score" DataIndex="math" TData="int" SorterMultiple="2" SorterCompare="(a,b)=>a-b" />
@@ -9,14 +9,14 @@
 @using System.Text.Json;
 @code {
 
-    public record Data(string Name, int Chinese, int Math, int English);
+    public record Data(string Key, string Name, int Chinese, int Math, int English);
 
     public Data[] data =
     {
-        new("John Brown",98,60,70),
-        new("Jim Green",98,66,89),
-        new("Joe Black",98,90,70),
-        new("Jim Red",88,99,89),
+        new("1", "John Brown",98,60,70),
+        new("2", "Jim Green",98,66,89),
+        new("3", "Joe Black",98,90,70),
+        new("4", "Jim Red",88,99,89),
     };
 
     void OnChange(QueryModel<Data> query)

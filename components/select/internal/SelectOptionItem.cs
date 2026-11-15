@@ -156,6 +156,13 @@ namespace AntDesign.Select.Internal
             }
         }
 
+        /// <summary>
+        /// Whether the source option explicitly supplied a disabled value.
+        /// React's hidden virtual accessibility options omit aria-disabled when
+        /// the source property is absent, but preserve an explicit false.
+        /// </summary>
+        public bool HasExplicitDisabled { get; set; }
+
         private bool _isHidden;
 
         public bool IsHidden

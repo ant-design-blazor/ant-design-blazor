@@ -48,13 +48,13 @@
 
     private async Task OpenConfirm()
     {
-        RenderFragment content =@<div>confirm content</div>;
+        RenderFragment content = builder => builder.AddContent(0, "confirm content");
 
         var options = new ConfirmOptions()
         {
             Title = "Modal",
             Width = 350,
-            Content = content,
+            Content = global::OneOf.OneOf<string, RenderFragment>.FromT1(content),
             OnOk = e => { Console.WriteLine("OnOk"); return Task.CompletedTask; },
             OnCancel = e => { Console.WriteLine("OnCancel"); return Task.CompletedTask; }
         };
@@ -76,12 +76,13 @@
 
     private async Task OpenModal()
     {
+        RenderFragment content = builder => builder.AddContent(0, "some content");
         var modalConfig = new ModalOptions
         {
             Title = _title,
             OkText = _okText,
             CancelText = _cancelText,
-            Content = @<div>some content</div>
+            Content = content
         };
 
         await _modalService.CreateModalAsync(modalConfig);
@@ -94,7 +95,7 @@
         {
             Button1Props = new AntDesign.ButtonProps()
             {
-                ChildContent = @<>@_okText</>
+                ChildContent = global::OneOf.OneOf<string, RenderFragment>.FromT1(builder => builder.AddContent(0, _okText))
             }
         };
         var confirmResult = await 

@@ -169,10 +169,12 @@ namespace AntDesign
             string prefixCls = $"{RootMenu.PrefixCls}-submenu";
 
             ClassMapper
+                .If("ant-menu-overflow-item", () => (IsOverflowRoot || IsOverflowIndicator) && RootMenu?.OverflowEnabled == true)
                 .Add(prefixCls)
-                .GetIf(() => $"{prefixCls}-vertical", () => RootMenu?.InternalMode != MenuMode.Inline)
+                .GetIf(() => $"{prefixCls}-horizontal", () => RootMenu?.InternalMode == MenuMode.Horizontal && Parent == null)
+                .GetIf(() => $"{prefixCls}-vertical", () => RootMenu?.InternalMode == MenuMode.Vertical || (RootMenu?.InternalMode == MenuMode.Horizontal && Parent != null))
                 .GetIf(() => $"{prefixCls}-inline", () => RootMenu?.InternalMode == MenuMode.Inline)
-                .If($"{prefixCls}-disabled", () => Disabled)
+                .If($"{prefixCls}-disabled", () => Disabled || (IsOverflowIndicator && !RootMenu.HasOverflowItems))
                 .If($"{prefixCls}-selected", () => _isSelected || RootMenu.HasSelectedSubmenu(Key) || (IsOverflowIndicator && RootMenu.OverflowHasSelected))
                 .If($"{prefixCls}-rtl", () => RTL)
                 .If($"{prefixCls}-open", () => RootMenu?.InternalMode == MenuMode.Inline && IsOpen)

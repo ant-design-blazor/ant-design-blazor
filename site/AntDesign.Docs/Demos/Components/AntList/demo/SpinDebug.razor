@@ -1,0 +1,22 @@
+@using AntDesign.Theming
+
+<ConfigProvider ThemeConfig="@_theme">
+    <AntList DataSource="@_data" ItemLayout="ListItemLayout.Horizontal">
+        <ListItem>
+            <ListItemMeta AvatarTemplate="@Avatar" Title="@context" Description="Ant Design, a design language for background applications, is refined by Ant UED Team" />
+        </ListItem>
+    </AntList>
+</ConfigProvider>
+
+@code {
+    private static readonly ThemeConfig _theme = CreateTheme();
+    private readonly string[] _data = { "Ant Design Title 1" };
+    private RenderFragment Avatar => @<Avatar Src="https://api.dicebear.com/10.x/lorelei/svg?seed=0" />;
+
+    private static ThemeConfig CreateTheme()
+    {
+        var theme = new ThemeConfig();
+        theme.Token.ColorText = "red";
+        return theme;
+    }
+}

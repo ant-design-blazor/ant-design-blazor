@@ -28,17 +28,30 @@
 
 @if (IsBody)
 {
-    <tr @attributes="attributes" @ref="@(RowData.RowElementRef)"
-        data-row-key="@(RowData.RowIndex-1)" 
-        class="ant-table-row ant-table-row-level-@RowData.Level @(RowData.Selected ? "ant-table-row-selected" : "") @(RowData.IsGrouping? "ant-table-row-grouping":"") @RowClassName @Class @RowAttributes?.GetValueOrDefault("class")">
-        @ChildContent
-    </tr>
+    @if (ParentTable?.IsVirtual == true)
+    {
+        <div @attributes="attributes" @ref="@(RowData.RowElementRef)"
+             data-row-key="@RowData.DataKey"
+             class="@ParentTable?.GetSemanticClass("body.row", GetBodyRowClass()) @RowClassName @Class @RowAttributes?.GetValueOrDefault("class")"
+             style="@GetBodyRowStyle()">
+            @ChildContent
+        </div>
+    }
+    else
+    {
+        <tr @attributes="attributes" @ref="@(RowData.RowElementRef)"
+            data-row-key="@RowData.DataKey"
+            class="@ParentTable?.GetSemanticClass("body.row", $"ant-table-row ant-table-row-level-{RowData.Level} {(RowData.Selected ? "ant-table-row-selected" : "")} {(RowData.IsGrouping ? "ant-table-row-grouping" : "")}") @RowClassName @Class @RowAttributes?.GetValueOrDefault("class")"
+            style="@ParentTable?.GetSemanticStyle("body.row")">
+            @ChildContent
+        </tr>
+    }
 }
 else if (IsHeader)
 {
-    <tr @attributes="attributes" class="@Class @RowAttributes?.GetValueOrDefault("class")">
+    <tr @attributes="attributes" class="@ParentTable?.GetSemanticClass("header.row", Class) @RowAttributes?.GetValueOrDefault("class")" style="@ParentTable?.GetSemanticStyle("header.row")">
         @ChildContent
-        @if (ScrollY != null)
+        @if (HasScrollbarPlaceholder)
         {
             <th class="ant-table-cell @(HasFixRight?"ant-table-cell-fix-right":"") ant-table-cell-scrollbar" style="@(HasFixRight?"position: sticky; right: 0px;":"")"></th>
         }
@@ -46,11 +59,40 @@ else if (IsHeader)
 }
 
 @code {
+    private string GetBodyRowStyle()
+    {
+        var baseStyle = ParentTable?.IsVirtual == true && ParentTable.VirtualWidth is { } width
+            ? $"width: {width};"
+            : null;
+        return ParentTable?.GetSemanticStyle("body.row", baseStyle);
+    }
+
+    private string GetBodyRowClass()
+    {
+        var classes = "ant-table-row";
+        if (RowData.Level != 0)
+        {
+            classes += $" ant-table-row-level-{RowData.Level}";
+        }
+        if (RowData.Selected)
+        {
+            classes += " ant-table-row-selected";
+        }
+        if (RowData.IsGrouping)
+        {
+            classes += " ant-table-row-grouping";
+        }
+        return classes;
+    }
+
     [Parameter]
     public RenderFragment ChildContent { get; set; }
 
     [CascadingParameter(Name = "IsHeader")]
     public bool IsHeader { get; set; }
+
+    [CascadingParameter]
+    public ITable ParentTable { get; set; }
 
     [CascadingParameter(Name = "IsBody")]
     public bool IsBody { get; set; }
@@ -64,8 +106,8 @@ else if (IsHeader)
     [CascadingParameter(Name = "AntDesign.TableRow.RowClassName")]
     public string RowClassName { get; set; }
 
-    [CascadingParameter(Name = "AntDesign.TableRow.ScrollY")]
-    public string ScrollY { get; set; }
+    [CascadingParameter(Name = "AntDesign.TableRow.HasScrollbarPlaceholder")]
+    public bool HasScrollbarPlaceholder { get; set; }
 
     [CascadingParameter(Name = "AntDesign.TableRow.HasFixRight")]
     public bool HasFixRight { get; set; }

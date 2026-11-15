@@ -234,6 +234,15 @@ namespace AntDesign
         {
             private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "backtopHelper.";
             public static string BackTop => $"{FUNC_PREFIX}backTop";
+            public static string BindBackTop => $"{FUNC_PREFIX}bindBackTop";
+            public static string UnbindBackTop => $"{FUNC_PREFIX}unbindBackTop";
+        }
+
+        public static class FloatButtonHelper
+        {
+            private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "floatButtonHelper.";
+            public static string BindDraggable => $"{FUNC_PREFIX}bindDraggable";
+            public static string UnbindDraggable => $"{FUNC_PREFIX}unbindDraggable";
         }
 
         public static class IconComponentHelper
@@ -294,8 +303,11 @@ namespace AntDesign
         public static class TableComponentHelper
         {
             private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "tableHelper.";
+            public static string BindTableRowHover => $"{FUNC_PREFIX}bindTableRowHover";
+            public static string UnbindTableRowHover => $"{FUNC_PREFIX}unbindTableRowHover";
             public static string BindTableScroll => $"{FUNC_PREFIX}bindTableScroll";
             public static string UnbindTableScroll => $"{FUNC_PREFIX}unbindTableScroll";
+            public static string ScrollToVirtualIndex => $"{FUNC_PREFIX}scrollToVirtualIndex";
         }
 
         public static class UploadComponentHelper
@@ -345,6 +357,7 @@ namespace AntDesign
             public static string CancelScroll => FUNC_PREFIX + "selectHelper.cancelScroll";
             public static string AttachVirtualList => FUNC_PREFIX + "selectHelper.attachVirtualList";
             public static string DetachVirtualList => FUNC_PREFIX + "selectHelper.detachVirtualList";
+            public static string ShowScrollbar => FUNC_PREFIX + "selectHelper.showScrollbar";
         }
 
         public static class DrawerHelper

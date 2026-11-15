@@ -1,25 +1,162 @@
-<Space Direction="SpaceDirection.Vertical">
+﻿<Space Direction="SpaceDirection.Vertical" Style="width: 100%; max-width: 644px;">
     <SpaceItem>
-        <SpaceCompact Block>
-            <SpaceCompactItem Position="SpaceCompactItemPosition.First"><Input TValue="string" Style="width: 20%;" DefaultValue="@("0571")" /></SpaceCompactItem>
-            <SpaceCompactItem Position="SpaceCompactItemPosition.Last"><Input TValue="string" DefaultValue="@("26888888")" /></SpaceCompactItem>
-        </SpaceCompact>
+    <SpaceCompact Block>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.First"><Input TValue="string" Style="width: 20%;" DefaultValue="@("0571")" /></SpaceCompactItem>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.Last"><Input TValue="string" Style="width: 30%;" DefaultValue="@("26888888")" /></SpaceCompactItem>
+    </SpaceCompact>
     </SpaceItem>
+
     <SpaceItem>
-        <SpaceCompact Block Size="InputSize.Small">
-            <SpaceCompactItem Position="SpaceCompactItemPosition.First"><Input TValue="string" Style="@FlexibleWidthStyle" DefaultValue="@("https://ant.design")" /></SpaceCompactItem>
-            <SpaceCompactItem Position="SpaceCompactItemPosition.Last"><Button Type="ButtonType.Primary">Submit</Button></SpaceCompactItem>
-        </SpaceCompact>
+    <SpaceCompact Block Size="InputSize.Small">
+        <SpaceCompactItem Position="SpaceCompactItemPosition.First"><Input TValue="string" Style="width: calc(100% - 200px);" DefaultValue="@("https://ant.design")" /></SpaceCompactItem>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.Last"><Button Type="ButtonType.Primary">Submit</Button></SpaceCompactItem>
+    </SpaceCompact>
     </SpaceItem>
+
     <SpaceItem>
-        <SpaceCompact Block>
-            <SpaceCompactItem Position="SpaceCompactItemPosition.First"><SpaceAddon>https://</SpaceAddon></SpaceCompactItem>
-            <SpaceCompactItem Position="SpaceCompactItemPosition.Middle"><Input TValue="string" DefaultValue="@("ant.design")" /></SpaceCompactItem>
-            <SpaceCompactItem Position="SpaceCompactItemPosition.Last"><SpaceAddon>.com</SpaceAddon></SpaceCompactItem>
-        </SpaceCompact>
+    <SpaceCompact Block>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.First"><Input TValue="string" Style="width: calc(100% - 200px);" DefaultValue="@("https://ant.design")" /></SpaceCompactItem>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.Last"><Button Type="ButtonType.Primary">Submit</Button></SpaceCompactItem>
+    </SpaceCompact>
+    </SpaceItem>
+
+    <SpaceItem>
+    <SpaceCompact Block>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.First"><Input TValue="string" Style="width: calc(100% - 200px);" DefaultValue="@("git@github.com:ant-design/ant-design.git")" /></SpaceCompactItem>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.Last"><Tooltip Title="copy git url"><Button Icon="@IconType.Outline.Copy" /></Tooltip></SpaceCompactItem>
+    </SpaceCompact>
+    </SpaceItem>
+
+    <SpaceItem>
+    <SpaceCompact Block>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.First"><Select TItem="string" TItemValue="string" DefaultValue="@("Zhejiang")" AllowClear DataSource="@_regions" Style="width: 50%;" /></SpaceCompactItem>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.Last"><Input TValue="string" Style="width: 50%;" DefaultValue="@("Xihu District, Hangzhou")" /></SpaceCompactItem>
+    </SpaceCompact>
+    </SpaceItem>
+
+    <SpaceItem>
+    <SpaceCompact Block>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.First"><Select TItem="string" TItemValue="string" Mode="SelectMode.Multiple" DefaultValues="@_selectedRegion" AllowClear DataSource="@_regions" Style="width: 50%;" /></SpaceCompactItem>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.Last"><Input TValue="string" Style="width: 50%;" DefaultValue="@("Xihu District, Hangzhou")" /></SpaceCompactItem>
+    </SpaceCompact>
+    </SpaceItem>
+
+    <SpaceItem>
+    <SpaceCompact Block>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.First"><Search TValue="string" Style="width: 30%;" DefaultValue="@("0571")" /></SpaceCompactItem>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.Middle"><Search TValue="string" AllowClear Style="width: 50%;" DefaultValue="@("26888888")" /></SpaceCompactItem>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.Last"><Search TValue="string" Style="width: 20%;" DefaultValue="@("+1")" /></SpaceCompactItem>
+    </SpaceCompact>
+    </SpaceItem>
+
+    <SpaceItem>
+    <SpaceCompact Block>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.First"><Select TItem="string" TItemValue="string" DefaultValue="@("Option1")" DataSource="@_basicOptions" /></SpaceCompactItem>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.Middle"><Input TValue="string" Style="width: 50%;" DefaultValue="@("input content")" /></SpaceCompactItem>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.Last"><InputNumber TValue="decimal?" DefaultValue="12" /></SpaceCompactItem>
+    </SpaceCompact>
+    </SpaceItem>
+
+    <SpaceItem>
+    <SpaceCompact Block>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.First"><Input TValue="string" Style="width: 50%;" DefaultValue="@("input content")" /></SpaceCompactItem>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.Last"><DatePicker TValue="DateTime?" Style="width: 50%;" /></SpaceCompactItem>
+    </SpaceCompact>
+    </SpaceItem>
+
+    <SpaceItem>
+    <SpaceCompact Block>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.First"><RangePicker TValue="DateTime?[]" Style="width: 70%;" /></SpaceCompactItem>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.Middle"><Input TValue="string" Style="width: 30%;" DefaultValue="@("input content")" /></SpaceCompactItem>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.Last"><Button Type="ButtonType.Primary">Search</Button></SpaceCompactItem>
+    </SpaceCompact>
+    </SpaceItem>
+
+    <SpaceItem>
+    <SpaceCompact Block>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.First"><Input TValue="string" Style="width: 30%;" DefaultValue="@("input content")" /></SpaceCompactItem>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.Last"><RangePicker TValue="DateTime?[]" Style="width: 70%;" /></SpaceCompactItem>
+    </SpaceCompact>
+    </SpaceItem>
+
+    <SpaceItem>
+    <SpaceCompact Block>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.First"><Select TItem="string" TItemValue="string" DefaultValue="@("Option1")" DataSource="@_basicOptions" /></SpaceCompactItem>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.Last"><Select TItem="string" TItemValue="string" DefaultValue="@("Option2")" DataSource="@_secondaryOptions" /></SpaceCompactItem>
+    </SpaceCompact>
+    </SpaceItem>
+
+    <SpaceItem>
+    <SpaceCompact Block>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.First"><Select TItem="string" TItemValue="string" DefaultValue="@("Between")" DataSource="@_rangeModes" /></SpaceCompactItem>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.Middle"><Input TValue="string" Style="width: 100px; text-align: center;" Placeholder="Minimum" /></SpaceCompactItem>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.Middle"><Input TValue="string" Style="width: 30px; border-inline-start: 0; border-inline-end: 0; pointer-events: none; text-align: center;" Placeholder="~" Disabled /></SpaceCompactItem>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.Last"><Input TValue="string" Style="width: 100px; text-align: center;" Placeholder="Maximum" /></SpaceCompactItem>
+    </SpaceCompact>
+    </SpaceItem>
+
+    <SpaceItem>
+    <SpaceCompact Block>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.First"><Select TItem="string" TItemValue="string" DefaultValue="@("Sign Up")" DataSource="@_accountModes" Style="width: 30%;" /></SpaceCompactItem>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.Last"><AutoComplete TOption="string" Style="width: 70%;" Placeholder="Email" Options="@_emailOptions" /></SpaceCompactItem>
+    </SpaceCompact>
+    </SpaceItem>
+
+    <SpaceItem>
+    <SpaceCompact Block>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.First"><TimePicker TValue="TimeOnly?" Style="width: 50%;" /></SpaceCompactItem>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.Last"><Cascader Options="@_addressOptions" Style="width: 50%;" Placeholder="Select Address" /></SpaceCompactItem>
+    </SpaceCompact>
+    </SpaceItem>
+
+    <SpaceItem>
+    <SpaceCompact Block>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.First"><RangePicker TValue="DateTime?[]" Picker="DatePickerType.Time" /></SpaceCompactItem>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.Middle"><TreeSelect TItem="string" TItemValue="string" TItemValue="string" @bind-Value="_treeValue" Style="width: 60%;" Placeholder="Please select" AllowClear TreeDefaultExpandAll>
+            <TreeNode TItem="string" Key="parent 1" Title="parent 1"><TreeNode TItem="string" Key="parent 1-0" Title="parent 1-0"><TreeNode TItem="string" Key="leaf1" Title="leaf1" /><TreeNode TItem="string" Key="leaf2" Title="leaf2" /></TreeNode><TreeNode TItem="string" Key="parent 1-1" Title="parent 1-1"><TreeNode TItem="string" Key="leaf3" Title="leaf3" /></TreeNode></TreeNode>
+        </TreeSelect></SpaceCompactItem>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.Last"><Button Type="ButtonType.Primary">Submit</Button></SpaceCompactItem>
+    </SpaceCompact>
+    </SpaceItem>
+
+    <SpaceItem>
+    <SpaceCompact>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.First"><Input TValue="string" Placeholder="input here" /></SpaceCompactItem>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.Middle"><SpaceAddon>$</SpaceAddon></SpaceCompactItem>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.Middle"><InputNumber TValue="decimal?" Placeholder="another input" Style="width: 100%;" /></SpaceCompactItem>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.Middle"><InputNumber TValue="decimal?" Placeholder="another input" Style="width: 100%;" /></SpaceCompactItem>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.Last"><SpaceAddon>$</SpaceAddon></SpaceCompactItem>
+    </SpaceCompact>
+    </SpaceItem>
+
+    <SpaceItem>
+    <SpaceCompact>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.First"><Input TValue="string" Placeholder="input here" /></SpaceCompactItem>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.Last"><ColorPicker /></SpaceCompactItem>
+    </SpaceCompact>
+    </SpaceItem>
+
+    <SpaceItem>
+    <SpaceCompact>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.First"><Button Type="ButtonType.Primary">Button</Button></SpaceCompactItem>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.Middle"><Input TValue="string" Placeholder="input here" /></SpaceCompactItem>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.Last"><SpaceAddon>$</SpaceAddon></SpaceCompactItem>
+    </SpaceCompact>
     </SpaceItem>
 </Space>
 
 @code {
-    private const string FlexibleWidthStyle = "width: 80%;";
+    private readonly string[] _regions = ["Zhejiang", "Jiangsu"];
+    private readonly IEnumerable<string> _selectedRegion = ["Zhejiang"];
+    private readonly string[] _basicOptions = ["Option1", "Option2"];
+    private readonly string[] _secondaryOptions = ["Option2-1", "Option2-2"];
+    private readonly string[] _rangeModes = ["Between", "Except"];
+    private readonly string[] _accountModes = ["Sign Up", "Sign In"];
+    private readonly string[] _emailOptions = ["text 1", "text 2"];
+    private string _treeValue = "leaf1";
+    private readonly List<CascaderNode> _addressOptions =
+    [
+        new() { Value = "zhejiang", Label = "Zhejiang", Children = [new() { Value = "hangzhou", Label = "Hangzhou", Children = [new() { Value = "xihu", Label = "West Lake" }] }] },
+        new() { Value = "jiangsu", Label = "Jiangsu", Children = [new() { Value = "nanjing", Label = "Nanjing", Children = [new() { Value = "zhonghuamen", Label = "Zhong Hua Men" }] }] },
+    ];
 }

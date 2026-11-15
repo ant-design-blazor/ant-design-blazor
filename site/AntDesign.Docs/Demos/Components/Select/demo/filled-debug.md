@@ -1,5 +1,6 @@
 ---
 order: 92
+debug: true
 title:
   zh-CN: 填充变体状态检查
   en-US: Filled variant state check

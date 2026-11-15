@@ -1,23 +1,24 @@
 @using AntDesign.Docs.Components
+@using AntDesign.Docs.Services
 
-<SemanticDomPreview Component="select" Language="@Language">
-    <Flex Id="select-semantic-demo" Direction="FlexDirection.Vertical" Gap="FlexGap.Middle" Align="FlexAlign.Center"
+<SemanticDomPreview Component="select" Language="@Language" NodesOverride="@VisibleNodes">
+    <Flex RefBack="@_popupContainerRef" Direction="FlexDirection.Vertical" Gap="FlexGap.Middle" Align="FlexAlign.Center"
           Style="position:absolute; margin-bottom:80px;">
         <Segmented TValue="string" Options="@_modes" AriaLabel="segmented control" AriaOrientation="horizontal" Role="radiogroup" TabIndex="0" @bind-Value="_mode" />
         @if (_mode == "multiple")
         {
-                    <Select TItemValue="string" TItem="string" Mode="SelectMode.Multiple" Open
+                    <Select TItemValue="string" TItem="string" Mode="SelectMode.Multiple" Open="true"
                     Placement="AntDesign.Placement.BottomLeft" DefaultValues="_selected" AllowClear
                     MaxTagCount="AntDesign.Select.ResponsiveTag.Responsive" Placeholder="Please select"
-                    Style="width:300px" DataSource="_options" PopupContainerSelector="#select-semantic-demo" ClassNames="_semanticClasses" Styles="_semanticStyles">
+                    Style="width:300px" DataSource="_options" GetPopupContainer="@GetPopupContainerElement" ClassNames="_semanticClasses" Styles="_semanticStyles">
                 <PrefixIcon>prefix</PrefixIcon>
             </Select>
         }
         else
         {
-            <Select TItemValue="string" TItem="string" Open Placement="AntDesign.Placement.BottomLeft"
+            <Select TItemValue="string" TItem="string" Open="true" Placement="AntDesign.Placement.BottomLeft"
                     DefaultValue='@("aojunhao123")' AllowClear Placeholder="Please select"
-                    Style="width:300px" DataSource="_options" PopupContainerSelector="#select-semantic-demo" ClassNames="_semanticClasses" Styles="_semanticStyles">
+                    Style="width:300px" DataSource="_options" GetPopupContainer="@GetPopupContainerElement" ClassNames="_semanticClasses" Styles="_semanticStyles">
                 <PrefixIcon>prefix</PrefixIcon>
             </Select>
         }
@@ -27,6 +28,18 @@
 @code {
     [Parameter] public string Language { get; set; } = "zh-CN";
     private string _mode = "single";
+    private static readonly string[] _singleNodeOrder = ["root", "prefix", "content", "placeholder", "clear", "input", "suffix", "popup.root", "popup.list", "popup.listItem"];
+    private static readonly string[] _multipleNodeOrder = ["root", "prefix", "content", "placeholder", "clear", "item", "itemContent", "itemRemove", "input", "suffix", "popup.root", "popup.list", "popup.listItem"];
+    private readonly ForwardRef _popupContainerRef = new();
+    private IReadOnlyList<SemanticDomNode> VisibleNodes
+    {
+        get
+        {
+            var nodes = SemanticDomCatalog.Get("select", Language).ToDictionary(node => node.Name);
+            var order = _mode == "multiple" ? _multipleNodeOrder : _singleNodeOrder;
+            return order.Where(nodes.ContainsKey).Select(name => nodes[name] with { Version = null }).ToArray();
+        }
+    }
     private static readonly SegmentedOption<string>[] _modes =
     [
         new("single", "Single"),
@@ -34,6 +47,7 @@
     ];
     private static readonly string[] _options = ["aojunhao123", "thinkasany", "meet-student"];
     private static readonly string[] _selected = ["aojunhao123"];
+    private ElementReference GetPopupContainerElement(ElementReference _) => _popupContainerRef.Current;
     private static readonly IReadOnlyDictionary<string, string> _semanticClasses = new Dictionary<string, string>
     {
         ["root"] = "semantic-mark-root",

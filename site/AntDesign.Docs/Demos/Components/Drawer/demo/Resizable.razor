@@ -1,5 +1,5 @@
 <Space Wrap>
-    <RadioGroup @bind-Value="_placement" @bind-Value:after="ResetSize">
+    <RadioGroup TValue="DrawerPlacement" Value="_placement" ValueChanged="OnPlacementChanged">
         <Radio RadioButton Value="DrawerPlacement.Top">Top</Radio>
         <Radio RadioButton Value="DrawerPlacement.Right">Right</Radio>
         <Radio RadioButton Value="DrawerPlacement.Bottom">Bottom</Radio>
@@ -29,6 +29,11 @@
     private DrawerPlacement _placement = DrawerPlacement.Right;
 
     private void ResetSize() => _size = 256;
+    private void OnPlacementChanged(DrawerPlacement placement)
+    {
+        _placement = placement;
+        ResetSize();
+    }
     private void OnResize(int size) => _size = size;
     private void OnResizeStart() { }
     private void OnResizeEnd() { }

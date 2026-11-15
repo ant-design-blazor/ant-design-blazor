@@ -1,0 +1,53 @@
+<style>
+    .card-button-alignment-debug .debug-button-icon {
+        background: rgba(255, 0, 0, 0.1);
+    }
+
+    .card-button-alignment-debug .debug-button-icon span {
+        background: rgba(0, 255, 0, 0.5);
+    }
+
+    .card-button-alignment-debug .debug-button-content {
+        background: rgba(0, 0, 255, 0.1);
+    }
+
+    .card-button-alignment-debug .inline-buttons {
+        display: flex;
+        gap: 8px;
+        justify-content: flex-end;
+    }
+</style>
+
+<div class="card-button-alignment-debug">
+    <Flex Vertical Gap="FlexGap.Middle">
+        <Card Class="line-card" Title="#57727 Card extra">
+            <Extra>
+                <Button IconContent="@smileIcon" ClassNames="buttonClassNames">Test</Button>
+            </Extra>
+            <ChildContent>Button in Card extra should be vertically centered with the title.</ChildContent>
+        </Card>
+
+        <Card Title="#57896 regression minimum case">
+            <ChildContent>
+                <div class="simulate-57896">
+                    <div class="inline-buttons">
+                        <Button ClassNames="buttonClassNames">Cancel</Button>
+                        <Button Type="ButtonType.Primary" IconContent="@smileIcon" ClassNames="buttonClassNames">Confirm</Button>
+                    </div>
+                </div>
+            </ChildContent>
+        </Card>
+
+        <PopconfirmPanel Title="Are you OK?" OkButtonProps="okButtonProps" />
+    </Flex>
+</div>
+
+@code {
+    private static readonly RenderFragment smileIcon = @<Icon Type="@IconType.Outline.Smile" />;
+    private static readonly IReadOnlyDictionary<string, string> buttonClassNames = new Dictionary<string, string>
+    {
+        ["icon"] = "debug-button-icon",
+        ["content"] = "debug-button-content"
+    };
+    private static readonly ButtonProps okButtonProps = new() { Icon = "smile" };
+}

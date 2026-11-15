@@ -7,7 +7,7 @@ title:
 
 ## zh-CN
 
-设置 `Eolumn.Ellipsis` 可以让单元格内容根据宽度自动省略。
+设置 `Column.Ellipsis` 可以让单元格内容根据宽度自动省略。
 
 > 列头缩略暂不支持和排序筛选一起使用。
 

@@ -362,7 +362,8 @@ namespace AntDesign
                .If($"{PrefixCls}-simple", () => Simple)
                .If($"{PrefixCls}-disabled", () => Disabled)
                .If($"{PrefixCls}-mini", () => !Simple && Size == PaginationSize.Small)
-               .If($"{PrefixCls}-{Align}", () => Align == "start" || Align == "center" || Align == "end")
+               .If($"{PrefixCls}-small", () => !Simple && Size == PaginationSize.Small)
+               .GetIf(() => $"{PrefixCls}-{Align}", () => Align == "start" || Align == "center" || Align == "end")
                .If($"{PrefixCls}-{InputVariant}", () => InputVariant is "filled" or "borderless" or "underlined")
                .If($"{PrefixCls}-bordered", () => ThemeConfig?.Seed?.Wireframe == true)
                .If($"{PrefixCls}-rtl", () => RTL);

@@ -1,0 +1,13 @@
+<Flex Vertical Gap="FlexGap.Small" Align="FlexAlign.Start">
+    <DatePicker TValue="DateTime[]" Multiple Placeholder="@placeholder" />
+    <DatePicker TValue="DateTime[]" Multiple DefaultValue="@defaultValue" Size="InputSize.Small" />
+    <DatePicker TValue="DateTime[]" Multiple DefaultValue="@defaultValue" />
+    <DatePicker TValue="DateTime[]" Multiple DefaultValue="@defaultValue" Size="InputSize.Large" />
+</Flex>
+
+@code {
+    private const string placeholder = "Bamboo";
+    private readonly DateTime[] defaultValue = Enumerable.Range(0, 10)
+        .Select(day => new DateTime(2000, 1, 1).AddDays(day))
+        .ToArray();
+}

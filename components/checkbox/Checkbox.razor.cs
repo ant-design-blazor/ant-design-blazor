@@ -114,7 +114,7 @@ namespace AntDesign
         /// Omits the empty label span when this checkbox has no label content.
         /// </summary>
         [Parameter]
-        public bool HideEmptyLabel { get; set; }
+        public bool HideEmptyLabel { get; set; } = true;
 
         /// <summary>Semantic class names keyed by root, icon, and label.</summary>
         [Parameter]
@@ -149,6 +149,7 @@ namespace AntDesign
                 .Add(WrapperClass)
                 .If($"{_prefixCls}-wrapper-checked", () => Checked)
                 .If($"{_prefixCls}-wrapper-disabled", () => IsDisabled)
+                .If($"{_prefixCls}-wrapper-in-form-item", () => FormItem != null)
                 .If($"{_prefixCls}-group-item", () => CheckboxGroup != null);
 
             ClassMapper

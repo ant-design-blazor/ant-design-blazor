@@ -1,18 +1,21 @@
 <Dropdown>
-    <Overlay>
+    <PopupRender Context="menu">
         <div style="background: var(--ant-color-bg-elevated); border-radius: var(--ant-border-radius-lg); box-shadow: var(--ant-box-shadow-secondary);">
-            <Menu Style="box-shadow: none">
-                <MenuItem Key="1">
-                    <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">1st menu item</a>
-                </MenuItem>
-                <MenuItem Key="2" Disabled>2nd menu item (disabled)</MenuItem>
-                <MenuItem Key="3" Disabled>3rd menu item (disabled)</MenuItem>
-            </Menu>
+            @menu
             <Divider Style="margin: 0" />
             <Space Style="padding: 8px">
                 <Button Type="ButtonType.Primary">Click me!</Button>
             </Space>
         </div>
+    </PopupRender>
+    <Overlay>
+        <Menu Style="box-shadow: none">
+            <MenuItem Key="1">
+                <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">1st menu item</a>
+            </MenuItem>
+            <MenuItem Key="2" Disabled>2nd menu item (disabled)</MenuItem>
+            <MenuItem Key="3" Disabled>3rd menu item (disabled)</MenuItem>
+        </Menu>
     </Overlay>
     <ChildContent>
         <a class="ant-dropdown-link" @onclick:preventDefault>

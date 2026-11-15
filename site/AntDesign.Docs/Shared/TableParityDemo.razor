@@ -1,7 +1,15 @@
+@implements IAsyncDisposable
 @using System.ComponentModel
 @using AntDesign.TableModels
+@inject IJSRuntime JS
 
 <div class="table-parity-demo" style="@ContainerStyle">
+    @if (IsReorder)
+    {
+        <div id="@SortableInstructionsId" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0">
+            To pick up a draggable row, press the space bar. While dragging, use the arrow keys to move the row. Press space again to drop it, or press escape to cancel.
+        </div>
+    }
     @if (IsSettings)
     {
         <Space Wrap>
@@ -23,10 +31,6 @@
             }
         </Space>
     }
-    @if (IsReorder)
-    {
-        <div>@(Variant == "drag-sorting" ? "Drag a row to reorder records." : "Drag the row handle to reorder records. Use the arrow buttons for keyboard-accessible reordering.")</div>
-    }
     @if (IsFilter)
     {
         <Space>
@@ -46,7 +50,7 @@
     {
         <Space><Checkbox @bind-Checked="_radio">Radio selection</Checkbox><Checkbox @bind-Checked="_checkStrictly">Check strictly</Checkbox></Space>
     }
-    <Table TItem="Row" DataSource="VisibleRows" RowKey="x=>x.Key" Bordered="@(_bordered && !IsReorder)"
+    <Table RefBack="@_tableRef" TItem="Row" DataSource="VisibleRows" RowKey="x=>x.Key" Bordered="@(_bordered && !IsReorder)"
            Size="@(_small ? TableSize.Small : TableSize.Default)" ScrollX="@ScrollWidth" ExpandTemplate="@ExpandContent" RowTemplate="@ReorderRowContent"
            OnRow="GetRowAttributes" @bind-SelectedRows="_selectedRows" TreeChildren="@(IsTree ? TreeChildren : null)" RowExpandable="@(IsExpand ? _ => true : null)">
         <ColumnDefinitions>
@@ -93,14 +97,9 @@
             }
             @if (Variant == "drag-sorting-handler")
             {
-                <ActionColumn Title="Order">
-                    <button type="button" class="ant-btn ant-btn-text ant-btn-sm" draggable="true"
-                            aria-label="Drag @context.Name" title="Drag to reorder" style="cursor:move"
-                            @ondragstart="@(_ => StartDrag(context))"
-                            @ondragenter="@(_ => MoveDraggedRowTo(context))" @ondragover:preventDefault
-                            @ondrop="@(_ => EndDrag())" @ondragend="EndDrag">⠿</button>
-                    <Button Size="ButtonSize.Small" Disabled="@(_data.IndexOf(context) == 0)" OnClick="@(() => Move(context, -1))">↑</Button>
-                    <Button Size="ButtonSize.Small" Disabled="@(_data.IndexOf(context) == _data.Count - 1)" OnClick="@(() => Move(context, 1))">↓</Button>
+                <ActionColumn Width="80" Align="ColumnAlign.Center">
+                    <Button Type="ButtonType.Text" Size="ButtonSize.Small" Icon="holder"
+                            Class="table-sort-handle" Style="cursor:move" AriaLabel="@GetDragHandleLabel(context)" />
                 </ActionColumn>
             }
         </ColumnDefinitions>
@@ -123,9 +122,8 @@
     private bool IsTree => Variant.StartsWith("tree-table") || Variant == "filter-in-tree";
     private bool IsExpand => Variant == "expand-sticky";
     private bool IsReorder => Variant is "drag-sorting" or "drag-sorting-handler";
-    private RenderFragment<RowData<Row>> ReorderRowContent => Variant == "drag-sorting" ? row => @<TableRow draggable="true" style="cursor:move;user-select:none;"
-        @ondragstart="@(_ => StartDrag(row.Data))" @ondragover:preventDefault
-        @ondrop="@(_ => DropDraggedRowOn(row.Data))" @ondragend="EndDrag">
+    private string SortableInstructionsId => $"table-{Variant}-instructions";
+    private RenderFragment<RowData<Row>> ReorderRowContent => Variant == "drag-sorting" ? row => @<TableRow style="cursor:move;">
         <TableCell>@row.Data.Name</TableCell>
         <TableCell>@row.Data.Age</TableCell>
         <TableCell>@row.Data.Address</TableCell>
@@ -138,12 +136,16 @@
         builder.CloseElement();
     } : null;
     private string ScrollWidth => Variant is "fixed-gapped-columns" or "narrow" or "expand-sticky" ? "900px" : null;
+    private static string GetDragHandleLabel(Row row) => $"Drag {row.Name}";
     private string ContainerStyle => $"overflow-x:auto;max-width:{(Variant == "narrow" ? "300px" : "100%")};" +
         (Variant == "style-class" ? "border:1px dashed #1677ff;padding:12px;" : "") +
         (Variant == "component-token" ? "--ant-table-header-bg:#e6f4ff;--ant-table-header-color:#0958d9;--ant-table-border-color:#91caff;" : "");
     private List<Row> _visibleRows;
     private IEnumerable<Row> VisibleRows => _visibleRows ?? _data;
-    private string _draggedKey;
+    private readonly ForwardRef _tableRef = new();
+    private IJSObjectReference _sortableModule;
+    private DotNetObjectReference<TableParityDemo> _dotNetReference;
+    private bool _sortableInitialized;
     private static IEnumerable<Row> TreeChildren(Row row) => row.Children ?? [];
     private List<Row> _data = Enumerable.Range(1, 12).Select(i => new Row {
         Key = $"{i}", Name = i == 3 ? "Disabled User" : $"User {i}", Age = 20 + i,
@@ -158,64 +160,62 @@
         {
             _data =
             [
-                new Row { Key = "1", Name = "John Brown", Age = 32, Address = "Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text" },
+                new Row { Key = "1", Name = "John Brown", Age = 32, Address = Variant == "drag-sorting-handler" ? "Long text Long" : "Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text" },
                 new Row { Key = "2", Name = "Jim Green", Age = 42, Address = "London No. 1 Lake Park" },
                 new Row { Key = "3", Name = "Joe Black", Age = 32, Address = "Sidney No. 1 Lake Park" }
             ];
         }
     }
 
-    private Dictionary<string, object> GetRowAttributes(RowData<Row> rowData)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (!IsReorder)
-            return null;
-
-        if (Variant == "drag-sorting")
-            return new Dictionary<string, object> { ["style"] = "cursor:move;user-select:none;" };
-
-        return new Dictionary<string, object>
+        if (firstRender && IsReorder)
         {
-            ["ondragenter"] = (Action<DragEventArgs>)(_ => MoveDraggedRowTo(rowData.Data)),
-            ["ondragover"] = "event.preventDefault()",
-            ["ondrop"] = (Action<DragEventArgs>)(_ => EndDrag()),
-            ["ondragend"] = (Action<DragEventArgs>)(_ => EndDrag())
-        };
+            _sortableModule = await JS.InvokeAsync<IJSObjectReference>("import", "./_content/AntDesign.Docs/js/table-sortable.js?v=20261115.3");
+            _dotNetReference = DotNetObjectReference.Create(this);
+            await _sortableModule.InvokeVoidAsync("initializeTableSortable", _tableRef.Current, _dotNetReference, Variant == "drag-sorting-handler");
+            _sortableInitialized = true;
+        }
     }
 
-    private void StartDrag(Row row) => _draggedKey = row.Key;
-    private void EndDrag() => _draggedKey = null;
-    private void DropDraggedRowOn(Row target)
-    {
-        if (_draggedKey is null || _draggedKey == target.Key)
-        {
-            EndDrag();
-            return;
-        }
+    private Dictionary<string, object> GetRowAttributes(RowData<Row> rowData) =>
+        Variant == "drag-sorting" ? new Dictionary<string, object> { ["style"] = "cursor:move;" } : null;
 
-        var from = _data.FindIndex(row => row.Key == _draggedKey);
-        var to = _data.IndexOf(target);
+    [JSInvokable]
+    public Task OnSortableDrop(string activeKey, string overKey)
+    {
+        var from = _data.FindIndex(row => row.Key == activeKey);
+        var to = _data.FindIndex(row => row.Key == overKey);
         if (from >= 0 && to >= 0)
         {
-            var dragged = _data[from];
+            var row = _data[from];
             _data.RemoveAt(from);
-            _data.Insert(to, dragged);
+            _data.Insert(to, row);
+            if (_visibleRows is not null)
+                _visibleRows = _data.Where(item => item.Name.Contains(_search, StringComparison.OrdinalIgnoreCase)).ToList();
+            return InvokeAsync(StateHasChanged);
         }
 
-        EndDrag();
+        return Task.CompletedTask;
     }
-    private void MoveDraggedRowTo(Row target)
+
+    public async ValueTask DisposeAsync()
     {
-        if (_draggedKey is null || _draggedKey == target.Key)
-            return;
-        var from = _data.FindIndex(row => row.Key == _draggedKey);
-        var to = _data.IndexOf(target);
-        if (from < 0 || to < 0)
-            return;
-        var dragged = _data[from];
-        _data.RemoveAt(from);
-        _data.Insert(to, dragged);
-        if (_visibleRows is not null)
-            _visibleRows = _data.Where(row => row.Name.Contains(_search, StringComparison.OrdinalIgnoreCase)).ToList();
+        if (_sortableModule is not null)
+        {
+            try
+            {
+                if (_sortableInitialized)
+                    await _sortableModule.InvokeVoidAsync("disposeTableSortable", _tableRef.Current);
+                await _sortableModule.DisposeAsync();
+            }
+            catch (JSDisconnectedException)
+            {
+                // The browser has already disposed the Blazor circuit.
+            }
+        }
+
+        _dotNetReference?.Dispose();
     }
 
     private void ResetFilter()
@@ -230,17 +230,6 @@
             ? null
             : _data.Where(x => x.Name.Contains(_search, StringComparison.OrdinalIgnoreCase)).ToList();
         return Task.CompletedTask;
-    }
-    private void Move(Row row, int offset)
-    {
-        var index = _data.IndexOf(row);
-        var target = index + offset;
-        if (index < 0 || target < 0 || target >= _data.Count) return;
-        (_data[index], _data[target]) = (_data[target], _data[index]);
-        if (_visibleRows != null)
-        {
-            _visibleRows = _data.Where(x => x.Name.Contains(_search, StringComparison.OrdinalIgnoreCase)).ToList();
-        }
     }
     private void SelectAll() => _selectedRows = VisibleRows.ToArray();
     private void ClearSelection() => _selectedRows = [];

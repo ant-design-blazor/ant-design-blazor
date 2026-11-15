@@ -40,7 +40,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/QAXskNI4G/Transfer.svg
 | ShowSelectAll | 是否展示全选勾选框 | bool | true |  |
 | TargetKeys | 显示在右侧框数据的 key 集合 | string\[] | \[] |  |
 | Titles | 标题集合，顺序从左至右 | string\[] | \['', ''] |  |
-| SelectAllLabels | 自定义顶部多选框标题的集合 |  |  |  |
+| SelectAllLabels | 自定义源和目标面板全选复选框旁的标签，可传入文本或接收已选数和总数的模板。 | `OneOf<string, RenderFragment<TransferSelectAllLabelInfo>>[]` | `null` |  |
 | Locale | 语言配置，包括过filter，空文本，项目单元等 | TransferLocale |  |  |
 | ListStyle | 两个穿梭框的自定义样式 | Func<TransferDirection,string> | | |
 | OnChange | 选项在两栏之间转移时的回调函数 | TransferSelectChangeArgs |  |  |

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0;net8.0;net9.0;net10.0</TargetFrameworks>
+    <TargetFrameworks>net6.0;net7.0;net8.0;net9.0;net10.0;net11.0</TargetFrameworks>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
@@ -18,7 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Resources\*.json" />
+    <!-- Keep culture-suffixed JSON dictionaries in the main assembly. The
+         embedded JSON localizer discovers both languages from this assembly. -->
+    <EmbeddedResource Include="Resources\*.json" WithCulture="false" />
   </ItemGroup>
 
   <!-- Publish the same Markdown used to build the docs, without copying it into
@@ -78,7 +80,9 @@
     <ProjectReference Include="..\..\components\AntDesign.csproj" />
     <ProjectReference Include="..\..\src\AntDesign.Extensions.Localization\AntDesign.Extensions.Localization.csproj" />
     <ProjectReference Include="..\..\src\AntDesign.Docs.Generator\AntDesign.Docs.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\..\src\AntDesign.SourceGenerators\AntDesign.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     <AdditionalFiles Include="..\..\docs\antd-v6\semantic-dom-catalog.json" />
+    <AdditionalFiles Include="..\..\docs\antd-v6\semantic-md-catalog.json" />
     <AdditionalFiles Include="..\..\docs\antd-v6\llms-tokens.json" />
     <AdditionalFiles Include="..\..\docs\*.en-US.md;..\..\docs\*.zh-CN.md" />
     <AdditionalFiles Include="wwwroot\meta\components.*.json;wwwroot\meta\menu.*.json;wwwroot\meta\demos.*.json;wwwroot\meta\docs.*.json" />

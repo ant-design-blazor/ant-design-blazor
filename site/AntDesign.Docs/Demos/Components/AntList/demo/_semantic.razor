@@ -1,0 +1,31 @@
+<AntList DataSource="@_data" ItemLayout="ListItemLayout.Vertical" Size="ListSize.Large">
+    <ChildContent Context="item">
+        <ListItem Actions="@_actions" Extra="@_extra">
+            <ListItemMeta AvatarTemplate="@_avatar" Title="@item.Title" Description="@item.Description" />
+            @item.Content
+        </ListItem>
+    </ChildContent>
+</AntList>
+
+@code {
+    private readonly List<SemanticItem> _data = new()
+    {
+        new SemanticItem(
+            "ant design part 0",
+            "Ant Design, a design language for background applications, is refined by Ant UED Team.",
+            "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.")
+    };
+
+    private readonly RenderFragment _avatar = @<Avatar Src="https://api.dicebear.com/10.x/lorelei/svg?seed=0" />;
+    private readonly RenderFragment _extra = @<img draggable="false" width="272" alt="logo" src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png" />;
+    private RenderFragment[] _actions => new[]
+    {
+        Action("star", "156"),
+        Action("like", "156"),
+        Action("message", "2")
+    };
+
+    private RenderFragment Action(string icon, string text) => @<Space><Icon Type="@icon" />@text</Space>;
+
+    private sealed record SemanticItem(string Title, string Description, string Content);
+}

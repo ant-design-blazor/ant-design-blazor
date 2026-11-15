@@ -73,6 +73,12 @@ namespace AntDesign
         public bool AllowClear { get; set; }
 
         /// <summary>
+        /// Custom content for the clear control.
+        /// </summary>
+        [Parameter]
+        public RenderFragment ClearIconTemplate { get; set; }
+
+        /// <summary>
         /// Overrides whether the clear icon is shown. When <see langword="null"/>, it is shown if and only if the input string is not empty.
         /// </summary>
         /// <remarks>
@@ -401,6 +407,31 @@ namespace AntDesign
             {
                 Attributes.TryAdd("maxlength", MaxLength);
             }
+
+            SetFormAccessibilityAttributes(ValidationMessages.Length > 0);
+        }
+
+        private void SetFormAccessibilityAttributes(bool hasErrors)
+        {
+            Attributes ??= [];
+            var describedBy = FormItem?.AriaDescribedBy;
+            if (!string.IsNullOrWhiteSpace(describedBy))
+            {
+                Attributes["aria-describedby"] = describedBy;
+            }
+            else
+            {
+                Attributes.Remove("aria-describedby");
+            }
+
+            if (hasErrors)
+            {
+                Attributes["aria-invalid"] = "true";
+            }
+            else
+            {
+                Attributes.Remove("aria-invalid");
+            }
         }
 
         protected virtual void SetClasses()
@@ -415,14 +446,14 @@ namespace AntDesign
             GroupWrapperClass = $"ant-input-css-var {PrefixCls}-group-wrapper {variantClass} {PrefixCls}-group-wrapper-{EffectiveVariant.ToString().ToLowerInvariant()}";
 
             ClassMapper.Clear()
-                .Add("ant-input-css-var")
+                .If("ant-input-css-var", () => !hasAffixWrapper)
                 .Add($"{PrefixCls}")
                 .If(variantClass, () => !hasAffixWrapper)
                 .If($"{PrefixCls}-lg", () => effectiveSize == InputSize.Large)
                 .If($"{PrefixCls}-sm", () => effectiveSize == InputSize.Small)
                 .Add(CompactItemContext?.ClassFor(PrefixCls))
                 .If($"{PrefixCls}-rtl", () => RTL)
-                .GetIf(() => $"{PrefixCls}-status-{status.Value.ToString().ToLowerInvariant()}", () => status.HasValue && status.Value != FormValidateStatus.Default)
+                .GetIf(() => $"{PrefixCls}-status-{status.Value.ToString().ToLowerInvariant()}", () => status.HasValue && status.Value != FormValidateStatus.Default && AppliesStatusToInputElement)
                 .If($"{InputElementSuffixClass}", () => !string.IsNullOrEmpty(InputElementSuffixClass))
                 ;
 
@@ -456,7 +487,7 @@ namespace AntDesign
             if (status.HasValue && status.Value != FormValidateStatus.Default)
             {
                 var statusClass = status.Value.ToString().ToLowerInvariant();
-                AffixWrapperClass += $" ant-input-status-{statusClass} ant-input-affix-wrapper-status-{statusClass}";
+                AffixWrapperClass += $" {GetAffixWrapperStatusClass(statusClass)}";
             }
 
             if (FormItem is { HasFeedback: true })
@@ -465,19 +496,15 @@ namespace AntDesign
             }
         }
 
+        protected virtual bool AppliesStatusToInputElement => true;
+
+        protected virtual string GetAffixWrapperStatusClass(string statusClass) => $"ant-input-status-{statusClass} ant-input-affix-wrapper-status-{statusClass}";
+
         internal override void OnValidated(string[] validationMessages)
         {
             base.OnValidated(validationMessages);
             SetClasses();
-
-            if (validationMessages.Length > 0 && !Attributes.ContainsKey("aria-invalid"))
-            {
-                Attributes.Add("aria-invalid", "true");
-            }
-            else
-            {
-                Attributes.Remove("aria-invalid");
-            }
+            SetFormAccessibilityAttributes(validationMessages.Length > 0);
         }
 
         internal override void UpdateStyles()
@@ -606,6 +633,18 @@ namespace AntDesign
                 (Suffix != null ? $"{PrefixCls}-clear-icon-has-suffix " : "") +
                 (!ShowClear ?? string.IsNullOrEmpty(_inputString) || Disabled ? $"{PrefixCls}-clear-icon-hidden " : ""));
 
+            if (ClearIconTemplate != null)
+            {
+                builder.AddAttribute(33, "role", "button");
+                builder.AddAttribute(34, "aria-label", "clear");
+                builder.AddAttribute(35, "tabindex", 0);
+                builder.AddAttribute(36, "onclick", CallbackFactory.Create<MouseEventArgs>(this, async _ => await Clear()));
+                builder.AddAttribute(38, "onkeydown", CallbackFactory.Create<KeyboardEventArgs>(this, HandleClearKeyDown));
+                builder.AddContent(37, ClearIconTemplate);
+                builder.CloseElement();
+                return;
+            }
+
             builder.OpenComponent<Icon>(33);
 
             builder.AddAttribute(34, "Type", IconType.Fill.CloseCircle);
@@ -619,6 +658,14 @@ namespace AntDesign
             builder.CloseComponent();
             builder.CloseElement();
         };
+
+        private async Task HandleClearKeyDown(KeyboardEventArgs args)
+        {
+            if (args.Key is "Enter" or " ")
+            {
+                await Clear();
+            }
+        }
 
         protected RenderFragment Counter => builder =>
         {
@@ -850,7 +897,7 @@ namespace AntDesign
 
             if (FormItem?.IsRequired ?? false)
             {
-                builder.AddAttribute(65, "aria-required", true);
+                builder.AddAttribute(65, "aria-required", "true");
             }
 
             // onchange 和 onblur 事件会导致点击 OnSearch 按钮时不触发 Click 事件，暂时取消这两个事件

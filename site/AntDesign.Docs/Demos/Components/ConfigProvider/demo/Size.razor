@@ -1,0 +1,27 @@
+<Space Direction="SpaceDirection.Vertical" Size="SpaceSize.Large" Style="width:100%">
+    <RadioGroup TValue="FormSize" @bind-Value="_size" Options="@_sizes" ButtonStyle="RadioButtonStyle.Outline" />
+
+    <ConfigProvider Size="@_size">
+        <Space Wrap>
+            <Button Type="ButtonType.Primary">Button</Button>
+            <Input TValue="string" Placeholder="Input" Style="width: 180px;" />
+            <Input TValue="string" Search Placeholder="Search" Style="width: 220px;" />
+            <Select TItemValue="string" TItem="string" DataSource="@_options"
+                    ItemValue="value => value" ItemLabel="value => value"
+                    DefaultValue="@("Apple")" Style="width: 160px;" />
+        </Space>
+    </ConfigProvider>
+</Space>
+
+@code {
+    private FormSize _size = FormSize.Default;
+
+    private readonly RadioOption<FormSize>[] _sizes =
+    [
+        new() { Label = "Large", Value = FormSize.Large },
+        new() { Label = "Middle", Value = FormSize.Default },
+        new() { Label = "Small", Value = FormSize.Small }
+    ];
+
+    private readonly string[] _options = ["Apple", "Orange", "Banana"];
+}

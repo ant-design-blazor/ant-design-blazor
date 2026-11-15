@@ -1,5 +1,5 @@
 ---
-order: 10
+order: 12
 title:
   zh-CN: 换行临界间距
   en-US: Gap and wrapping

@@ -1,7 +1,9 @@
-﻿<Flex Gap="FlexGap.Small" Justify="FlexJustify.Start" Align="FlexAlign.Start" Vertical>
-    <DatePicker TValue="DateOnly?" Picker="DatePickerType.Date" />
-    <DatePicker TValue="DateTime?" Picker="DatePickerType.Week" />
-    <DatePicker TValue="DateTime?" Picker="DatePickerType.Month" />
-    <DatePicker TValue="DateTime?" Picker="DatePickerType.Quarter" />
-    <DatePicker TValue="DateTime?" Picker="DatePickerType.Year" />
+﻿@inject ILocalizationService LocalizationService
+
+<Flex Gap="FlexGap.Small" Justify="FlexJustify.FlexStart" Align="FlexAlign.FlexStart" Vertical>
+    <DatePicker TValue="DateOnly?" Picker="DatePickerType.Date" CultureInfo="@LocalizationService.CurrentCulture" />
+    <DatePicker TValue="DateTime?" Picker="DatePickerType.Week" CultureInfo="@LocalizationService.CurrentCulture" />
+    <DatePicker TValue="DateTime?" Picker="DatePickerType.Month" CultureInfo="@LocalizationService.CurrentCulture" />
+    <DatePicker TValue="DateTime?" Picker="DatePickerType.Quarter" CultureInfo="@LocalizationService.CurrentCulture" />
+    <DatePicker TValue="DateTime?" Picker="DatePickerType.Year" CultureInfo="@LocalizationService.CurrentCulture" />
 </Flex>

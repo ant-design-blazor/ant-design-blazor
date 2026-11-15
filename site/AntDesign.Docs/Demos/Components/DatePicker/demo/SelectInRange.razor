@@ -1,3 +1,44 @@
-﻿<div>
-    TODO
-</div>
+<Space Direction="SpaceDirection.Vertical">
+    <Title Level="5">7 days range</Title>
+    <RangePicker TValue="DateTime?[]" DisabledDateWithInfo="DisableWithinSevenDays" />
+
+    <Title Level="5">6 months range</Title>
+    <RangePicker TValue="DateTime?[]" Picker="DatePickerType.Month" DisabledDateWithInfo="DisableWithinSixMonths" />
+</Space>
+
+@code {
+    private static bool DisableWithinSevenDays(DateTime current, DatePickerDisabledDateInfo info)
+    {
+        if (info.From is not DateTime start)
+        {
+            return false;
+        }
+
+        var minimum = start.AddDays(-6);
+        var maximum = start.AddDays(6);
+
+        return info.Type switch
+        {
+            DatePickerType.Year => current.Year < minimum.Year || current.Year > maximum.Year,
+            DatePickerType.Month => GetYearMonth(current) < GetYearMonth(minimum) || GetYearMonth(current) > GetYearMonth(maximum),
+            _ => Math.Abs((current.Date - start.Date).TotalDays) >= 7
+        };
+    }
+
+    private static bool DisableWithinSixMonths(DateTime current, DatePickerDisabledDateInfo info)
+    {
+        if (info.From is not DateTime start)
+        {
+            return false;
+        }
+
+        var minimum = start.AddMonths(-5);
+        var maximum = start.AddMonths(5);
+
+        return info.Type == DatePickerType.Year
+            ? current.Year < minimum.Year || current.Year > maximum.Year
+            : GetYearMonth(current) < GetYearMonth(minimum) || GetYearMonth(current) > GetYearMonth(maximum);
+    }
+
+    private static int GetYearMonth(DateTime date) => date.Year * 12 + date.Month - 1;
+}

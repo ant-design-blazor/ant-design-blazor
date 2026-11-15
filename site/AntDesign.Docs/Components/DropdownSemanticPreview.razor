@@ -1,0 +1,60 @@
+<div id="dropdown-semantic-preview-host" style="height:220px;position:relative;overflow:visible">
+    <div style="height:120px;position:absolute;top:50px;left:0">
+        <Dropdown Visible="true" PopupContainerSelector="#dropdown-semantic-preview-host"
+                  Menu="_menu" Styles="_styles">
+            <ChildContent>
+                <a class="ant-dropdown-link" @onclick:preventDefault>
+                    Hover me <Icon Type="@IconType.Outline.Down" />
+                </a>
+            </ChildContent>
+        </Dropdown>
+    </div>
+</div>
+
+@code {
+    private static readonly IReadOnlyDictionary<string, string> _styles = new Dictionary<string, string>
+    {
+        ["root"] = "width:200px;z-index:1"
+    };
+
+    private static readonly DropdownMenuOptions _menu = new()
+    {
+        DefaultOpenKeys = ["submenu"],
+        Items =
+        [
+            new DropdownMenuItem
+            {
+                Key = "group",
+                Type = DropdownMenuItemKind.Group,
+                Label = "Group title",
+                Children =
+                [
+                    new DropdownMenuItem { Key = "save", Label = "1st menu item", IconTemplate = @<Icon Type="@IconType.Outline.Save" /> },
+                    new DropdownMenuItem { Key = "edit", Label = "2nd menu item", IconTemplate = @<Icon Type="@IconType.Outline.Edit" /> }
+                ]
+            },
+            new DropdownMenuItem
+            {
+                Key = "submenu",
+                Type = DropdownMenuItemKind.SubMenu,
+                Label = "SubMenu",
+                Children =
+                [
+                    new DropdownMenuItem
+                    {
+                        Key = "nested-group",
+                        Type = DropdownMenuItemKind.Group,
+                        Label = "Item group",
+                        Children =
+                        [
+                            new DropdownMenuItem { Key = "option-1", Label = "Option 1" },
+                            new DropdownMenuItem { Key = "option-2", Label = "Option 2" }
+                        ]
+                    }
+                ]
+            },
+            new DropdownMenuItem { Key = "divider", Type = DropdownMenuItemKind.Divider },
+            new DropdownMenuItem { Key = "delete", Label = "Delete", IconTemplate = @<Icon Type="@IconType.Outline.Delete" />, Danger = true }
+        ]
+    };
+}

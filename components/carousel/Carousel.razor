@@ -1,11 +1,15 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
 
-<div class="@ClassMapper.Class">
-    <div class="@SlickSliderClassMapper.Class">
+<div class="@ClassMapper.Class" style="@RootStyle">
+    <div class="@SlickSliderClassMapper.Class" dir="ltr">
+        @if (Arrows)
+        {
+            <button type="button" aria-label="Previous slide" data-role="none" class="slick-arrow slick-prev @(IsPreviousDisabled ? "slick-disabled" : string.Empty)" style="display: block;" @onclick="Previous"></button>
+        }
         <div class="slick-list" @ref="Ref" style="@SlickListStyle">
             <div class="slick-track" style="@TrackStyle">
-                @if (_slicks.Count > 0 && Effect == CarouselEffect.ScrollX)
+                @if (_slicks.Count > 0 && Infinite && Effect == CarouselEffect.ScrollX)
                 {
                     <div data-index="-1" class="slick-slide slick-cloned" tabindex="-1" aria-hidden="true" style="@SlickClonedStyle">
                         <div>
@@ -18,29 +22,29 @@
                 <CascadingValue Value="this" IsFixed="@true">
                     @ChildContent
                 </CascadingValue>
-                @if (Effect == CarouselEffect.ScrollX)
+                @if (_slicks.Count > 0 && Infinite && Effect == CarouselEffect.ScrollX)
                 {
-                    for (int i = 0; i < _slicks.Count; i++)
-                    {
-                        int index = i;
-                        <div data-index="@(i+_slicks.Count)" class="slick-slide slick-cloned" tabindex="-1" aria-hidden="true" style="@SlickClonedStyle">
-                            <div>
-                                <div tabindex="-1" style="width: 100%; display: inline-block;">
-                                    @_slicks[index].ChildContent
-                                </div>
+                    <div data-index="@_slicks.Count" class="slick-slide slick-cloned" tabindex="-1" aria-hidden="true" style="@SlickClonedStyle">
+                        <div>
+                            <div tabindex="-1" style="width: 100%; display: inline-block;">
+                                @_slicks[0].ChildContent
                             </div>
                         </div>
-                    }
+                    </div>
                 }
             </div>
         </div>
+        @if (Arrows)
+        {
+            <button type="button" aria-label="Next slide" data-role="none" class="slick-arrow slick-next @(IsNextDisabled ? "slick-disabled" : string.Empty)" style="display: block;" @onclick="Next"></button>
+        }
         @if (Dots)
         {
-            <ul class="@($"slick-dots slick-dots-{DotPosition.ToString().ToLowerInvariant()} {DotsClass}")" style="display: block;">
+            <ul class="@DotsClassName" style="display: block;">
                 @for (int i = 0; i < _slicks.Count; i++)
                 {
                     int index = i;
-                    <li class=" @(_slicks[index].Active?"slick-active":string.Empty)">
+                    <li class="@(_slicks[index].Active ? "slick-active" : string.Empty)">
                         <button @onclick="(e)=>Activate(_slicks[index])">@(index + 1)</button>
                     </li>
                 }

@@ -1,7 +1,10 @@
 ﻿@namespace AntDesign.Internal
 @inherits AntDomComponentBase
 
-@if (_hasAddOverlayToBody == true || _isWaitForOverlayFirstRender || HiddenMode)
+@if ((!Trigger.DestroyOnHidden && _hasAddOverlayToBody == true)
+    || _isWaitForOverlayFirstRender
+    || (HiddenMode && !Trigger.DestroyOnHidden)
+    || Trigger.Visible)
 {
     string display = GetOverlayDisplayStyle();
     string overlayCls = GetOverlayCls();

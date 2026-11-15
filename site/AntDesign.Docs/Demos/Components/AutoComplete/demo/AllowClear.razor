@@ -1,0 +1,14 @@
+<AutoComplete TOption="string" AllowClear="false" Style="width:200px" Placeholder="UnClearable" Options="_options" OnInput="OnSearch" />
+<br /><br />
+<AutoComplete TOption="string" AllowClear ClearIconTemplate="@_clearIcon" Style="width:200px" Placeholder="Customized clear icon" Options="_options" OnInput="OnSearch" />
+
+@code {
+    private IEnumerable<string> _options = [];
+    private RenderFragment _clearIcon = @<Icon Type="@IconType.Fill.CloseSquare" />;
+
+    private void OnSearch(ChangeEventArgs args)
+    {
+        var value = args.Value?.ToString() ?? string.Empty;
+        _options = string.IsNullOrEmpty(value) ? [] : [value, value + value, value + value + value];
+    }
+}

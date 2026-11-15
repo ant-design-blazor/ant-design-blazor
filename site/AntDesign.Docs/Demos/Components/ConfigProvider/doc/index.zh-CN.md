@@ -16,6 +16,8 @@ ConfigProvider 用于为组件树提供统一的方向、主题和表单配置�
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | Direction | 文字方向 | string | -- |
+| Size | 向下传递给支持该配置的组件的默认尺寸 | FormSize?（`Small`、`Default`、`Large`） | `Default` |
+| Variant | 向下传递给支持该配置的数据录入组件的默认外观 | `outlined` \| `filled` \| `borderless` \| `underlined` | `outlined` |
 | Theme | 全局主题 | GlobalTheme | -- |
 | ThemeConfig | Design Token 与组件主题配置 | ThemeConfig | -- |
 | Form | 全局表单配置 | FormConfig | -- |

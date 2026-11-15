@@ -7,8 +7,8 @@ title:
 
 ## zh-CN
 
-展示标题、段落及文本内联样式。
+展示文档样例。
 
 ## en-US
 
-Demonstrates headings, paragraphs, and inline text styles.
+Display the document sample.

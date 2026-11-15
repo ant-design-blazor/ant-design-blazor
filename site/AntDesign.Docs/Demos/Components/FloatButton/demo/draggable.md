@@ -8,8 +8,8 @@ title:
 
 ## zh-CN
 
-通过集成第三方库，实现拖拽功能。
+拖动悬浮按钮可将它移动到新的位置。
 
 ## en-US
 
-Implement drag-and-drop functionality with third-party libraries.
+Drag the FloatButton to move it to a new position.

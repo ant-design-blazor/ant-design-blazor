@@ -1,0 +1,24 @@
+<div class="demo-dropdown-render-panel" style="position: relative; min-height: 280px; padding: 24px">
+    <Dropdown Menu="_menu" Open="true" Trigger="_noTrigger" Placement="Placement.BottomLeft">
+        <Unbound Context="trigger">
+            <span aria-hidden="true" @ref="trigger.Current"
+                  style="position: absolute; left: 24px; top: 24px; display: block; width: 1px; height: 1px; pointer-events: none"></span>
+        </Unbound>
+    </Dropdown>
+</div>
+
+@code {
+    private readonly Trigger[] _noTrigger = [];
+
+    private readonly DropdownMenuOptions _menu = new()
+    {
+        Selectable = false,
+        Items = new[]
+        {
+            new DropdownMenuItem { Key = "1", LabelTemplate = @<a href="https://www.antgroup.com" target="_blank" rel="noopener noreferrer">1st menu item</a> },
+            new DropdownMenuItem { Key = "2", LabelTemplate = @<a href="https://www.aliyun.com" target="_blank" rel="noopener noreferrer">2nd menu item (disabled)</a>, Icon = "smile", Disabled = true },
+            new DropdownMenuItem { Key = "3", LabelTemplate = @<a href="https://www.luohanacademy.com" target="_blank" rel="noopener noreferrer">3rd menu item (disabled)</a>, Disabled = true },
+            new DropdownMenuItem { Key = "4", Label = "a danger item", Danger = true },
+        },
+    };
+}

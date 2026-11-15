@@ -133,6 +133,12 @@ namespace AntDesign
         public EventCallback<MouseEventArgs> OnClick { get; set; }
 
         /// <summary>
+        /// Key down event for interactive icons.
+        /// </summary>
+        [Parameter]
+        public EventCallback<KeyboardEventArgs> OnKeyDown { get; set; }
+
+        /// <summary>
         /// The component to render as a custom icon
         /// </summary>
         [Parameter]
@@ -163,9 +169,29 @@ namespace AntDesign
         protected string _svgImg;
         private string _primaryColor;
 
-        private Dictionary<string, object> _attributes = new();
+        protected Dictionary<string, object> _attributes = new();
 
         private string IconTabIndex => TabIndex ?? (OnClick.HasDelegate ? "-1" : null);
+        private string IconClass
+        {
+            get
+            {
+                var classes = new List<string> { "anticon" };
+                if (!string.IsNullOrWhiteSpace(Type) && string.IsNullOrEmpty(IconFont))
+                {
+                    classes.Add($"anticon-{Type}");
+                }
+                if (Spin || Type == "loading")
+                {
+                    classes.Add("anticon-spin");
+                }
+                if (!string.IsNullOrWhiteSpace(Class))
+                {
+                    classes.Add(Class);
+                }
+                return string.Join(" ", classes);
+            }
+        }
 
         protected override void OnInitialized()
         {
@@ -177,10 +203,6 @@ namespace AntDesign
 
         protected override async Task OnInitializedAsync()
         {
-            ClassMapper.Add($"anticon")
-                .GetIf(() => $"anticon-{Type}", () => !string.IsNullOrWhiteSpace(Type) && string.IsNullOrEmpty(IconFont))
-                .GetIf(() => "anticon-spin", () => Spin || Type == "loading");
-
             await base.OnInitializedAsync();
         }
 

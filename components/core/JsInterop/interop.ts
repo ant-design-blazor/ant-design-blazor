@@ -21,6 +21,7 @@ export {
   menuOverflowHelper,
   selectHelper,
   collapseHelper,
+  floatButtonHelper,
 } from './modules/components/export'
 
 

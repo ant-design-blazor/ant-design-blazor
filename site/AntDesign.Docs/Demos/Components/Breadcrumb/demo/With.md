@@ -1,13 +1,13 @@
 ---
-order: 1
+order: 7
 title:
-  zh-CN: 带有图标的
-  en-US: With an Icon
+  zh-CN: 子组件写法
+  en-US: Child Content API
 ---
 
 ## zh-CN
-图标放在文字前面。
+通过 `BreadcrumbItem` 子组件组合面包屑项。
 
 
 ## en-US
-The icon should be placed in front of the text.
+Compose breadcrumb entries with `BreadcrumbItem` child components.

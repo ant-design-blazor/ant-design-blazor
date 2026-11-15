@@ -6,7 +6,7 @@
 {
     @if (IsButton)
     {
-        <div class="@ClassMapper.Class"
+        <div class="@GetTriggerWrapperClass()"
      style="display: inline-block; width: @(Block ? "100%" : "fit-content" ); @Style"
      id="@Id"
      @ref="Ref">
@@ -15,7 +15,7 @@
     }
     else
     {
-        <div class="@ClassMapper.Class"
+        <div class="@GetTriggerWrapperClass()"
      style="display: inline-block; width: fit-content; @Style"
      id="@Id"
      @ref="@Ref"
@@ -44,7 +44,9 @@
 <CascadingValue Value="this" Name="Trigger" IsFixed="@true">
     <CascadingValue Value="@ArrowPointAtCenter" Name="ArrowPointAtCenter">
         <Overlay @ref="_overlay"
+                 HiddenMode="HiddenMode"
                  CssVarClass="ant-dropdown-css-var"
+                 OverlayDisplayStyle="block"
                  OverlayChildPrefixCls="@($"{PrefixCls}-menu")"
                  OnOverlayMouseEnter="OnOverlayMouseEnter"
                  OnOverlayMouseLeave="OnOverlayMouseLeave"
@@ -53,7 +55,20 @@
             {
                 <div class="ant-dropdown-arrow" />
             }
-            @Overlay
+            <CascadingValue Value="ClassNames" Name="DropdownClassNames">
+                <CascadingValue Value="Styles" Name="DropdownStyles">
+                    <CascadingValue Value="@("ant-dropdown-css-var")" Name="DropdownMenuCssVarClass">
+                        @if (PopupRender != null || DropdownRender != null)
+                        {
+                            @((PopupRender ?? DropdownRender)(GetPopupContent()))
+                        }
+                        else
+                        {
+                            @GetPopupContent()
+                        }
+                    </CascadingValue>
+                </CascadingValue>
+            </CascadingValue>
         </Overlay>
     </CascadingValue>
 </CascadingValue>
@@ -70,6 +85,9 @@
                     Disabled="@data.dropdown.Disabled"
                     Danger="@data.dropdown.ButtonDanger"
                     Ghost="@data.dropdown.ButtonGhost"
+                    HtmlType="@data.dropdown.ButtonHtmlType"
+                    Href="@data.dropdown.ButtonHref"
+                    Title="@data.dropdown.ButtonTitle"
                     Style="@(data.dropdown.Block ? "flex: 1 0 auto;" + data.dropdown.ButtonStyleLeft : data.dropdown.ButtonStyleLeft)"
                         @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(data.dropdown, data.dropdown.OnClick) })">
                     @data.childContent

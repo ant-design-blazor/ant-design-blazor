@@ -1,0 +1,31 @@
+<Space Wrap>
+    <DropdownButton Icon="@IconType.Outline.Down">
+        <Overlay>@_menu</Overlay>
+        <ChildContent>Submit</ChildContent>
+    </DropdownButton>
+    <DropdownButton Icon="@IconType.Outline.Down" Placement="AntDesign.Placement.TopRight">
+        <Overlay>@_menu</Overlay>
+        <ChildContent>Submit</ChildContent>
+    </DropdownButton>
+    <SpaceCompact>
+        <Button Type="ButtonType.Primary">Submit</Button>
+        <Dropdown Trigger="@(new[] { AntDesign.Trigger.Click })">
+            <Overlay>@_menu</Overlay>
+            <ChildContent><Button Type="ButtonType.Primary" Icon="@IconType.Outline.Down" /></ChildContent>
+        </Dropdown>
+    </SpaceCompact>
+    <SpaceCompact>
+        <Button>Submit</Button>
+        <Dropdown Placement="AntDesign.Placement.TopRight" Trigger="@(new[] { AntDesign.Trigger.Click })">
+            <Overlay>@_menu</Overlay>
+            <ChildContent><Button Icon="@IconType.Outline.Down" /></ChildContent>
+        </Dropdown>
+    </SpaceCompact>
+</Space>
+
+@code {
+    private RenderFragment _menu => @<Menu>
+        <MenuItem>First action</MenuItem>
+        <MenuItem>Second action</MenuItem>
+    </Menu>;
+}

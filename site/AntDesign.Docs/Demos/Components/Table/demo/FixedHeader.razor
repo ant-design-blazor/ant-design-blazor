@@ -1,13 +1,13 @@
-﻿<Table DataSource="data" ScrollY="240px" PageSize="50">
-    <Selection />
-    <PropertyColumn Property="c=>c.Name" Width="150" />
-    <PropertyColumn Property="c=>c.Age"  Width="150" />
-    <PropertyColumn Property="c=>c.Address" />
+﻿<Table TItem="Column" DataSource="data" RowKey="row => row.Key" ScrollY="275px" PageSize="50">
+    <PropertyColumn Property="row => row.Name" Title="Name" Width="150" />
+    <PropertyColumn Property="row => row.Age" Title="Age" Width="150" />
+    <PropertyColumn Property="row => row.Address" Title="Address" />
 </Table>
 
 @code {
     class Column
     {
+        public int Key { get; set; }
         public string Name { get; set; }
 
         public int Age { get; set; }
@@ -17,9 +17,10 @@
 
     Column[] data = Enumerable.Range(0, 100).Select(i => new Column()
     {
+        Key = i,
         Name = $"Edward King {i}",
         Age = 32,
-        Address = $"Edward King {i}"
+        Address = $"London, Park Lane no. {i}"
     }).ToArray();
 
 }

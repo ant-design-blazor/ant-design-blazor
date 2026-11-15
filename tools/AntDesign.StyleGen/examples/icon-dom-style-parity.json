@@ -8,15 +8,27 @@
   "config": {
     "timeoutMs": 20000,
     "navigationTimeoutMs": 120000,
-    "viewport": { "width": 1280, "height": 900, "deviceScaleFactor": 1 },
+    "viewport": {
+      "width": 1280,
+      "height": 900,
+      "deviceScaleFactor": 1
+    },
     "comparisonPolicy": {
       "svgUsePaintTolerancePx": 0.01,
       "normalization": {
         "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_[rR]_[a-zA-Z0-9_-]+)$",
         "removeUnreferencedRuntimeIds": true,
-        "removeAttributes": ["_bl_*"],
-        "removeClassPatterns": ["^css-dev-only-do-not-override-", "^css-var-_[rR]_", "^css-[a-zA-Z0-9]+$"],
-        "removeCommentMarkers": ["<!--!-->"]
+        "removeAttributes": [
+          "_bl_*"
+        ],
+        "removeClassPatterns": [
+          "^css-dev-only-do-not-override-",
+          "^css-var-_[rR]_",
+          "^css-[a-zA-Z0-9]+$"
+        ],
+        "removeCommentMarkers": [
+          "<!--!-->"
+        ]
       }
     }
   },
@@ -24,69 +36,265 @@
     {
       "id": "icon-font",
       "component": "Icon",
-      "react": { "url": "http://127.0.0.1:8000/components/icon?theme=light", "scopeSelector": "#components-icon-demo-iconfont .code-box-demo", "rootSelector": ".ant-space" },
-      "blazor": { "url": "http://127.0.0.1:5000/en-US/components/icon?theme=light", "scopeSelector": "#components-icon-demo-iconfont .code-box-demo", "rootSelector": ".ant-space" },
-      "styleProperties": ["display", "width", "height", "gap", "alignItems", "fontSize", "lineHeight", "color", "fill", "verticalAlign"],
-      "semanticNodes": [
-        { "path": "item", "selector": ".ant-space-item", "minimumCount": 3 },
-        { "path": "icon", "selector": ".anticon", "minimumCount": 3 },
-        { "path": "svg", "selector": "svg", "minimumCount": 3 },
-        { "path": "use", "selector": "use", "minimumCount": 3, "verifySvgUse": true }
+      "react": {
+        "url": "http://127.0.0.1:8000/components/icon?theme=light",
+        "scopeSelector": "#components-icon-demo-iconfont .code-box-demo",
+        "rootSelector": ".ant-space"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/icon?theme=light",
+        "scopeSelector": "#components-icon-demo-iconfont .code-box-demo",
+        "rootSelector": ".ant-space"
+      },
+      "styleProperties": [
+        "display",
+        "width",
+        "height",
+        "gap",
+        "alignItems",
+        "fontSize",
+        "lineHeight",
+        "color",
+        "fill",
+        "verticalAlign"
       ],
-      "scenarios": [{ "id": "default", "minimumRoots": 1 }]
+      "semanticNodes": [
+        {
+          "path": "item",
+          "selector": ".ant-space-item",
+          "minimumCount": 3
+        },
+        {
+          "path": "icon",
+          "selector": ".anticon",
+          "minimumCount": 3
+        },
+        {
+          "path": "svg",
+          "selector": "svg",
+          "minimumCount": 3
+        },
+        {
+          "path": "use",
+          "selector": "use",
+          "minimumCount": 3,
+          "verifySvgUse": true
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "default",
+          "minimumRoots": 1,
+          "actions": [
+            {
+              "type": "hover",
+              "reactSelector": "#components-icon-demo-iconfont .ant-space",
+              "blazorSelector": "#components-icon-demo-iconfont .ant-space"
+            },
+            {
+              "type": "wait",
+              "milliseconds": 4500
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "icon-font-resources",
       "component": "Icon",
-      "react": { "url": "http://127.0.0.1:8000/components/icon?theme=light", "scopeSelector": "#components-icon-demo-scripturl .code-box-demo", "rootSelector": ".ant-space" },
-      "blazor": { "url": "http://127.0.0.1:5000/en-US/components/icon?theme=light", "scopeSelector": "#components-icon-demo-scriptUrl .code-box-demo", "rootSelector": ".ant-space" },
-      "styleProperties": ["display", "width", "height", "gap", "alignItems", "fontSize", "lineHeight", "color", "fill", "verticalAlign"],
-      "semanticNodes": [
-        { "path": "item", "selector": ".ant-space-item", "minimumCount": 4 },
-        { "path": "icon", "selector": ".anticon", "minimumCount": 4 },
-        { "path": "svg", "selector": "svg", "minimumCount": 4 },
-        { "path": "use", "selector": "use", "minimumCount": 4, "verifySvgUse": true }
+      "react": {
+        "url": "http://127.0.0.1:8000/components/icon?theme=light",
+        "scopeSelector": "#components-icon-demo-scripturl .code-box-demo",
+        "rootSelector": ".ant-space"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/icon?theme=light",
+        "scopeSelector": "#components-icon-demo-scriptUrl .code-box-demo",
+        "rootSelector": ".ant-space"
+      },
+      "styleProperties": [
+        "display",
+        "width",
+        "height",
+        "gap",
+        "alignItems",
+        "fontSize",
+        "lineHeight",
+        "color",
+        "fill",
+        "verticalAlign"
       ],
-      "scenarios": [{ "id": "default", "minimumRoots": 1 }]
+      "semanticNodes": [
+        {
+          "path": "item",
+          "selector": ".ant-space-item",
+          "minimumCount": 4
+        },
+        {
+          "path": "icon",
+          "selector": ".anticon",
+          "minimumCount": 4
+        },
+        {
+          "path": "svg",
+          "selector": "svg",
+          "minimumCount": 4
+        },
+        {
+          "path": "use",
+          "selector": "use",
+          "minimumCount": 4,
+          "verifySvgUse": true
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "default",
+          "minimumRoots": 1
+        }
+      ]
     },
     {
       "id": "icon-basic",
       "component": "Icon",
-      "react": { "url": "http://127.0.0.1:8000/components/icon?theme=light", "scopeSelector": "#components-icon-demo-basic .code-box-demo", "rootSelector": ".ant-space" },
-      "blazor": { "url": "http://127.0.0.1:5000/en-US/components/icon?theme=light", "scopeSelector": "#components-icon-demo-basic .code-box-demo", "rootSelector": ".ant-space" },
-      "styleProperties": ["display", "width", "height", "gap", "alignItems", "fontSize", "lineHeight", "color"],
-      "semanticNodes": [
-        { "path": "item", "selector": ".ant-space-item", "minimumCount": 6 },
-        { "path": "icon", "selector": ".anticon", "minimumCount": 6 },
-        { "path": "svg", "selector": "svg", "minimumCount": 6 }
+      "react": {
+        "url": "http://127.0.0.1:8000/components/icon?theme=light",
+        "scopeSelector": "#components-icon-demo-basic .code-box-demo",
+        "rootSelector": ".ant-space"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/icon?theme=light",
+        "scopeSelector": "#components-icon-demo-basic .code-box-demo",
+        "rootSelector": ".ant-space"
+      },
+      "styleProperties": [
+        "display",
+        "width",
+        "height",
+        "gap",
+        "alignItems",
+        "fontSize",
+        "lineHeight",
+        "color"
       ],
-      "scenarios": [{ "id": "default", "minimumRoots": 1 }]
+      "semanticNodes": [
+        {
+          "path": "item",
+          "selector": ".ant-space-item",
+          "minimumCount": 6
+        },
+        {
+          "path": "icon",
+          "selector": ".anticon",
+          "minimumCount": 6
+        },
+        {
+          "path": "svg",
+          "selector": "svg",
+          "minimumCount": 6
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "default",
+          "minimumRoots": 1
+        }
+      ]
     },
     {
       "id": "icon-two-tone",
       "component": "Icon",
-      "react": { "url": "http://127.0.0.1:8000/components/icon?theme=light", "scopeSelector": "#components-icon-demo-two-tone .code-box-demo", "rootSelector": ".ant-space" },
-      "blazor": { "url": "http://127.0.0.1:5000/en-US/components/icon?theme=light", "scopeSelector": "#components-icon-demo-two-tone .code-box-demo", "rootSelector": ".ant-space" },
-      "styleProperties": ["display", "width", "height", "gap", "alignItems", "fontSize", "lineHeight", "color", "fill"],
-      "semanticNodes": [
-        { "path": "item", "selector": ".ant-space-item", "minimumCount": 3 },
-        { "path": "icon", "selector": ".anticon", "minimumCount": 3 },
-        { "path": "path", "selector": "path", "minimumCount": 8 }
+      "react": {
+        "url": "http://127.0.0.1:8000/components/icon?theme=light",
+        "scopeSelector": "#components-icon-demo-two-tone .code-box-demo",
+        "rootSelector": ".ant-space"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/icon?theme=light",
+        "scopeSelector": "#components-icon-demo-two-tone .code-box-demo",
+        "rootSelector": ".ant-space"
+      },
+      "styleProperties": [
+        "display",
+        "width",
+        "height",
+        "gap",
+        "alignItems",
+        "fontSize",
+        "lineHeight",
+        "color",
+        "fill"
       ],
-      "scenarios": [{ "id": "default", "minimumRoots": 1 }]
+      "semanticNodes": [
+        {
+          "path": "item",
+          "selector": ".ant-space-item",
+          "minimumCount": 3
+        },
+        {
+          "path": "icon",
+          "selector": ".anticon",
+          "minimumCount": 3
+        },
+        {
+          "path": "path",
+          "selector": "path",
+          "minimumCount": 8
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "default",
+          "minimumRoots": 1
+        }
+      ]
     },
     {
       "id": "icon-custom",
       "component": "Icon",
-      "react": { "url": "http://127.0.0.1:8000/components/icon?theme=light", "scopeSelector": "#components-icon-demo-custom .code-box-demo", "rootSelector": ".ant-space" },
-      "blazor": { "url": "http://127.0.0.1:5000/en-US/components/icon?theme=light", "scopeSelector": "#components-icon-demo-custom .code-box-demo", "rootSelector": ".ant-space" },
-      "styleProperties": ["display", "width", "height", "gap", "alignItems", "fontSize", "lineHeight", "color"],
-      "semanticNodes": [
-        { "path": "item", "selector": ".ant-space-item", "minimumCount": 4 },
-        { "path": "icon", "selector": ".anticon", "minimumCount": 5 },
-        { "path": "svg", "selector": "svg", "minimumCount": 4 }
+      "react": {
+        "url": "http://127.0.0.1:8000/components/icon?theme=light",
+        "scopeSelector": "#components-icon-demo-custom .code-box-demo",
+        "rootSelector": ".ant-space"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/icon?theme=light",
+        "scopeSelector": "#components-icon-demo-custom .code-box-demo",
+        "rootSelector": ".ant-space"
+      },
+      "styleProperties": [
+        "display",
+        "width",
+        "height",
+        "gap",
+        "alignItems",
+        "fontSize",
+        "lineHeight",
+        "color"
       ],
-      "scenarios": [{ "id": "default", "minimumRoots": 1 }]
+      "semanticNodes": [
+        {
+          "path": "item",
+          "selector": ".ant-space-item",
+          "minimumCount": 4
+        },
+        {
+          "path": "icon",
+          "selector": ".anticon",
+          "minimumCount": 5
+        },
+        {
+          "path": "svg",
+          "selector": "svg",
+          "minimumCount": 4
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "default",
+          "minimumRoots": 1
+        }
+      ]
     }
   ]
 }

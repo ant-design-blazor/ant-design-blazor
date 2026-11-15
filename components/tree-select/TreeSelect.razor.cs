@@ -248,12 +248,6 @@ namespace AntDesign
         public Func<TreeNode<TItem>, string> TitleExpression { get; set; }
 
         /// <summary>
-        /// Set the style of the dropdown menu
-        /// </summary>
-        [Parameter]
-        public string DropdownStyle { get; set; }
-
-        /// <summary>
         /// Whether to show lines in the tree or not
         /// </summary>
         /// <default value="false"/>
@@ -695,7 +689,6 @@ namespace AntDesign
             bool checkStricklyChanged = parameters.IsParameterChanged("TreeCheckStrictly", TreeCheckStrictly);
             bool checkedStrategyChanged = parameters.IsParameterChanged("ShowCheckedStrategy", ShowCheckedStrategy);
             await base.SetParametersAsync(parameters);
-            _dropdownStyle = DropdownStyle ?? string.Empty;
             if ((Values != null) && TreeCheckable && (checkStricklyChanged || checkedStrategyChanged))
             {
                 UpdateTreeCheckedKeys(Values.Select(x => GetTreeKeyFormValue(x)));
@@ -708,8 +701,6 @@ namespace AntDesign
 
         protected Task SetDropdownStyleAsync()
         {
-            _dropdownStyle = DropdownStyle ?? string.Empty;
-
             if (IsMultiple)
             {
                 if (Values == null)

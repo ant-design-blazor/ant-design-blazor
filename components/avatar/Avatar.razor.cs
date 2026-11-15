@@ -151,6 +151,13 @@ namespace AntDesign
                 .Where(item => ResponsiveBreakpoints.ContainsKey(item.Key) && item.Value > 0)
                 .Select(item => $"--ant-avatar-size-{item.Key.ToLowerInvariant()}:{item.Value}px")) + ";";
 
+        private string AvatarStyle => string.Join(" ", new[]
+        {
+            HasResponsiveSize ? string.Empty : _sizeStyles,
+            ResponsiveSizeStyles,
+            Style
+        }.Where(value => !string.IsNullOrWhiteSpace(value)));
+
         private static readonly Dictionary<string, int> ResponsiveBreakpoints = new(StringComparer.OrdinalIgnoreCase)
         {
             ["xs"] = 0, ["sm"] = 576, ["md"] = 768, ["lg"] = 992, ["xl"] = 1200, ["xxl"] = 1600
@@ -176,6 +183,9 @@ namespace AntDesign
             Group?.AddAvatar(this);
 
             SetClassMap();
+            // Ant Design v6 provides the default size through the Avatar CSS
+            // variables. The Blazor output must opt into that scope as well.
+            ClassMapper.Add("ant-avatar-css-var");
         }
 
         protected override void OnParametersSet()
@@ -222,7 +232,7 @@ namespace AntDesign
 
             ClassMapper
                 .Add(PrefixCls)
-                .GetIf(() => $"{PrefixCls}-{_shapeMap[Shape.GetValueOrDefault(AvatarShape.Square)]}", () => Shape.HasValue)
+                .GetIf(() => $"{PrefixCls}-{_shapeMap[Shape.GetValueOrDefault(AvatarShape.Circle)]}", () => true)
                 .If($"{PrefixCls}-sm", () => _size.IsT0 && _size.AsT0 == AvatarSize.Small)
                 .If($"{PrefixCls}-lg", () => _size.IsT0 && _size.AsT0 == AvatarSize.Large)
                 .If($"{PrefixCls}-icon", () => !string.IsNullOrEmpty(Icon))

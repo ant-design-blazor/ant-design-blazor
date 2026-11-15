@@ -1,0 +1,58 @@
+@using System.Globalization
+@using AntDesign.Theming
+
+<ConfigProvider ThemeConfig="@CurrentTheme">
+    <Space>
+        <Input TValue="string" Placeholder="Themed input" />
+        <Button Type="ButtonType.Primary">Button</Button>
+    </Space>
+</ConfigProvider>
+
+<Divider />
+
+<Space Direction="SpaceDirection.Vertical" Style="width:100%">
+    <Space Align="SpaceAlign.Center">
+        <span style="width:120px">Primary color</span>
+        <ColorPicker @bind-Value="_primaryColor" ShowText />
+    </Space>
+    <Space Align="SpaceAlign.Center">
+        <span style="width:120px">Border radius</span>
+        <InputNumber TValue="decimal?" DefaultValue="6" OnChange="OnBorderRadiusChanged" Min="0" Max="20" />
+    </Space>
+    <Space Align="SpaceAlign.Center">
+        <span style="width:120px">Button color</span>
+        <ColorPicker @bind-Value="_buttonColor" ShowText />
+    </Space>
+</Space>
+
+@code {
+    private string _primaryColor = "#1677ff";
+    private decimal? _borderRadius = 6;
+    private string _buttonColor = "#00b96b";
+
+    private Task OnBorderRadiusChanged(decimal? value)
+    {
+        _borderRadius = value;
+        return Task.CompletedTask;
+    }
+
+    private ThemeConfig CurrentTheme
+    {
+        get
+        {
+            var theme = new ThemeConfig
+            {
+                Token = new ThemeToken
+                {
+                    ["colorPrimary"] = _primaryColor,
+                    ["borderRadius"] = (_borderRadius ?? 6).ToString(CultureInfo.InvariantCulture)
+                }
+            };
+            theme.Components["Button"] = new Dictionary<string, string>
+            {
+                ["colorPrimary"] = _buttonColor
+            };
+            return theme;
+        }
+    }
+}

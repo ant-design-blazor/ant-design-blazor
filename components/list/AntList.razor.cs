@@ -3,6 +3,9 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Collections.Generic;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
@@ -129,6 +132,41 @@ namespace AntDesign
         private double _columnWidth;
         private int _columns = 0;
         private bool _isInitialized = false;
+        private int _currentPage = 1;
+        private int _pageSize = 10;
+
+        private List<TItem> GetItems()
+        {
+            var items = DataSource?.ToList() ?? new List<TItem>();
+            if (Pagination == null)
+            {
+                return items;
+            }
+
+            var pageSize = GetPageSize();
+            var currentPage = GetCurrentPage(items.Count, pageSize);
+            return items.Skip((currentPage - 1) * pageSize).Take(pageSize).ToList();
+        }
+
+        private int GetCurrentPage(int total, int pageSize)
+        {
+            var current = Pagination is { Current: > 0 } pagination ? pagination.Current : _currentPage;
+            var pageCount = Math.Max(1, (int)Math.Ceiling((double)total / Math.Max(pageSize, 1)));
+            return Math.Clamp(current, 1, pageCount);
+        }
+
+        private int GetPageSize() => Pagination is { PageSize: > 0 } pagination ? pagination.PageSize : _pageSize;
+
+        private bool ShowPaginationAtTop => Pagination != null && (Pagination.Position is "top" or "both");
+        private bool ShowPaginationAtBottom => Pagination != null && LoadMore == null && (Pagination.Position is "bottom" or "both");
+
+        private async Task OnPaginationChanged(PaginationEventArgs args)
+        {
+            if (Pagination == null) return;
+            if (Pagination.Current <= 0) _currentPage = args.Page;
+            if (Pagination.PageSize <= 0) _pageSize = args.PageSize;
+            await Pagination.OnChange.InvokeAsync(args);
+        }
 
         protected override void OnInitialized()
         {

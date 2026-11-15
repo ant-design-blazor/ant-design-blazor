@@ -54,6 +54,19 @@ namespace AntDesign
         #region Parameters
 
         /// <summary>
+        /// Whether Select is searchable. React-compatible name for <c>EnableSearch</c>.
+        /// </summary>
+        [Parameter]
+        public bool? ShowSearch
+        {
+            get => _showSearch;
+            set => _showSearch = value;
+        }
+
+        private bool? _showSearch;
+        internal override bool? SearchEnabledOverride => ShowSearch;
+
+        /// <summary>
         /// Toggle the border style.
         /// </summary>
         /// <default value="true"/>
@@ -124,6 +137,16 @@ namespace AntDesign
         public IEnumerable<TItem> DataSource { get; set; }
 
         /// <summary>
+        /// Select options. React-compatible name for <see cref="DataSource"/>.
+        /// </summary>
+        [Parameter]
+        public IEnumerable<TItem> Options
+        {
+            get => DataSource;
+            set => DataSource = value;
+        }
+
+        /// <summary>
         /// Used for rendering select options manually.
         /// </summary>
         [Parameter]
@@ -170,7 +193,10 @@ namespace AntDesign
             get => _disabledName;
             set
             {
-                _getDisabled = string.IsNullOrWhiteSpace(value) ? null : PathHelper.GetDelegate<TItem, bool>(value);
+                _getDisabledValue = string.IsNullOrWhiteSpace(value) ? null : PathHelper.GetDelegate<TItem, object>(value);
+                _getDisabled = _getDisabledValue == null
+                    ? null
+                    : item => _getDisabledValue(item) is bool disabled && disabled;
                 _disabledName = value;
             }
         }
@@ -183,6 +209,16 @@ namespace AntDesign
         /// <default value="true"/>
         [Parameter]
         public OneOf<bool, string> DropdownMatchSelectWidth { get; set; } = true;
+
+        /// <summary>
+        /// Controls whether the popup matches the Select width. React-compatible name for <see cref="DropdownMatchSelectWidth"/>.
+        /// </summary>
+        [Parameter]
+        public OneOf<bool, string> PopupMatchSelectWidth
+        {
+            get => DropdownMatchSelectWidth;
+            set => DropdownMatchSelectWidth = value;
+        }
 
         /// <summary>
         /// Will not allow dropdown width to grow above stated in here value (eg. "768px")
@@ -276,11 +312,33 @@ namespace AntDesign
         }
 
         /// <summary>
+        /// Whether to show the dropdown arrow. React-compatible name for <c>ShowArrowIcon</c>.
+        /// </summary>
+        [Parameter]
+        public bool ShowArrow
+        {
+            get => ShowArrowIcon;
+            set => ShowArrowIcon = value;
+        }
+
+        /// <summary>
         /// Define what characters will be treated as token separators for newly created tags.
         /// Useful when creating new tags using only keyboard.
         /// </summary>
         [Parameter]
         public char[] TokenSeparators { get; set; }
+
+#if NET5_0_OR_GREATER
+        /// <summary>
+        /// Whether to use virtual scrolling. React-compatible name for <see cref="EnableVirtualization"/>.
+        /// </summary>
+        [Parameter]
+        public bool Virtual
+        {
+            get => EnableVirtualization;
+            set => EnableVirtualization = value;
+        }
+#endif
 
         /// <summary>
         /// Converts the current search text into committed values for tags or multiple mode.
@@ -332,7 +390,15 @@ namespace AntDesign
         /// <summary>
         /// Specifies predicate for disabled options
         /// </summary>
-        [Parameter] public Func<TItem, bool> DisabledPredicate { get => _getDisabled; set => _getDisabled = value; }
+        [Parameter] public Func<TItem, bool> DisabledPredicate
+        {
+            get => _getDisabled;
+            set
+            {
+                _getDisabled = value;
+                _getDisabledValue = null;
+            }
+        }
 
         /// <summary>
         /// Used when Mode =  default - The value is used during initialization and when pressing the Reset button within Forms.
@@ -397,10 +463,12 @@ namespace AntDesign
         private int _virtualListStartIndex;
         private int _virtualListEndIndex = VirtualListRowsRendered;
         private DotNetObjectReference<Select<TItemValue, TItem>> _virtualListReference;
+        private ElementReference _attachedVirtualListHolder;
         private bool _virtualListAttached;
+        private bool _virtualScrollbarFlashedForOpen;
 
-        internal bool UsesVirtualWindow => UsesVirtualAccessibility
-                                          && SortedSelectOptionItems.Count(option => !option.IsHidden) > 8;
+        internal override bool UsesVirtualWindow => UsesVirtualAccessibility
+                                                    && SortedSelectOptionItems.Count(option => !option.IsHidden) > 8;
 
         internal int VirtualListOptionCount => SortedSelectOptionItems.Count(option => !option.IsHidden);
 
@@ -457,6 +525,20 @@ namespace AntDesign
             });
         }
 
+        [JSInvokable]
+        public Task SetActiveVirtualOption(string internalId)
+        {
+            if (!Guid.TryParse(internalId, out var optionId)) return Task.CompletedTask;
+
+            return InvokeAsync(() =>
+            {
+                var option = SelectOptionItems.FirstOrDefault(item => item.InternalId == optionId);
+                if (option == null || option.IsHidden || option.IsDisabled || ActiveOption == option) return;
+
+                ActiveOption = option;
+            });
+        }
+
 
         private TItemValue _selectedValue;
         private TItemValue _defaultValue;
@@ -478,6 +560,7 @@ namespace AntDesign
         private string _disabledName;
 
         private Func<TItem, bool> _getDisabled;
+        private Func<TItem, object> _getDisabledValue;
 
 
         private bool _showArrowIcon = true;
@@ -732,28 +815,49 @@ namespace AntDesign
             await base.OnAfterRenderAsync(firstRender);
             _afterFirstRender = true;
 
-            if (UsesVirtualWindow && !_virtualListAttached && _scrollableSelectDiv.Id != null)
+            var virtualListHolderChanged = _virtualListAttached
+                                           && _attachedVirtualListHolder.Id != _scrollableSelectDiv.Id;
+            if (UsesVirtualWindow && _scrollableSelectDiv.Id != null
+                && (!_virtualListAttached || virtualListHolderChanged))
             {
+                if (_virtualListAttached)
+                {
+                    await JsInvokeAsync(JSInteropConstants.SelectHelper.DetachVirtualList, _attachedVirtualListHolder);
+                    _virtualListAttached = false;
+                }
                 _virtualListReference ??= DotNetObjectReference.Create(this);
                 await JsInvokeAsync(JSInteropConstants.SelectHelper.AttachVirtualList,
                     _scrollableSelectDiv, _virtualListReference, VirtualListItemHeight, VirtualListRowsRendered, VirtualListOptionCount);
+                _attachedVirtualListHolder = _scrollableSelectDiv;
                 _virtualListAttached = true;
             }
             else if (!UsesVirtualWindow && _virtualListAttached)
             {
-                await JsInvokeAsync(JSInteropConstants.SelectHelper.DetachVirtualList, _scrollableSelectDiv);
+                await JsInvokeAsync(JSInteropConstants.SelectHelper.DetachVirtualList, _attachedVirtualListHolder);
                 _virtualListAttached = false;
+                _attachedVirtualListHolder = default;
                 _virtualListReference?.Dispose();
                 _virtualListReference = null;
+            }
+
+            if (!IsDropdownShown())
+            {
+                _virtualScrollbarFlashedForOpen = false;
+            }
+            else if (UsesVirtualWindow && !_virtualScrollbarFlashedForOpen)
+            {
+                await JsInvokeAsync(JSInteropConstants.SelectHelper.ShowScrollbar, _scrollableSelectDiv);
+                _virtualScrollbarFlashedForOpen = true;
             }
         }
 
         protected override void Dispose(bool disposing)
         {
-            if (_virtualListAttached && _scrollableSelectDiv.Id != null)
+            if (_virtualListAttached && _attachedVirtualListHolder.Id != null)
             {
-                _ = JsInvokeAsync(JSInteropConstants.SelectHelper.DetachVirtualList, _scrollableSelectDiv);
+                _ = JsInvokeAsync(JSInteropConstants.SelectHelper.DetachVirtualList, _attachedVirtualListHolder);
                 _virtualListAttached = false;
+                _attachedVirtualListHolder = default;
             }
             _virtualListReference?.Dispose();
             base.Dispose(disposing);
@@ -853,6 +957,7 @@ namespace AntDesign
                         Label = label,
                         GroupName = groupName,
                         IsDisabled = disabled,
+                        HasExplicitDisabled = _getDisabledValue?.Invoke(item) != null,
                         Item = item,
                         Value = value,
                         IsSelected = isSelected,
@@ -871,6 +976,7 @@ namespace AntDesign
                 {
                     updateSelectOption.Label = label;
                     updateSelectOption.IsDisabled = disabled;
+                    updateSelectOption.HasExplicitDisabled = _getDisabledValue?.Invoke(item) != null;
                     updateSelectOption.GroupName = groupName;
                     updateSelectOption.IsHidden = isSelected && HideSelected;
                     SelectOptionItems.Add(updateSelectOption);
@@ -924,7 +1030,7 @@ namespace AntDesign
                 .If($"{ClassPrefix}-show-arrow", () => ShowArrowIcon)
                 .If($"{ClassPrefix}-disabled", () => Disabled)
                 .If($"{ClassPrefix}-loading", () => Loading)
-                .If($"{ClassPrefix}-open", () => _dropDown?.IsOverlayShow() ?? false)
+                .If($"{ClassPrefix}-open", () => _isDropdownVisible || (_dropDown?.IsOverlayShow() ?? false))
                 .If($"{ClassPrefix}-show-search", () => IsSearchEnabled)
                 .If($"{ClassPrefix}-rtl", () => RTL)
                 .GetIf(() => $"{ClassPrefix}-status-{status}", () => status is not null)
@@ -956,15 +1062,48 @@ namespace AntDesign
 
         protected override async Task OnOverlayVisibleChangeAsync(bool visible)
         {
+            _isDropdownVisible = visible;
+
+            // Focus an interactively opened Select, but don't steal focus when
+            // the popup is controlled open (for example, the Semantic DOM
+            // preview). Its native focus event also drives the focused style.
+            if (visible && !Open && !Focused)
+            {
+                await SetInputFocusAsync();
+            }
+
             OnDropdownVisibleChange?.Invoke(visible);
+            await OnOpenChange.InvokeAsync(visible);
+
+            // Overlay visibility changes independently of the Select's bound
+            // Open parameter. Refresh the root classes and the cascading
+            // IsOverlayShow value so its ARIA state follows the actual popup,
+            // including when Select is used without an Open binding.
+            SetClassMap();
+            await InvokeAsync(StateHasChanged);
 
             if (visible)
             {
                 OnOverlayShow();
 
-                FocusIfInSearch();
+                if (UsesVirtualWindow && _scrollableSelectDiv.Id != null)
+                {
+                    await JsInvokeAsync(JSInteropConstants.SelectHelper.ShowScrollbar, _scrollableSelectDiv);
+                    _virtualScrollbarFlashedForOpen = true;
+                }
+
+                // React Select does not steal focus when its popup is open
+                // through the controlled `Open` parameter. In particular, a
+                // controlled-open semantic preview must leave focus on the
+                // control that changed its mode instead of focusing the new
+                // Select input after its first render.
+                if (!Open)
+                {
+                    FocusIfInSearch();
+                }
 
                 await ScrollToFirstSelectedItemAsync();
+
             }
             else
             {
@@ -1982,8 +2121,7 @@ namespace AntDesign
             if (Focused)
             {
                 Focused = false;
-
-                //SetClassMap();
+                SetClassMap();
 
                 await JsInvokeAsync(JSInteropConstants.Blur, _inputRef);
 

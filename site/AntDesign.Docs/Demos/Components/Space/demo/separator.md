@@ -1,5 +1,5 @@
 ---
-order: 9
+order: 5
 title:
   zh-CN: 相邻组件分隔符
   en-US: Crowded components separator

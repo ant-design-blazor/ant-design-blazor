@@ -6,14 +6,14 @@
             scrollbar-color: #eaeaea transparent;
         }
     </style>
-    <Table TItem="Row" DataSource="_rows" Bordered ScrollX="max-content" HidePagination Class="custom-table">
+    <Table TItem="Row" DataSource="_rows" RowKey="row => row.Key" Bordered ScrollX="max-content" TableLayout="auto" HidePagination>
         <ColumnDefinitions>
             <PropertyColumn Property="row => row.Name" Title="Full Name" Width="100" Fixed="ColumnFixPlacement.Left" />
             <PropertyColumn Property="row => row.Age" Title="Age" Width="100" />
-            <PropertyColumn Property="row => row.Address" Title="Column 1" Width="150" Fixed="ColumnFixPlacement.Left" />
+            <PropertyColumn Property="row => row.Address" Title="Column 1" Fixed="ColumnFixPlacement.Left" />
             @for (var index = 2; index <= 20; index++)
             {
-                <PropertyColumn @key="index" Property="row => row.Address" Title="@($"Column {index}")" Width="150" />
+                <PropertyColumn @key="index" Property="row => row.Address" Title="@($"Column {index}")" />
             }
             <ActionColumn Title="Action 1" Width="90" Fixed="ColumnFixPlacement.Right">
                 <a>action</a>

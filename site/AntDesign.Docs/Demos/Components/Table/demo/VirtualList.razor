@@ -1,1 +1,123 @@
-<TableParityDemo Variant="virtual-list" />
+@using AntDesign.TableModels
+
+<div style="padding: 64px;">
+    <Space Direction="SpaceDirection.Vertical" Style="width: 100%;">
+        <Space>
+            <Switch @bind-Checked="_bordered" CheckedChildren="Bordered" UnCheckedChildren="Bordered" />
+            <Switch @bind-Checked="_fixed" CheckedChildren="Fixed" UnCheckedChildren="Fixed" />
+            <Switch @bind-Checked="_expanded" CheckedChildren="Expandable" UnCheckedChildren="Expandable" />
+            <Switch @bind-Checked="_empty" CheckedChildren="Empty" UnCheckedChildren="Empty" />
+            <Segmented TValue="int" Options="CountOptions" @bind-Value="_count" />
+            @if (_count >= 999)
+            {
+                <Button OnClick="ScrollToIndex">Scroll To index 999</Button>
+            }
+        </Space>
+
+        <Table @ref="_table" TItem="VirtualRow" DataSource="CurrentData" RowKey="row => row.Id.ToString()"
+               Bordered="_bordered" Virtual ScrollX="2000px" ScrollY="400px" HidePagination
+               ExpandIconColumnIndex="0" RowExpandable="@(_expanded ? CanExpand : null)"
+               ExpandTemplate="@(_expanded ? ExpandedContent : null)" @bind-SelectedRows="_selectedRows">
+            <ColumnDefinitions>
+                @if (!_expanded)
+                {
+                    <Selection Type="SelectionType.Radio" Width="48" />
+                }
+
+                @if (_fixed)
+                {
+                    <PropertyColumn Property="row => row.Id" Title="ID" Width="100" Fixed="ColumnFixPlacement.Left" />
+                    <PropertyColumn Property="row => row.FirstName" Title="FistName" Width="120" Fixed="ColumnFixPlacement.Left" />
+                    <PropertyColumn Property="row => row.LastName" Title="LastName" Width="120" Fixed="ColumnFixPlacement.Left" />
+                    <PropertyColumn Property="row => row.Group" Title="Group" Width="120" OnCell="GroupSpan" />
+                    <PropertyColumn Property="row => row.Age" Title="Age" Width="100" OnCell="AgeSpan" />
+                    <PropertyColumn Property="row => row.Address1" Title="Address 1" OnCell="AddressOneSpan" />
+                    <PropertyColumn Property="row => row.Address2" Title="Address 2" />
+                    <PropertyColumn Property="row => row.Address3" Title="Address 3" />
+                    <ActionColumn Title="Action" Width="150" Fixed="ColumnFixPlacement.Right">
+                        <Space>
+                            <AntDesign.Link>Action1</AntDesign.Link>
+                            <AntDesign.Link>Action2</AntDesign.Link>
+                        </Space>
+                    </ActionColumn>
+                }
+                else
+                {
+                    <PropertyColumn Property="row => row.Id" Title="ID" Width="100" />
+                    <PropertyColumn Property="row => row.FirstName" Title="FistName" Width="120" />
+                    <PropertyColumn Property="row => row.LastName" Title="LastName" />
+                }
+            </ColumnDefinitions>
+
+        </Table>
+    </Space>
+</div>
+
+@code {
+    private static readonly SegmentedOption<int>[] CountOptions =
+    [
+        new(0, "None"),
+        new(4, "Less"),
+        new(10000, "Lot")
+    ];
+
+    private static readonly VirtualRow[] AllRows = Enumerable.Range(0, 10000)
+        .Select(index => new VirtualRow(
+            index,
+            $"First_{index.ToString("x")}",
+            $"Last_{index.ToString("x")}",
+            25 + index % 10,
+            $"New York No. {index} Lake Park",
+            $"London No. {index} Lake Park",
+            $"Sydney No. {index} Lake Park"))
+        .ToArray();
+
+    private readonly VirtualRow[] _emptyRows = [];
+    private Table<VirtualRow> _table;
+    private IEnumerable<VirtualRow> _selectedRows = [];
+    private bool _bordered = true;
+    private bool _fixed = true;
+    private bool _expanded;
+    private bool _empty;
+    private int _count = 10000;
+
+    private IEnumerable<VirtualRow> CurrentData => _empty ? _emptyRows : AllRows.Take(_count);
+
+    private RenderFragment<RowData<VirtualRow>> ExpandedContent => row => @<p style="margin: 0;">🎉 Expanded @row.Data.Address1</p>;
+
+    private bool CanExpand(RowData<VirtualRow> row) => row.Data.Id % 2 == 0;
+
+    private Dictionary<string, object> GroupSpan(CellData cell)
+    {
+        if (_expanded)
+            return null;
+
+        var row = (VirtualRow)cell.RowData.Record;
+        return new Dictionary<string, object> { ["rowspan"] = row.Id % 4 == 0 ? 4 : 0 };
+    }
+
+    private Dictionary<string, object> AgeSpan(CellData cell)
+    {
+        if (_expanded)
+            return null;
+
+        var row = (VirtualRow)cell.RowData.Record;
+        return new Dictionary<string, object> { ["colspan"] = row.Id % 4 == 0 ? 2 : 1 };
+    }
+
+    private Dictionary<string, object> AddressOneSpan(CellData cell)
+    {
+        if (_expanded)
+            return null;
+
+        var row = (VirtualRow)cell.RowData.Record;
+        return new Dictionary<string, object> { ["colspan"] = row.Id % 4 == 0 ? 0 : 1 };
+    }
+
+    private Task ScrollToIndex() => _table?.ScrollTo(999) ?? Task.CompletedTask;
+
+    private sealed record VirtualRow(int Id, string FirstName, string LastName, int Age, string Address1, string Address2, string Address3)
+    {
+        public string Group => $"Group {Id / 4}";
+    }
+}

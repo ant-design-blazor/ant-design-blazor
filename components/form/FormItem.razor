@@ -13,7 +13,7 @@
                 }
                 else
                 {
-                    <label class=@GetLabelClass() style="@LabelStyle">
+                    <label class=@GetLabelClass() for="@LabelFor" title="@DisplayName" style="@LabelStyle">
                         @DisplayName
                         @if (Form?.RequiredMark == FormRequiredMark.Optional && !IsRequired)
                         {
@@ -41,24 +41,25 @@
                 </div>
             </div>
 
-            @if (Extra != null)
+            @if (!NoStyle && (ValidationMessages.Length > 0 || Extra != null))
             {
-                <div class="ant-form-item-extra">@Extra</div>
-            }
-
-            @if (!NoStyle)
-            {
-                @foreach (var message in ValidationMessages)
-                {
-                    <div style="display: flex; flex-wrap: nowrap;">
-                        <div class="ant-form-item-explain ant-form-item-explain-connected" role="alert">
-                            <div class=@($"{_prefixCls}-explain-{ValidateStatus.ToString().ToLowerInvariant()}")>
-                                @message
-                            </div>
+                <div class="ant-form-item-additional" style="min-height: 24px;">
+                    @if (ValidationMessages.Length > 0)
+                    {
+                        <div class="ant-form-css-var ant-form-item-explain ant-form-item-explain-connected" id="@HelpElementId">
+                            @foreach (var message in ValidationMessages)
+                            {
+                                <div class=@($"{_prefixCls}-explain-{ValidateStatus.ToString().ToLowerInvariant()}")>
+                                    @message
+                                </div>
+                            }
                         </div>
-                        <div style="width: 0px; height: 24px;"></div>
-                    </div>
-                }
+                    }
+                    @if (Extra != null)
+                    {
+                        <div class="ant-form-item-extra" id="@ExtraElementId">@Extra</div>
+                    }
+                </div>
             }
         </AntDesign.Col>
     </Row>

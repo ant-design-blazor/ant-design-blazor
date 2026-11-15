@@ -1,13 +1,13 @@
-<RadioGroup @bind-Value="placement" ButtonStyle="RadioButtonStyle.Outline" TValue="AntDesign.Placement">
-    <Radio RadioButton Value="AntDesign.Placement.TopLeft">topLeft</Radio>
-    <Radio RadioButton Value="AntDesign.Placement.TopRight">topRight</Radio>
-    <Radio RadioButton Value="AntDesign.Placement.BottomLeft">bottomLeft</Radio>
-    <Radio RadioButton Value="AntDesign.Placement.BottomRight">bottomRight</Radio>
+<RadioGroup @bind-Value="placement" ButtonStyle="RadioButtonStyle.Outline" TValue="string">
+    <Radio RadioButton Value="@("topLeft")">topLeft</Radio>
+    <Radio RadioButton Value="@("topRight")">topRight</Radio>
+    <Radio RadioButton Value="@("bottomLeft")">bottomLeft</Radio>
+    <Radio RadioButton Value="@("bottomRight")">bottomRight</Radio>
 </RadioGroup>
 <br />
 <br />
 <Select TItem="string" TItemValue="string" Value="@("HangZhou")" Style="width: 120px"
-        Placement="@placement" DropdownMatchSelectWidth="false">
+        Placement="@SelectedPlacement" DropdownMatchSelectWidth="false">
     <SelectOptions>
         <SelectOption TItem="string" TItemValue="string" Value="@("HangZhou")" Label="HangZhou #310000" />
         <SelectOption TItem="string" TItemValue="string" Value="@("NingBo")" Label="NingBo #315000" />
@@ -16,5 +16,6 @@
 </Select>
 
 @code {
-    private AntDesign.Placement placement = AntDesign.Placement.TopLeft;
+    private string placement = "topLeft";
+    private AntDesign.Placement SelectedPlacement => Enum.Parse<AntDesign.Placement>(placement, ignoreCase: true);
 }

@@ -1,46 +1,25 @@
-@using AntDesign.Select
-<Select Mode="SelectMode.Multiple"
-        DataSource="@_myColors"
-        Disabled="@_disabled"
-        Style="min-width:200px;"
-        @bind-Values="@_selectedColorValues"
+<Select TItemValue="string"
+        TItem="MyColor"
+        Mode="SelectMode.Multiple"
+        DataSource="@_colors"
         ValueName="@nameof(MyColor.Value)"
-        LabelName="@nameof(MyColor.Name)"
+        LabelName="@nameof(MyColor.Label)"
+        @bind-Values="_selectedColors"
+        Style="width: 100%;"
         ShowArrowIcon>
-    <LabelTemplate>
-        <LabelTemplateItem Context="item"
-                           TItem="MyColor"
-                           TItemValue="string"
-                           Class=@($"ant-tag {(!_disabled?$"ant-tag-{context.Name}":"")}")
-                           Style="margin-right: 4px;"
-                           RemoveIconStyle="margin-top: 1px; display: inline-block;">
-            <LabelTemplateItemContent>
-                <span style=@($"color: {(_disabled? "rgba(0,0,0,.5)" :item.Name)}")>@item.Name</span>
-            </LabelTemplateItemContent>
-        </LabelTemplateItem>
-    </LabelTemplate>
+    <TagRender Context="tag"><Tag Color="@tag.Value" Closable="@tag.Closable" OnClose="@tag.OnClose" Style="margin-inline-end: 4px;" PreventMouseDownDefault="true" StopMouseDownPropagation="true"><ChildContent>@tag.Label</ChildContent></Tag></TagRender>
 </Select>
 
-<Switch @bind-Value=@_disabled CheckedChildren="Enabled" UnCheckedChildren="Disabled" />
+@code {
+    private readonly MyColor[] _colors =
+    [
+        new("gold", "gold"),
+        new("lime", "lime"),
+        new("green", "green"),
+        new("cyan", "cyan")
+    ];
 
-@code
-{
-  bool _toggleSearch;
-  bool _disabled = false;
+    private IEnumerable<string> _selectedColors = ["gold", "cyan"];
 
-  MyColor[] _myColors =
-  {
-      new MyColor { Value = "gold", Name = "gold"},
-      new MyColor { Value = "lime", Name = "lime"},
-      new MyColor { Value = "green", Name = "green"},
-      new MyColor { Value = "cyan", Name = "cyan"}
-  };
-
-  IEnumerable<string> _selectedColorValues = new[] { "gold", "cyan" };
-
-  class MyColor
-  {
-    public string Value { get; set; }
-    public string Name { get; set; }
-  }
+    private sealed record MyColor(string Value, string Label);
 }

@@ -4,28 +4,83 @@
 <nav class="@ClassMapper.Class" id="@Id" @ref="Ref" style="@Style">
     <ol>
         <CascadingValue Value="this" IsFixed="@true">
-            @ChildContent
-            @if (AutoGenerate)
+            @if (Items != null)
             {
-                @foreach (var options in MenuService.GetBreadcrumbOptions())
+                @for (var index = 0; index < Items.Count; index++)
                 {
-                    @if (_existingOptions.Any(x => x.RouterLink == options.RouterLink))
+                    var item = Items[index];
+                    @if (item?.Type == "separator")
                     {
-                        continue;
+                        <li class="ant-breadcrumb-separator" aria-hidden="true">@(item.Separator ?? "/")</li>
                     }
+                    else if (item != null)
+                    {
+                        <li class="ant-breadcrumb-item">
+                            @if (item.Href != null || item.RouterLink != null)
+                            {
+                                <a class="ant-breadcrumb-link" href="@ResolveItemHref(item)">
+                                    @if (item.TitleTemplate != null)
+                                    {
+                                        @item.TitleTemplate
+                                    }
+                                    else
+                                    {
+                                        @ResolveItemTitle(item)
+                                    }
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="ant-breadcrumb-link">
+                                    @if (item.TitleTemplate != null)
+                                    {
+                                        @item.TitleTemplate
+                                    }
+                                    else
+                                    {
+                                        @ResolveItemTitle(item)
+                                    }
+                                </span>
+                            }
+                        </li>
+                        @if (index < Items.Count - 1 && !string.IsNullOrEmpty(Separator))
+                        {
+                            <li class="ant-breadcrumb-separator" aria-hidden="true">@Separator</li>
+                        }
+                    }
+                }
+            }
+            else
+            {
+                @ChildContent
+                @if (AutoGenerate)
+                {
+                    @foreach (var options in MenuService.GetBreadcrumbOptions())
+                    {
+                        @if (_existingOptions.Any(x => x.RouterLink == options.RouterLink))
+                        {
+                            continue;
+                        }
 
-                    <BreadcrumbItem Href="@options.RouterLink">
-                        @if (options.TitleTemplate != null)
-                        {
-                            @options.TitleTemplate
-                        }
-                        else
-                        {
-                            @options.Title
-                        }
-                    </BreadcrumbItem>
+                        <BreadcrumbItem Href="@options.RouterLink">
+                            @if (options.TitleTemplate != null)
+                            {
+                                @options.TitleTemplate
+                            }
+                            else
+                            {
+                                @options.Title
+                            }
+                        </BreadcrumbItem>
+                    }
                 }
             }
         </CascadingValue>
     </ol>
 </nav>
+
+@code {
+    private string ResolveItemTitle(BreadcrumbOption item) => ResolveParameter(item.Title);
+
+    private string ResolveItemHref(BreadcrumbOption item) => ResolveParameter(item.Href ?? item.RouterLink);
+}

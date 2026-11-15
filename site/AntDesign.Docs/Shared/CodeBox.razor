@@ -2,10 +2,11 @@
 @using AntDesign.Docs.Services
 @using System.Globalization
 @implements IDisposable
+@implements IAsyncDisposable
 @inherits ComponentBase
 
 <div class="code-box @_styles["root"]" id="@DemoId">
-    <section class="code-box-demo">
+    <section class="code-box-demo" @ref="_demoHost">
         @if (_rendered)
         {
             if (Demo.Iframe > 0)
@@ -106,6 +107,7 @@
 <style>@((MarkupString)_styles.CssText)</style>
 
 @inject InteropService InteropService
+@inject IJSRuntime JS
 @inject DemoService demoService;
 @inject ILocalizationService lang;
 @inject IStringLocalizer Localizer;
@@ -124,6 +126,10 @@
             // Match React's demo wrapper: fixed-width examples scroll locally,
             // rather than widening the entire component documentation page.
             ["& .code-box-demo > .demo"] = new System.Collections.Generic.Dictionary<string, object> { ["overflow"] = "auto" },
+            // The vertical List layout intentionally lets its action row extend
+            // into the demo's horizontal padding, as it does in the React docs.
+            // The generic scroll wrapper clips that final few pixels on narrow screens.
+            ["& .code-box-demo:has(.ant-list-vertical) > .demo"] = new System.Collections.Generic.Dictionary<string, object> { ["overflow"] = "visible" },
             ["&[id^='components-grid-demo-'] .code-box-demo .ant-row > div"] = new System.Collections.Generic.Dictionary<string, object>
             {
                 ["minHeight"] = 30, ["marginTop"] = 8, ["marginBottom"] = 8, ["color"] = "#fff", ["textAlign"] = "center", ["borderRadius"] = 0
@@ -152,8 +158,8 @@
             ["& .code-box-meta h4, & section.code-box-meta p"] = new System.Collections.Generic.Dictionary<string, object> { ["margin"] = 0 },
             ["& .code-box-meta > p"] = new System.Collections.Generic.Dictionary<string, object> { ["width"] = "100%", ["margin"] = "0.5em 0", ["paddingRight"] = 25, ["fontSize"] = 12, ["wordBreak"] = "break-word" },
             [".ant-row-rtl & .code-box-meta > p"] = new System.Collections.Generic.Dictionary<string, object> { ["paddingRight"] = 0, ["paddingLeft"] = 25 },
-            ["& .code-box-title"] = new System.Collections.Generic.Dictionary<string, object> { ["position"] = "absolute", ["top"] = -14, ["marginLeft"] = 16, ["padding"] = "1px 8px", ["color"] = "#777", ["borderRadius"] = "2px 2px 0 0", ["transition"] = "background-color 0.4s" },
-            [".ant-row-rtl & .code-box-title"] = new System.Collections.Generic.Dictionary<string, object> { ["marginRight"] = 16, ["marginLeft"] = 0, ["borderRadius"] = "2px 0 0 2px" },
+            ["& .code-box-title"] = new System.Collections.Generic.Dictionary<string, object> { ["position"] = "absolute", ["top"] = -14, ["marginLeft"] = 16, ["padding"] = "1px 8px", ["color"] = "#777", ["borderRadius"] = "6px 6px 0 0", ["transition"] = "background-color 0.4s" },
+            [".ant-row-rtl & .code-box-title"] = new System.Collections.Generic.Dictionary<string, object> { ["marginRight"] = 16, ["marginLeft"] = 0, ["borderRadius"] = "6px 0 0 6px" },
             ["& .code-box-title a, & .code-box-title a:hover"] = new System.Collections.Generic.Dictionary<string, object> { ["color"] = "rgba(0, 0, 0, 0.85)", ["fontWeight"] = 500, ["fontSize"] = 14 },
             ["& .code-box-description"] = new System.Collections.Generic.Dictionary<string, object> { ["padding"] = "18px 24px 12px" },
             ["& a.edit-button"] = new System.Collections.Generic.Dictionary<string, object> { ["position"] = "absolute", ["top"] = 7, ["right"] = -16, ["paddingRight"] = 6, ["fontSize"] = 12, ["textDecoration"] = "none", ["background"] = "inherit", ["transform"] = "scale(0.9)" },
@@ -186,8 +192,14 @@
             ["& pre code"] = new System.Collections.Generic.Dictionary<string, object> { ["background"] = "#fff", ["border"] = "none" },
             ["& .highlight-wrapper:hover .code-box-code-copy"] = new System.Collections.Generic.Dictionary<string, object> { ["opacity"] = 1 },
             ["&:target"] = new System.Collections.Generic.Dictionary<string, object> { ["border"] = "1px solid var(--ant-primary-color)" },
-            ["[data-theme='dark'] & .code-box-demo"] = new System.Collections.Generic.Dictionary<string, object> { ["borderBottomColor"] = "rgba(0, 0, 0, 0.06)" },
-            ["[data-theme='dark'] & .code-box-title, [data-theme='dark'] & .code-box-title a"] = new System.Collections.Generic.Dictionary<string, object> { ["color"] = "rgba(255, 255, 255, 0.85)", ["background"] = "#262626" },
+            ["[data-theme='dark'] &"] = new System.Collections.Generic.Dictionary<string, object> { ["background"] = "#141414", ["borderColor"] = "#303030" },
+            ["[data-theme='dark'] & .code-box-title, [data-theme='dark'] & .code-box-title a, [data-theme='dark'] & .code-box-demo, [data-theme='dark'] & .code-box-meta"] = new System.Collections.Generic.Dictionary<string, object> { ["background"] = "#141414", ["color"] = "rgba(255, 255, 255, 0.85)" },
+            ["[data-theme='dark'] & .code-box-demo"] = new System.Collections.Generic.Dictionary<string, object> { ["borderBottomColor"] = "rgba(255, 255, 255, 0.12)" },
+            ["[data-theme='dark'] & .code-box-actions"] = new System.Collections.Generic.Dictionary<string, object> { ["borderTopColor"] = "rgba(255, 255, 255, 0.12)" },
+            ["[data-theme='dark'] & .code-box-code-copy"] = new System.Collections.Generic.Dictionary<string, object> { ["background"] = "#141414" },
+            ["[data-theme='dark'] & .code-box-title, [data-theme='dark'] & .code-box-title a"] = new System.Collections.Generic.Dictionary<string, object> { ["color"] = "rgba(255, 255, 255, 0.85)", ["background"] = "#141414" },
+            ["[data-theme='dark'] & .code-box-title a.edit-button, [data-theme='dark'] & .code-box-title a.edit-button .anticon"] = new System.Collections.Generic.Dictionary<string, object> { ["color"] = "rgba(255, 255, 255, 0.45)" },
+            ["[data-theme='dark'] & .code-box-title a.edit-button:hover, [data-theme='dark'] & .code-box-title a.edit-button:hover .anticon"] = new System.Collections.Generic.Dictionary<string, object> { ["color"] = "rgba(255, 255, 255, 0.85)" },
             ["[data-theme='dark'] & .markdown pre code"] = new System.Collections.Generic.Dictionary<string, object> { ["background"] = "#262626" },
             ["[data-theme='dark'] & .markdown pre"] = new System.Collections.Generic.Dictionary<string, object> { ["margin"] = "0.5em 0", ["padding"] = "6px 12px" },
             ["[data-theme='dark'] & .code-expand-icon-show"] = new System.Collections.Generic.Dictionary<string, object> { ["opacity"] = 0.45 },
@@ -225,6 +237,11 @@
     private bool _rendered;
     private bool _codeViewRendered;
     private ErrorBoundary _errorBoundary;
+    private ElementReference _demoHost;
+    private IJSObjectReference _visibilityModule;
+    private DotNetObjectReference<CodeBox> _dotNetReference;
+    private Task _visibilityInitialization;
+    private bool _disposed;
     private bool _innerExpand;
     private bool _codeExpand;
     private string _activeFileTab; // 当前激活的文件Tab
@@ -273,12 +290,37 @@
         lang.LanguageChanged -= OnLangeChanged;
     } 
 
+    [JSInvokable]
+    public Task RenderDemoWhenVisible()
+    {
+        if (_disposed || _rendered) return Task.CompletedTask;
+        _rendered = true;
+        return InvokeAsync(StateHasChanged);
+    }
+
+    async ValueTask IAsyncDisposable.DisposeAsync()
+    {
+        _disposed = true;
+        try
+        {
+            if (_visibilityInitialization != null) await _visibilityInitialization;
+            if (_visibilityModule != null)
+            {
+                await _visibilityModule.InvokeVoidAsync("unobserve", _demoHost);
+                await _visibilityModule.DisposeAsync();
+            }
+        }
+        catch (JSDisconnectedException) { }
+        catch (TaskCanceledException) { }
+        _dotNetReference?.Dispose();
+    }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            _rendered = true;
-            StateHasChanged();
+            _visibilityInitialization = InitializeVisibilityAsync();
+            await _visibilityInitialization;
             return;
         }
 
@@ -289,6 +331,14 @@
             _demoType = demoService.GetShowCase(Demo.Type);
             StateHasChanged();
         }
+    }
+
+    private async Task InitializeVisibilityAsync()
+    {
+        _visibilityModule = await JS.InvokeAsync<IJSObjectReference>("import", "./_content/AntDesign.Docs/js/demo-visibility.js");
+        if (_disposed || _visibilityModule == null) return;
+        _dotNetReference = DotNetObjectReference.Create(this);
+        await _visibilityModule.InvokeVoidAsync("observe", _demoHost, _dotNetReference);
     }
 
     void OnCompiled(Type type)

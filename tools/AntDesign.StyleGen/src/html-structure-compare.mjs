@@ -39,6 +39,27 @@ function normalizeNode(node, ignoredAttributes) {
 
 function parseMarkup(markup, ignoredAttributes) {
   const document = new JSDOM(`<body>${markup}</body>`).window.document;
+  const firstTag = String(markup ?? '').match(/^\s*<([a-z][\w:-]*)\b/i)?.[1]?.toLowerCase();
+
+  // A semantic capture can be a table fragment such as a single <tr>. Parsing
+  // it directly inside <body> makes the HTML parser discard invalid table
+  // children (including <td>), which can turn harmless Razor whitespace into
+  // a false text mismatch. Parse those fragments in their required context.
+  if (firstTag === 'tr' || firstTag === 'td' || firstTag === 'th'
+    || firstTag === 'tbody' || firstTag === 'thead' || firstTag === 'tfoot'
+    || firstTag === 'col' || firstTag === 'colgroup') {
+    const table = document.createElement('table');
+    if (firstTag === 'tr') {
+      table.innerHTML = `<tbody>${markup}</tbody>`;
+      return [...table.tBodies[0].childNodes].map((node) => normalizeNode(node, ignoredAttributes)).filter(Boolean);
+    }
+    if (firstTag === 'td' || firstTag === 'th') {
+      table.innerHTML = `<tbody><tr>${markup}</tr></tbody>`;
+      return [...table.tBodies[0].rows[0].childNodes].map((node) => normalizeNode(node, ignoredAttributes)).filter(Boolean);
+    }
+    table.innerHTML = markup;
+    return [...table.childNodes].map((node) => normalizeNode(node, ignoredAttributes)).filter(Boolean);
+  }
   return [...document.body.childNodes].map((node) => normalizeNode(node, ignoredAttributes)).filter(Boolean);
 }
 

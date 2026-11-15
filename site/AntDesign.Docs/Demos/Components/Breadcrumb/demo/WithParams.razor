@@ -1,0 +1,14 @@
+<Breadcrumb Items="_items" Params="_params" />
+
+@code {
+    private readonly BreadcrumbOption[] _items =
+    [
+        new() { Title = "Users" },
+        new() { Title = ":id", Href = "" },
+    ];
+
+    private readonly Dictionary<string, object> _params = new()
+    {
+        ["id"] = 1,
+    };
+}

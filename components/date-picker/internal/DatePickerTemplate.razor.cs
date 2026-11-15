@@ -94,11 +94,6 @@ namespace AntDesign.Internal
 
         private void DateOnMouseEnter(DateTime hoverDateTime)
         {
-            if (Value is not null)
-            {
-                return;
-            }
-
             if (IsRange)
             {
                 DatePicker.HoverDateTime = hoverDateTime;
@@ -107,7 +102,7 @@ namespace AntDesign.Internal
             int focusIndex = DatePicker.GetOnFocusPickerIndex();
             string placeholder = DatePicker.GetFormatValue(hoverDateTime, focusIndex);
 
-            DatePicker.ChangePlaceholder(placeholder, focusIndex);
+            DatePicker.ChangePreviewValue(placeholder, focusIndex);
         }
 
         private void DateOnMouseLeave()
@@ -117,7 +112,7 @@ namespace AntDesign.Internal
                 DatePicker.HoverDateTime = null;
             }
 
-            DatePicker.ResetPlaceholder();
+            DatePicker.ResetPreviewValue();
         }
 
         private bool IsDateInRange(DateTime currentColDate)

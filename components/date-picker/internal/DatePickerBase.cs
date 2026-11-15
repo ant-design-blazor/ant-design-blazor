@@ -13,6 +13,8 @@ using AntDesign.Core.Documentation;
 using AntDesign.Datepicker.Locale;
 using AntDesign.Internal;
 using AntDesign.JsInterop;
+using AntDesign.Core.JsInterop.ObservableApi;
+using AntDesign.Select;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using OneOf;
@@ -92,6 +94,38 @@ namespace AntDesign
         /// <default value="true"/>
         [Parameter]
         public bool Bordered { get; set; } = true;
+
+        /// <summary>
+        /// Allow selecting multiple dates. The value type must be an array of supported date values.
+        /// </summary>
+        [Parameter]
+        public bool Multiple { get; set; }
+
+        private OneOf<int, ResponsiveTag> _maxTagCount = 0;
+
+        /// <summary>
+        /// Maximum number of selected date tags to display.
+        /// </summary>
+        [Parameter]
+        public OneOf<int, ResponsiveTag> MaxTagCount
+        {
+            get => _maxTagCount;
+            set => _maxTagCount = value;
+        }
+
+        protected bool IsResponsiveTagCount => _maxTagCount.IsT1 && _maxTagCount.AsT1 == ResponsiveTag.Responsive;
+
+        protected int FixedMaxTagCount => _maxTagCount.IsT0 && _maxTagCount.AsT0 > 0 ? _maxTagCount.AsT0 : int.MaxValue;
+
+        [Inject]
+        private IDomEventListener DomEventListener { get; set; }
+
+        protected ElementReference _selectionOverflow;
+        protected ElementReference _aggregateTagMeasure;
+        protected ElementReference[] _selectionTagRefs = Array.Empty<ElementReference>();
+        protected int _responsiveTagCount = int.MaxValue;
+        private bool _responsiveObserverAttached;
+        private bool _responsiveCalculationRunning;
 
         /// <summary>Visual style of the picker input.</summary>
         [Parameter]
@@ -444,6 +478,18 @@ namespace AntDesign
         [Parameter]
         public bool Use12Hours { get; set; }
 
+        /// <summary>Interval between hours in the time panel.</summary>
+        [Parameter]
+        public int HourStep { get; set; } = 1;
+
+        /// <summary>Interval between minutes in the time panel.</summary>
+        [Parameter]
+        public int MinuteStep { get; set; } = 1;
+
+        /// <summary>Interval between seconds in the time panel.</summary>
+        [Parameter]
+        public int SecondStep { get; set; } = 1;
+
         /// <summary>
         /// When true, will show week column in date panel
         /// </summary>
@@ -466,6 +512,7 @@ namespace AntDesign
         protected DatePickerInput _inputStart;
         protected DatePickerInput _inputEnd;
         protected OverlayTrigger _dropDown;
+        protected string[] _previewValues = new string[2];
 
         protected string _activeBarStyle = "";
         protected string _rangeArrowStyle = "";
@@ -524,6 +571,11 @@ namespace AntDesign
                 _placeholder = IsRange ? Array.Empty<string>() : string.Empty;
             }
 
+            if (Multiple && !typeof(TValue).IsArray)
+            {
+                throw new InvalidOperationException($"{nameof(DatePicker<TValue>)} with {nameof(Multiple)} requires an array TValue.");
+            }
+
             base.OnInitialized();
 
             _isInitialized = true;
@@ -531,6 +583,15 @@ namespace AntDesign
 
         protected override void OnParametersSet()
         {
+            // The docs router can establish the circuit culture after the first
+            // render. Refresh the implicit locale on subsequent parameter sets so
+            // the picker follows the active circuit language without overriding
+            // an explicitly supplied Locale or CultureInfo.
+            if (!_isLocaleSetOutside && !_isCultureInfoOutside)
+            {
+                _locale = LocaleProvider.CurrentLocale.DatePicker;
+            }
+
             SetClass();
             base.OnParametersSet();
         }
@@ -575,6 +636,7 @@ namespace AntDesign
                 .If($"{PrefixCls}-disabled", () => IsDisabled() == true)
                 .If($"{ClassName}", () => !string.IsNullOrEmpty(ClassName))
                 .If($"{PrefixCls}-range", () => IsRange == true)
+                .If($"{PrefixCls}-multiple", () => Multiple)
                 .If($"{PrefixCls}-focused", () => AutoFocus == true)
                 .If($"{PrefixCls}-has-feedback", () => FormItem?.HasFeedback == true)
                 .GetIf(() => $"{PrefixCls}-status-{(Status ?? FormItem?.ValidateStatus.ToString())?.ToLowerInvariant()}", () => !string.IsNullOrWhiteSpace(Status) || FormItem is { ValidateStatus: not FormValidateStatus.Default })
@@ -608,6 +670,17 @@ namespace AntDesign
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
+
+            if (Multiple && IsResponsiveTagCount)
+            {
+                if (!_responsiveObserverAttached)
+                {
+                    await DomEventListener.AddResizeObserver(_selectionOverflow, OnSelectionOverflowResize);
+                    _responsiveObserverAttached = true;
+                }
+
+                await CalculateResponsiveTagCount();
+            }
 
             if (firstRender && _inputStart != null)
             {
@@ -651,6 +724,12 @@ namespace AntDesign
             base.Dispose(disposing);
             _ = InvokeAsync(async () =>
             {
+                if (_responsiveObserverAttached)
+                {
+                    await DomEventListener.DisposeResizeObserver(_selectionOverflow);
+                    _responsiveObserverAttached = false;
+                }
+
                 if (_inputStart != null)
                 {
                     await Js.InvokeVoidAsync(JSInteropConstants.RemovePreventKeys, _inputStart.Ref);
@@ -658,8 +737,98 @@ namespace AntDesign
             });
         }
 
+        protected void EnsureSelectionTagReferences(int count)
+        {
+            if (_selectionTagRefs.Length != count)
+            {
+                _selectionTagRefs = new ElementReference[count];
+            }
+        }
+
+        protected string GetSelectionTagStyle(int index, int visibleCount)
+        {
+            return index < visibleCount
+                ? $"opacity: 1; order: {index};"
+                : $"opacity: 0; height: 0px; overflow-y: hidden; order: {index}; pointer-events: none; position: absolute;";
+        }
+
+        protected string GetAggregateTagStyle(int visibleCount, int itemCount, bool hasOverflow)
+        {
+            return hasOverflow
+                ? $"opacity: 1; order: {Math.Max(0, visibleCount - 1)};"
+                : $"position: absolute; visibility: hidden; pointer-events: none; order: {itemCount};";
+        }
+
+        private async Task OnSelectionOverflowResize(List<ResizeObserverEntry> entries)
+        {
+            var width = entries?.FirstOrDefault()?.ContentRect?.Width;
+            await CalculateResponsiveTagCount(width);
+        }
+
+        private async Task CalculateResponsiveTagCount(decimal? observedWidth = null)
+        {
+            if (_responsiveCalculationRunning || !Multiple || !IsResponsiveTagCount)
+            {
+                return;
+            }
+
+            _responsiveCalculationRunning = true;
+            try
+            {
+                var selectedDates = GetSelectedDates();
+                if (selectedDates.Count == 0)
+                {
+                    if (_responsiveTagCount != 0)
+                    {
+                        _responsiveTagCount = 0;
+                        await InvokeAsync(StateHasChanged);
+                    }
+                    return;
+                }
+
+                var availableWidth = observedWidth ?? (await Js.InvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _selectionOverflow)).Width;
+                if (availableWidth <= 0)
+                {
+                    return;
+                }
+
+                var aggregateWidth = (await Js.InvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _aggregateTagMeasure)).Width;
+                var visibleCount = 0;
+                decimal accumulatedWidth = 0;
+
+                for (var index = 0; index < selectedDates.Count; index++)
+                {
+                    var itemWidth = (await Js.InvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _selectionTagRefs[index])).Width;
+                    var nextWidth = accumulatedWidth + itemWidth + (index > 0 ? 4 : 0);
+                    var reserveAggregate = index < selectedDates.Count - 1 ? aggregateWidth + 4 : 0;
+                    if (nextWidth + reserveAggregate > availableWidth)
+                    {
+                        break;
+                    }
+
+                    visibleCount = index + 1;
+                    accumulatedWidth = nextWidth;
+                }
+
+                if (visibleCount != _responsiveTagCount)
+                {
+                    _responsiveTagCount = visibleCount;
+                    await InvokeAsync(StateHasChanged);
+                }
+            }
+            finally
+            {
+                _responsiveCalculationRunning = false;
+            }
+        }
+
         protected string GetInputValue(int index = 0)
         {
+            if (Multiple)
+            {
+                return string.Join(",", GetSelectedDates().Select(date => GetFormatValue(date, 0)));
+            }
+
             var inputValue = index == 0 ? _inputStart?.Value : _inputEnd?.Value;
 
             if (_duringManualInput && !string.IsNullOrEmpty(Mask))
@@ -843,7 +1012,14 @@ namespace AntDesign
             {
                 _pickerStatus[index].SelectedValue = date;
 
-                if (IsRange)
+                if (Multiple)
+                {
+                    if (!HasTimeInput && Picker != DatePickerType.Time)
+                    {
+                        ChangeValue(date, index, false);
+                    }
+                }
+                else if (IsRange)
                 {
                     if (!HasTimeInput)
                     {
@@ -869,7 +1045,7 @@ namespace AntDesign
                 {
                     await SwitchFocus(index);
                 }
-                else
+                else if (!Multiple)
                 {
                     await Focus(index);
                 }
@@ -944,6 +1120,76 @@ namespace AntDesign
             CurrentValue = DataConversionExtensions.Convert<DateTime?[], TValue>(range);
             InvokeOnChange();
             Close();
+        }
+
+        protected IReadOnlyList<DateTime> GetSelectedDates()
+        {
+            if (!Multiple)
+            {
+                var single = GetIndexValue(0);
+                return single.HasValue ? new[] { single.Value } : Array.Empty<DateTime>();
+            }
+
+            var source = Value as Array ?? DefaultValue as Array;
+            if (source == null)
+            {
+                return Array.Empty<DateTime>();
+            }
+
+            var values = new List<DateTime>(source.Length);
+            foreach (var item in source)
+            {
+                if (item == null) continue;
+                var converted = InternalConvert.ToDateTime(item);
+                if (converted.HasValue) values.Add(converted.Value);
+            }
+
+            return values;
+        }
+
+        internal bool IsDateSelected(DateTime date)
+        {
+            if (!Multiple) return false;
+            var value = DateHelper.FormatDateByPicker(date, Picker);
+            return GetSelectedDates().Any(selected => DateHelper.FormatDateByPicker(selected, Picker) == value);
+        }
+
+        protected Array CreateMultipleValue(IEnumerable<DateTime> dates)
+        {
+            var source = Value as Array ?? DefaultValue as Array ?? DefaultPickerValue as Array;
+            var elementType = source?.GetType().GetElementType() ?? typeof(TValue).GetElementType();
+            if (elementType == null)
+            {
+                throw new InvalidOperationException($"{nameof(Multiple)} requires an array TValue.");
+            }
+
+            var underlyingType = Nullable.GetUnderlyingType(elementType) ?? elementType;
+            var values = dates.ToArray();
+            var result = Array.CreateInstance(elementType, values.Length);
+            for (var i = 0; i < values.Length; i++)
+            {
+                object value = underlyingType == typeof(DateTime) ? values[i]
+                    : underlyingType == typeof(DateTimeOffset) ? new DateTimeOffset(values[i])
+#if NET6_0_OR_GREATER
+                    : underlyingType == typeof(DateOnly) ? DateOnly.FromDateTime(values[i])
+#endif
+                    : throw new InvalidOperationException($"DatePicker multiple does not support array values of type {elementType}.");
+                result.SetValue(value, i);
+            }
+
+            return result;
+        }
+
+        protected void RemoveSelectedDate(int index)
+        {
+            var selected = GetSelectedDates().ToList();
+            if (index < 0 || index >= selected.Count) return;
+            selected.RemoveAt(index);
+            CurrentValue = DataConversionExtensions.Convert<Array, TValue>(CreateMultipleValue(selected));
+            _pickerStatus[0].SelectedValue = selected.LastOrDefault();
+            _pickerStatus[0].IsValueSelected = selected.Count > 0;
+            InvokeOnChange();
+            RefreshComponentState();
         }
 
         protected async Task<bool> SwitchFocus(int index)
@@ -1159,6 +1405,27 @@ namespace AntDesign
             });
         }
 
+        protected void ChangePreviewValue(string value, int index = 0)
+        {
+            _previewValues[index] = value;
+            RefreshComponentState();
+        }
+
+        protected void ResetPreviewValue(int index = -1)
+        {
+            if (index < 0)
+            {
+                _previewValues[0] = null;
+                _previewValues[1] = null;
+            }
+            else
+            {
+                _previewValues[index] = null;
+            }
+
+            RefreshComponentState();
+        }
+
         private int _htmlInputSize;
 
         protected int HtmlInputSize
@@ -1328,7 +1595,7 @@ namespace AntDesign
         {
             var index = GetOnFocusPickerIndex();
 
-            if (!visible && ChangeOnClose)
+            if (!visible && ChangeOnClose && !HasTimeInput)
             {
                 if (_pickerStatus[index].SelectedValue is not null)
                 {
@@ -1533,6 +1800,21 @@ namespace AntDesign
         void IDatePicker.ResetPlaceholder(int index)
         {
             ResetPlaceholder(index);
+        }
+
+        void IDatePicker.ChangePreviewValue(string value, int index)
+        {
+            ChangePreviewValue(value, index);
+        }
+
+        void IDatePicker.ResetPreviewValue(int index)
+        {
+            ResetPreviewValue(index);
+        }
+
+        bool IDatePicker.IsDateSelected(DateTime date)
+        {
+            return IsDateSelected(date);
         }
 
         string IDatePicker.GetFormatValue(DateTime value, int index)

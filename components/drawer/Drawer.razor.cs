@@ -267,11 +267,26 @@ namespace AntDesign
             }
         }
 
+        /// <summary>Whether the drawer is open. React-compatible alias for <see cref="Visible"/>.</summary>
+        [Parameter]
+        public bool? Open
+        {
+            get => _isOpen;
+            set
+            {
+                if (value.HasValue) Visible = value.Value;
+            }
+        }
+
         /// <summary>
         /// EventCallback trigger on Visible was changed.
         /// </summary>
         [Parameter]
         public EventCallback<bool> VisibleChanged { get; set; }
+
+        /// <summary>Callback for changes to the React-compatible <see cref="Open"/> parameter.</summary>
+        [Parameter]
+        public EventCallback<bool> OpenChanged { get; set; }
 
         /// <summary>
         /// Specify a callback that will be called before drawer displayed
@@ -489,6 +504,10 @@ namespace AntDesign
                         {
                             await VisibleChanged.InvokeAsync(true);
                         }
+                        if (OpenChanged.HasDelegate)
+                        {
+                            await OpenChanged.InvokeAsync(true);
+                        }
 
                         _hasInvokeClosed = true;// avoid closing again
 
@@ -604,6 +623,10 @@ namespace AntDesign
             if (VisibleChanged.HasDelegate)
             {
                 await VisibleChanged.InvokeAsync(false);
+            }
+            if (OpenChanged.HasDelegate)
+            {
+                await OpenChanged.InvokeAsync(false);
             }
             _isOpen = false;
 

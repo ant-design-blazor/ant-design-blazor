@@ -1,0 +1,16 @@
+@using AntDesign.Select
+
+<Flex Vertical Gap="FlexGap.Small" Align="FlexAlign.Stretch">
+    <DatePicker TValue="DateTime[]" Multiple MaxTagCount="ResponsiveTag.Responsive" DefaultValue="@defaultValue" Format="yyyy-MM-dd" Size="InputSize.Small" />
+    <DatePicker TValue="DateTime[]" Multiple MaxTagCount="ResponsiveTag.Responsive" DefaultValue="@defaultValue" Format="yyyy-MM-dd" />
+    <DatePicker TValue="DateTime[]" Multiple MaxTagCount="ResponsiveTag.Responsive" DefaultValue="@defaultValue" Format="yyyy-MM-dd" Size="InputSize.Large" />
+</Flex>
+
+@code {
+    private readonly DateTime[] defaultValue =
+    [
+        new DateTime(2000, 1, 1),
+        new DateTime(2000, 1, 3),
+        new DateTime(2000, 1, 5)
+    ];
+}

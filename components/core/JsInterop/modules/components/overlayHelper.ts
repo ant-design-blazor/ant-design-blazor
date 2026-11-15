@@ -35,7 +35,7 @@ function getInheritedAntDesignTokenStyle(triggerSelector: string): string {
   return declarations.join(';');
 }
 
-function prepareOverlayInContainer(overlay: HTMLElement, trigger: HTMLElement, containerSelector: string): void {
+function prepareOverlayInContainer(overlay: HTMLElement, trigger: HTMLElement, containerSelector: string | HTMLElement): void {
   // Measure in the same DOM context in which the popup will be displayed.
   // Select popup content can resolve different typography and sizing tokens
   // after it leaves a scoped ConfigProvider, so copy those tokens before the
@@ -59,7 +59,7 @@ function prepareOverlayInContainer(overlay: HTMLElement, trigger: HTMLElement, c
   }
 }
 
-type ImmediateOpenWidthMode = 'match-trigger' | 'content' | 'custom' | '';
+type ImmediateOpenWidthMode = 'match-trigger' | 'content' | 'content-only' | 'custom' | '';
 
 export class overlayHelper {
   static overlayRegistry: { [key: string]: Overlay} = {};
@@ -171,7 +171,7 @@ export class overlayHelper {
     clickIgnoreSelector: string,
     openClass: string,
     placement: Placement,
-    containerSelector: string,
+    containerSelector: string | HTMLElement,
     triggerBoundyAdjustMode: TriggerBoundyAdjustMode,
     triggerIsWrappedInDiv: boolean,
     triggerPrefixCls: string,
@@ -307,7 +307,11 @@ export class overlayHelper {
     // and borders are added a second time by content-box sizing and the popup
     // grows on its first visible frame.
     overlay.style.boxSizing = 'border-box';
-    overlay.style.minWidth = `${triggerWidth}px`;
+    // A fixed match-trigger/custom width already determines the popup's
+    // border-box width, so a second min-width constraint is redundant. Keep
+    // the trigger minimum only for content sizing, where the measured popup
+    // may otherwise be narrower than its trigger.
+    overlay.style.minWidth = mode === 'content' ? `${triggerWidth}px` : '0px';
     overlay.style.maxWidth = maxWidth && maxWidth.toLowerCase() !== 'auto' ? maxWidth : '';
 
     if (mode === 'match-trigger') {
@@ -320,9 +324,35 @@ export class overlayHelper {
     }
 
     overlay.style.width = mode === 'custom' ? width : 'max-content';
+
+    // Dropdown menus are block elements whose auto width can shrink to the
+    // 1px unbound selection trigger during max-content measurement. Measure
+    // the menu at its intrinsic width, then restore its styles before the
+    // popup becomes visible. This keeps React's content-sized menu behavior
+    // without hard-coding a width in individual demos.
+    const intrinsicWidthElements = mode === 'content'
+      ? Array.from(overlay.querySelectorAll<HTMLElement>('.ant-dropdown-menu'))
+      : [];
+    const intrinsicWidthStyles = intrinsicWidthElements.map(element => ({
+      element,
+      width: element.style.width,
+      minWidth: element.style.minWidth,
+      maxWidth: element.style.maxWidth
+    }));
+    intrinsicWidthElements.forEach(element => {
+      element.style.width = 'max-content';
+      element.style.minWidth = 'max-content';
+      element.style.maxWidth = 'none';
+    });
+
     const measuredWidth = overlay.getBoundingClientRect().width;
     const resolvedWidth = measuredWidth > 0 ? measuredWidth : triggerWidth;
     overlay.style.width = `${resolvedWidth}px`;
+    intrinsicWidthStyles.forEach(({ element, width: originalWidth, minWidth, maxWidth: originalMaxWidth }) => {
+      element.style.width = originalWidth;
+      element.style.minWidth = minWidth;
+      element.style.maxWidth = originalMaxWidth;
+    });
     // Measure once more after locking the resolved width. The caller can now
     // position and reveal the overlay without its first visible frame
     // changing size during the entrance animation.
@@ -338,7 +368,7 @@ export class overlayHelper {
   static prepareOverlayWidthForShow(
     overlaySelector: string,
     triggerSelector: string,
-    containerSelector: string,
+    containerSelector: string | HTMLElement,
     mode: ImmediateOpenWidthMode,
     width: string,
     maxWidth: string
@@ -389,7 +419,7 @@ export class overlayHelper {
   }
 
   static addOverlayToContainer(blazorId: string, 
-    overlaySelector, triggerSelector, placement: Placement,  containerSelector: string,
+    overlaySelector, triggerSelector, placement: Placement,  containerSelector: string | HTMLElement,
     triggerBoundyAdjustMode: TriggerBoundyAdjustMode, triggerIsWrappedInDiv: boolean, triggerPrefixCls: string,
     verticalOffset: number, horizontalOffset: number, offsetCssExpression: string, arrowPointAtCenter: boolean,
     overlayTop?: number, overlayLeft?: number
@@ -397,6 +427,8 @@ export class overlayHelper {
     const overlayElement = domInfoHelper.get(overlaySelector) as HTMLDivElement;    
     const containerElement = domInfoHelper.get(containerSelector) as HTMLElement;
     const triggerElement = domInfoHelper.get(triggerSelector) as HTMLElement;    
+    if (!overlayElement || !containerElement || !triggerElement) return null;
+    if (!Overlay.isValidPlacement(placement)) return null;
 
     const previousOverlay = this.overlayRegistry[blazorId];
     if (previousOverlay) {
@@ -457,7 +489,12 @@ export class overlayHelper {
       delete this.overlayRegistry[blazorId];
     }
 
-    if (!domManipulationHelper.addElementTo(overlaySelector, containerElement)) {
+    // `addElementTo` expects actual DOM nodes. The selector/reference passed
+    // into this method is only used for lookup above; passing it directly can
+    // leave the popup under a positioned demo/card ancestor while its
+    // coordinates are calculated in document space. That applies the ancestor
+    // offset a second time (Dropdown is especially visible on long docs pages).
+    if (!domManipulationHelper.addElementTo(overlayElement, containerElement)) {
       console.log("Failed to add overlay. Details:", {
         triggerPrefixCls: triggerPrefixCls,
         overlaySelector: overlaySelector,
@@ -489,11 +526,41 @@ export class overlayHelper {
   }
 
 
-  static updateOverlayPosition(blazorId: string, overlaySelector, triggerSelector, placement: Placement,  containerSelector: string,
+  static updateOverlayPosition(blazorId: string, overlaySelector, triggerSelector, placement: Placement,  containerSelector: string | HTMLElement,
     triggerBoundyAdjustMode: TriggerBoundyAdjustMode, triggerIsWrappedInDiv: boolean, triggerPrefixCls: string,
     verticalOffset: number, horizontalOffset: number, offsetCssExpression: string, arrowPointAtCenter: boolean,
     overlayTop?: number, overlayLeft?: number): overlayPosition {
     const overlay = this.overlayRegistry[blazorId];
+    const overlayElement = domInfoHelper.get(overlaySelector) as HTMLDivElement;
+    const containerElement = domInfoHelper.get(containerSelector) as HTMLElement;
+    const triggerElement = domInfoHelper.get(triggerSelector) as HTMLElement;
+    if (!overlayElement || !containerElement || !triggerElement) return null;
+    if (!Overlay.isValidPlacement(placement)) return null;
+    if (overlay && !overlay.matchesContext(
+      overlayElement,
+      containerElement,
+      triggerElement,
+      triggerBoundyAdjustMode,
+      triggerIsWrappedInDiv,
+      triggerPrefixCls
+    )) {
+      return overlayHelper.addOverlayToContainer(
+        blazorId,
+        overlaySelector,
+        triggerSelector,
+        placement,
+        containerSelector,
+        triggerBoundyAdjustMode,
+        triggerIsWrappedInDiv,
+        triggerPrefixCls,
+        verticalOffset,
+        horizontalOffset,
+        offsetCssExpression,
+        arrowPointAtCenter,
+        overlayTop,
+        overlayLeft
+      );
+    }
     if (overlay){
       const overlayElement = domInfoHelper.get(overlaySelector) as HTMLElement;
       overlay.updateOffsets(

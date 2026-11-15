@@ -1,11 +1,13 @@
 @namespace AntDesign
 @using AntDesign.Icons
 @using AntDesign.Internal
+@using OneOf
 @inherits AntDomComponentBase
 
 <div class="@SemanticClass("root", RootClass)" @ref="Ref" style="@SemanticStyle("root", Style)" id="@Id">
     <TransferSidePanel TItem="TransferItem" DataSource="_leftDataSource" Direction="TransferDirection.Left"
                        Title="@(Titles[0] == "" ? null : Titles[0])" SelectedKeys="_sourceSelectedKeys"
+                       SelectAllLabel="GetSelectAllLabel(0)"
                        TargetKeys="_targetKeys" ChildContent="ChildContent"
                        CountText="@_leftCountText"
                        Disabled="Disabled" ShowSelectAll="ShowSelectAll" ShowDropdown ShowSearch="ShowSearch"
@@ -52,6 +54,7 @@
 
     <TransferSidePanel TItem="TransferItem" DataSource="_rightDataSource" Direction="TransferDirection.Right"
                        Title="@(Titles[1] == "" ? null : Titles[1])" SelectedKeys="_targetSelectedKeys"
+                       SelectAllLabel="GetSelectAllLabel(1)"
                        TargetKeys="_targetKeys" ChildContent="ChildContent"
                        CountText="@_rightCountText"
                        Disabled="Disabled" ShowSelectAll="ShowSelectAll" ShowDropdown ShowSearch="ShowSearch"
@@ -69,6 +72,9 @@
 </div>
 
 @code {
+    private OneOf<string, RenderFragment<TransferSelectAllLabelInfo>> GetSelectAllLabel(int index) =>
+        SelectAllLabels != null && SelectAllLabels.Length > index ? SelectAllLabels[index] : default;
+
     private bool HasFooter => FooterTemplate != null || !string.IsNullOrEmpty(Footer);
     private string RootClass => ChildContent == null ? ClassMapper.Class : $"{ClassMapper.Class} ant-transfer-customize-list";
 

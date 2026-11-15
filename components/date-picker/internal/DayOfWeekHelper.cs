@@ -17,6 +17,16 @@ namespace AntDesign
         private const int DIFF_MONDAY = 6;
         private const int DIFF_SUNDAY = 7;
 
+        internal static DateTime GetWeekStartDate(DateTime monthFirstDay, DayOfWeek firstDayOfWeek, out int skipDays)
+        {
+            var daysSinceWeekStart = ((int)monthFirstDay.DayOfWeek - (int)firstDayOfWeek + 7) % 7;
+            skipDays = monthFirstDay == DateTime.MinValue ? daysSinceWeekStart : 0;
+
+            return monthFirstDay == DateTime.MinValue
+                ? monthFirstDay
+                : monthFirstDay.AddDays(-daysSinceWeekStart);
+        }
+
         /// <summary>
         ///     Returns the amount of days that have to be added to the start date to get the correct first day of the week.
         /// </summary>

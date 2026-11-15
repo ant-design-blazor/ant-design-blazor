@@ -1,21 +1,22 @@
 @using AntDesign.Theming
 
 <style>
-    .button-debug-color .custom-primary { background: #5794f7; border-color: blue; color: wheat; }
-    .button-debug-color .custom-default,
-    .button-debug-color .custom-dashed { background: #f5f5f5; border-color: gray; color: #313030; }
-    .button-debug-color .custom-text { color: gray; }
-    .button-debug-color .custom-link { color: blue; }
-    .button-debug-color .legacy-override .ant-btn-primary { color: #ec5b56; }
-    .button-debug-color .legacy-override .ant-btn-default { color: orange; }
-    .button-debug-color .legacy-override .ant-btn-dashed { color: #3976f6; }
-    .button-debug-color .legacy-override .ant-btn-text { color: green; }
-    .button-debug-color .legacy-override .ant-btn-link { color: #0e98aa; }
+    #components-button-demo-debug-color-variant .button-debug-global { display: contents; }
+    #components-button-demo-debug-color-variant .custom-primary { background: #5794f7; border-color: blue; color: wheat; }
+    #components-button-demo-debug-color-variant .custom-default,
+    #components-button-demo-debug-color-variant .custom-dashed { background: #f5f5f5; border-color: gray; color: #313030; }
+    #components-button-demo-debug-color-variant .custom-text { color: gray; }
+    #components-button-demo-debug-color-variant .custom-link { color: blue; }
+    #components-button-demo-debug-color-variant .legacy-override .ant-btn-primary { color: #ec5b56; }
+    #components-button-demo-debug-color-variant .legacy-override .ant-btn-default { color: orange; }
+    #components-button-demo-debug-color-variant .legacy-override .ant-btn-dashed { color: #3976f6; }
+    #components-button-demo-debug-color-variant .legacy-override .ant-btn-text { color: green; }
+    #components-button-demo-debug-color-variant .legacy-override .ant-btn-link { color: #0e98aa; }
 </style>
 
-<Flex Vertical Gap="FlexGap.Small" Class="button-debug-color">
+<Flex Vertical Gap="FlexGap.Small">
     <Flex Gap="FlexGap.Small">
-        <ConfigProvider ThemeConfig="_linkTheme"><Button Type="ButtonType.Link">Link Button (custom link token)</Button></ConfigProvider>
+        <ConfigProvider ThemeConfig="_linkTheme"><Button Type="ButtonType.Link">Link Button</Button></ConfigProvider>
         <Button Type="ButtonType.Link">Link Button</Button>
     </Flex>
     <Flex Gap="FlexGap.Small" Wrap="FlexWrap.Wrap">
@@ -26,11 +27,11 @@
         <Button Type="ButtonType.Link" Class="custom-link">Link Button</Button>
     </Flex>
     <Flex Gap="FlexGap.Small" Wrap="FlexWrap.Wrap" Class="legacy-override">
-        <Button Type="ButtonType.Primary">Legacy Primary</Button>
-        <Button Type="ButtonType.Default">Legacy Default</Button>
-        <Button Type="ButtonType.Dashed">Legacy Dashed</Button>
-        <Button Type="ButtonType.Text">Legacy Text</Button>
-        <Button Type="ButtonType.Link">Legacy Link</Button>
+        <Button Type="ButtonType.Primary">Primary Button</Button>
+        <Button Type="ButtonType.Default">Default Button</Button>
+        <Button Type="ButtonType.Dashed">Dashed Button</Button>
+        <Button Type="ButtonType.Text">Text Button</Button>
+        <Button Type="ButtonType.Link">Link Button</Button>
     </Flex>
     <ConfigProvider ThemeConfig="_theme">
         <Flex Gap="FlexGap.Small" Wrap="FlexWrap.Wrap">

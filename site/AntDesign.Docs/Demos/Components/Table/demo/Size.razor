@@ -1,61 +1,17 @@
 @using System.ComponentModel
-<p>Middle size table</p>
-<Table DataSource="@data" Bordered="true" Size="TableSize.Middle">
-    <PropertyColumn Property="c=>c.Name">
-        <a>@context.Name</a>
-    </PropertyColumn>
-    <PropertyColumn Property="c=>c.Age"></PropertyColumn>
-    <PropertyColumn Property="c=>c.Address"></PropertyColumn>
-    <PropertyColumn Property="c=>c.Tags">
-        @foreach (var tag in context.Tags)
-        {
-            var color = tag.Length > 5 ? TagColor.GeekBlue : TagColor.Green;
-            if (tag == "loser")
-            {
-                color = TagColor.Volcano;
-            }
-            <Tag Color="@color">@tag</Tag>
-        }
-    </PropertyColumn>
-    <ActionColumn Title="Action">
-        <Space Size="SpaceSize.Middle">
-            <SpaceItem>
-                <a>Invite @context.Name</a>
-            </SpaceItem>
-            <SpaceItem>
-                <a>Delete</a>
-            </SpaceItem>
-        </Space>
-    </ActionColumn>
+
+<Divider>Medium size table</Divider>
+<Table DataSource="@data" RowKey="item => item.Key" Size="TableSize.Medium">
+    <PropertyColumn Property="c => c.Name" Title="Name" />
+    <PropertyColumn Property="c => c.Age" Title="Age" />
+    <PropertyColumn Property="c => c.Address" Title="Address" />
 </Table>
-<p>Small size table</p>
-<Table DataSource="@data" Bordered="true" Size="TableSize.Small">
-    <PropertyColumn Property="c=>c.Name">
-        <a>@context.Name</a>
-    </PropertyColumn>
-    <PropertyColumn Property="c=>c.Age"></PropertyColumn>
-    <PropertyColumn Property="c=>c.Address"></PropertyColumn>
-    <PropertyColumn Property="c=>c.Tags">
-        @foreach (var tag in context.Tags)
-        {
-            var color = tag.Length > 5 ? TagColor.GeekBlue : TagColor.Green;
-            if (tag == "loser")
-            {
-                color = TagColor.Volcano;
-            }
-            <Tag Color="@color">@tag</Tag>
-        }
-    </PropertyColumn>
-    <ActionColumn Title="Action">
-        <Space Size="SpaceSize.Middle">
-            <SpaceItem>
-                <a>Invite @context.Name</a>
-            </SpaceItem>
-            <SpaceItem>
-                <a>Delete</a>
-            </SpaceItem>
-        </Space>
-    </ActionColumn>
+
+<Divider>Small size table</Divider>
+<Table DataSource="@data" RowKey="item => item.Key" Size="TableSize.Small">
+    <PropertyColumn Property="c => c.Name" Title="Name" />
+    <PropertyColumn Property="c => c.Age" Title="Age" />
+    <PropertyColumn Property="c => c.Address" Title="Address" />
 </Table>
 
 @code{
@@ -67,7 +23,6 @@
             Name = "John Brown",
             Age = 32,
             Address = "New York No. 1 Lake Park",
-            Tags = new[] {"nice", "developer"}
         },
         new Data()
         {
@@ -75,15 +30,13 @@
             Name = "Jim Green",
             Age = 42,
             Address = "London No. 1 Lake Park",
-            Tags = new[] { "loser"}
         },
         new Data()
         {
             Key = "3",
             Name = "Joe Black",
             Age = 32,
-            Address = "Sidney No. 1 Lake Park",
-            Tags = new[] { "cool", "teacher" }
+            Address = "Sydney No. 1 Lake Park",
         }
     };
 
@@ -100,8 +53,5 @@
 
         [DisplayName("Address")]
         public string Address { get; set; }
-
-        [DisplayName("Tags")]
-        public string[] Tags { get; set; }
     }
 }

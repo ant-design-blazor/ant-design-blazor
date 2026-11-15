@@ -1,13 +1,17 @@
-﻿<Button Type="ButtonType.Primary" OnClick="ToggleData">Toggle Data</Button>
-<Table TItem="EmptyTableRow" DataSource="@_rows" Bordered>
+﻿@if (_rows.Count > 0)
+{
+    <Button Type="ButtonType.Primary" OnClick="ToggleData">Toggle Data</Button>
+}
+<div style="margin-block: 8px"></div>
+<Table TItem="EmptyTableRow" DataSource="@_rows" RowKey="row => row.Key" Bordered>
     <ColumnDefinitions>
         <PropertyColumn Property="x => x.Name" Title="Name" />
-        <PropertyColumn Property="x => x.Age" Title="Age" />
+        <PropertyColumn Property="x => x.Age" Title="Age" Filters="AgeFilters" />
         <PropertyColumn Property="x => x.Address" Title="Address" />
     </ColumnDefinitions>
     <EmptyTemplate>
         <Empty Description='@("No Data")'>
-            <Button Type="ButtonType.Primary" OnClick="ToggleData">Add sample data</Button>
+            <Button Type="ButtonType.Primary" OnClick="ToggleData">Toggle Data</Button>
         </Empty>
     </EmptyTemplate>
 </Table>
@@ -15,13 +19,22 @@
 @code {
     private List<EmptyTableRow> _rows = CreateRows();
 
-    private void ToggleData() => _rows = _rows.Count > 0 ? [] : CreateRows();
+    private static readonly TableFilter<int>[] _ageFilters =
+    [
+        new() { Text = ">=35", Value = 35 },
+        new() { Text = "<18", Value = 18 }
+    ];
 
-    private static List<EmptyTableRow> CreateRows() => Enumerable.Range(0, 5)
-        .Select(i => new EmptyTableRow { Name = $"Edward King {i}", Age = 32 + i, Address = $"London, Park Lane no. {i}" }).ToList();
+    private IEnumerable<TableFilter<int>> AgeFilters => _rows.Count > 0 ? _ageFilters : Array.Empty<TableFilter<int>>();
+
+    private void ToggleData() => _rows = _rows.Count > 0 ? [] : CreateRows(5);
+
+    private static List<EmptyTableRow> CreateRows(int count = 5) => Enumerable.Range(0, count)
+        .Select(i => new EmptyTableRow { Key = i, Name = $"Edward King {i}", Age = 32 + i, Address = $"London, Park Lane no. {i}" }).ToList();
 
     private sealed class EmptyTableRow
     {
+        public int Key { get; set; }
         public string Name { get; set; } = string.Empty;
         public int Age { get; set; }
         public string Address { get; set; } = string.Empty;

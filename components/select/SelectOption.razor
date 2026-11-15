@@ -7,6 +7,7 @@
 <div @ref="Ref"
       @key="@this"
       id="@(SelectParent.UsesVirtualAccessibility ? null : SelectParent.GetOptionId(InternalId))"
+      data-select-option-id="@(SelectParent.UsesVirtualWindow ? InternalId.ToString("D") : null)"
       class="@SelectParent.GetSemanticClass("popup.listItem", ClassMapper.Class)"
       role="@(SelectParent.UsesVirtualAccessibility ? null : "option")"
       aria-selected="@(SelectParent.UsesVirtualAccessibility ? null : IsSelected.ToString().ToLowerInvariant())"

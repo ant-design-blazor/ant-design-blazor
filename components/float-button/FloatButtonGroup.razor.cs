@@ -120,9 +120,10 @@ public partial class FloatButtonGroup : AntDomComponentBase
         ClassMapper
             .Add(prefix)
             .If("ant-float-btn-group-individual", () => Shape == FloatButtonShape.Circle)
+            .If($"{prefix}-square", () => Shape == FloatButtonShape.Square)
             .If($"{prefix}-{Trigger.ToString().ToLowerInvariant()}", () => IsMenuMode)
             .If($"{prefix}-menu-mode", () => IsMenuMode)
-            .Add($"{prefix}-{Placement.ToString().ToLowerInvariant()}")
+            .If($"{prefix}-{Placement.ToString().ToLowerInvariant()}", () => IsMenuMode)
             .If($"{prefix}-open", () => IsOpen)
             .If("ant-float-btn-group-rtl", () => RTL);
     }

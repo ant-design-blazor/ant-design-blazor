@@ -2,6 +2,7 @@
 @inherits DatePickerBase<TValue>
 @typeparam TValue
 @using AntDesign.Internal;
+@using AntDesign.Icons;
 
 <CascadingValue Value='$"{PrefixCls}-dropdown"' Name="PrefixCls">
     <OverlayTrigger @ref="@_dropDown"
@@ -48,11 +49,69 @@
                 {
                     <span class="@SemanticClass("prefix", $"{PrefixCls}-prefix")" style="@SemanticStyle("prefix")">@Prefix</span>
                 }
+                @if (Multiple)
+                {
+                    <div class="@($"{PrefixCls}-selector")" @onclick="async () => await OnInputClick()">
+                        <div @ref="_selectionOverflow" class="@($"{PrefixCls}-selection-overflow")">
+                            @{
+                                var selectedDates = GetSelectedDates();
+                                var visibleCount = IsResponsiveTagCount ? Math.Min(_responsiveTagCount, selectedDates.Count) : Math.Min(FixedMaxTagCount, selectedDates.Count);
+                                EnsureSelectionTagReferences(selectedDates.Count);
+                            }
+                            @for (var i = 0; i < selectedDates.Count; i++)
+                            {
+                                var index = i;
+                                var date = selectedDates[index];
+                                var formatted = GetFormatValue(date, 0);
+                                var visible = index < visibleCount;
+                                <div @ref="_selectionTagRefs[index]" class="@($"{PrefixCls}-selection-overflow-item")" style="@GetSelectionTagStyle(index, visibleCount)" aria-hidden="@(visible ? null : "true")">
+                                    <span class="@($"{PrefixCls}-selection-item")" title="@formatted">
+                                        <span class="@($"{PrefixCls}-selection-item-content")">@formatted</span>
+                                        <span class="@($"{PrefixCls}-selection-item-remove")" @onclick="() => RemoveSelectedDate(index)" @onclick:stopPropagation="true">
+                                            <CloseOutlined AriaLabel="close" />
+                                        </span>
+                                    </span>
+                                </div>
+                            }
+                            @if (selectedDates.Count > visibleCount || (IsResponsiveTagCount && selectedDates.Count > 0))
+                            {
+                                var hasOverflow = selectedDates.Count > visibleCount;
+                                var overflowCount = hasOverflow ? selectedDates.Count - visibleCount : selectedDates.Count;
+                                <div @ref="_aggregateTagMeasure"
+                                      class="@($"{PrefixCls}-selection-overflow-item {PrefixCls}-selection-overflow-item-rest")"
+                                      style="@GetAggregateTagStyle(visibleCount, selectedDates.Count, hasOverflow)"
+                                      aria-hidden="@(hasOverflow ? null : "true")">
+                                    <span class="@($"{PrefixCls}-selection-item")" title="@($"+ {overflowCount} ...")">
+                                        <span class="@($"{PrefixCls}-selection-item-content")">+ @overflowCount ...</span>
+                                    </span>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                        <input class="@($"{PrefixCls}-multiple-input")"
+                               readonly="@string.Empty"
+                               value="@GetInputValue(0)" />
+                    @if (SuffixIcon != null)
+                    {
+                        <span class="@($"{PrefixCls}-suffix")" @onclick="OnSuffixIconClick">@SuffixIcon</span>
+                    }
+                    else
+                    {
+                        <span class="@($"{PrefixCls}-suffix")" @onclick="OnSuffixIconClick"><CalendarOutlined AriaLabel="calendar" aria-hidden="true" /></span>
+                    }
+                    @if (AllowClear && GetSelectedDates().Count > 0 && !IsDisabled())
+                    {
+                        <button type="button" aria-label="Clear" class="@($"{PrefixCls}-clear")" @onclick="() => ClearValue(0)" @onclick:stopPropagation="true"><Icon Type="@IconType.Fill.CloseCircle" Theme="IconThemeType.Fill" /></button>
+                    }
+                }
+                else
+                {
                 <DatePickerInput @ref="_inputStart"
                                  PrefixCls="@PrefixCls"
                                  Size="@Size"
                                  Disabled="IsDisabled(0)"
                                  Value="@GetInputValue(0)"
+                                 PreviewValue="@_previewValues[0]"
                                  Placeholder="@_placeholders[0]"
                                  AriaInvalid="@IsInvalid"
                                  ReadOnly="@InputReadOnly"
@@ -72,6 +131,7 @@
                                  Styles="@Styles"
                                  FeedbackIcon="@FormItem?.FeedbackIcon"
                                  AllowClear="@AllowClear" />
+                }
             </div>
         </Unbound>
     </OverlayTrigger>

@@ -76,6 +76,7 @@
     "node-fetch": "^2.6.0",
     "open": "^7.0.3",
     "resolve-bin": "^0.4.0",
+    "regenerator-runtime": "^0.13.11",
     "simple-git": "^3.7.0",
     "ts-node": "^10.8.0",
     "tsify": "^4.0.2",

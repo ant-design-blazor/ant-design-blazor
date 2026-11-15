@@ -1,7 +1,7 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
 
-<div class="@(AutoComplete?.GetSemanticClass("popup.listItem", ClassMapper.Class) ?? ClassMapper.Class)" style="@(AutoComplete?.GetSemanticStyle("popup.listItem", Style) ?? Style)" id="@Id" @onclick="@OnClick" @onmouseenter="@OnMouseEnter">
+<div aria-disabled="@(Disabled ? "true" : "false")" class="@(AutoComplete?.GetSemanticClass("popup.listItem", ClassMapper.Class) ?? ClassMapper.Class)" style="@(AutoComplete?.GetSemanticStyle("popup.listItem", Style) ?? Style)" title="@Label" @onclick="@OnClick" @onmouseenter="@OnMouseEnter">
     <div class="ant-select-item-option-content">
         @if (ChildContent != null)
         {
@@ -12,4 +12,5 @@
             @Label
         }
     </div>
+    <span class="ant-select-item-option-state" unselectable="on" aria-hidden="true" style="user-select: none;"></span>
 </div>

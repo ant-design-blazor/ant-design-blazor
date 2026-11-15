@@ -8,9 +8,10 @@
     [Parameter] public RenderFragment ChildContent { get; set; }
     public string Appearance { get; private set; } = "light";
     public bool Compact { get; private set; }
+    private const string DocsFontFamily = "AlibabaSans, -apple-system, 'system-ui', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'";
     // The selected, generated v6 stylesheet owns root variables. Emitting a
     // second default palette inline here would override stylesheet switching.
-    public ThemeConfig Theme { get; private set; } = new ThemeConfig { Key = "light", CssVar = false };
+    public ThemeConfig Theme { get; private set; } = CreateTheme("light", "default");
 
     public Task ApplyAsync(string appearance, bool compact)
     {
@@ -18,12 +19,19 @@
         if (Appearance == appearance && Compact == compact) return Task.CompletedTask;
         Appearance = appearance;
         Compact = compact;
-        Theme = new ThemeConfig
-        {
-            Key = compact ? appearance + "-compact" : appearance,
-            Algorithm = appearance == "dark" ? "dark" : compact ? "compact" : "default",
-            CssVar = false
-        };
+        Theme = CreateTheme(compact ? appearance + "-compact" : appearance,
+            appearance == "dark" ? "dark" : compact ? "compact" : "default");
         return InvokeAsync(StateHasChanged);
+    }
+
+    private static ThemeConfig CreateTheme(string key, string algorithm)
+    {
+        return new ThemeConfig
+        {
+            Key = key,
+            Algorithm = algorithm,
+            CssVar = false,
+            Token = new ThemeToken { FontFamily = DocsFontFamily }
+        };
     }
 }

@@ -163,6 +163,13 @@ namespace AntDesign
         public bool ShowSelectAll { get; set; } = true;
 
         /// <summary>
+        /// Custom labels for the source and target select-all checkboxes. Each entry can be
+        /// static text or a template receiving the selected and total item counts.
+        /// </summary>
+        [Parameter]
+        public OneOf<string, RenderFragment<TransferSelectAllLabelInfo>>[] SelectAllLabels { get; set; }
+
+        /// <summary>
         /// Keys of elements that are listed in the right column
         /// </summary>
         [Parameter]

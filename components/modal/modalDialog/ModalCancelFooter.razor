@@ -15,7 +15,7 @@
             Size="@cancelProps.Size"
             Icon="@cancelProps.Icon"
             Disabled="@cancelProps.Disabled"
-            Danger="@cancelProps.Danger">
+            Danger="@(cancelProps.Danger ?? false)">
         @{
             if (ModalProps.CancelText.IsT0)
             {

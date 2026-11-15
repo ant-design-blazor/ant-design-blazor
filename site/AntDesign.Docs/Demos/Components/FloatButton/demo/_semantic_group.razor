@@ -1,7 +1,9 @@
-<FloatButtonGroup Trigger="FloatButtonGroupTrigger.Click" Icon="appstore" ClassNames="_classNames" Styles="_styles">
-    <FloatButton Icon="search" />
-    <FloatButton Icon="edit" />
-</FloatButtonGroup>
+<div style="position:relative;display:grid;width:100%;min-height:220px;place-items:center;overflow:hidden">
+    <FloatButtonGroup Trigger="FloatButtonGroupTrigger.Click" Icon="appstore" ClassNames="_classNames" Styles="_styles" Style="position:relative;inset-inline-end:auto;bottom:auto">
+        <FloatButton Icon="search" />
+        <FloatButton Icon="edit" />
+    </FloatButtonGroup>
+</div>
 
 @code {
     private static readonly Dictionary<string, string> _classNames = new()

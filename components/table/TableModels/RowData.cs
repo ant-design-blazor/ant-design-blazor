@@ -18,6 +18,11 @@ namespace AntDesign.TableModels
 
         public TItem Data => DataItem.Data;
 
+        /// <summary>
+        /// Gets the source record associated with this row.
+        /// </summary>
+        public override object Record => Data;
+
         public Table<TItem> Table => DataItem.Table;
 
         /// <summary>
@@ -63,6 +68,11 @@ namespace AntDesign.TableModels
 
         public string Key { get; set; }
 
+        /// <summary>
+        /// The row key exposed in the rendered table markup.
+        /// </summary>
+        public string DataKey { get; set; }
+
         internal ElementReference RowElementRef { get; set; }
 
         public bool Expanded
@@ -81,6 +91,11 @@ namespace AntDesign.TableModels
         public int Level { get; set; }
 
         public abstract TableDataItem TableDataItem { get; }
+
+        /// <summary>
+        /// Gets the source record associated with this row.
+        /// </summary>
+        public virtual object Record => null;
 
         public bool Selected
         {

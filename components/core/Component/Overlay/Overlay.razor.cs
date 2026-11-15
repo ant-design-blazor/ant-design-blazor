@@ -125,6 +125,7 @@ namespace AntDesign.Internal
         private bool _isOverlayDuringShowing = false;
         private bool _isOverlayShow = false;
         private bool _isOverlayHiding = false;
+        private int _visibilityTransitionId;
         private bool _lastDisabledState = false;
 
         private int? _overlayLeft = null;
@@ -235,10 +236,14 @@ namespace AntDesign.Internal
 
         internal async Task Show(int? overlayLeft = null, int? overlayTop = null)
         {
-            if (_isOverlayShow || Trigger.Disabled)
+            if ((_isOverlayShow && !_isOverlayHiding) || Trigger.Disabled)
             {
                 return;
             }
+            // A click during the leave transition is a request to reopen the
+            // popup. Cancel the pending Hide completion before positioning it.
+            var transitionId = ++_visibilityTransitionId;
+            _isOverlayHiding = false;
             _isOverlayDuringShowing = true;
 
             if (_isOverlayFirstRender && HiddenMode && Ref.Id is not null)
@@ -266,8 +271,10 @@ namespace AntDesign.Internal
             }
 
             await UpdateParentOverlayState(true);
+            if (transitionId != _visibilityTransitionId) return;
 
             await AddOverlayToBody(overlayLeft, overlayTop);
+            if (transitionId != _visibilityTransitionId) return;
             if (!string.IsNullOrWhiteSpace(Trigger.EffectivePopupWidthMode) && Ref.Id is not null)
             {
                 // Keep the popup hidden until its width has been measured and
@@ -276,6 +283,7 @@ namespace AntDesign.Internal
                 await JsInvokeAsync(JSInteropConstants.OverlayComponentHelper.RevealOverlayForShow,
                     Ref, Trigger.GetOverlayHiddenClass(), Trigger.GetOverlayEnterClass(), OverlayDisplayStyle);
             }
+            if (transitionId != _visibilityTransitionId) return;
             _isOverlayShow = true;
             _isOverlayDuringShowing = false;
             _isOverlayHiding = false;
@@ -286,6 +294,14 @@ namespace AntDesign.Internal
             if (Trigger != null && Trigger.VisibleChanged.HasDelegate)
             {
                 await Trigger.VisibleChanged.InvokeAsync(true);
+            }
+            if (Trigger != null && Trigger.OpenChanged.HasDelegate)
+            {
+                await Trigger.OpenChanged.InvokeAsync(true);
+            }
+            if (Trigger != null && Trigger.OnOpenChange.HasDelegate)
+            {
+                await Trigger.OnOpenChange.InvokeAsync(true);
             }
 
             await InvokeAsync(StateHasChanged);
@@ -306,29 +322,52 @@ namespace AntDesign.Internal
             {
                 return;
             }
-            await Task.Delay(HideMillisecondsDelay);
+            if (_isOverlayHiding)
+            {
+                return;
+            }
+            // Mark the transition before the delay so a trigger click during
+            // the close window is interpreted as a reopen request.
+            var transitionId = ++_visibilityTransitionId;
+            _isOverlayHiding = true;
+            await Task.Delay(IsContainTrigger(TriggerType.Click) ? 0 : HideMillisecondsDelay);
+            if (transitionId != _visibilityTransitionId || !_isOverlayHiding || !_isOverlayShow)
+            {
+                return;
+            }
 
             // if mouse is in overlay, don't hide
             // if there are children overlay is showing, don't hide
             // if trigger is set visible by outside and has no visible changed delegate, it means that the user is using visible to control show and hide, show don't hide by itself
-            if (!force && ((!IsContainTrigger(TriggerType.Click) && _mouseInOverlay) || _isPreventHide || (_childrenToShow.Count > 0) || (Trigger.Visible && !Trigger.VisibleChanged.HasDelegate)))
+            if (!force && ((!IsContainTrigger(TriggerType.Click) && _mouseInOverlay) || _isPreventHide || (_childrenToShow.Count > 0) || (Trigger.Visible && !Trigger.HasVisibilityChangeCallback)))
             {
+                _isOverlayHiding = false;
                 return;
             }
             _isOverlayFirstRender = true;
 
             _isWaitForOverlayFirstRender = false;
-            _isOverlayHiding = true;
 
             _overlayCls = Trigger.GetOverlayLeaveClass();
 
             await Trigger.OnOverlayHiding.InvokeAsync(true);
+            if (transitionId != _visibilityTransitionId) return;
             await UpdateParentOverlayState(false);
+            if (transitionId != _visibilityTransitionId) return;
 
-            StateHasChanged();
+            // Commit the leave class before starting the animation delay. In
+            // Blazor Server the render can otherwise be queued behind this
+            // method's await, so the fixed delay may finish before the browser
+            // has even received the leave state. That leaves popup content
+            // visible after the panel appears to have collapsed.
+            await InvokeAsync(StateHasChanged);
 
             // wait for leave animation
             await Task.Delay(WaitForHideAnimMilliseconds);
+            if (transitionId != _visibilityTransitionId || !_isOverlayHiding || !_isOverlayShow)
+            {
+                return;
+            }
             _isOverlayShow = false;
             _isOverlayHiding = false;
 
@@ -338,8 +377,16 @@ namespace AntDesign.Internal
             {
                 await Trigger.VisibleChanged.InvokeAsync(false);
             }
+            if (Trigger != null && Trigger.OpenChanged.HasDelegate)
+            {
+                await Trigger.OpenChanged.InvokeAsync(false);
+            }
+            if (Trigger != null && Trigger.OnOpenChange.HasDelegate)
+            {
+                await Trigger.OnOpenChange.InvokeAsync(false);
+            }
 
-            StateHasChanged();
+            await InvokeAsync(StateHasChanged);
 
             if (OnHide.HasDelegate)
                 _ = OnHide.InvokeAsync(null);
@@ -387,12 +434,12 @@ namespace AntDesign.Internal
 
         internal bool IsPopup()
         {
-            return _isOverlayShow;
+            return _isOverlayShow && !_isOverlayHiding;
         }
 
         /// <summary>
-        /// when overlay is complete hide, IsPopup return true
-        /// when overlay is hiding(playing hide animation), IsPopup return false, IsHiding return true.
+        /// Returns true while the popup is stably open. During its leave
+        /// transition, it is treated as closed so a click can reopen it.
         /// </summary>
         /// <returns></returns>
         internal bool IsHiding()
@@ -428,7 +475,7 @@ namespace AntDesign.Internal
                 // 342.65625 to 342.656), which can snap the popup one layout
                 // quantum narrower than its trigger after the Blazor render.
                 var measuredWidth = await JsInvokeAsync<string>(JSInteropConstants.OverlayComponentHelper.PrepareOverlayWidthForShow,
-                    Ref, Trigger.Ref, Trigger.PopupContainerSelector, Trigger.EffectivePopupWidthMode,
+                    Ref, Trigger.Ref, Trigger.EffectivePopupContainer, Trigger.EffectivePopupWidthMode,
                     Trigger.EffectivePopupWidth, Trigger.EffectivePopupMaxWidth);
                 if (double.TryParse(measuredWidth, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var parsedWidth) && parsedWidth > 0)
                 {
@@ -442,7 +489,8 @@ namespace AntDesign.Internal
                     // width constraints in Blazor's style too, since a later
                     // render replaces the style attribute and would otherwise
                     // discard JS-only min/max-width values during the motion.
-                    _overlayMeasuredWidthStyle = $"box-sizing:border-box;width:{width}px;min-width:{width}px{maxWidth}";
+                    var minWidth = Trigger.EffectivePopupWidthMode == "content" ? width : "0";
+                    _overlayMeasuredWidthStyle = $"box-sizing:border-box;width:{width}px;min-width:{minWidth}px{maxWidth}";
                 }
             }
 
@@ -469,7 +517,7 @@ namespace AntDesign.Internal
                 }
 
                 _position = await JsInvokeAsync<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer,
-                    Ref.Id, Ref, Trigger.Ref, Trigger.PlacementWithRTL, Trigger.PopupContainerSelector,
+                    Ref.Id, Ref, Trigger.Ref, Trigger.PlacementWithRTL, Trigger.EffectivePopupContainer,
                     Trigger.BoundaryAdjustMode, triggerIsWrappedInDiv, Trigger.PrefixCls,
                     VerticalOffset, HorizontalOffset, OffsetCssExpression, ArrowPointAtCenter, overlayTop, overlayLeft);
                 if (_position is null && _recurenceGuard <= 10) //up to 10 attempts
@@ -514,7 +562,7 @@ namespace AntDesign.Internal
                 clickIgnoreSelector,
                 openClass,
                 Trigger.PlacementWithRTL,
-                Trigger.PopupContainerSelector,
+                Trigger.EffectivePopupContainer,
                 Trigger.BoundaryAdjustMode,
                 Trigger.IsTriggerWrappedInDiv,
                 Trigger.PrefixCls,
@@ -653,10 +701,18 @@ namespace AntDesign.Internal
         {
             bool triggerIsWrappedInDiv = Trigger.IsTriggerWrappedInDiv;
 
-            _position = await JsInvokeAsync<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.UpdateOverlayPosition,
-                Ref.Id, Ref, Trigger.Ref, Trigger.PlacementWithRTL, Trigger.PopupContainerSelector,
-                Trigger.BoundaryAdjustMode, triggerIsWrappedInDiv, Trigger.PrefixCls,
-                VerticalOffset, HorizontalOffset, OffsetCssExpression, ArrowPointAtCenter, overlayTop, overlayLeft);
+            for (var attempt = 0; attempt < 10; attempt++)
+            {
+                _position = await JsInvokeAsync<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.UpdateOverlayPosition,
+                    Ref.Id, Ref, Trigger.Ref, Trigger.PlacementWithRTL, Trigger.EffectivePopupContainer,
+                    Trigger.BoundaryAdjustMode, triggerIsWrappedInDiv, Trigger.PrefixCls,
+                    VerticalOffset, HorizontalOffset, OffsetCssExpression, ArrowPointAtCenter, overlayTop, overlayLeft);
+                if (_position != null)
+                {
+                    break;
+                }
+                await Task.Delay(10);
+            }
             if (_position is not null)
             {
                 if (_position.Placement != Trigger.GetPlacementType().Placement)

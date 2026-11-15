@@ -37,7 +37,7 @@ One or more elements can be selected from either column, one click on the proper
 | ShowSelectAll | Show select all checkbox on the header | bool | true |  |
 | TargetKeys | A set of keys of elements that are listed on the right column. | string\[] | \[] |  |
 | Titles | A set of titles that are sorted from left to right. | string\[] | - |  |
-| SelectAllLabels | A set of customized labels for select all checkboxs on the header |  |  |  |
+| SelectAllLabels | Customized labels beside the source and target select-all checkboxes. Each entry accepts static text or a render template with selected and total counts. | `OneOf<string, RenderFragment<TransferSelectAllLabelInfo>>[]` | `null` |  |
 | Locale | The i18n text including filter, empty text, item unit, etc. | TransferLocale |  |  |
 | ListStyle | A custom CSS style used for rendering the transfer columns. | Func<TransferDirection,string> | | |
 | OnChange | A callback function that is executed when the transfer between columns is complete. | TransferSelectChangeArgs |  |  |

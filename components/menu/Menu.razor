@@ -2,11 +2,11 @@
 @inherits AntDomComponentBase
 
 <CascadingValue Value="this" IsFixed>
-    <ul class="@GetSemanticClass("root", ClassMapper.Class)" style="@GetSemanticStyle("root", OverflowRootStyle)" id="@Id" direction="ltr" role="menu" @ref="Ref">
+    <ul class="@GetSemanticClass("root", ClassMapper.Class)" style="@(string.IsNullOrWhiteSpace(GetSemanticStyle("root", OverflowRootStyle)) ? null : GetSemanticStyle("root", OverflowRootStyle))" id="@Id" dir="ltr" data-menu-list="true" role="menu" tabindex="0" @ref="Ref">
         @ChildContent
         @if (OverflowEnabled)
         {
-            <SubMenu @ref="_overflowSubmenu" Key="@OverflowKey" Title="More" Class="ant-menu-overflow-item-rest" PopupClassName="@OverflowedIndicatorPopupClassName" Placement="Placement.BottomRight">
+            <SubMenu @ref="_overflowSubmenu" Key="@OverflowKey" Title="More" Disabled="@(!HasOverflowItems)" Class="ant-menu-overflow-item-rest" PopupClassName="@OverflowedIndicatorPopupClassName" Placement="Placement.BottomLeft">
                 <TitleTemplate>
                     @if (OverflowedIndicator != null) { @OverflowedIndicator }
                     else { <Icon Type="@IconType.Outline.Ellipsis" /> }
@@ -20,4 +20,5 @@
             </SubMenu>
         }
     </ul>
+    <div aria-hidden="true" style="display: none;"></div>
 </CascadingValue>

@@ -3,7 +3,7 @@
 
 @if (Grid == null)
 {
-    <li class="@ClassMapper.Class" style="@Style" Id="@Id" @onclick="HandleClick" @onclick:stopPropagation @ref="Ref">
+    <li class="@ClassMapper.Class" style="@(string.IsNullOrEmpty(Style) ? null : Style)" Id="@Id" @onclick="HandleClick" @onclick:stopPropagation @ref="Ref">
         @itemChildren(this)
     </li>
 }
@@ -11,7 +11,7 @@ else
 {
     <div style="width: @(AntList.ColumnWidth)%; max-width: @(AntList.ColumnWidth)%;">
         <AntDesign.Col Flex="1">
-            <div class="@ClassMapper.Class" style="@Style" Id="@Id" @onclick="HandleClick" @onclick:stopPropagation @ref="Ref">
+            <div class="@ClassMapper.Class" style="@(string.IsNullOrEmpty(Style) ? null : Style)" Id="@Id" @onclick="HandleClick" @onclick:stopPropagation @ref="Ref">
                 @itemChildren(this)
             </div>
         </AntDesign.Col>
@@ -44,10 +44,10 @@ else
     @<Template>
         @if (content.Actions != null && content.Actions.Length > 0)
         {
-            <ul class="@content.PrefixName-action" key="actions">
+            <ul class="@content.PrefixName-action">
                 @for (int i = 0; i < content.Actions.Length; i++)
                 {
-                    <li key="@content.PrefixName-action-@i">
+                    <li>
                         @content.Actions[i]
                         @if (i != (content.Actions.Length - 1))
                         {

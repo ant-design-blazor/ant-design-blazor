@@ -1,5 +1,142 @@
 @import './index.less';
 
+// React v6 names the standard compact table size `medium` and uses the MD
+// cell padding tokens. Keep the public .NET enum alias while matching its DOM
+// class and token-driven spacing.
+.@{table-prefix-cls}.@{table-prefix-cls}-css-var.@{table-prefix-cls}-medium {
+    .@{table-prefix-cls}-title,
+    .@{table-prefix-cls}-footer,
+    .@{table-prefix-cls}-thead > tr > th,
+    .@{table-prefix-cls}-tbody > tr > td,
+    tfoot > tr > th,
+    tfoot > tr > td {
+        padding-block: var(--ant-table-cell-padding-block-md, 8px);
+        padding-inline: var(--ant-table-cell-padding-inline-md, 8px);
+    }
+}
+
+// React v6 renders virtual rows as flex divs instead of table rows. The base
+// table selectors above intentionally target tr/td, so mirror their cell
+// sizing and separators for the virtual DOM here.
+.@{table-prefix-cls}-wrapper {
+    // The docs host's Tailwind-style border reset applies `solid` to every
+    // element. React's Table wrapper and virtual row resolve this edge to
+    // `none`, so keep the component's computed style aligned without changing
+    // the shared docs reset.
+    border-bottom-style: none;
+
+    .@{table-prefix-cls}-tbody-virtual .@{table-prefix-cls}-row {
+        border-bottom-style: none;
+    }
+
+    .@{table-prefix-cls}-tbody-virtual-holder {
+        overflow-anchor: none;
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+            width: 0;
+            height: 0;
+        }
+    }
+
+    .@{table-prefix-cls}-tbody-virtual-holder-inner {
+        > .@{table-prefix-cls}-row,
+        > div:not(.@{table-prefix-cls}-row) > .@{table-prefix-cls}-row {
+            display: flex;
+            box-sizing: border-box;
+            width: 100%;
+
+            > .@{table-prefix-cls}-cell {
+                align-content: center;
+            }
+        }
+    }
+
+    .@{table-prefix-cls}-tbody-virtual .@{table-prefix-cls}-cell {
+        position: relative;
+        padding: @table-padding-vertical @table-padding-horizontal;
+        overflow-wrap: break-word;
+        border-bottom: @border-width-base @border-style-base @table-border-color;
+        transition: background-color @animation-duration-slow;
+    }
+}
+
+// Ant Design v6 fixed columns use logical directions and per-column z offsets.
+.@{table-prefix-cls}-wrapper {
+    .@{table-prefix-cls}-cell.@{table-prefix-cls}-cell-fix {
+        position: sticky;
+    }
+
+    .@{table-prefix-cls}-cell-fix {
+        z-index: calc(var(--z-offset-reverse) + @zindex-table-fixed);
+        background: @table-bg;
+
+        &:after {
+            position: absolute;
+            top: 0;
+            bottom: -@border-width-base;
+            width: 30px;
+            content: '';
+            pointer-events: none;
+            transition: box-shadow @animation-duration-slow;
+        }
+
+        &-start:after {
+            inset-inline-start: 100%;
+        }
+
+        &-end:after {
+            inset-inline-end: 100%;
+        }
+
+        &-start-shadow-show:after {
+            box-shadow: inset 10px 0 8px -8px @table-border-color;
+        }
+
+        &-end-shadow-show:after {
+            box-shadow: inset -10px 0 8px -8px @table-border-color;
+        }
+    }
+
+    .@{table-prefix-cls}-container {
+        position: relative;
+
+        &:before,
+        &:after {
+            position: absolute;
+            top: 0;
+            bottom: -@border-width-base;
+            z-index: calc(var(--columns-count, 0) * 2 + @zindex-table-fixed + 1);
+            width: 30px;
+            content: '';
+            pointer-events: none;
+            transition: box-shadow @animation-duration-slow;
+        }
+
+        &:before {
+            inset-inline-start: 0;
+        }
+
+        &:after {
+            inset-inline-end: 0;
+        }
+    }
+
+    .@{table-prefix-cls}-has-fix-start .@{table-prefix-cls}-container:before,
+    .@{table-prefix-cls}-has-fix-end .@{table-prefix-cls}-container:after {
+        display: none;
+    }
+
+    .@{table-prefix-cls}-fix-start-shadow-show .@{table-prefix-cls}-container:before {
+        box-shadow: inset 10px 0 8px -8px @table-border-color;
+    }
+
+    .@{table-prefix-cls}-fix-end-shadow-show .@{table-prefix-cls}-container:after {
+        box-shadow: inset -10px 0 8px -8px @table-border-color;
+    }
+}
+
 .@{table-prefix-cls}-responsive {
     @media (max-width: 960px) {
         .@{table-prefix-cls} {
@@ -91,6 +228,22 @@
     .@{table-prefix-cls}-resizing {
         border-right: 2px dashed @primary-color-active;
         z-index: 99;
+    }
+}
+
+#components-table-demo-fixed-header .@{table-prefix-cls} .@{table-prefix-cls}-container {
+    .@{table-prefix-cls}-body,
+    .@{table-prefix-cls}-content {
+        scrollbar-width: thin;
+        scrollbar-color: #eaeaea transparent;
+    }
+}
+
+#components-table-demo-fixed-columns-header .@{table-prefix-cls} .@{table-prefix-cls}-container {
+    .@{table-prefix-cls}-body,
+    .@{table-prefix-cls}-content {
+        scrollbar-width: thin;
+        scrollbar-color: #eaeaea transparent;
     }
 }
 

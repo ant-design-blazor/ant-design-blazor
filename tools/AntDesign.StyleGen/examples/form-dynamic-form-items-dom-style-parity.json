@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "ant-design/ant-design",
+    "component": "Form"
+  },
+  "config": {
+    "timeoutMs": 30000,
+    "viewport": { "width": 1280, "height": 900, "deviceScaleFactor": 1 },
+    "colorScheme": "light",
+    "comparisonPolicy": {
+      "normalization": {
+        "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_r_[a-zA-Z0-9_-]+)$",
+        "removeAttributes": ["_bl_*", "id"],
+        "removeClassPatterns": ["^css-dev-only-to-override-", "^css-var-_r_", "^css-var-_[rR]_", "^css-[a-zA-Z0-9]+$"],
+        "removeCommentMarkers": ["<!--!-->"],
+        "sortClassTokens": true,
+        "removeEmptyAttributes": ["style"]
+      }
+    }
+  },
+  "groups": [
+    {
+      "id": "form-dynamic-form-items",
+      "component": "Form",
+      "captureReactBeforeBlazor": true,
+      "react": {
+        "url": "http://127.0.0.1:8000/components/form?theme=light",
+        "scopeSelector": "#form-demo-dynamic-form-items .code-box-demo",
+        "rootSelector": "form.ant-form"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/form?theme=light",
+        "scopeSelector": "#components-form-demo-dynamic-form-items .code-box-demo",
+        "rootSelector": "form.ant-form"
+      },
+      "styleProperties": ["display", "position", "boxSizing", "width", "height", "marginBottom", "gap", "alignItems", "padding", "fontSize", "lineHeight", "color", "backgroundColor", "borderRadius", "borderWidth"],
+      "semanticNodes": [
+        { "path": "form", "selector": "$root", "minimumCount": 1 },
+        { "path": "space", "selector": ".ant-space", "minimumCount": 0 },
+        { "path": "space.item", "selector": ".ant-space-item", "minimumCount": 0 },
+        { "path": "formItem", "selector": ".ant-form-item", "minimumCount": 2 },
+        { "path": "input", "selector": ".ant-input", "minimumCount": 0 },
+        { "path": "button", "selector": "button.ant-btn", "minimumCount": 1 }
+      ],
+      "scenarios": [
+        { "id": "initial" },
+        {
+          "id": "add-field",
+          "actions": [
+            {
+              "type": "click",
+              "reactSelector": "#form-demo-dynamic-form-items button.ant-btn-dashed",
+              "blazorSelector": "#components-form-demo-dynamic-form-items button.ant-btn-dashed"
+            },
+            { "type": "wait", "milliseconds": 2500 }
+          ]
+        }
+      ]
+    }
+  ]
+}

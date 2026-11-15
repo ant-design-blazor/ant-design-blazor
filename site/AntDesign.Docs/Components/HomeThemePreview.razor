@@ -5,11 +5,8 @@
 <style id="home-theme-preview-style">@((MarkupString)_styles.CssText)</style>
 <section class="@GetClass("home-theme-preview", "root")">
     <div class="@GetClass("home-theme-heading", "heading")">
-        <div>
-            <span class="@GetClass("home-theme-eyebrow", "eyebrow")">Ant Design v6</span>
-            <h2>@Localizer["app.home.theme-title"]</h2>
-            <p>@Localizer["app.home.theme-description"]</p>
-        </div>
+        <div class="@_styles["headingTitle"]"><h1 class="ant-typography">@Localizer["app.home.theme-title"]</h1></div>
+        <p>@Localizer["app.home.theme-description"]</p>
     </div>
     <div class="@_styles["wrapper"]">
         <div class="@GetClass("home-theme-controls", "controls")">
@@ -357,10 +354,10 @@
                 ("@media(max-width:600px)", Css(("maxWidth", "none")))),
             ["wrapper"] = Css(("width", "100%"), ("maxWidth", 1320), ("marginInline", "auto"), ("display", "flex"), ("flexDirection", "column"), ("gap", 16)),
             ["heading"] = Css(("width", "100%"), ("textAlign", "center"),
-                ("& h2", Css(("margin", 0), ("fontSize", "var(--ant-font-size-heading-1)"), ("fontWeight", 900), ("lineHeight", "var(--ant-line-height-heading-1)"), ("color", "var(--preview-text)"))),
+                ("& h1", Css(("margin", 0), ("fontSize", "var(--ant-font-size-heading-1)"), ("fontWeight", 900), ("lineHeight", "var(--ant-line-height-heading-1)"), ("color", "var(--preview-text)"))),
                 ("& p", Css(("marginTop", "var(--ant-margin-sm)"), ("marginBottom", "calc(var(--ant-margin-xxl) * 7 / 6)"))),
-                ("@media(width < 768px)", Css(("& h2", Css(("fontSize", "var(--ant-font-size-heading-2)"))), ("& p", Css(("marginBottom", "var(--ant-margin-xxl)")))))),
-            ["eyebrow"] = Css(("display", "none")),
+                ("@media(width < 768px)", Css(("& h1", Css(("fontSize", "var(--ant-font-size-heading-2)"))), ("& p", Css(("marginBottom", "var(--ant-margin-xxl)")))))),
+            ["headingTitle"] = Css(("display", "flex"), ("alignItems", "center"), ("justifyContent", "center"), ("gap", 8)),
             ["controls"] = Css(("display", "flex"), ("width", "100%"), ("alignItems", "center"), ("justifyContent", "space-between"), ("gap", 16),
                 ("@media(max-width:1200px)", Css(("justifyContent", "center"), ("flexDirection", "column")))),
             ["actions"] = Css(("display", "flex"), ("alignItems", "center"), ("gap", 12), ("& button, & a", Css(("display", "flex"), ("alignItems", "center"), ("justifyContent", "center"), ("height", 28), ("width", 28), ("borderRadius", "50%"), ("fontSize", 15), ("border", 0), ("background", "transparent"), ("color", "var(--ant-color-primary-border)"), ("cursor", "pointer"))),

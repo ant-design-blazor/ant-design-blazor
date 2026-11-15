@@ -20,11 +20,20 @@ export class eventHelper {
           if (target instanceof Element && target.matches(ignoreSelector)) return;
         }
       }
-      const obj = {};
+      const obj: any = {};
       for (const k in args) {
         if (k !== 'originalTarget') { //firefox occasionally raises Permission Denied when this property is being stringified
           obj[k] = args[k];
         }
+      }
+
+      // MouseEvent and PointerEvent coordinates are prototype getters, so a
+      // for-in copy omits them. Shared document listeners (such as overlay
+      // outside-click handling) need the actual pointer position to determine
+      // whether the interaction happened inside the trigger or popup.
+      if (typeof args.clientX === 'number' && typeof args.clientY === 'number') {
+        obj.clientX = args.clientX;
+        obj.clientY = args.clientY;
       }
       const cache = new Set();
       const json = JSON.stringify(obj, (k, v) => {

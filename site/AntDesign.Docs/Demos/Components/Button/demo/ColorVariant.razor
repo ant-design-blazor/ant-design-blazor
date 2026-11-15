@@ -1,16 +1,47 @@
+@using AntDesign.JsInterop
+@inject IJSRuntime JS
+@inject IDomEventListener DomEventListener
+@implements IDisposable
+
 <Flex Gap="FlexGap.Small" Vertical>
     @foreach (var color in _colors)
     {
         <Flex Gap="FlexGap.Small" Wrap="FlexWrap.Wrap">
             @foreach (var variant in _variants)
             {
-                <Button ButtonColor="color" Variant="variant">@variant</Button>
+                <Button ButtonColor="color" Variant="variant" Size="_buttonSize">@variant</Button>
             }
         </Flex>
     }
 </Flex>
 
 @code {
+    private ButtonSize _buttonSize = ButtonSize.Small;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var window = await JS.InvokeAsync<Window>(JSInteropConstants.GetWindow);
+            UpdateButtonSize(window.InnerWidth);
+            DomEventListener.AddShared<Window>("window", "resize", HandleResize);
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private void HandleResize(Window window) => UpdateButtonSize(window.InnerWidth);
+
+    private void UpdateButtonSize(decimal viewportWidth)
+    {
+        var size = viewportWidth >= (int)BreakpointType.Xxl ? ButtonSize.Default : ButtonSize.Small;
+        if (_buttonSize == size) return;
+        _buttonSize = size;
+        _ = InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose() => DomEventListener.RemoveShared<Window>("window", "resize", HandleResize);
+
     private static readonly ButtonColor[] _colors =
     [
         ButtonColor.Default,

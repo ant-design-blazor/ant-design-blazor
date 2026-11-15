@@ -1,0 +1,32 @@
+@using System.Collections.Generic
+
+<Dropdown ClassNames="_classNames" Styles="_styles">
+    <Overlay>
+        <Menu>
+            <MenuItem Key="profile">Profile</MenuItem>
+            <MenuItem Key="settings">Settings</MenuItem>
+            <MenuItem Key="billing">Billing</MenuItem>
+        </Menu>
+    </Overlay>
+    <ChildContent>
+        <Button>Open styled menu</Button>
+    </ChildContent>
+</Dropdown>
+
+@code {
+    private readonly IReadOnlyDictionary<string, string> _classNames = new Dictionary<string, string>
+    {
+        ["root"] = "dropdown-demo-root",
+        ["item"] = "dropdown-demo-item",
+        ["itemTitle"] = "dropdown-demo-item-title",
+        ["itemContent"] = "dropdown-demo-item-content"
+    };
+
+    private readonly IReadOnlyDictionary<string, string> _styles = new Dictionary<string, string>
+    {
+        ["root"] = "border: 1px solid var(--ant-color-primary-border); border-radius: 12px;",
+        ["item"] = "padding-block: 10px;",
+        ["itemTitle"] = "font-weight: 600;",
+        ["itemContent"] = "color: var(--ant-color-primary);"
+    };
+}

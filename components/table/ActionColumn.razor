@@ -16,7 +16,7 @@ else if (IsPlaceholder)
 }
 else if (IsMeasure)
 {
-    <td style="padding: 0px; border: 0px; height: 0px;"><div style="height: 0px; overflow: hidden;">&nbsp;</div></td>
+    <td style="padding-top: 0px; padding-bottom: 0px; border-top: 0px; border-bottom: 0px; height: 0px;"><div style="height: 0px; overflow: hidden; font-weight: bold;">@Title</div></td>
 }
 else if (IsColGroup)
 {
@@ -27,9 +27,9 @@ else if (IsColGroup)
 
     if (Width != null)
     {
-        <col style="width: @((CssSizeLength)Width); min-width: @((CssSizeLength)Width);">
+        <col style="width: @((CssSizeLength)Width);">
     }
-    else
+    else if (Fixed != null)
     {
         <col />
     }
@@ -41,8 +41,16 @@ else if (IsHeader && HeaderColSpan != 0)
         <th class="ant-table-cell ant-table-row-expand-icon-cell"></th>
     }
 
-	<th class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" colspan="@HeaderColSpan" rowspan="@(RowSpan > 1 ? RowSpan : false)">
-		@if (TitleTemplate != null)
+	<th class="@ClassMapper.Class" scope="col" style="@(string.IsNullOrWhiteSpace($"{FixedStyle}{HeaderStyle}") ? null : $"{FixedStyle}{HeaderStyle}")" colspan="@(HeaderColSpan > 1 ? HeaderColSpan : false)" rowspan="@(RowSpan > 1 ? RowSpan : false)"
+		aria-description="@(Sortable ? Table.Locale.Sortable : null)" aria-label="@(Sortable ? Title ?? string.Empty : null)" tabindex="@(Sortable ? "0" : null)" aria-sort="@(Sortable ? AriaSort : null)" @onkeydown="HandleSortKeyDown">
+		@if (Sortable)
+		{
+			<div class="ant-table-column-sorters" @onclick="HandleSort">
+				<span class="ant-table-column-title">@if (TitleTemplate != null) { @TitleTemplate } else { @Title }</span>
+				@SorterIcon()
+			</div>
+		}
+		else if (TitleTemplate != null)
 		{
 			@TitleTemplate
 		}
@@ -61,13 +69,35 @@ else if (!IsHeader && RowSpan != 0 && ColSpan != 0)
 			{
 				<button type="button" @onclick="ToggleTreeNode"
 			class="ant-table-row-expand-icon @(RowData.Expanded?"ant-table-row-expand-icon-expanded":"ant-table-row-expand-icon-collapsed")"
-			aria-label="@(RowData.Expanded?Table.Locale.Collapse:Table.Locale.Expand)"></button>
+			aria-label="@(RowData.Expanded?Table.Locale.Collapse:Table.Locale.Expand)"
+			aria-expanded="@(RowData.Expanded ? "true" : "false")"></button>
+			}
+			else if (!Table.TreeMode)
+			{
+				<button type="button" class="ant-table-row-expand-icon ant-table-row-expand-icon-spaced"
+				        aria-label="@Table.Locale.Expand" aria-expanded="false"></button>
 			}
         </td>
     }
 
     var title = Context.HeaderColumns.LastOrDefault(x => x.ColIndex <= ColIndex && x.ColIndex + x.HeaderColSpan > ColIndex)?.Title;
-    <td class="@ClassMapper.Class" style="@FixedStyle @Style" rowspan="@RowSpan" colspan="@ColSpan" data-label="@title">
+    @if (Table.IsVirtual)
+    {
+            <div class="@ClassMapper.Class" style="@GetVirtualCellStyle()" rowspan="@(RowSpan > 1 ? RowSpan : false)" colspan="@(ColSpan > 1 ? ColSpan : false)" data-label="@(Table.Responsive ? title : false)" data-virtual-column="@VirtualColumnIndex">
+		    @if (CellRender != null)
+		    {
+                var cellData = new CellData(RowData);
+                @CellRender(cellData)
+		    }
+		    else
+		    {
+		        @ChildContent
+		    }
+        </div>
+    }
+    else
+    {
+    <td class="@ClassMapper.Class" style="@(string.IsNullOrWhiteSpace($"{FixedStyle}{Style}") ? null : $"{FixedStyle}{Style}")" rowspan="@(RowSpan > 1 ? RowSpan : false)" colspan="@(ColSpan > 1 ? ColSpan : false)" data-label="@(Table.Responsive ? title : false)">
 		@if (ColIndex == Table.TreeExpandIconColumnIndex && Table.TreeMode)
 		{
 			<span class="ant-table-row-indent indent-level-@RowData.Level" style="padding-left: @((CssSizeLength)(RowData.Level * Table.IndentSize));"></span>
@@ -91,4 +121,17 @@ else if (!IsHeader && RowSpan != 0 && ColSpan != 0)
             @ChildContent
         }
     </td>
+    }
+}
+
+@code {
+    private string GetVirtualCellStyle()
+    {
+        var width = Width != null ? ((CssSizeLength)Width).ToString() : null;
+        var virtualStyle = width == null
+            ? "flex: 0 0 auto; margin-right: 0px; pointer-events: auto;"
+            : $"flex: 0 0 {width}; width: {width}; margin-right: 0px; pointer-events: auto;";
+        var customStyle = $"{FixedStyle}{Style}".Trim();
+        return string.IsNullOrWhiteSpace(customStyle) ? virtualStyle : $"{customStyle.TrimEnd(';')}; {virtualStyle}";
+    }
 }

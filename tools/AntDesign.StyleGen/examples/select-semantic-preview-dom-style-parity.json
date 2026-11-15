@@ -1,0 +1,246 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "ant-design/ant-design",
+    "revision": "599b251da933709d7b25fc9e9018ed7f4c093b96",
+    "component": "Select"
+  },
+  "config": {
+    "timeoutMs": 60000,
+    "navigationTimeoutMs": 120000,
+    "viewport": {
+      "width": 1280,
+      "height": 900,
+      "deviceScaleFactor": 1
+    },
+    "comparisonPolicy": {
+      "normalization": {
+        "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_[rR]_[a-zA-Z0-9_-]+)$",
+        "removeAttributes": [
+          "_bl_*"
+        ],
+        "removeClassPatterns": [
+          "^css-dev-only-do-not-override-",
+          "^css-var-_[a-zA-Z0-9_]+$",
+          "^css-[a-zA-Z0-9]+$"
+        ],
+        "removeCommentMarkers": [
+          "<!--!-->"
+        ],
+        "sortClassTokens": true,
+        "normalizeStyleAttributes": true
+      },
+      "ignoredSemanticAttributes": {
+        "popup.root": [
+          "style"
+        ]
+      }
+    }
+  },
+  "groups": [
+    {
+      "id": "select-semantic-single-open",
+      "component": "Select",
+      "alignRootViewportY": 250,
+      "react": {
+        "url": "http://127.0.0.1:8000/components/select?theme=light#select-demo-_semantic",
+        "scopeSelector": "#select-demo-_semantic .code-box-demo",
+        "rootSelector": ".semantic-mark-root",
+        "skeletonSelector": ""
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/select?theme=light#components-select-demo-_semantic",
+        "scopeSelector": ".semantic-dom-preview",
+        "rootSelector": ".semantic-mark-root",
+        "skeletonSelector": ""
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "paddingBlock",
+        "paddingInline",
+        "fontSize",
+        "lineHeight",
+        "color",
+        "backgroundColor",
+        "borderRadius",
+        "borderWidth",
+        "borderColor",
+        "boxShadow",
+        "zIndex",
+        "top",
+        "right",
+        "bottom",
+        "left",
+        "transform"
+      ],
+      "semanticNodes": [
+        {
+          "path": "prefix",
+          "selector": ".semantic-mark-prefix",
+          "minimumCount": 1
+        },
+        {
+          "path": "content",
+          "selector": ".semantic-mark-content",
+          "minimumCount": 1
+        },
+        {
+          "path": "placeholder",
+          "selector": ".semantic-mark-placeholder",
+          "minimumCount": 0
+        },
+        {
+          "path": "clear",
+          "selector": ".semantic-mark-clear",
+          "minimumCount": 1
+        },
+        {
+          "path": "input",
+          "selector": ".semantic-mark-input",
+          "minimumCount": 1
+        },
+        {
+          "path": "suffix",
+          "selector": ".semantic-mark-suffix",
+          "minimumCount": 1
+        },
+        {
+          "path": "popup.root",
+          "selector": ".semantic-mark-popup-root",
+          "minimumCount": 1,
+          "portal": true
+        },
+        {
+          "path": "popup.list",
+          "selector": ".semantic-mark-popup-list",
+          "minimumCount": 1,
+          "portal": true,
+          "portalParentPath": "popup.root"
+        },
+        {
+          "path": "popup.listItem",
+          "selector": ".semantic-mark-popup-listItem",
+          "minimumCount": 3,
+          "portal": true,
+          "portalParentPath": "popup.root"
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "open-single",
+          "minimumRoots": 1,
+          "actions": [
+            {
+              "type": "waitForSelector",
+              "selector": ".semantic-mark-popup-root"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "select-semantic-multiple-open",
+      "component": "Select",
+      "alignRootViewportY": 250,
+      "react": {
+        "url": "http://127.0.0.1:8000/components/select?theme=light#select-demo-_semantic",
+        "scopeSelector": "#select-demo-_semantic .code-box-demo",
+        "rootSelector": ".semantic-mark-root",
+        "skeletonSelector": ""
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/select?theme=light#components-select-demo-_semantic",
+        "scopeSelector": ".semantic-dom-preview",
+        "rootSelector": ".semantic-mark-root",
+        "skeletonSelector": ""
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "paddingBlock",
+        "paddingInline",
+        "fontSize",
+        "lineHeight",
+        "color",
+        "backgroundColor",
+        "borderRadius",
+        "borderWidth",
+        "borderColor",
+        "boxShadow",
+        "zIndex",
+        "top",
+        "right",
+        "bottom",
+        "left",
+        "transform"
+      ],
+      "semanticNodes": [
+        {
+          "path": "item",
+          "selector": ".semantic-mark-item",
+          "minimumCount": 1
+        },
+        {
+          "path": "itemContent",
+          "selector": ".semantic-mark-itemContent",
+          "minimumCount": 1
+        },
+        {
+          "path": "itemRemove",
+          "selector": ".semantic-mark-itemRemove",
+          "minimumCount": 1
+        },
+        {
+          "path": "input",
+          "selector": ".semantic-mark-input",
+          "minimumCount": 1
+        },
+        {
+          "path": "popup.root",
+          "selector": ".semantic-mark-popup-root",
+          "minimumCount": 1,
+          "portal": true
+        },
+        {
+          "path": "popup.list",
+          "selector": ".semantic-mark-popup-list",
+          "minimumCount": 1,
+          "portal": true,
+          "portalParentPath": "popup.root"
+        },
+        {
+          "path": "popup.listItem",
+          "selector": ".semantic-mark-popup-listItem",
+          "minimumCount": 3,
+          "portal": true,
+          "portalParentPath": "popup.root"
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "switch-to-multiple",
+          "minimumRoots": 1,
+          "actions": [
+            {
+              "type": "click",
+              "reactSelector": "#select-demo-_semantic .ant-segmented-item:nth-child(2)",
+              "blazorSelector": ".semantic-dom-preview .ant-segmented-item:nth-child(2)"
+            },
+            {
+              "type": "waitForSelector",
+              "reactSelector": "#select-demo-_semantic .ant-select-multiple",
+              "blazorSelector": ".semantic-dom-preview .ant-select-multiple"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

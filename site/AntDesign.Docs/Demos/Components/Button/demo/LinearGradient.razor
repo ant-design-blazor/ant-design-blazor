@@ -1,16 +1,15 @@
 <div class="button-gradient-demo">
     <Space>
-        <Button Type="ButtonType.Primary" Size="ButtonSize.Large" Icon="@IconType.Outline.AntDesign">Gradient Button</Button>
-        <Button Size="ButtonSize.Large">Button</Button>
+        <SpaceItem>
+            <Button Type="ButtonType.Primary" Size="ButtonSize.Large" Icon="@IconType.Outline.AntDesign">Gradient Button</Button>
+        </SpaceItem>
+        <SpaceItem>
+            <Button Size="ButtonSize.Large">Button</Button>
+        </SpaceItem>
     </Space>
 </div>
 
 <style>
-    .button-gradient-demo .ant-btn-primary:not([disabled]):not(.ant-btn-dangerous) {
-        position: relative;
-        isolation: isolate;
-        overflow: hidden;
-    }
     .button-gradient-demo .ant-btn-primary:not([disabled]):not(.ant-btn-dangerous)::before {
         content: "";
         position: absolute;

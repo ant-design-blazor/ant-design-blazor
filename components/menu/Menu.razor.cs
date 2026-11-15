@@ -109,6 +109,10 @@ namespace AntDesign
         [Parameter]
         public bool Multiple { get; set; }
 
+        /// <summary>Currently active item key, independent of selection.</summary>
+        [Parameter]
+        public string ActiveKey { get; set; }
+
         /// <summary>
         /// Specifies the collapsed status when menu is inline mode	
         /// </summary>
@@ -145,6 +149,15 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public IReadOnlyDictionary<string, string> Styles { get; set; }
+
+        [CascadingParameter(Name = "DropdownClassNames")]
+        public IReadOnlyDictionary<string, string> DropdownClassNames { get; set; }
+
+        [CascadingParameter(Name = "DropdownMenuCssVarClass")]
+        internal string DropdownMenuCssVarClass { get; set; }
+
+        [CascadingParameter(Name = "DropdownStyles")]
+        public IReadOnlyDictionary<string, string> DropdownStyles { get; set; }
 
         /// <summary>
         /// Close dropdown when clicking an item
@@ -346,39 +359,43 @@ namespace AntDesign
         {
             ClassMapper
                 .Clear()
-                .Add($"{PrefixCls}-css-var")
+                .If($"{PrefixCls}-overflow", () => OverflowEnabled)
                 .Add(PrefixCls)
                 .Add($"{PrefixCls}-root")
+                .If($"{PrefixCls}-horizontal", () => InternalMode == MenuMode.Horizontal)
+                .If($"{PrefixCls}-vertical", () => InternalMode == MenuMode.Vertical)
+                .If($"{PrefixCls}-inline", () => InternalMode == MenuMode.Inline)
                 .If($"{PrefixCls}-dark", () => Theme == MenuTheme.Dark)
                 .If($"{PrefixCls}-light", () => Theme == MenuTheme.Light)
-                .If($"{PrefixCls}-inline", () => InternalMode == MenuMode.Inline)
-                .If($"{PrefixCls}-vertical", () => InternalMode == MenuMode.Vertical)
-                .If($"{PrefixCls}-horizontal", () => InternalMode == MenuMode.Horizontal)
                 .If($"{PrefixCls}-inline-collapsed", () => _inlineCollapsed)
                 .If($"{PrefixCls}-unselectable", () => !Selectable)
-                .If($"{PrefixCls}-rtl", () => RTL);
+                .If($"{PrefixCls}-rtl", () => RTL)
+                .Add($"{PrefixCls}-css-var")
+                .If(DropdownMenuCssVarClass, () => !string.IsNullOrWhiteSpace(DropdownMenuCssVarClass));
         }
 
         internal string GetSemanticClass(string slot, string baseClass = null)
         {
+            var result = baseClass;
+            if (slot != "root" && DropdownClassNames != null && DropdownClassNames.TryGetValue(slot, out var dropdownClass)
+                && !string.IsNullOrWhiteSpace(dropdownClass))
+                result = string.IsNullOrWhiteSpace(result) ? dropdownClass : $"{result} {dropdownClass}";
             if (ClassNames != null && ClassNames.TryGetValue(slot, out var customClass)
                 && !string.IsNullOrWhiteSpace(customClass))
-            {
-                return string.IsNullOrWhiteSpace(baseClass) ? customClass : $"{baseClass} {customClass}";
-            }
-
-            return baseClass;
+                result = string.IsNullOrWhiteSpace(result) ? customClass : $"{result} {customClass}";
+            return result;
         }
 
         internal string GetSemanticStyle(string slot, string baseStyle = null)
         {
-            if (Styles == null || !Styles.TryGetValue(slot, out var semanticStyle)
-                || string.IsNullOrWhiteSpace(semanticStyle))
-            {
-                return baseStyle;
-            }
-
-            return string.IsNullOrWhiteSpace(baseStyle) ? semanticStyle : $"{baseStyle.TrimEnd(';')};{semanticStyle}";
+            var result = baseStyle;
+            if (slot != "root" && DropdownStyles != null && DropdownStyles.TryGetValue(slot, out var dropdownStyle)
+                && !string.IsNullOrWhiteSpace(dropdownStyle))
+                result = string.IsNullOrWhiteSpace(result) ? dropdownStyle : $"{result.TrimEnd(';')};{dropdownStyle}";
+            if (Styles != null && Styles.TryGetValue(slot, out var semanticStyle)
+                && !string.IsNullOrWhiteSpace(semanticStyle))
+                result = string.IsNullOrWhiteSpace(result) ? semanticStyle : $"{result.TrimEnd(';')};{semanticStyle}";
+            return result;
         }
 
         protected override void OnInitialized()

@@ -130,107 +130,124 @@ namespace AntDesign.Theming
         public string BoxShadowTabsOverflowRight { get => this["boxShadowTabsOverflowRight"]; set => this["boxShadowTabsOverflowRight"] = value; }
         public string BoxShadowTabsOverflowTop { get => this["boxShadowTabsOverflowTop"]; set => this["boxShadowTabsOverflowTop"] = value; }
         public string BoxShadowTabsOverflowBottom { get => this["boxShadowTabsOverflowBottom"]; set => this["boxShadowTabsOverflowBottom"] = value; }
-        public string ColorText { get => this["colorText"]; set => this["colorText"] = value; }
+        public string Blue { get => this["blue"]; set => this["blue"] = value; }
+        public string Purple { get => this["purple"]; set => this["purple"] = value; }
+        public string Cyan { get => this["cyan"]; set => this["cyan"] = value; }
+        public string Green { get => this["green"]; set => this["green"] = value; }
+        public string Magenta { get => this["magenta"]; set => this["magenta"] = value; }
+        public string Pink { get => this["pink"]; set => this["pink"] = value; }
+        public string Red { get => this["red"]; set => this["red"] = value; }
+        public string Orange { get => this["orange"]; set => this["orange"] = value; }
+        public string Yellow { get => this["yellow"]; set => this["yellow"] = value; }
+        public string Volcano { get => this["volcano"]; set => this["volcano"] = value; }
+        public string Geekblue { get => this["geekblue"]; set => this["geekblue"] = value; }
+        public string Lime { get => this["lime"]; set => this["lime"] = value; }
+        public string Gold { get => this["gold"]; set => this["gold"] = value; }
+        public string BorderRadiusLG { get => this["borderRadiusLG"]; set => this["borderRadiusLG"] = value; }
+        public string BorderRadiusOuter { get => this["borderRadiusOuter"]; set => this["borderRadiusOuter"] = value; }
+        public string BorderRadiusSM { get => this["borderRadiusSM"]; set => this["borderRadiusSM"] = value; }
+        public string BorderRadiusXS { get => this["borderRadiusXS"]; set => this["borderRadiusXS"] = value; }
+        public string ColorBgBlur { get => this["colorBgBlur"]; set => this["colorBgBlur"] = value; }
         public string ColorBgContainer { get => this["colorBgContainer"]; set => this["colorBgContainer"] = value; }
+        public string ColorBgElevated { get => this["colorBgElevated"]; set => this["colorBgElevated"] = value; }
+        public string ColorBgLayout { get => this["colorBgLayout"]; set => this["colorBgLayout"] = value; }
+        public string ColorBgMask { get => this["colorBgMask"]; set => this["colorBgMask"] = value; }
+        public string ColorBgSolid { get => this["colorBgSolid"]; set => this["colorBgSolid"] = value; }
+        public string ColorBgSolidActive { get => this["colorBgSolidActive"]; set => this["colorBgSolidActive"] = value; }
+        public string ColorBgSolidHover { get => this["colorBgSolidHover"]; set => this["colorBgSolidHover"] = value; }
+        public string ColorBgSpotlight { get => this["colorBgSpotlight"]; set => this["colorBgSpotlight"] = value; }
         public string ColorBorder { get => this["colorBorder"]; set => this["colorBorder"] = value; }
-        public string ColorPrimaryBg { get => this["colorPrimaryBg"]; set => this["colorPrimaryBg"] = value; }
-        public string ColorPrimaryBgHover { get => this["colorPrimaryBgHover"]; set => this["colorPrimaryBgHover"] = value; }
-        public string ColorPrimaryBorder { get => this["colorPrimaryBorder"]; set => this["colorPrimaryBorder"] = value; }
-        public string ColorPrimaryBorderHover { get => this["colorPrimaryBorderHover"]; set => this["colorPrimaryBorderHover"] = value; }
-        public string ColorPrimaryHover { get => this["colorPrimaryHover"]; set => this["colorPrimaryHover"] = value; }
-        public string ColorPrimaryActive { get => this["colorPrimaryActive"]; set => this["colorPrimaryActive"] = value; }
-        public string ColorPrimaryTextHover { get => this["colorPrimaryTextHover"]; set => this["colorPrimaryTextHover"] = value; }
-        public string ColorPrimaryText { get => this["colorPrimaryText"]; set => this["colorPrimaryText"] = value; }
-        public string ColorPrimaryTextActive { get => this["colorPrimaryTextActive"]; set => this["colorPrimaryTextActive"] = value; }
-        public string ColorSuccessBg { get => this["colorSuccessBg"]; set => this["colorSuccessBg"] = value; }
-        public string ColorSuccessBgHover { get => this["colorSuccessBgHover"]; set => this["colorSuccessBgHover"] = value; }
-        public string ColorSuccessBorder { get => this["colorSuccessBorder"]; set => this["colorSuccessBorder"] = value; }
-        public string ColorSuccessBorderHover { get => this["colorSuccessBorderHover"]; set => this["colorSuccessBorderHover"] = value; }
-        public string ColorSuccessHover { get => this["colorSuccessHover"]; set => this["colorSuccessHover"] = value; }
-        public string ColorSuccessActive { get => this["colorSuccessActive"]; set => this["colorSuccessActive"] = value; }
-        public string ColorSuccessTextHover { get => this["colorSuccessTextHover"]; set => this["colorSuccessTextHover"] = value; }
-        public string ColorSuccessText { get => this["colorSuccessText"]; set => this["colorSuccessText"] = value; }
-        public string ColorSuccessTextActive { get => this["colorSuccessTextActive"]; set => this["colorSuccessTextActive"] = value; }
-        public string ColorWarningBg { get => this["colorWarningBg"]; set => this["colorWarningBg"] = value; }
-        public string ColorWarningBgHover { get => this["colorWarningBgHover"]; set => this["colorWarningBgHover"] = value; }
-        public string ColorWarningBorder { get => this["colorWarningBorder"]; set => this["colorWarningBorder"] = value; }
-        public string ColorWarningBorderHover { get => this["colorWarningBorderHover"]; set => this["colorWarningBorderHover"] = value; }
-        public string ColorWarningHover { get => this["colorWarningHover"]; set => this["colorWarningHover"] = value; }
-        public string ColorWarningActive { get => this["colorWarningActive"]; set => this["colorWarningActive"] = value; }
-        public string ColorWarningTextHover { get => this["colorWarningTextHover"]; set => this["colorWarningTextHover"] = value; }
-        public string ColorWarningText { get => this["colorWarningText"]; set => this["colorWarningText"] = value; }
-        public string ColorWarningTextActive { get => this["colorWarningTextActive"]; set => this["colorWarningTextActive"] = value; }
+        public string ColorBorderDisabled { get => this["colorBorderDisabled"]; set => this["colorBorderDisabled"] = value; }
+        public string ColorBorderSecondary { get => this["colorBorderSecondary"]; set => this["colorBorderSecondary"] = value; }
+        public string ColorErrorActive { get => this["colorErrorActive"]; set => this["colorErrorActive"] = value; }
         public string ColorErrorBg { get => this["colorErrorBg"]; set => this["colorErrorBg"] = value; }
-        public string ColorErrorBgHover { get => this["colorErrorBgHover"]; set => this["colorErrorBgHover"] = value; }
-        public string ColorErrorBgFilledHover { get => this["colorErrorBgFilledHover"]; set => this["colorErrorBgFilledHover"] = value; }
         public string ColorErrorBgActive { get => this["colorErrorBgActive"]; set => this["colorErrorBgActive"] = value; }
+        public string ColorErrorBgFilledHover { get => this["colorErrorBgFilledHover"]; set => this["colorErrorBgFilledHover"] = value; }
+        public string ColorErrorBgHover { get => this["colorErrorBgHover"]; set => this["colorErrorBgHover"] = value; }
         public string ColorErrorBorder { get => this["colorErrorBorder"]; set => this["colorErrorBorder"] = value; }
         public string ColorErrorBorderHover { get => this["colorErrorBorderHover"]; set => this["colorErrorBorderHover"] = value; }
         public string ColorErrorHover { get => this["colorErrorHover"]; set => this["colorErrorHover"] = value; }
-        public string ColorErrorActive { get => this["colorErrorActive"]; set => this["colorErrorActive"] = value; }
-        public string ColorErrorTextHover { get => this["colorErrorTextHover"]; set => this["colorErrorTextHover"] = value; }
         public string ColorErrorText { get => this["colorErrorText"]; set => this["colorErrorText"] = value; }
         public string ColorErrorTextActive { get => this["colorErrorTextActive"]; set => this["colorErrorTextActive"] = value; }
+        public string ColorErrorTextHover { get => this["colorErrorTextHover"]; set => this["colorErrorTextHover"] = value; }
+        public string ColorFill { get => this["colorFill"]; set => this["colorFill"] = value; }
+        public string ColorFillQuaternary { get => this["colorFillQuaternary"]; set => this["colorFillQuaternary"] = value; }
+        public string ColorFillSecondary { get => this["colorFillSecondary"]; set => this["colorFillSecondary"] = value; }
+        public string ColorFillTertiary { get => this["colorFillTertiary"]; set => this["colorFillTertiary"] = value; }
+        public string ColorInfoActive { get => this["colorInfoActive"]; set => this["colorInfoActive"] = value; }
         public string ColorInfoBg { get => this["colorInfoBg"]; set => this["colorInfoBg"] = value; }
         public string ColorInfoBgHover { get => this["colorInfoBgHover"]; set => this["colorInfoBgHover"] = value; }
         public string ColorInfoBorder { get => this["colorInfoBorder"]; set => this["colorInfoBorder"] = value; }
         public string ColorInfoBorderHover { get => this["colorInfoBorderHover"]; set => this["colorInfoBorderHover"] = value; }
         public string ColorInfoHover { get => this["colorInfoHover"]; set => this["colorInfoHover"] = value; }
-        public string ColorInfoActive { get => this["colorInfoActive"]; set => this["colorInfoActive"] = value; }
-        public string ColorInfoTextHover { get => this["colorInfoTextHover"]; set => this["colorInfoTextHover"] = value; }
         public string ColorInfoText { get => this["colorInfoText"]; set => this["colorInfoText"] = value; }
         public string ColorInfoTextActive { get => this["colorInfoTextActive"]; set => this["colorInfoTextActive"] = value; }
-        public string ColorLinkHover { get => this["colorLinkHover"]; set => this["colorLinkHover"] = value; }
+        public string ColorInfoTextHover { get => this["colorInfoTextHover"]; set => this["colorInfoTextHover"] = value; }
         public string ColorLinkActive { get => this["colorLinkActive"]; set => this["colorLinkActive"] = value; }
-        public string ColorFill { get => this["colorFill"]; set => this["colorFill"] = value; }
-        public string ColorFillSecondary { get => this["colorFillSecondary"]; set => this["colorFillSecondary"] = value; }
-        public string ColorFillTertiary { get => this["colorFillTertiary"]; set => this["colorFillTertiary"] = value; }
-        public string ColorFillQuaternary { get => this["colorFillQuaternary"]; set => this["colorFillQuaternary"] = value; }
+        public string ColorLinkHover { get => this["colorLinkHover"]; set => this["colorLinkHover"] = value; }
+        public string ColorPrimaryActive { get => this["colorPrimaryActive"]; set => this["colorPrimaryActive"] = value; }
+        public string ColorPrimaryBg { get => this["colorPrimaryBg"]; set => this["colorPrimaryBg"] = value; }
+        public string ColorPrimaryBgHover { get => this["colorPrimaryBgHover"]; set => this["colorPrimaryBgHover"] = value; }
+        public string ColorPrimaryBorder { get => this["colorPrimaryBorder"]; set => this["colorPrimaryBorder"] = value; }
+        public string ColorPrimaryBorderHover { get => this["colorPrimaryBorderHover"]; set => this["colorPrimaryBorderHover"] = value; }
+        public string ColorPrimaryHover { get => this["colorPrimaryHover"]; set => this["colorPrimaryHover"] = value; }
+        public string ColorPrimaryText { get => this["colorPrimaryText"]; set => this["colorPrimaryText"] = value; }
+        public string ColorPrimaryTextActive { get => this["colorPrimaryTextActive"]; set => this["colorPrimaryTextActive"] = value; }
+        public string ColorPrimaryTextHover { get => this["colorPrimaryTextHover"]; set => this["colorPrimaryTextHover"] = value; }
+        public string ColorSuccessActive { get => this["colorSuccessActive"]; set => this["colorSuccessActive"] = value; }
+        public string ColorSuccessBg { get => this["colorSuccessBg"]; set => this["colorSuccessBg"] = value; }
+        public string ColorSuccessBgHover { get => this["colorSuccessBgHover"]; set => this["colorSuccessBgHover"] = value; }
+        public string ColorSuccessBorder { get => this["colorSuccessBorder"]; set => this["colorSuccessBorder"] = value; }
+        public string ColorSuccessBorderHover { get => this["colorSuccessBorderHover"]; set => this["colorSuccessBorderHover"] = value; }
+        public string ColorSuccessHover { get => this["colorSuccessHover"]; set => this["colorSuccessHover"] = value; }
+        public string ColorSuccessText { get => this["colorSuccessText"]; set => this["colorSuccessText"] = value; }
+        public string ColorSuccessTextActive { get => this["colorSuccessTextActive"]; set => this["colorSuccessTextActive"] = value; }
+        public string ColorSuccessTextHover { get => this["colorSuccessTextHover"]; set => this["colorSuccessTextHover"] = value; }
+        public string ColorText { get => this["colorText"]; set => this["colorText"] = value; }
+        public string ColorTextQuaternary { get => this["colorTextQuaternary"]; set => this["colorTextQuaternary"] = value; }
         public string ColorTextSecondary { get => this["colorTextSecondary"]; set => this["colorTextSecondary"] = value; }
         public string ColorTextTertiary { get => this["colorTextTertiary"]; set => this["colorTextTertiary"] = value; }
-        public string ColorTextQuaternary { get => this["colorTextQuaternary"]; set => this["colorTextQuaternary"] = value; }
-        public string ColorBgLayout { get => this["colorBgLayout"]; set => this["colorBgLayout"] = value; }
-        public string ColorBgElevated { get => this["colorBgElevated"]; set => this["colorBgElevated"] = value; }
-        public string ColorBgSpotlight { get => this["colorBgSpotlight"]; set => this["colorBgSpotlight"] = value; }
-        public string ColorBgBlur { get => this["colorBgBlur"]; set => this["colorBgBlur"] = value; }
-        public string ColorBgMask { get => this["colorBgMask"]; set => this["colorBgMask"] = value; }
+        public string ColorWarningActive { get => this["colorWarningActive"]; set => this["colorWarningActive"] = value; }
+        public string ColorWarningBg { get => this["colorWarningBg"]; set => this["colorWarningBg"] = value; }
+        public string ColorWarningBgHover { get => this["colorWarningBgHover"]; set => this["colorWarningBgHover"] = value; }
+        public string ColorWarningBorder { get => this["colorWarningBorder"]; set => this["colorWarningBorder"] = value; }
+        public string ColorWarningBorderHover { get => this["colorWarningBorderHover"]; set => this["colorWarningBorderHover"] = value; }
+        public string ColorWarningHover { get => this["colorWarningHover"]; set => this["colorWarningHover"] = value; }
+        public string ColorWarningText { get => this["colorWarningText"]; set => this["colorWarningText"] = value; }
+        public string ColorWarningTextActive { get => this["colorWarningTextActive"]; set => this["colorWarningTextActive"] = value; }
+        public string ColorWarningTextHover { get => this["colorWarningTextHover"]; set => this["colorWarningTextHover"] = value; }
         public string ColorWhite { get => this["colorWhite"]; set => this["colorWhite"] = value; }
-        public string ColorBorderSecondary { get => this["colorBorderSecondary"]; set => this["colorBorderSecondary"] = value; }
-        public string ColorBorderDisabled { get => this["colorBorderDisabled"]; set => this["colorBorderDisabled"] = value; }
-        public string ColorShadow { get => this["colorShadow"]; set => this["colorShadow"] = value; }
-        public string FontSizeSM { get => this["fontSizeSM"]; set => this["fontSizeSM"] = value; }
-        public string FontSizeLG { get => this["fontSizeLG"]; set => this["fontSizeLG"] = value; }
-        public string FontSizeXL { get => this["fontSizeXL"]; set => this["fontSizeXL"] = value; }
-        public string FontSizeHeading5 { get => this["fontSizeHeading5"]; set => this["fontSizeHeading5"] = value; }
-        public string FontSizeHeading4 { get => this["fontSizeHeading4"]; set => this["fontSizeHeading4"] = value; }
-        public string FontSizeHeading3 { get => this["fontSizeHeading3"]; set => this["fontSizeHeading3"] = value; }
-        public string FontSizeHeading2 { get => this["fontSizeHeading2"]; set => this["fontSizeHeading2"] = value; }
-        public string FontSizeHeading1 { get => this["fontSizeHeading1"]; set => this["fontSizeHeading1"] = value; }
-        public string LineHeight { get => this["lineHeight"]; set => this["lineHeight"] = value; }
-        public string LineHeightSM { get => this["lineHeightSM"]; set => this["lineHeightSM"] = value; }
-        public string LineHeightLG { get => this["lineHeightLG"]; set => this["lineHeightLG"] = value; }
-        public string FontHeight { get => this["fontHeight"]; set => this["fontHeight"] = value; }
-        public string FontHeightSM { get => this["fontHeightSM"]; set => this["fontHeightSM"] = value; }
-        public string FontHeightLG { get => this["fontHeightLG"]; set => this["fontHeightLG"] = value; }
+        public string ControlHeightLG { get => this["controlHeightLG"]; set => this["controlHeightLG"] = value; }
         public string ControlHeightSM { get => this["controlHeightSM"]; set => this["controlHeightSM"] = value; }
         public string ControlHeightXS { get => this["controlHeightXS"]; set => this["controlHeightXS"] = value; }
-        public string ControlHeightLG { get => this["controlHeightLG"]; set => this["controlHeightLG"] = value; }
-        public string SizeXXL { get => this["sizeXXL"]; set => this["sizeXXL"] = value; }
-        public string SizeXL { get => this["sizeXL"]; set => this["sizeXL"] = value; }
-        public string SizeLG { get => this["sizeLG"]; set => this["sizeLG"] = value; }
-        public string SizeMD { get => this["sizeMD"]; set => this["sizeMD"] = value; }
-        public string SizeMS { get => this["sizeMS"]; set => this["sizeMS"] = value; }
-        public string Size { get => this["size"]; set => this["size"] = value; }
-        public string SizeSM { get => this["sizeSM"]; set => this["sizeSM"] = value; }
-        public string SizeXS { get => this["sizeXS"]; set => this["sizeXS"] = value; }
-        public string SizeXXS { get => this["sizeXXS"]; set => this["sizeXXS"] = value; }
+        public string FontSizeHeading1 { get => this["fontSizeHeading1"]; set => this["fontSizeHeading1"] = value; }
+        public string FontSizeHeading2 { get => this["fontSizeHeading2"]; set => this["fontSizeHeading2"] = value; }
+        public string FontSizeHeading3 { get => this["fontSizeHeading3"]; set => this["fontSizeHeading3"] = value; }
+        public string FontSizeHeading4 { get => this["fontSizeHeading4"]; set => this["fontSizeHeading4"] = value; }
+        public string FontSizeHeading5 { get => this["fontSizeHeading5"]; set => this["fontSizeHeading5"] = value; }
+        public string FontSizeLG { get => this["fontSizeLG"]; set => this["fontSizeLG"] = value; }
+        public string FontSizeSM { get => this["fontSizeSM"]; set => this["fontSizeSM"] = value; }
+        public string FontSizeXL { get => this["fontSizeXL"]; set => this["fontSizeXL"] = value; }
+        public string LineHeight { get => this["lineHeight"]; set => this["lineHeight"] = value; }
+        public string LineHeightHeading1 { get => this["lineHeightHeading1"]; set => this["lineHeightHeading1"] = value; }
+        public string LineHeightHeading2 { get => this["lineHeightHeading2"]; set => this["lineHeightHeading2"] = value; }
+        public string LineHeightHeading3 { get => this["lineHeightHeading3"]; set => this["lineHeightHeading3"] = value; }
+        public string LineHeightHeading4 { get => this["lineHeightHeading4"]; set => this["lineHeightHeading4"] = value; }
+        public string LineHeightHeading5 { get => this["lineHeightHeading5"]; set => this["lineHeightHeading5"] = value; }
+        public string LineHeightLG { get => this["lineHeightLG"]; set => this["lineHeightLG"] = value; }
+        public string LineHeightSM { get => this["lineHeightSM"]; set => this["lineHeightSM"] = value; }
+        public string LineWidthBold { get => this["lineWidthBold"]; set => this["lineWidthBold"] = value; }
         public string MotionDurationFast { get => this["motionDurationFast"]; set => this["motionDurationFast"] = value; }
         public string MotionDurationMid { get => this["motionDurationMid"]; set => this["motionDurationMid"] = value; }
         public string MotionDurationSlow { get => this["motionDurationSlow"]; set => this["motionDurationSlow"] = value; }
-        public string LineWidthBold { get => this["lineWidthBold"]; set => this["lineWidthBold"] = value; }
-        public string BorderRadiusXS { get => this["borderRadiusXS"]; set => this["borderRadiusXS"] = value; }
-        public string BorderRadiusSM { get => this["borderRadiusSM"]; set => this["borderRadiusSM"] = value; }
-        public string BorderRadiusLG { get => this["borderRadiusLG"]; set => this["borderRadiusLG"] = value; }
-        public string BorderRadiusOuter { get => this["borderRadiusOuter"]; set => this["borderRadiusOuter"] = value; }
+        public string Size { get => this["size"]; set => this["size"] = value; }
+        public string SizeLG { get => this["sizeLG"]; set => this["sizeLG"] = value; }
+        public string SizeMD { get => this["sizeMD"]; set => this["sizeMD"] = value; }
+        public string SizeMS { get => this["sizeMS"]; set => this["sizeMS"] = value; }
+        public string SizeSM { get => this["sizeSM"]; set => this["sizeSM"] = value; }
+        public string SizeXL { get => this["sizeXL"]; set => this["sizeXL"] = value; }
+        public string SizeXS { get => this["sizeXS"]; set => this["sizeXS"] = value; }
+        public string SizeXXL { get => this["sizeXXL"]; set => this["sizeXXL"] = value; }
+        public string SizeXXS { get => this["sizeXXS"]; set => this["sizeXXS"] = value; }
     }
 }

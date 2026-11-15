@@ -125,25 +125,13 @@ namespace AntDesign
         [Parameter]
         public bool ArrowPointAtCenter { get; set; } = false;
 
-        /// <summary>
-        /// Delay (in seconds) before showing popconfirm when trigger is Hover and mouse enters
-        /// </summary>
-        /// <default value="0.1" />
-        [Parameter]
-        public double MouseEnterDelay { get; set; } = 0.1;
-
-        /// <summary>
-        /// Delay (in seconds) before hiding popconfirm when trigger is Hover and mouse leaves
-        /// </summary>
-        /// <default value="0.1" />
-        [Parameter]
-        public double MouseLeaveDelay { get; set; } = 0.1;
-
         public Popconfirm()
         {
             PrefixCls = "ant-popover";
             Placement = Placement.Top;
             Trigger = new[] { AntDesign.Trigger.Click };
+            MouseEnterDelay = 0.1;
+            MouseLeaveDelay = 0.1;
         }
 
         protected override void OnInitialized()

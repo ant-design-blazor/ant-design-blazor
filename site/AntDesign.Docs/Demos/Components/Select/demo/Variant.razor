@@ -1,21 +1,24 @@
-<Flex Vertical Gap='@("12px")'>
-    @foreach (var variant in _variants)
-    {
-        <Flex Gap='@("8px")'>
-            <Select TItemValue="string" TItem="OptionItem"
-                    DataSource="@_options" ItemValue="item => item.Value" ItemLabel="item => item.Label"
-                    Placeholder="@variant.Placeholder" Variant="@variant.Variant" Style="flex: 1;" />
-            <Select TItemValue="string" TItem="OptionItem" Mode="SelectMode.Multiple"
-                    DataSource="@_options" ItemValue="item => item.Value" ItemLabel="item => item.Label"
-                    DefaultValues="@_selectedValues" Placeholder="@variant.Placeholder"
-                    Variant="@variant.Variant" Style="flex: 1;" />
-        </Flex>
-    }
+<Flex Gap="@("12px")" Vertical>
+    <Flex Gap="@("8px")">
+        <Select TItemValue="string" TItem="OptionItem" DataSource="@_options" ItemValue="item => item.Value" ItemLabel="item => item.Label" Placeholder="Outlined" Style="flex: 1 1 0%;" />
+        <Select TItemValue="string" TItem="OptionItem" Mode="SelectMode.Multiple" DataSource="@_options" ItemValue="item => item.Value" ItemLabel="item => item.Label" DefaultValues="@_selectedValues" Placeholder="Outlined" Style="flex: 1 1 0%;" />
+    </Flex>
+    <Flex Gap="@("8px")">
+        <Select TItemValue="string" TItem="OptionItem" DataSource="@_options" ItemValue="item => item.Value" ItemLabel="item => item.Label" Placeholder="Filled" Variant="InputVariant.Filled" Style="flex: 1 1 0%;" />
+        <Select TItemValue="string" TItem="OptionItem" Mode="SelectMode.Multiple" DataSource="@_options" ItemValue="item => item.Value" ItemLabel="item => item.Label" DefaultValues="@_selectedValues" Placeholder="Filled" Variant="InputVariant.Filled" Style="flex: 1 1 0%;" />
+    </Flex>
+    <Flex Gap="@("8px")">
+        <Select TItemValue="string" TItem="OptionItem" DataSource="@_options" ItemValue="item => item.Value" ItemLabel="item => item.Label" Placeholder="Borderless" Variant="InputVariant.Borderless" Style="flex: 1 1 0%;" />
+        <Select TItemValue="string" TItem="OptionItem" Mode="SelectMode.Multiple" DataSource="@_options" ItemValue="item => item.Value" ItemLabel="item => item.Label" DefaultValues="@_selectedValues" Placeholder="Borderless" Variant="InputVariant.Borderless" Style="flex: 1 1 0%;" />
+    </Flex>
+    <Flex Gap="@("8px")">
+        <Select TItemValue="string" TItem="OptionItem" DataSource="@_options" ItemValue="item => item.Value" ItemLabel="item => item.Label" Placeholder="Underlined" Variant="InputVariant.Underlined" Style="flex: 1 1 0%;" />
+        <Select TItemValue="string" TItem="OptionItem" Mode="SelectMode.Multiple" DataSource="@_options" ItemValue="item => item.Value" ItemLabel="item => item.Label" DefaultValues="@_selectedValues" Placeholder="Underlined" Variant="InputVariant.Underlined" Style="flex: 1 1 0%;" />
+    </Flex>
 </Flex>
 
 @code {
     private sealed record OptionItem(string Value, string Label);
-    private sealed record VariantRow(string Placeholder, InputVariant Variant);
 
     private readonly OptionItem[] _options =
     [
@@ -23,12 +26,6 @@
         new("lucy", "Lucy"),
         new("Yiminghe", "yiminghe")
     ];
+
     private readonly string[] _selectedValues = ["lucy"];
-    private readonly VariantRow[] _variants =
-    [
-        new("Outlined", InputVariant.Outlined),
-        new("Filled", InputVariant.Filled),
-        new("Borderless", InputVariant.Borderless),
-        new("Underlined", InputVariant.Underlined)
-    ];
 }

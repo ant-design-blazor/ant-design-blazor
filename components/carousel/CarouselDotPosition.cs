@@ -8,7 +8,11 @@ namespace AntDesign
     {
         Top,
         Bottom,
+        Start,
+        End,
+        [System.Obsolete("Use Start instead. This value maps to the start side in v6.")]
         Left,
+        [System.Obsolete("Use End instead. This value maps to the end side in v6.")]
         Right,
     }
 }

@@ -1,14 +1,30 @@
-﻿<Button Type="ButtonType.Primary">Primary</Button>
-<Button>Secondary</Button>
-<DropdownButton>
-    <Overlay>
-        <Menu>
-            <MenuItem Key="1">1st item</MenuItem>
-            <MenuItem Key="2">2nd item</MenuItem>
-            <MenuItem Key="3">3rd item</MenuItem>
-        </Menu>
-    </Overlay>
-    <Unbound>
-        Actions
-    </Unbound>
-</DropdownButton>
+<Flex Align="FlexAlign.FlexStart" Gap="FlexGap.Small" Vertical>
+    <Button Type="ButtonType.Primary">primary</Button>
+    <Button>secondary</Button>
+    <SpaceCompact>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.First">
+            <Button>Actions</Button>
+        </SpaceCompactItem>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.Last">
+            <Dropdown Placement="AntDesign.Placement.BottomRight" Trigger="@(new[] { AntDesign.Trigger.Click })">
+                <Overlay>
+                    <Menu OnMenuItemClicked="OnMenuClick">
+                        <MenuItem Key="1">1st item</MenuItem>
+                        <MenuItem Key="2">2nd item</MenuItem>
+                        <MenuItem Key="3">3rd item</MenuItem>
+                    </Menu>
+                </Overlay>
+                <Unbound Context="trigger">
+                    <Button RefBack="@trigger" Icon="@IconType.Outline.Ellipsis" AriaLabel="More actions" />
+                </Unbound>
+            </Dropdown>
+        </SpaceCompactItem>
+    </SpaceCompact>
+</Flex>
+
+@code {
+    private void OnMenuClick(MenuItem item)
+    {
+        Console.WriteLine($"click {item.Key}");
+    }
+}

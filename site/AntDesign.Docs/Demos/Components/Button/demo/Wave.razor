@@ -1,13 +1,12 @@
 <Flex Gap="FlexGap.Large" Wrap="FlexWrap.Wrap">
-    <Button Type="ButtonType.Primary" Disabled>Disabled</Button>
+    <Button Type="ButtonType.Primary">Disabled</Button>
     <Button Type="ButtonType.Primary">Default</Button>
     <Button Type="ButtonType.Primary" Class="@EffectClass("inset")" OnClick="@(() => Play("inset"))">Inset</Button>
     <Button Type="ButtonType.Primary" Class="@EffectClass("shake")" OnClick="@(() => Play("shake"))">Shake</Button>
-    <Button Type="ButtonType.Primary" Class="button-wave-happy">Custom accent</Button>
+    <Button Type="ButtonType.Primary">Happy Work</Button>
 </Flex>
 
 <style>
-    .button-wave-happy { --antd-wave-shadow-color: #13c2c2; }
     .button-wave-effect.inset { position: relative; isolation: isolate; overflow: hidden; }
     .button-wave-effect.inset::after {
         content: "";
@@ -35,7 +34,7 @@
 @code {
     private string _activeEffect;
 
-    private string EffectClass(string effect) => $"button-wave-effect {effect} {(_activeEffect == effect ? "is-animating" : string.Empty)}";
+    private string EffectClass(string effect) => _activeEffect == effect ? $"button-wave-effect {effect} is-animating" : string.Empty;
 
     private async Task Play(string effect)
     {

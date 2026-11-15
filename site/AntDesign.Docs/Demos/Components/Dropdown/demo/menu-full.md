@@ -2,7 +2,7 @@
 order: 11
 title:
   zh-CN: 完整菜单结构
-  en-US: Full menu structure
+  en-US: Menu full styles
 ---
 
 ## zh-CN

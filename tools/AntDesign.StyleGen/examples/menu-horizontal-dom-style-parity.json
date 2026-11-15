@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "upstream": { "repository": "ant-design/ant-design", "component": "Menu" },
+  "config": {
+    "timeoutMs": 30000,
+    "viewport": { "width": 1280, "height": 900, "deviceScaleFactor": 1 },
+    "colorScheme": "light",
+    "comparisonPolicy": { "normalization": {
+      "runtimeIdPattern": "^(?:rc-menu-uuid-(?:ant-blazor-[a-zA-Z0-9_-]+|_r_[a-zA-Z0-9_-]+)-[a-zA-Z0-9:_-]+|ant-blazor-[a-zA-Z0-9_-]+|_r_[a-zA-Z0-9_-]+)$",
+      "runtimeIdAttributes": ["data-menu-id"],
+      "removeAttributes": ["_bl_*", "id", "data-menu-overflow-item", "data-menu-overflow-rest"],
+      "removeClassPatterns": ["^css-dev-only-do-not-override-", "^css-var-_r_", "^css-var-_[rR]_", "^css-[a-zA-Z0-9]+$"],
+      "sortClassTokens": true,
+      "normalizeStyleAttributes": true,
+      "removeCommentMarkers": ["<!--!-->"]
+    }}
+  },
+  "groups": [{
+    "id": "menu-horizontal",
+    "component": "Menu",
+    "react": { "url": "http://127.0.0.1:8000/components/menu?theme=light", "scopeSelector": "#menu-demo-horizontal .code-box-demo", "rootSelector": ".ant-menu" },
+    "blazor": { "url": "http://127.0.0.1:5000/en-US/components/menu?theme=light", "scopeSelector": "#components-menu-demo-horizontal .code-box-demo", "rootSelector": ".ant-menu" },
+    "styleProperties": ["display", "position", "boxSizing", "width", "height", "paddingBlock", "paddingInline", "marginBlock", "gap", "alignItems", "lineHeight", "fontSize", "fontWeight", "color", "backgroundColor", "borderRadius", "borderTopWidth", "borderRightWidth", "borderBottomWidth", "borderLeftWidth"],
+    "semanticNodes": [
+      { "path": "root", "selector": "$root", "minimumCount": 1 },
+      { "path": "item", "selector": ".ant-menu-item", "minimumCount": 2 },
+      { "path": "submenu", "selector": ".ant-menu-submenu", "minimumCount": 0 }
+    ],
+    "scenarios": [{ "id": "default" }]
+  }]
+} 

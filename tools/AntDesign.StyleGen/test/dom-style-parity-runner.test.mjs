@@ -109,12 +109,15 @@ test('lazy demo anchors are scrolled into view before waiting for the inner scop
   const calls = [];
   const savedDocument = globalThis.document;
   globalThis.document = {
+    documentElement: { style: {} },
+    body: { style: {} },
     querySelector(selector) {
       calls.push(`query:${selector}`);
       return { scrollIntoView(options) { calls.push(options); } };
     },
   };
   const page = {
+    async waitForSelector(selector) { calls.push(`wait:${selector}`); },
     async evaluate(callback, selector) {
       calls.push(`evaluate:${selector}`);
       callback(selector);
@@ -123,9 +126,10 @@ test('lazy demo anchors are scrolled into view before waiting for the inner scop
   try {
     await scrollScopeAnchorIntoView(page, '#select-demo-suffix .code-box-demo');
     assert.deepEqual(calls, [
+      'wait:#select-demo-suffix',
       'evaluate:#select-demo-suffix',
       'query:#select-demo-suffix',
-      { block: 'center', inline: 'nearest' },
+      { block: 'center', inline: 'nearest', behavior: 'instant' },
     ]);
   } finally {
     if (savedDocument === undefined) delete globalThis.document;
@@ -137,6 +141,12 @@ test('measureClickVisible times from input dispatch until the popup is paint-vis
   const calls = [];
   const page = {
     async bringToFront() { calls.push('front'); },
+    async waitForSelector(selector, options) { calls.push(`wait:${selector}:${options.timeout}`); },
+    async $eval(selector, callback, shouldScroll) {
+      calls.push(`measure:${selector}:${shouldScroll}`);
+      return { x: 10, y: 20 };
+    },
+    mouse: { async click(x, y) { calls.push(`pointer:${x}:${y}`); } },
     async evaluate(fn, ...args) {
       if (fn.toString().includes('window.__antDesignParityVisibilityPromise = new Promise')) {
         calls.push(`start-on-pointerdown:${args[0]}:${args[1]}`);
@@ -145,9 +155,6 @@ test('measureClickVisible times from input dispatch until the popup is paint-vis
       if (fn.toString().includes('window.__antDesignParityVisibilityPromise')) return 42.5;
       assert.fail('unexpected browser evaluation');
     },
-    locator(selector) {
-      return { async click() { calls.push(`click:${selector}`); } };
-    },
   };
   const elapsed = await applyAction(page, 'react', {
     type: 'measureClickVisible',
@@ -155,7 +162,13 @@ test('measureClickVisible times from input dispatch until the popup is paint-vis
     reactVisibleSelector: '.popup',
   }, 1000);
   assert.equal(elapsed, 42.5);
-  assert.deepEqual(calls, ['front', 'start-on-pointerdown:#trigger:.popup', 'click:#trigger']);
+  assert.deepEqual(calls, [
+    'front',
+    'start-on-pointerdown:#trigger:.popup',
+    'wait:#trigger:1000',
+    'measure:#trigger:true',
+    'pointer:10:20',
+  ]);
 });
 
 test('waitForPortal is scoped to a visible popup near the interacted trigger', async () => {

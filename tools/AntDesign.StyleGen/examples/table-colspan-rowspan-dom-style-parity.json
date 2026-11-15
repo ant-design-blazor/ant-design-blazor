@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "ant-design/ant-design",
+    "revision": "599b251da933709d7b25fc9e9018ed7f4c093b96",
+    "component": "Table"
+  },
+  "config": {
+    "timeoutMs": 90000,
+    "viewport": {
+      "width": 1280,
+      "height": 900,
+      "deviceScaleFactor": 1
+    },
+    "colorScheme": "light",
+    "comparisonPolicy": {
+      "normalization": {
+        "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_r_[a-zA-Z0-9_-]+)$",
+        "removeAttributes": [
+          "_bl_*",
+          "id"
+        ],
+        "removeClassPatterns": [
+          "^acss-[a-zA-Z0-9_-]+$",
+          "^css-dev-only-do-not-override-",
+          "^css-var-_[rR]_",
+          "^css-[a-zA-Z0-9]+$"
+        ],
+        "removeCommentMarkers": [
+          "<!--!-->"
+        ],
+        "sortClassTokens": true,
+        "removeInterTagWhitespace": true
+      }
+    }
+  },
+  "groups": [
+    {
+      "id": "table-colspan-rowspan",
+      "component": "Table",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/table",
+        "scopeSelector": "#table-demo-colspan-rowspan",
+        "rootSelector": ".ant-table-wrapper"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/table",
+        "scopeSelector": "#components-table-demo-colspan-rowspan",
+        "rootSelector": ".ant-table-wrapper"
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "paddingInline",
+        "fontSize",
+        "fontWeight",
+        "color",
+        "backgroundColor",
+        "borderRadius",
+        "borderTopWidth",
+        "borderBottomWidth"
+      ],
+      "semanticNodes": [
+        {
+          "path": "root",
+          "selector": "$root",
+          "minimumCount": 1
+        },
+        {
+          "path": "table",
+          "selector": ".ant-table",
+          "minimumCount": 1
+        },
+        {
+          "path": "header.cell",
+          "selector": ".ant-table-thead th",
+          "minimumCount": 1
+        },
+        {
+          "path": "body.row",
+          "selector": ".ant-table-tbody tr",
+          "minimumCount": 1
+        },
+        {
+          "path": "body.cell",
+          "selector": ".ant-table-tbody td",
+          "minimumCount": 1
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "default"
+        }
+      ],
+      "singleBrowserContext": true
+    }
+  ]
+}

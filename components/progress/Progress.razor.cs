@@ -100,6 +100,10 @@ namespace AntDesign
         [Parameter]
         public string TrailColor { get; set; }
 
+        /// <summary>Color of the unfilled rail. React-compatible alias for <see cref="TrailColor"/>.</summary>
+        [Parameter]
+        public string RailColor { get; set; }
+
         /// <summary>
         /// to set the width of the progress bar, unit: px
         /// to set the width of the circular progress, unit: percentage of the canvas width
@@ -162,6 +166,11 @@ namespace AntDesign
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
+
+            if (RailColor != null)
+            {
+                TrailColor = RailColor;
+            }
 
             if (StrokeWidth <= 0)
             {

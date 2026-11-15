@@ -1,0 +1,7 @@
+<Card Style="width:300px" Cover="Cover" Actions="Actions" />
+
+@code {
+    private RenderFragment Cover => @<img alt="example" src="https://api.dicebear.com/10.x/lorelei/svg?seed=8" />;
+    private IList<RenderFragment> Actions => new[] { Action("setting"), Action("edit") };
+    private RenderFragment Action(string label) => @<span>@label</span>;
+}

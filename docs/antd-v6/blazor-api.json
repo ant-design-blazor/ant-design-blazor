@@ -2,12 +2,12 @@
   "schemaVersion": 1,
   "source": {
     "repository": "ant-design-blazor",
-    "root": "/Volumes/Data/GitHub/ant-design-blazor"
+    "root": "."
   },
   "summary": {
-    "components": 68,
-    "parameters": 1505,
-    "callbacks": 213
+    "components": 76,
+    "parameters": 2622,
+    "callbacks": 320
   },
   "components": [
     {
@@ -37,6 +37,26 @@
           "name": "OnChange",
           "type": "EventCallback<bool>",
           "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
+          "optional": true
         }
       ]
     },
@@ -46,6 +66,11 @@
         {
           "name": "AfterClose",
           "type": "EventCallback<MouseEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "Action",
+          "type": "RenderFragment",
           "optional": true
         },
         {
@@ -94,6 +119,21 @@
           "optional": true
         },
         {
+          "name": "Variant",
+          "type": "AlertVariant",
+          "optional": true
+        },
+        {
+          "name": "ClassNames",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "Styles",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
           "name": "OnClose",
           "type": "EventCallback<MouseEventArgs>",
           "optional": true
@@ -102,12 +142,52 @@
           "name": "ChildContent",
           "type": "RenderFragment",
           "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
+          "optional": true
         }
       ]
     },
     {
       "component": "anchor",
       "parameters": [
+        {
+          "name": "ClassNames",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "Styles",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "Direction",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Replace",
+          "type": "bool",
+          "optional": true
+        },
         {
           "name": "Key",
           "type": "string",
@@ -182,6 +262,66 @@
           "name": "Target",
           "type": "string",
           "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "app",
+      "parameters": [
+        {
+          "name": "PrefixCls",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ClassName",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RootClassName",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Component",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "AdditionalAttributes",
+          "type": "IReadOnlyDictionary<string, object>",
+          "optional": true
         }
       ]
     },
@@ -196,6 +336,41 @@
         {
           "name": "Disabled",
           "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "AllowClear",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ClearIconTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Open",
+          "type": "bool?",
+          "optional": true
+        },
+        {
+          "name": "Variant",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Status",
+          "type": "FormValidateStatus",
+          "optional": true
+        },
+        {
+          "name": "ClassNames",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "Styles",
+          "type": "IReadOnlyDictionary<string, string>",
           "optional": true
         },
         {
@@ -240,6 +415,11 @@
         },
         {
           "name": "OnPanelVisibleChange",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "OnOpenChange",
           "type": "EventCallback<bool>",
           "optional": true
         },
@@ -327,6 +507,56 @@
           "name": "Value",
           "type": "object",
           "optional": true
+        },
+        {
+          "name": "AdditionalAttributes",
+          "type": "IReadOnlyDictionary<string, object>",
+          "optional": true
+        },
+        {
+          "name": "ValueChanged",
+          "type": "virtual EventCallback<TValue>",
+          "optional": true
+        },
+        {
+          "name": "ValueExpression",
+          "type": "Expression<Func<TValue>>",
+          "optional": true
+        },
+        {
+          "name": "ValuesExpression",
+          "type": "Expression<Func<IEnumerable<TValue>>>",
+          "optional": true
+        },
+        {
+          "name": "Size",
+          "type": "InputSize",
+          "optional": true
+        },
+        {
+          "name": "CultureInfo",
+          "type": "virtual CultureInfo",
+          "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
+          "optional": true
         }
       ]
     },
@@ -346,6 +576,11 @@
         {
           "name": "Size",
           "type": "OneOf<AvatarSize, string>",
+          "optional": true
+        },
+        {
+          "name": "ResponsiveSize",
+          "type": "Dictionary<string, int>",
           "optional": true
         },
         {
@@ -392,6 +627,26 @@
           "name": "MaxPopoverPlacement",
           "type": "Placement",
           "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
+          "optional": true
         }
       ]
     },
@@ -421,6 +676,26 @@
         {
           "name": "OnClick",
           "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
           "optional": true
         }
       ]
@@ -502,6 +777,81 @@
           "name": "Placement",
           "type": "string",
           "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "border-beam",
+      "parameters": [
+        {
+          "name": "Count",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "Duration",
+          "type": "double?",
+          "optional": true
+        },
+        {
+          "name": "LineWidth",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Size",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Outset",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Color",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
+          "optional": true
         }
       ]
     },
@@ -511,6 +861,16 @@
         {
           "name": "ChildContent",
           "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Items",
+          "type": "IReadOnlyList<BreadcrumbOption>",
+          "optional": true
+        },
+        {
+          "name": "Params",
+          "type": "IDictionary<string, object>",
           "optional": true
         },
         {
@@ -537,6 +897,26 @@
           "name": "OnClick",
           "type": "EventCallback<MouseEventArgs>",
           "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
+          "optional": true
         }
       ]
     },
@@ -549,8 +929,23 @@
           "optional": true
         },
         {
+          "name": "AriaPressed",
+          "type": "bool?",
+          "optional": true
+        },
+        {
           "name": "Color",
           "type": "Color",
+          "optional": true
+        },
+        {
+          "name": "ButtonColor",
+          "type": "ButtonColor?",
+          "optional": true
+        },
+        {
+          "name": "Variant",
+          "type": "ButtonVariant?",
           "optional": true
         },
         {
@@ -584,8 +979,28 @@
           "optional": true
         },
         {
+          "name": "Href",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Title",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Target",
+          "type": "string",
+          "optional": true
+        },
+        {
           "name": "Icon",
           "type": "string",
+          "optional": true
+        },
+        {
+          "name": "IconContent",
+          "type": "RenderFragment",
           "optional": true
         },
         {
@@ -594,8 +1009,38 @@
           "optional": true
         },
         {
+          "name": "IconPlacement",
+          "type": "ButtonIconPlacement",
+          "optional": true
+        },
+        {
+          "name": "ClassNames",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "ClassNamesFunc",
+          "type": "Func<Button, IReadOnlyDictionary<string, string>>",
+          "optional": true
+        },
+        {
+          "name": "Styles",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "StylesFunc",
+          "type": "Func<Button, IReadOnlyDictionary<string, string>>",
+          "optional": true
+        },
+        {
           "name": "Loading",
           "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "LoadingIcon",
+          "type": "RenderFragment",
           "optional": true
         },
         {
@@ -641,6 +1086,26 @@
         {
           "name": "FileName",
           "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
           "optional": true
         }
       ]
@@ -737,6 +1202,26 @@
           "name": "PickerIndex",
           "type": "int",
           "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
+          "optional": true
         }
       ]
     },
@@ -745,6 +1230,11 @@
       "parameters": [
         {
           "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Decoration",
           "type": "RenderFragment",
           "optional": true
         },
@@ -761,6 +1251,26 @@
         {
           "name": "Bordered",
           "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Variant",
+          "type": "CardVariant?",
+          "optional": true
+        },
+        {
+          "name": "ClassNames",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "Styles",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "HeadStyle",
+          "type": "string",
           "optional": true
         },
         {
@@ -832,6 +1342,26 @@
           "name": "AvatarTemplate",
           "type": "RenderFragment",
           "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
+          "optional": true
         }
       ]
     },
@@ -872,12 +1402,42 @@
           "name": "EnableSwipe",
           "type": "bool",
           "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
+          "optional": true
         }
       ]
     },
     {
       "component": "cascader",
       "parameters": [
+        {
+          "name": "Multiple",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ShowCheckedStrategy",
+          "type": "CascaderCheckedStrategy",
+          "optional": true
+        },
         {
           "name": "ChangeOnSelect",
           "type": "bool",
@@ -904,12 +1464,27 @@
           "optional": true
         },
         {
+          "name": "Status",
+          "type": "FormValidateStatus",
+          "optional": true
+        },
+        {
+          "name": "Variant",
+          "type": "InputVariant",
+          "optional": true
+        },
+        {
           "name": "OnChange",
           "type": "Action<List<CascaderNode>, string, string>",
           "optional": true
         },
         {
           "name": "SelectedNodesChanged",
+          "type": "EventCallback<CascaderNode[]>",
+          "optional": true
+        },
+        {
+          "name": "LoadData",
           "type": "EventCallback<CascaderNode[]>",
           "optional": true
         },
@@ -921,6 +1496,336 @@
         {
           "name": "ChildContent",
           "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "RootClassName",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "PopupClassName",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "DropdownClassName",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "DropdownStyle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "DebounceTimeout",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "LoadingIcon",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "ClassNames",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "Styles",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "BoundaryAdjustMode",
+          "type": "TriggerBoundaryAdjustMode",
+          "optional": true
+        },
+        {
+          "name": "AllowClear",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "AutoClearSearchValue",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Disabled",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Mode",
+          "type": "SelectMode",
+          "optional": true
+        },
+        {
+          "name": "MaxCount",
+          "type": "int?",
+          "optional": true
+        },
+        {
+          "name": "EnableSearch",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "SearchDebounceMilliseconds",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "Loading",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Open",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "OpenChanged",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "OnOpenChange",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "Placeholder",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "OnFocus",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "AutoFocus",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "SortByGroup",
+          "type": "SortDirection",
+          "optional": true
+        },
+        {
+          "name": "SortByLabel",
+          "type": "SortDirection",
+          "optional": true
+        },
+        {
+          "name": "HideSelected",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ValueChanged",
+          "type": "override EventCallback<TItemValue>",
+          "optional": true
+        },
+        {
+          "name": "ValuesChanged",
+          "type": "EventCallback<IEnumerable<TItemValue>>",
+          "optional": true
+        },
+        {
+          "name": "SuffixIcon",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "PrefixIcon",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "AccessKey",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "DefaultValues",
+          "type": "IEnumerable<TItemValue>",
+          "optional": true
+        },
+        {
+          "name": "OnClearSelected",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "Unbound",
+          "type": "RenderFragment<ForwardRef>",
+          "optional": true
+        },
+        {
+          "name": "OnSelectedItemChanged",
+          "type": "EventCallback<TItem>",
+          "optional": true
+        },
+        {
+          "name": "OnSelectedItemsChanged",
+          "type": "EventCallback<IEnumerable<TItem>>",
+          "optional": true
+        },
+        {
+          "name": "Values",
+          "type": "virtual IEnumerable<TItemValue>",
+          "optional": true
+        },
+        {
+          "name": "CustomTagLabelToValue",
+          "type": "Func<string, TItemValue>",
+          "optional": true
+        },
+        {
+          "name": "MaxTagTextLength",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "LabelInValue",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "MaxTagCount",
+          "type": "OneOf<int, ResponsiveTag>",
+          "optional": true
+        },
+        {
+          "name": "ValueOnClear",
+          "type": "TItemValue",
+          "optional": true
+        },
+        {
+          "name": "ItemLabel",
+          "type": "Func<TItem, string>",
+          "optional": true
+        },
+        {
+          "name": "ItemValue",
+          "type": "Func<TItem, TItemValue>",
+          "optional": true
+        },
+        {
+          "name": "LabelName",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ValueName",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "OnMouseEnter",
+          "type": "Action",
+          "optional": true
+        },
+        {
+          "name": "OnMouseLeave",
+          "type": "Action",
+          "optional": true
+        },
+        {
+          "name": "PopupContainerSelector",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "DropdownRender",
+          "type": "RenderFragment<RenderFragment>",
+          "optional": true
+        },
+        {
+          "name": "PopupRender",
+          "type": "RenderFragment<RenderFragment>",
+          "optional": true
+        },
+        {
+          "name": "LabelTemplate",
+          "type": "RenderFragment<TItem>",
+          "optional": true
+        },
+        {
+          "name": "MaxTagPlaceholder",
+          "type": "RenderFragment<IEnumerable<TItem>>",
+          "optional": true
+        },
+        {
+          "name": "ShowSearchIcon",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ShowArrowIcon",
+          "type": "virtual bool",
+          "optional": true
+        },
+        {
+          "name": "Placement",
+          "type": "Placement",
+          "optional": true
+        },
+        {
+          "name": "AdditionalAttributes",
+          "type": "IReadOnlyDictionary<string, object>",
+          "optional": true
+        },
+        {
+          "name": "Value",
+          "type": "virtual TValue",
+          "optional": true
+        },
+        {
+          "name": "ValueExpression",
+          "type": "Expression<Func<TValue>>",
+          "optional": true
+        },
+        {
+          "name": "ValuesExpression",
+          "type": "Expression<Func<IEnumerable<TValue>>>",
+          "optional": true
+        },
+        {
+          "name": "Size",
+          "type": "InputSize",
+          "optional": true
+        },
+        {
+          "name": "CultureInfo",
+          "type": "virtual CultureInfo",
+          "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
           "optional": true
         }
       ]
@@ -954,6 +1859,26 @@
           "optional": true
         },
         {
+          "name": "WrapperClass",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "HideEmptyLabel",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ClassNames",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "Styles",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
           "name": "Options",
           "type": "OneOf<CheckboxOption<TValue>[], TValue[]>",
           "optional": true
@@ -972,6 +1897,76 @@
           "name": "Disabled",
           "type": "bool",
           "optional": true
+        },
+        {
+          "name": "AutoFocus",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Checked",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "CheckedChanged",
+          "type": "virtual EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "AdditionalAttributes",
+          "type": "IReadOnlyDictionary<string, object>",
+          "optional": true
+        },
+        {
+          "name": "Value",
+          "type": "virtual TValue",
+          "optional": true
+        },
+        {
+          "name": "ValueChanged",
+          "type": "virtual EventCallback<TValue>",
+          "optional": true
+        },
+        {
+          "name": "ValueExpression",
+          "type": "Expression<Func<TValue>>",
+          "optional": true
+        },
+        {
+          "name": "ValuesExpression",
+          "type": "Expression<Func<IEnumerable<TValue>>>",
+          "optional": true
+        },
+        {
+          "name": "Size",
+          "type": "InputSize",
+          "optional": true
+        },
+        {
+          "name": "CultureInfo",
+          "type": "virtual CultureInfo",
+          "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
+          "optional": true
         }
       ]
     },
@@ -986,6 +1981,31 @@
         {
           "name": "Bordered",
           "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Ghost",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Size",
+          "type": "CollapseSize",
+          "optional": true
+        },
+        {
+          "name": "Collapsible",
+          "type": "CollapseCollapsible?",
+          "optional": true
+        },
+        {
+          "name": "ClassNames",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "Styles",
+          "type": "IReadOnlyDictionary<string, string>",
           "optional": true
         },
         {
@@ -1077,6 +2097,131 @@
           "name": "OnActiveChange",
           "type": "EventCallback<bool>",
           "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "color-picker",
+      "parameters": [
+        {
+          "name": "Value",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ValueChanged",
+          "type": "EventCallback<string>",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Open",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "OpenChanged",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "Size",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ShowText",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Disabled",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "AllowClear",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Presets",
+          "type": "IReadOnlyList<ColorPickerPreset>",
+          "optional": true
+        },
+        {
+          "name": "OnClear",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "Format",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "FormatChanged",
+          "type": "EventCallback<string>",
+          "optional": true
+        },
+        {
+          "name": "DisabledAlpha",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "DisabledFormat",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "AriaLabel",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
+          "optional": true
         }
       ]
     },
@@ -1137,6 +2282,26 @@
           "name": "Placement",
           "type": "CommentPlacement",
           "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
+          "optional": true
         }
       ]
     },
@@ -1146,6 +2311,11 @@
         {
           "name": "Direction",
           "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Size",
+          "type": "FormSize?",
           "optional": true
         },
         {
@@ -1159,6 +2329,11 @@
           "optional": true
         },
         {
+          "name": "Variant",
+          "type": "string",
+          "optional": true
+        },
+        {
           "name": "Form",
           "type": "FormConfig",
           "optional": true
@@ -1166,6 +2341,11 @@
         {
           "name": "ChildContent",
           "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
           "optional": true
         }
       ]
@@ -1180,6 +2360,16 @@
         },
         {
           "name": "Disabled",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Presets",
+          "type": "IEnumerable<KeyValuePair<string, TValue>>",
+          "optional": true
+        },
+        {
+          "name": "ShowInput",
           "type": "bool",
           "optional": true
         },
@@ -1219,6 +2409,26 @@
           "optional": true
         },
         {
+          "name": "Variant",
+          "type": "InputVariant?",
+          "optional": true
+        },
+        {
+          "name": "Status",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ClassNames",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "Styles",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
           "name": "AutoFocus",
           "type": "bool",
           "optional": true
@@ -1235,6 +2445,11 @@
         },
         {
           "name": "ShowToday",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "NeedConfirm",
           "type": "bool",
           "optional": true
         },
@@ -1296,6 +2511,11 @@
         {
           "name": "DefaultPickerValue",
           "type": "TValue",
+          "optional": true
+        },
+        {
+          "name": "Prefix",
+          "type": "RenderFragment",
           "optional": true
         },
         {
@@ -1459,12 +2679,22 @@
           "optional": true
         },
         {
+          "name": "PreviewValue",
+          "type": "string",
+          "optional": true
+        },
+        {
           "name": "ReadOnly",
           "type": "bool",
           "optional": true
         },
         {
           "name": "IsRange",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "AriaInvalid",
           "type": "bool",
           "optional": true
         },
@@ -1692,6 +2922,46 @@
           "name": "SkipDays",
           "type": "int",
           "optional": true
+        },
+        {
+          "name": "AdditionalAttributes",
+          "type": "IReadOnlyDictionary<string, object>",
+          "optional": true
+        },
+        {
+          "name": "ValueChanged",
+          "type": "virtual EventCallback<TValue>",
+          "optional": true
+        },
+        {
+          "name": "ValueExpression",
+          "type": "Expression<Func<TValue>>",
+          "optional": true
+        },
+        {
+          "name": "ValuesExpression",
+          "type": "Expression<Func<IEnumerable<TValue>>>",
+          "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
+          "optional": true
         }
       ]
     },
@@ -1752,6 +3022,26 @@
           "name": "ContentStyle",
           "type": "string",
           "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
+          "optional": true
         }
       ]
     },
@@ -1786,6 +3076,56 @@
         {
           "name": "Dashed",
           "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Variant",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Size",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ClassNames",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "ClassNamesFunc",
+          "type": "Func<Divider, IReadOnlyDictionary<string, string>>",
+          "optional": true
+        },
+        {
+          "name": "Styles",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "StylesFunc",
+          "type": "Func<Divider, IReadOnlyDictionary<string, string>>",
+          "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
           "optional": true
         }
       ]
@@ -1849,6 +3189,16 @@
           "optional": true
         },
         {
+          "name": "Extra",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Footer",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
           "name": "Content",
           "type": "OneOf<RenderFragment, string>",
           "optional": true
@@ -1869,8 +3219,53 @@
           "optional": true
         },
         {
+          "name": "MaskBlur",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Loading",
+          "type": "bool",
+          "optional": true
+        },
+        {
           "name": "MaskStyle",
           "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ClassNames",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "Styles",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "Resizable",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "MaxSize",
+          "type": "int?",
+          "optional": true
+        },
+        {
+          "name": "OnResizeStart",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "OnResize",
+          "type": "EventCallback<int>",
+          "optional": true
+        },
+        {
+          "name": "OnResizeEnd",
+          "type": "EventCallback",
           "optional": true
         },
         {
@@ -1934,7 +3329,17 @@
           "optional": true
         },
         {
+          "name": "Open",
+          "type": "bool?",
+          "optional": true
+        },
+        {
           "name": "VisibleChanged",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "OpenChanged",
           "type": "EventCallback<bool>",
           "optional": true
         },
@@ -1952,12 +3357,82 @@
           "name": "Handler",
           "type": "RenderFragment",
           "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
+          "optional": true
         }
       ]
     },
     {
       "component": "dropdown",
       "parameters": [
+        {
+          "name": "Menu",
+          "type": "DropdownMenuOptions",
+          "optional": true
+        },
+        {
+          "name": "ClassNames",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "Styles",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "PopupRender",
+          "type": "RenderFragment<RenderFragment>",
+          "optional": true
+        },
+        {
+          "name": "DropdownRender",
+          "type": "RenderFragment<RenderFragment>",
+          "optional": true
+        },
+        {
+          "name": "AutoAdjustOverflow",
+          "type": "bool?",
+          "optional": true
+        },
+        {
+          "name": "DestroyPopupOnHide",
+          "type": "bool?",
+          "optional": true
+        },
+        {
+          "name": "RootClassName",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ForceRender",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "OpenClassName",
+          "type": "string",
+          "optional": true
+        },
         {
           "name": "Arrow",
           "type": "bool",
@@ -1966,6 +3441,21 @@
         {
           "name": "ArrowPointAtCenter",
           "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "HtmlType",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Href",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Title",
+          "type": "string",
           "optional": true
         },
         {
@@ -2027,6 +3517,266 @@
           "name": "RightButton",
           "type": "RenderFragment",
           "optional": true
+        },
+        {
+          "name": "PrefixCls",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "TransitionName",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "MouseEnterDelay",
+          "type": "double",
+          "optional": true
+        },
+        {
+          "name": "MouseLeaveDelay",
+          "type": "double",
+          "optional": true
+        },
+        {
+          "name": "BoundaryAdjustMode",
+          "type": "TriggerBoundaryAdjustMode",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "ComplexAutoCloseAndVisible",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Disabled",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "HiddenMode",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "DestroyOnHidden",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "UseCssZIndex",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "OverlayDisplayStyle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "InlineFlexMode",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "IsButton",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "OnClick",
+          "type": "EventCallback<MouseEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "ClickIgnoreSelector",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "OnMaskClick",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "OnMouseEnter",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "OnMouseLeave",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "OnOverlayHiding",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "OnVisibleChange",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "Overlay",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "OverlayClassName",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "OverlayEnterCls",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "OverlayHiddenCls",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "OverlayLeaveCls",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "OverlayStyle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ImmediateOpenOnPointerDown",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ImmediateOpenClass",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ImmediateOpenWidthMode",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "PopupWidthMode",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "PopupWidth",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "PopupMaxWidth",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ImmediateOpenWidth",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ImmediateOpenMaxWidth",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Placement",
+          "type": "Placement",
+          "optional": true
+        },
+        {
+          "name": "PlacementCls",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "PopupContainerSelector",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "GetPopupContainer",
+          "type": "Func<ElementReference, ElementReference>",
+          "optional": true
+        },
+        {
+          "name": "Trigger",
+          "type": "Trigger[]",
+          "optional": true
+        },
+        {
+          "name": "TriggerCls",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "TriggerReference",
+          "type": "ElementReference",
+          "optional": true
+        },
+        {
+          "name": "Unbound",
+          "type": "RenderFragment<ForwardRef>",
+          "optional": true
+        },
+        {
+          "name": "Visible",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Open",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "VisibleChanged",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "OpenChanged",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "OnOpenChange",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
+          "optional": true
         }
       ]
     },
@@ -2074,8 +3824,38 @@
           "optional": true
         },
         {
+          "name": "ClassNames",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "Styles",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
           "name": "PrefixCls",
           "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
           "optional": true
         }
       ]
@@ -2126,6 +3906,216 @@
         {
           "name": "ChildContent",
           "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "float-button",
+      "parameters": [
+        {
+          "name": "Icon",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "IconTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Description",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Content",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Tooltip",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Type",
+          "type": "FloatButtonType",
+          "optional": true
+        },
+        {
+          "name": "Shape",
+          "type": "FloatButtonShape",
+          "optional": true
+        },
+        {
+          "name": "OnClick",
+          "type": "EventCallback<MouseEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "Href",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Target",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Badge",
+          "type": "FloatButtonBadge",
+          "optional": true
+        },
+        {
+          "name": "Disabled",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "HtmlType",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "AriaLabel",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "TooltipPlacement",
+          "type": "Placement",
+          "optional": true
+        },
+        {
+          "name": "ClassNames",
+          "type": "IDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "Styles",
+          "type": "IDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "Duration",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "ShowProgress",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "TargetSelector",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "VisibilityHeight",
+          "type": "double",
+          "optional": true
+        },
+        {
+          "name": "Count",
+          "type": "int?",
+          "optional": true
+        },
+        {
+          "name": "Dot",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Color",
+          "type": "OneOf<BadgeColor?, string>",
+          "optional": true
+        },
+        {
+          "name": "OverflowCount",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "Placement",
+          "type": "FloatButtonGroupPlacement",
+          "optional": true
+        },
+        {
+          "name": "Trigger",
+          "type": "FloatButtonGroupTrigger",
+          "optional": true
+        },
+        {
+          "name": "Open",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "OpenChanged",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "CloseIcon",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "OnOpenChange",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "TriggerContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
           "optional": true
         }
       ]
@@ -2314,6 +4304,11 @@
           "optional": true
         },
         {
+          "name": "Extra",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
           "name": "ToolTip",
           "type": "string",
           "optional": true
@@ -2341,6 +4336,26 @@
         {
           "name": "SubformStyle",
           "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
           "optional": true
         }
       ]
@@ -2494,6 +4509,11 @@
           "optional": true
         },
         {
+          "name": "TwoToneSecondaryColor",
+          "type": "string",
+          "optional": true
+        },
+        {
           "name": "IconFont",
           "type": "string",
           "optional": true
@@ -2532,6 +4552,36 @@
           "name": "Component",
           "type": "RenderFragment",
           "optional": true
+        },
+        {
+          "name": "ComponentTemplate",
+          "type": "RenderFragment<IReadOnlyDictionary<string, object>>",
+          "optional": true
+        },
+        {
+          "name": "ScriptUrl",
+          "type": "OneOf<string, string[]>",
+          "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
+          "optional": true
         }
       ]
     },
@@ -2564,8 +4614,63 @@
           "optional": true
         },
         {
+          "name": "PlaceholderProgress",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ProgressPercent",
+          "type": "double?",
+          "optional": true
+        },
+        {
+          "name": "ProgressRender",
+          "type": "RenderFragment<ImageProgressRenderContext>",
+          "optional": true
+        },
+        {
           "name": "Preview",
           "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "PreviewMaskVisible",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "PreviewMaskBlur",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "PreviewCover",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "PreviewCoverPlacement",
+          "type": "ImageCoverPlacement",
+          "optional": true
+        },
+        {
+          "name": "ClassNames",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "Styles",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "ActionsRender",
+          "type": "RenderFragment<ImagePreviewActionsRenderContext>",
+          "optional": true
+        },
+        {
+          "name": "ImageRender",
+          "type": "RenderFragment<ImagePreviewImageRenderContext>",
           "optional": true
         },
         {
@@ -2607,6 +4712,26 @@
           "name": "ChildContent",
           "type": "RenderFragment",
           "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
+          "optional": true
         }
       ]
     },
@@ -2626,6 +4751,11 @@
         {
           "name": "AllowClear",
           "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ClearIconTemplate",
+          "type": "RenderFragment",
           "optional": true
         },
         {
@@ -2651,6 +4781,16 @@
         {
           "name": "Bordered",
           "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Variant",
+          "type": "InputVariant?",
+          "optional": true
+        },
+        {
+          "name": "Status",
+          "type": "FormValidateStatus?",
           "optional": true
         },
         {
@@ -2769,6 +4909,11 @@
           "optional": true
         },
         {
+          "name": "Count",
+          "type": "InputCountOptions",
+          "optional": true
+        },
+        {
           "name": "Width",
           "type": "string",
           "optional": true
@@ -2791,6 +4936,56 @@
         {
           "name": "Size",
           "type": "InputSize",
+          "optional": true
+        },
+        {
+          "name": "Length",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "Value",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ValueChanged",
+          "type": "EventCallback<string>",
+          "optional": true
+        },
+        {
+          "name": "Formatter",
+          "type": "Func<string, string>",
+          "optional": true
+        },
+        {
+          "name": "InputMode",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Mask",
+          "type": "OneOf<bool, string>",
+          "optional": true
+        },
+        {
+          "name": "Separator",
+          "type": "RenderFragment<int>",
+          "optional": true
+        },
+        {
+          "name": "SeparatorText",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ClassNames",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "Styles",
+          "type": "IReadOnlyDictionary<string, string>",
           "optional": true
         },
         {
@@ -2854,8 +5049,43 @@
           "optional": true
         },
         {
-          "name": "Value",
-          "type": "override string",
+          "name": "AdditionalAttributes",
+          "type": "IReadOnlyDictionary<string, object>",
+          "optional": true
+        },
+        {
+          "name": "ValueExpression",
+          "type": "Expression<Func<TValue>>",
+          "optional": true
+        },
+        {
+          "name": "ValuesExpression",
+          "type": "Expression<Func<IEnumerable<TValue>>>",
+          "optional": true
+        },
+        {
+          "name": "CultureInfo",
+          "type": "virtual CultureInfo",
+          "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
           "optional": true
         }
       ]
@@ -2914,6 +5144,41 @@
           "optional": true
         },
         {
+          "name": "Status",
+          "type": "FormValidateStatus",
+          "optional": true
+        },
+        {
+          "name": "Variant",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Keyboard",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Controls",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ControlsUpIcon",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "ControlsDownIcon",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "ChangeOnWheel",
+          "type": "bool",
+          "optional": true
+        },
+        {
           "name": "OnChange",
           "type": "EventCallback<TValue>",
           "optional": true
@@ -2939,8 +5204,68 @@
           "optional": true
         },
         {
+          "name": "Suffix",
+          "type": "OneOf<string, RenderFragment>",
+          "optional": true
+        },
+        {
           "name": "Width",
           "type": "string",
+          "optional": true
+        },
+        {
+          "name": "AdditionalAttributes",
+          "type": "IReadOnlyDictionary<string, object>",
+          "optional": true
+        },
+        {
+          "name": "Value",
+          "type": "virtual TValue",
+          "optional": true
+        },
+        {
+          "name": "ValueChanged",
+          "type": "virtual EventCallback<TValue>",
+          "optional": true
+        },
+        {
+          "name": "ValueExpression",
+          "type": "Expression<Func<TValue>>",
+          "optional": true
+        },
+        {
+          "name": "ValuesExpression",
+          "type": "Expression<Func<IEnumerable<TValue>>>",
+          "optional": true
+        },
+        {
+          "name": "Size",
+          "type": "InputSize",
+          "optional": true
+        },
+        {
+          "name": "CultureInfo",
+          "type": "virtual CultureInfo",
+          "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
           "optional": true
         }
       ]
@@ -2956,6 +5281,16 @@
         {
           "name": "Collapsible",
           "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ClassNames",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "Styles",
+          "type": "IReadOnlyDictionary<string, string>",
           "optional": true
         },
         {
@@ -3011,6 +5346,26 @@
         {
           "name": "DefaultCollapsed",
           "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
           "optional": true
         }
       ]
@@ -3136,6 +5491,141 @@
       ]
     },
     {
+      "component": "listy",
+      "parameters": [
+        {
+          "name": "DataSource",
+          "type": "IEnumerable<TItem>",
+          "optional": true
+        },
+        {
+          "name": "ItemTemplate",
+          "type": "RenderFragment<TItem>",
+          "optional": true
+        },
+        {
+          "name": "GroupHeaderTemplate",
+          "type": "RenderFragment<string>",
+          "optional": true
+        },
+        {
+          "name": "GroupBy",
+          "type": "System.Func<TItem, string>",
+          "optional": true
+        },
+        {
+          "name": "Height",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "ItemHeight",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "masonry",
+      "parameters": [
+        {
+          "name": "ClassNames",
+          "type": "IDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "Styles",
+          "type": "IDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "Gutter",
+          "type": "MasonryGutter",
+          "optional": true
+        },
+        {
+          "name": "Items",
+          "type": "IEnumerable<MasonryItem<T>>",
+          "optional": true
+        },
+        {
+          "name": "ItemRender",
+          "type": "RenderFragment<MasonryItemRenderContext<T>>",
+          "optional": true
+        },
+        {
+          "name": "Columns",
+          "type": "MasonryColumns",
+          "optional": true
+        },
+        {
+          "name": "OnLayoutChange",
+          "type": "EventCallback<IEnumerable<MasonryLayoutItem>>",
+          "optional": true
+        },
+        {
+          "name": "Fresh",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Content",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "ItemKey",
+          "type": "object",
+          "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
+          "optional": true
+        }
+      ]
+    },
+    {
       "component": "mentions",
       "parameters": [
         {
@@ -3166,6 +5656,16 @@
         {
           "name": "Loading",
           "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Variant",
+          "type": "InputVariant?",
+          "optional": true
+        },
+        {
+          "name": "Status",
+          "type": "FormValidateStatus?",
           "optional": true
         },
         {
@@ -3207,12 +5707,47 @@
           "name": "OnSearch",
           "type": "EventCallback<(string searchValue, string prefix)>",
           "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
+          "optional": true
         }
       ]
     },
     {
       "component": "menu",
       "parameters": [
+        {
+          "name": "DisabledOverflow",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "OverflowedIndicator",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "OverflowedIndicatorPopupClassName",
+          "type": "string",
+          "optional": true
+        },
         {
           "name": "Theme",
           "type": "MenuTheme",
@@ -3254,6 +5789,11 @@
           "optional": true
         },
         {
+          "name": "ActiveKey",
+          "type": "string",
+          "optional": true
+        },
+        {
           "name": "InlineCollapsed",
           "type": "bool",
           "optional": true
@@ -3261,6 +5801,16 @@
         {
           "name": "InlineIndent",
           "type": "int",
+          "optional": true
+        },
+        {
+          "name": "ClassNames",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "Styles",
+          "type": "IReadOnlyDictionary<string, string>",
           "optional": true
         },
         {
@@ -3314,8 +5864,28 @@
           "optional": true
         },
         {
+          "name": "CollapsedTooltipPlacement",
+          "type": "Placement",
+          "optional": true
+        },
+        {
+          "name": "PopupRender",
+          "type": "RenderFragment<MenuPopupContext>",
+          "optional": true
+        },
+        {
           "name": "Animation",
           "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Dashed",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Extra",
+          "type": "RenderFragment",
           "optional": true
         },
         {
@@ -3325,6 +5895,11 @@
         },
         {
           "name": "Disabled",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Danger",
           "type": "bool",
           "optional": true
         },
@@ -3412,6 +5987,26 @@
           "name": "TriggerClass",
           "type": "string",
           "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
+          "optional": true
         }
       ]
     },
@@ -3431,6 +6026,26 @@
         {
           "name": "OnMouseLeave",
           "type": "EventCallback<MessageItem>",
+          "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
           "optional": true
         }
       ]
@@ -3465,6 +6080,11 @@
         },
         {
           "name": "Visible",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "PurePanel",
           "type": "bool",
           "optional": true
         },
@@ -3539,6 +6159,11 @@
           "optional": true
         },
         {
+          "name": "Loading",
+          "type": "bool",
+          "optional": true
+        },
+        {
           "name": "DestroyOnClose",
           "type": "bool",
           "optional": true
@@ -3569,6 +6194,16 @@
           "optional": true
         },
         {
+          "name": "MousePosition",
+          "type": "ModalMousePosition",
+          "optional": true
+        },
+        {
+          "name": "ModalRender",
+          "type": "RenderFragment<RenderFragment>",
+          "optional": true
+        },
+        {
           "name": "MaskClosable",
           "type": "bool",
           "optional": true
@@ -3596,6 +6231,16 @@
         {
           "name": "TitleTemplate",
           "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Open",
+          "type": "bool?",
+          "optional": true
+        },
+        {
+          "name": "OpenChanged",
+          "type": "EventCallback<bool>",
           "optional": true
         },
         {
@@ -3684,6 +6329,11 @@
           "optional": true
         },
         {
+          "name": "PurePanel",
+          "type": "bool",
+          "optional": true
+        },
+        {
           "name": "OnClose",
           "type": "Func<NotificationConfig, Task>",
           "optional": true
@@ -3754,8 +6404,28 @@
           "optional": true
         },
         {
+          "name": "ClassNames",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "Styles",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
           "name": "If",
           "type": "Func<bool>",
+          "optional": true
+        },
+        {
+          "name": "Presets",
+          "type": "IEnumerable<KeyValuePair<string, TValue>>",
+          "optional": true
+        },
+        {
+          "name": "ShowInput",
+          "type": "bool",
           "optional": true
         },
         {
@@ -3819,6 +6489,11 @@
           "optional": true
         },
         {
+          "name": "PreviewValue",
+          "type": "string",
+          "optional": true
+        },
+        {
           "name": "ReadOnly",
           "type": "bool",
           "optional": true
@@ -3835,6 +6510,11 @@
         },
         {
           "name": "Disabled",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "AriaInvalid",
           "type": "bool",
           "optional": true
         },
@@ -3929,6 +6609,11 @@
           "optional": true
         },
         {
+          "name": "Dashed",
+          "type": "bool",
+          "optional": true
+        },
+        {
           "name": "ShowTitle",
           "type": "bool",
           "optional": true
@@ -3940,6 +6625,16 @@
         },
         {
           "name": "RootPrefixCls",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ItemClass",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ItemStyle",
           "type": "string",
           "optional": true
         },
@@ -3956,6 +6651,56 @@
         {
           "name": "UnmatchedAttributes",
           "type": "Dictionary<string, object>",
+          "optional": true
+        },
+        {
+          "name": "Icon",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "IconTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "CancelText",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "OkText",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "OkType",
+          "type": "ButtonType",
+          "optional": true
+        },
+        {
+          "name": "OkButtonProps",
+          "type": "ButtonProps",
+          "optional": true
+        },
+        {
+          "name": "CancelButtonProps",
+          "type": "ButtonProps",
+          "optional": true
+        },
+        {
+          "name": "OnCancel",
+          "type": "EventCallback<MouseEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "OnConfirm",
+          "type": "EventCallback<MouseEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "Placement",
+          "type": "Placement",
           "optional": true
         },
         {
@@ -3999,8 +6744,203 @@
           "optional": true
         },
         {
-          "name": "Context",
-          "type": "AdvancedFilterInputContext",
+          "name": "Current",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "Total",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "Type",
+          "type": "TourType",
+          "optional": true
+        },
+        {
+          "name": "Step",
+          "type": "TourStep",
+          "optional": true
+        },
+        {
+          "name": "Previous",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "Next",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "Cover",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "CurrentChanged",
+          "type": "EventCallback<int>",
+          "optional": true
+        },
+        {
+          "name": "OnClose",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "OnFinish",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "Closable",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "IsItemDisabled",
+          "type": "Func<TItem, bool>",
+          "optional": true
+        },
+        {
+          "name": "Direction",
+          "type": "TransferDirection",
+          "optional": true
+        },
+        {
+          "name": "SelectedKeys",
+          "type": "IEnumerable<string>",
+          "optional": true
+        },
+        {
+          "name": "TargetKeys",
+          "type": "IEnumerable<string>",
+          "optional": true
+        },
+        {
+          "name": "Selectable",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ShowSelectAll",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ShowDropdown",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "AllSelectedOverride",
+          "type": "bool?",
+          "optional": true
+        },
+        {
+          "name": "IndeterminateOverride",
+          "type": "bool?",
+          "optional": true
+        },
+        {
+          "name": "ShowSearch",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ShowSearchIcon",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "SearchPlaceholder",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "CountText",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "PanelClass",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "PanelStyle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ClassResolver",
+          "type": "Func<string, string, TransferDirection, string>",
+          "optional": true
+        },
+        {
+          "name": "StyleResolver",
+          "type": "Func<string, string, TransferDirection, string>",
+          "optional": true
+        },
+        {
+          "name": "ItemTitleSelector",
+          "type": "Func<TItem, string>",
+          "optional": true
+        },
+        {
+          "name": "OnScroll",
+          "type": "EventCallback<EventArgs>",
+          "optional": true
+        },
+        {
+          "name": "Footer",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "FooterTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "SearchValue",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "SearchValueChanged",
+          "type": "EventCallback<string>",
+          "optional": true
+        },
+        {
+          "name": "OnItemSelect",
+          "type": "EventCallback<TransferSideSelection>",
+          "optional": true
+        },
+        {
+          "name": "OnSelectAll",
+          "type": "EventCallback<TransferSideSelectAll>",
+          "optional": true
+        },
+        {
+          "name": "ItemTemplate",
+          "type": "RenderFragment<TItem>",
+          "optional": true
+        },
+        {
+          "name": "PageSize",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "CurrentPage",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "CurrentPageChanged",
+          "type": "EventCallback<int>",
           "optional": true
         }
       ]
@@ -4149,6 +7089,11 @@
           "optional": true
         },
         {
+          "name": "SizeChanger",
+          "type": "RenderFragment<PaginationSizeChangerContext>",
+          "optional": true
+        },
+        {
           "name": "OnShowSizeChange",
           "type": "EventCallback<PaginationEventArgs>",
           "optional": true
@@ -4176,6 +7121,21 @@
         {
           "name": "Size",
           "type": "PaginationSize",
+          "optional": true
+        },
+        {
+          "name": "Align",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ItemClass",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ItemStyle",
+          "type": "string",
           "optional": true
         },
         {
@@ -4259,6 +7219,11 @@
           "optional": true
         },
         {
+          "name": "Position",
+          "type": "string",
+          "optional": true
+        },
+        {
           "name": "QuickGo",
           "type": "EventCallback<int>",
           "optional": true
@@ -4281,6 +7246,26 @@
         {
           "name": "OnKeyPress",
           "type": "EventCallback<(KeyboardEventArgs e, Action callback)>",
+          "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
           "optional": true
         }
       ]
@@ -4354,6 +7339,21 @@
           "optional": true
         },
         {
+          "name": "Placement",
+          "type": "Placement",
+          "optional": true
+        },
+        {
+          "name": "PrefixCls",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "TransitionName",
+          "type": "string",
+          "optional": true
+        },
+        {
           "name": "MouseEnterDelay",
           "type": "double",
           "optional": true
@@ -4361,6 +7361,241 @@
         {
           "name": "MouseLeaveDelay",
           "type": "double",
+          "optional": true
+        },
+        {
+          "name": "BoundaryAdjustMode",
+          "type": "TriggerBoundaryAdjustMode",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "ComplexAutoCloseAndVisible",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Disabled",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "HiddenMode",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "DestroyOnHidden",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "UseCssZIndex",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "OverlayDisplayStyle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "InlineFlexMode",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "IsButton",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "OnClick",
+          "type": "EventCallback<MouseEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "ClickIgnoreSelector",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "OnMaskClick",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "OnMouseEnter",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "OnMouseLeave",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "OnOverlayHiding",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "OnVisibleChange",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "Overlay",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "OverlayClassName",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "OverlayEnterCls",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "OverlayHiddenCls",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "OverlayLeaveCls",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "OverlayStyle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ImmediateOpenOnPointerDown",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ImmediateOpenClass",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ImmediateOpenWidthMode",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "PopupWidthMode",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "PopupWidth",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "PopupMaxWidth",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ImmediateOpenWidth",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ImmediateOpenMaxWidth",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "PlacementCls",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "PopupContainerSelector",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "GetPopupContainer",
+          "type": "Func<ElementReference, ElementReference>",
+          "optional": true
+        },
+        {
+          "name": "Trigger",
+          "type": "Trigger[]",
+          "optional": true
+        },
+        {
+          "name": "TriggerCls",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "TriggerReference",
+          "type": "ElementReference",
+          "optional": true
+        },
+        {
+          "name": "Unbound",
+          "type": "RenderFragment<ForwardRef>",
+          "optional": true
+        },
+        {
+          "name": "Visible",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Open",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "VisibleChanged",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "OpenChanged",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "OnOpenChange",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
           "optional": true
         }
       ]
@@ -4394,6 +7629,16 @@
           "optional": true
         },
         {
+          "name": "PrefixCls",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "TransitionName",
+          "type": "string",
+          "optional": true
+        },
+        {
           "name": "MouseEnterDelay",
           "type": "double",
           "optional": true
@@ -4401,6 +7646,246 @@
         {
           "name": "MouseLeaveDelay",
           "type": "double",
+          "optional": true
+        },
+        {
+          "name": "BoundaryAdjustMode",
+          "type": "TriggerBoundaryAdjustMode",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "ComplexAutoCloseAndVisible",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Disabled",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "HiddenMode",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "DestroyOnHidden",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "UseCssZIndex",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "OverlayDisplayStyle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "InlineFlexMode",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "IsButton",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "OnClick",
+          "type": "EventCallback<MouseEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "ClickIgnoreSelector",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "OnMaskClick",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "OnMouseEnter",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "OnMouseLeave",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "OnOverlayHiding",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "OnVisibleChange",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "Overlay",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "OverlayClassName",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "OverlayEnterCls",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "OverlayHiddenCls",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "OverlayLeaveCls",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "OverlayStyle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ImmediateOpenOnPointerDown",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ImmediateOpenClass",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ImmediateOpenWidthMode",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "PopupWidthMode",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "PopupWidth",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "PopupMaxWidth",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ImmediateOpenWidth",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ImmediateOpenMaxWidth",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Placement",
+          "type": "Placement",
+          "optional": true
+        },
+        {
+          "name": "PlacementCls",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "PopupContainerSelector",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "GetPopupContainer",
+          "type": "Func<ElementReference, ElementReference>",
+          "optional": true
+        },
+        {
+          "name": "Trigger",
+          "type": "Trigger[]",
+          "optional": true
+        },
+        {
+          "name": "TriggerCls",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "TriggerReference",
+          "type": "ElementReference",
+          "optional": true
+        },
+        {
+          "name": "Unbound",
+          "type": "RenderFragment<ForwardRef>",
+          "optional": true
+        },
+        {
+          "name": "Visible",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Open",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "VisibleChanged",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "OpenChanged",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "OnOpenChange",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
           "optional": true
         }
       ]
@@ -4454,6 +7939,11 @@
           "optional": true
         },
         {
+          "name": "RailColor",
+          "type": "string",
+          "optional": true
+        },
+        {
           "name": "StrokeWidth",
           "type": "int",
           "optional": true
@@ -4482,6 +7972,141 @@
           "name": "GapPosition",
           "type": "ProgressGapPosition",
           "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "qr-code",
+      "parameters": [
+        {
+          "name": "Value",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Type",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Size",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "ErrorLevel",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "BoostLevel",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "MarginSize",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "Icon",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "IconSize",
+          "type": "OneOf<int, QRCodeIconSize>",
+          "optional": true
+        },
+        {
+          "name": "Status",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Color",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "BackgroundColor",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "StatusRender",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "StatusTemplate",
+          "type": "RenderFragment<QRCodeStatusRenderInfo>",
+          "optional": true
+        },
+        {
+          "name": "Bordered",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "OnRefresh",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "Locale",
+          "type": "QRCodeLocale",
+          "optional": true
+        },
+        {
+          "name": "ClassNames",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "Styles",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
+          "optional": true
         }
       ]
     },
@@ -4496,6 +8121,16 @@
         {
           "name": "Value",
           "type": "TValue",
+          "optional": true
+        },
+        {
+          "name": "Title",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Required",
+          "type": "bool",
           "optional": true
         },
         {
@@ -4529,8 +8164,28 @@
           "optional": true
         },
         {
+          "name": "ClassNames",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "Styles",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
           "name": "CheckedChange",
           "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "Block",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Vertical",
+          "type": "bool",
           "optional": true
         },
         {
@@ -4557,6 +8212,26 @@
           "name": "Options",
           "type": "OneOf<string[], RadioOption<TValue>[]>",
           "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
+          "optional": true
         }
       ]
     },
@@ -4581,6 +8256,26 @@
         {
           "name": "AutoFocus",
           "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Keyboard",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "TabIndex",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "Size",
+          "type": "InputSize",
+          "optional": true
+        },
+        {
+          "name": "OnKeyDown",
+          "type": "EventCallback<KeyboardEventArgs>",
           "optional": true
         },
         {
@@ -4657,6 +8352,26 @@
           "name": "IsFocused",
           "type": "bool",
           "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
+          "optional": true
         }
       ]
     },
@@ -4706,6 +8421,36 @@
         {
           "name": "ChildContent",
           "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "ClassNames",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "Styles",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
           "optional": true
         }
       ]
@@ -4772,6 +8517,26 @@
           "name": "Icon",
           "type": "string",
           "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
+          "optional": true
         }
       ]
     },
@@ -4789,8 +8554,23 @@
           "optional": true
         },
         {
+          "name": "ShowSearch",
+          "type": "bool?",
+          "optional": true
+        },
+        {
           "name": "Bordered",
           "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Variant",
+          "type": "InputVariant?",
+          "optional": true
+        },
+        {
+          "name": "Status",
+          "type": "string",
           "optional": true
         },
         {
@@ -4800,6 +8580,11 @@
         },
         {
           "name": "DataSource",
+          "type": "IEnumerable<TItem>",
+          "optional": true
+        },
+        {
+          "name": "Options",
           "type": "IEnumerable<TItem>",
           "optional": true
         },
@@ -4830,6 +8615,11 @@
         },
         {
           "name": "DropdownMatchSelectWidth",
+          "type": "OneOf<bool, string>",
+          "optional": true
+        },
+        {
+          "name": "PopupMatchSelectWidth",
           "type": "OneOf<bool, string>",
           "optional": true
         },
@@ -4894,8 +8684,23 @@
           "optional": true
         },
         {
+          "name": "ShowArrow",
+          "type": "bool",
+          "optional": true
+        },
+        {
           "name": "TokenSeparators",
           "type": "char[]",
+          "optional": true
+        },
+        {
+          "name": "Virtual",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Tokenize",
+          "type": "Func<string, IEnumerable<string>>",
           "optional": true
         },
         {
@@ -4934,6 +8739,46 @@
           "optional": true
         },
         {
+          "name": "RootClassName",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "PopupClassName",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "DropdownClassName",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "DropdownStyle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "DebounceTimeout",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "LoadingIcon",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "ClassNames",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "Styles",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
           "name": "BoundaryAdjustMode",
           "type": "TriggerBoundaryAdjustMode",
           "optional": true
@@ -4959,6 +8804,11 @@
           "optional": true
         },
         {
+          "name": "MaxCount",
+          "type": "int?",
+          "optional": true
+        },
+        {
           "name": "EnableSearch",
           "type": "bool",
           "optional": true
@@ -4980,6 +8830,11 @@
         },
         {
           "name": "OpenChanged",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "OnOpenChange",
           "type": "EventCallback<bool>",
           "optional": true
         },
@@ -5124,6 +8979,11 @@
           "optional": true
         },
         {
+          "name": "PopupRender",
+          "type": "RenderFragment<RenderFragment>",
+          "optional": true
+        },
+        {
           "name": "LabelTemplate",
           "type": "RenderFragment<TItem>",
           "optional": true
@@ -5232,6 +9092,41 @@
           "name": "SearchValue",
           "type": "string",
           "optional": true
+        },
+        {
+          "name": "ShowClearIcon",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "AdditionalAttributes",
+          "type": "IReadOnlyDictionary<string, object>",
+          "optional": true
+        },
+        {
+          "name": "ValueExpression",
+          "type": "Expression<Func<TValue>>",
+          "optional": true
+        },
+        {
+          "name": "ValuesExpression",
+          "type": "Expression<Func<IEnumerable<TValue>>>",
+          "optional": true
+        },
+        {
+          "name": "Size",
+          "type": "InputSize",
+          "optional": true
+        },
+        {
+          "name": "CultureInfo",
+          "type": "virtual CultureInfo",
+          "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
         }
       ]
     },
@@ -5294,6 +9189,16 @@
           "optional": true
         },
         {
+          "name": "ClassNames",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "Styles",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
           "name": "Type",
           "type": "SkeletonElementType",
           "optional": true
@@ -5306,6 +9211,36 @@
         {
           "name": "Shape",
           "type": "SkeletonElementShape",
+          "optional": true
+        },
+        {
+          "name": "SpanClass",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "SpanStyle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
           "optional": true
         }
       ]
@@ -5321,6 +9256,31 @@
         {
           "name": "Disabled",
           "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "DraggableTrack",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Editable",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "MinCount",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "MaxCount",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "DisabledHandles",
+          "type": "bool[]",
           "optional": true
         },
         {
@@ -5379,6 +9339,16 @@
           "optional": true
         },
         {
+          "name": "ClassNames",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "Styles",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
           "name": "TipFormatter",
           "type": "Func<double, string>",
           "optional": true
@@ -5401,6 +9371,56 @@
         {
           "name": "Value",
           "type": "override sealed TValue",
+          "optional": true
+        },
+        {
+          "name": "AdditionalAttributes",
+          "type": "IReadOnlyDictionary<string, object>",
+          "optional": true
+        },
+        {
+          "name": "ValueChanged",
+          "type": "virtual EventCallback<TValue>",
+          "optional": true
+        },
+        {
+          "name": "ValueExpression",
+          "type": "Expression<Func<TValue>>",
+          "optional": true
+        },
+        {
+          "name": "ValuesExpression",
+          "type": "Expression<Func<IEnumerable<TValue>>>",
+          "optional": true
+        },
+        {
+          "name": "Size",
+          "type": "InputSize",
+          "optional": true
+        },
+        {
+          "name": "CultureInfo",
+          "type": "virtual CultureInfo",
+          "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
           "optional": true
         }
       ]
@@ -5437,6 +9457,71 @@
           "name": "ChildContent",
           "type": "RenderFragment",
           "optional": true
+        },
+        {
+          "name": "ClassNames",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "Styles",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "Variant",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Status",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Disabled",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "AdditionalAttributes",
+          "type": "System.Collections.Generic.IReadOnlyDictionary<string, object>",
+          "optional": true
+        },
+        {
+          "name": "Block",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Vertical",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Position",
+          "type": "SpaceCompactItemPosition",
+          "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
+          "optional": true
         }
       ]
     },
@@ -5451,6 +9536,21 @@
         {
           "name": "Tip",
           "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Description",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ClassNames",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "Styles",
+          "type": "IReadOnlyDictionary<string, string>",
           "optional": true
         },
         {
@@ -5477,12 +9577,62 @@
           "name": "ChildContent",
           "type": "RenderFragment",
           "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
+          "optional": true
         }
       ]
     },
     {
       "component": "splitter",
       "parameters": [
+        {
+          "name": "ClassNames",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "Styles",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "DraggerIcon",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "HideDraggerIndicator",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "CollapseIconStart",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "CollapseIconEnd",
+          "type": "RenderFragment",
+          "optional": true
+        },
         {
           "name": "FirstPane",
           "type": "RenderFragment",
@@ -5539,6 +9689,16 @@
           "optional": true
         },
         {
+          "name": "Lazy",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "OnDraggerDoubleClick",
+          "type": "EventCallback<int>",
+          "optional": true
+        },
+        {
           "name": "DefaultSize",
           "type": "string",
           "optional": true
@@ -5564,8 +9724,33 @@
           "optional": true
         },
         {
+          "name": "ShowCollapsibleIcon",
+          "type": "bool?",
+          "optional": true
+        },
+        {
           "name": "Resizable",
           "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
           "optional": true
         }
       ]
@@ -5651,6 +9836,26 @@
         {
           "name": "ChildContent",
           "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
           "optional": true
         }
       ]
@@ -5739,13 +9944,28 @@
           "optional": true
         },
         {
+          "name": "Responsive",
+          "type": "bool",
+          "optional": true
+        },
+        {
           "name": "LabelPlacement",
           "type": "StepsLabelPlacement",
           "optional": true
         },
         {
+          "name": "Ellipsis",
+          "type": "bool",
+          "optional": true
+        },
+        {
           "name": "Type",
           "type": "StepsType",
+          "optional": true
+        },
+        {
+          "name": "Outlined",
+          "type": "bool",
           "optional": true
         },
         {
@@ -5766,6 +9986,26 @@
         {
           "name": "OnChange",
           "type": "EventCallback<int>",
+          "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
           "optional": true
         }
       ]
@@ -5806,6 +10046,86 @@
         {
           "name": "UnCheckedChildrenTemplate",
           "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "AutoFocus",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Checked",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "OnChange",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "CheckedChanged",
+          "type": "virtual EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "Disabled",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "AdditionalAttributes",
+          "type": "IReadOnlyDictionary<string, object>",
+          "optional": true
+        },
+        {
+          "name": "Value",
+          "type": "virtual TValue",
+          "optional": true
+        },
+        {
+          "name": "ValueChanged",
+          "type": "virtual EventCallback<TValue>",
+          "optional": true
+        },
+        {
+          "name": "ValueExpression",
+          "type": "Expression<Func<TValue>>",
+          "optional": true
+        },
+        {
+          "name": "ValuesExpression",
+          "type": "Expression<Func<IEnumerable<TValue>>>",
+          "optional": true
+        },
+        {
+          "name": "Size",
+          "type": "InputSize",
+          "optional": true
+        },
+        {
+          "name": "CultureInfo",
+          "type": "virtual CultureInfo",
+          "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
           "optional": true
         }
       ]
@@ -6164,6 +10484,11 @@
           "optional": true
         },
         {
+          "name": "ShowHeader",
+          "type": "bool",
+          "optional": true
+        },
+        {
           "name": "ExpandTemplate",
           "type": "RenderFragment<RowData<TItem>>",
           "optional": true
@@ -6342,6 +10667,26 @@
           "name": "RowData",
           "type": "RowData<TItem>",
           "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
+          "optional": true
         }
       ]
     },
@@ -6519,8 +10864,33 @@
           "optional": true
         },
         {
+          "name": "Indicator",
+          "type": "TabsIndicator",
+          "optional": true
+        },
+        {
+          "name": "MorePopupRender",
+          "type": "RenderFragment<TabsMoreContext>",
+          "optional": true
+        },
+        {
+          "name": "ClassNames",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "Styles",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
           "name": "TabPosition",
           "type": "TabPosition",
+          "optional": true
+        },
+        {
+          "name": "TabPlacement",
+          "type": "TabPlacement?",
           "optional": true
         },
         {
@@ -6577,12 +10947,67 @@
           "name": "EnableSwipe",
           "type": "bool",
           "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
+          "optional": true
         }
       ]
     },
     {
       "component": "tag",
       "parameters": [
+        {
+          "name": "Options",
+          "type": "IReadOnlyList<CheckableTagOption>",
+          "optional": true
+        },
+        {
+          "name": "Multiple",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Value",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ValueChanged",
+          "type": "EventCallback<string>",
+          "optional": true
+        },
+        {
+          "name": "Values",
+          "type": "IReadOnlyList<string>",
+          "optional": true
+        },
+        {
+          "name": "ValuesChanged",
+          "type": "EventCallback<IReadOnlyList<string>>",
+          "optional": true
+        },
+        {
+          "name": "Disabled",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ClassNames",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "Styles",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
         {
           "name": "ChildContent",
           "type": "RenderFragment",
@@ -6601,6 +11026,11 @@
         {
           "name": "Checked",
           "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Variant",
+          "type": "TagVariant?",
           "optional": true
         },
         {
@@ -6634,6 +11064,11 @@
           "optional": true
         },
         {
+          "name": "AdditionalAttributes",
+          "type": "IReadOnlyDictionary<string, object>",
+          "optional": true
+        },
+        {
           "name": "NoAnimation",
           "type": "bool",
           "optional": true
@@ -6657,12 +11092,62 @@
           "name": "Visible",
           "type": "bool",
           "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
+          "optional": true
         }
       ]
     },
     {
       "component": "timeline",
       "parameters": [
+        {
+          "name": "Variant",
+          "type": "TimelineVariant",
+          "optional": true
+        },
+        {
+          "name": "Orientation",
+          "type": "TimelineOrientation",
+          "optional": true
+        },
+        {
+          "name": "TitleSpan",
+          "type": "OneOf<double, string>",
+          "optional": true
+        },
+        {
+          "name": "ClassNames",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "Styles",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "Items",
+          "type": "IReadOnlyList<TimelineItemData>",
+          "optional": true
+        },
         {
           "name": "Mode",
           "type": "TimelineMode?",
@@ -6702,12 +11187,47 @@
           "name": "Label",
           "type": "string",
           "optional": true
+        },
+        {
+          "name": "Placement",
+          "type": "TimelineMode?",
+          "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
+          "optional": true
         }
       ]
     },
     {
       "component": "tooltip",
       "parameters": [
+        {
+          "name": "ClassNames",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "Styles",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
         {
           "name": "Title",
           "type": "string",
@@ -6724,6 +11244,36 @@
           "optional": true
         },
         {
+          "name": "Arrow",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Color",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "AutoAdjustOverflow",
+          "type": "bool?",
+          "optional": true
+        },
+        {
+          "name": "TabIndex",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "PrefixCls",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "TransitionName",
+          "type": "string",
+          "optional": true
+        },
+        {
           "name": "MouseEnterDelay",
           "type": "double",
           "optional": true
@@ -6734,8 +11284,428 @@
           "optional": true
         },
         {
-          "name": "TabIndex",
+          "name": "BoundaryAdjustMode",
+          "type": "TriggerBoundaryAdjustMode",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "ComplexAutoCloseAndVisible",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Disabled",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "HiddenMode",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "DestroyOnHidden",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "UseCssZIndex",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "OverlayDisplayStyle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "InlineFlexMode",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "IsButton",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "OnClick",
+          "type": "EventCallback<MouseEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "ClickIgnoreSelector",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "OnMaskClick",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "OnMouseEnter",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "OnMouseLeave",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "OnOverlayHiding",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "OnVisibleChange",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "Overlay",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "OverlayClassName",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "OverlayEnterCls",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "OverlayHiddenCls",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "OverlayLeaveCls",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "OverlayStyle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ImmediateOpenOnPointerDown",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ImmediateOpenClass",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ImmediateOpenWidthMode",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "PopupWidthMode",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "PopupWidth",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "PopupMaxWidth",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ImmediateOpenWidth",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ImmediateOpenMaxWidth",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Placement",
+          "type": "Placement",
+          "optional": true
+        },
+        {
+          "name": "PlacementCls",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "PopupContainerSelector",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "GetPopupContainer",
+          "type": "Func<ElementReference, ElementReference>",
+          "optional": true
+        },
+        {
+          "name": "Trigger",
+          "type": "Trigger[]",
+          "optional": true
+        },
+        {
+          "name": "TriggerCls",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "TriggerReference",
+          "type": "ElementReference",
+          "optional": true
+        },
+        {
+          "name": "Unbound",
+          "type": "RenderFragment<ForwardRef>",
+          "optional": true
+        },
+        {
+          "name": "Visible",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Open",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "VisibleChanged",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "OpenChanged",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "OnOpenChange",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "tour",
+      "parameters": [
+        {
+          "name": "Steps",
+          "type": "IReadOnlyList<TourStep>",
+          "optional": true
+        },
+        {
+          "name": "Open",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "OpenChanged",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "Current",
           "type": "int",
+          "optional": true
+        },
+        {
+          "name": "CurrentChanged",
+          "type": "EventCallback<int>",
+          "optional": true
+        },
+        {
+          "name": "OnChange",
+          "type": "EventCallback<int>",
+          "optional": true
+        },
+        {
+          "name": "OnClose",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "OnFinish",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "ClassNames",
+          "type": "IDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "Styles",
+          "type": "IDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "IndicatorsRender",
+          "type": "RenderFragment<(int Current, int Total)>",
+          "optional": true
+        },
+        {
+          "name": "ActionsRender",
+          "type": "RenderFragment<TourActionsRenderContext>",
+          "optional": true
+        },
+        {
+          "name": "Mask",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "MaskStyle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "MaskColor",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "MaskClosable",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Keyboard",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "DisabledInteraction",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Type",
+          "type": "TourType",
+          "optional": true
+        },
+        {
+          "name": "GapOffset",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "GapOffsetX",
+          "type": "int?",
+          "optional": true
+        },
+        {
+          "name": "GapOffsetY",
+          "type": "int?",
+          "optional": true
+        },
+        {
+          "name": "GapRadius",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "ZIndex",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "Total",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "Step",
+          "type": "TourStep",
+          "optional": true
+        },
+        {
+          "name": "Previous",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "Next",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "Cover",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Title",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Description",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Closable",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
           "optional": true
         }
       ]
@@ -6743,6 +11713,16 @@
     {
       "component": "transfer",
       "parameters": [
+        {
+          "name": "ClassNames",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "Styles",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
         {
           "name": "DataSource",
           "type": "IEnumerable<TransferItem>",
@@ -6764,8 +11744,18 @@
           "optional": true
         },
         {
+          "name": "Status",
+          "type": "string",
+          "optional": true
+        },
+        {
           "name": "ShowSearch",
           "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "FilterOption",
+          "type": "Func<string, TransferItem, bool>",
           "optional": true
         },
         {
@@ -6781,6 +11771,11 @@
         {
           "name": "SelectedKeys",
           "type": "IEnumerable<string>",
+          "optional": true
+        },
+        {
+          "name": "SelectedKeysChanged",
+          "type": "EventCallback<IEnumerable<string>>",
           "optional": true
         },
         {
@@ -6825,12 +11820,147 @@
         },
         {
           "name": "ChildContent",
-          "type": "RenderFragment",
+          "type": "RenderFragment<TransferSidePanelContext<TransferItem>>",
           "optional": true
         },
         {
           "name": "ListStyle",
           "type": "Func<TransferDirection, string>",
+          "optional": true
+        },
+        {
+          "name": "IsItemDisabled",
+          "type": "Func<TItem, bool>",
+          "optional": true
+        },
+        {
+          "name": "Direction",
+          "type": "TransferDirection",
+          "optional": true
+        },
+        {
+          "name": "Title",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Selectable",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ShowDropdown",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "AllSelectedOverride",
+          "type": "bool?",
+          "optional": true
+        },
+        {
+          "name": "IndeterminateOverride",
+          "type": "bool?",
+          "optional": true
+        },
+        {
+          "name": "ShowSearchIcon",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "SearchPlaceholder",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "CountText",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "PanelClass",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "PanelStyle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ClassResolver",
+          "type": "Func<string, string, TransferDirection, string>",
+          "optional": true
+        },
+        {
+          "name": "StyleResolver",
+          "type": "Func<string, string, TransferDirection, string>",
+          "optional": true
+        },
+        {
+          "name": "ItemTitleSelector",
+          "type": "Func<TItem, string>",
+          "optional": true
+        },
+        {
+          "name": "SearchValue",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "SearchValueChanged",
+          "type": "EventCallback<string>",
+          "optional": true
+        },
+        {
+          "name": "OnItemSelect",
+          "type": "EventCallback<TransferSideSelection>",
+          "optional": true
+        },
+        {
+          "name": "OnSelectAll",
+          "type": "EventCallback<TransferSideSelectAll>",
+          "optional": true
+        },
+        {
+          "name": "ItemTemplate",
+          "type": "RenderFragment<TItem>",
+          "optional": true
+        },
+        {
+          "name": "PageSize",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "CurrentPage",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "CurrentPageChanged",
+          "type": "EventCallback<int>",
+          "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
           "optional": true
         }
       ]
@@ -7287,12 +12417,47 @@
           "name": "OnSwitcherClick",
           "type": "EventCallback<MouseEventArgs>",
           "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
+          "optional": true
         }
       ]
     },
     {
       "component": "tree-select",
       "parameters": [
+        {
+          "name": "Bordered",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Status",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Variant",
+          "type": "InputVariant?",
+          "optional": true
+        },
         {
           "name": "Multiple",
           "type": "bool",
@@ -7434,11 +12599,6 @@
           "optional": true
         },
         {
-          "name": "DropdownStyle",
-          "type": "string",
-          "optional": true
-        },
-        {
           "name": "ShowTreeLine",
           "type": "bool",
           "optional": true
@@ -7497,12 +12657,342 @@
           "name": "Values",
           "type": "override IEnumerable<TItemValue>",
           "optional": true
+        },
+        {
+          "name": "RootClassName",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "PopupClassName",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "DropdownClassName",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "DropdownStyle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "DebounceTimeout",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "LoadingIcon",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "ClassNames",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "Styles",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "BoundaryAdjustMode",
+          "type": "TriggerBoundaryAdjustMode",
+          "optional": true
+        },
+        {
+          "name": "AllowClear",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "AutoClearSearchValue",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Disabled",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Mode",
+          "type": "SelectMode",
+          "optional": true
+        },
+        {
+          "name": "MaxCount",
+          "type": "int?",
+          "optional": true
+        },
+        {
+          "name": "EnableSearch",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "SearchDebounceMilliseconds",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "Loading",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Open",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "OpenChanged",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "OnOpenChange",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "Placeholder",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "OnFocus",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "AutoFocus",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "SortByGroup",
+          "type": "SortDirection",
+          "optional": true
+        },
+        {
+          "name": "SortByLabel",
+          "type": "SortDirection",
+          "optional": true
+        },
+        {
+          "name": "HideSelected",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ValueChanged",
+          "type": "override EventCallback<TItemValue>",
+          "optional": true
+        },
+        {
+          "name": "ValuesChanged",
+          "type": "EventCallback<IEnumerable<TItemValue>>",
+          "optional": true
+        },
+        {
+          "name": "SuffixIcon",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "PrefixIcon",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "AccessKey",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "DefaultValues",
+          "type": "IEnumerable<TItemValue>",
+          "optional": true
+        },
+        {
+          "name": "OnClearSelected",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "Unbound",
+          "type": "RenderFragment<ForwardRef>",
+          "optional": true
+        },
+        {
+          "name": "OnSelectedItemChanged",
+          "type": "EventCallback<TItem>",
+          "optional": true
+        },
+        {
+          "name": "OnSelectedItemsChanged",
+          "type": "EventCallback<IEnumerable<TItem>>",
+          "optional": true
+        },
+        {
+          "name": "CustomTagLabelToValue",
+          "type": "Func<string, TItemValue>",
+          "optional": true
+        },
+        {
+          "name": "MaxTagTextLength",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "LabelInValue",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "MaxTagCount",
+          "type": "OneOf<int, ResponsiveTag>",
+          "optional": true
+        },
+        {
+          "name": "ValueOnClear",
+          "type": "TItemValue",
+          "optional": true
+        },
+        {
+          "name": "ItemLabel",
+          "type": "Func<TItem, string>",
+          "optional": true
+        },
+        {
+          "name": "ItemValue",
+          "type": "Func<TItem, TItemValue>",
+          "optional": true
+        },
+        {
+          "name": "LabelName",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ValueName",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "OnMouseEnter",
+          "type": "Action",
+          "optional": true
+        },
+        {
+          "name": "OnMouseLeave",
+          "type": "Action",
+          "optional": true
+        },
+        {
+          "name": "PopupContainerSelector",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "DropdownRender",
+          "type": "RenderFragment<RenderFragment>",
+          "optional": true
+        },
+        {
+          "name": "PopupRender",
+          "type": "RenderFragment<RenderFragment>",
+          "optional": true
+        },
+        {
+          "name": "LabelTemplate",
+          "type": "RenderFragment<TItem>",
+          "optional": true
+        },
+        {
+          "name": "MaxTagPlaceholder",
+          "type": "RenderFragment<IEnumerable<TItem>>",
+          "optional": true
+        },
+        {
+          "name": "ShowSearchIcon",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ShowArrowIcon",
+          "type": "virtual bool",
+          "optional": true
+        },
+        {
+          "name": "Placement",
+          "type": "Placement",
+          "optional": true
+        },
+        {
+          "name": "AdditionalAttributes",
+          "type": "IReadOnlyDictionary<string, object>",
+          "optional": true
+        },
+        {
+          "name": "ValueExpression",
+          "type": "Expression<Func<TValue>>",
+          "optional": true
+        },
+        {
+          "name": "ValuesExpression",
+          "type": "Expression<Func<IEnumerable<TValue>>>",
+          "optional": true
+        },
+        {
+          "name": "Size",
+          "type": "InputSize",
+          "optional": true
+        },
+        {
+          "name": "CultureInfo",
+          "type": "virtual CultureInfo",
+          "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
+          "optional": true
         }
       ]
     },
     {
       "component": "typography",
       "parameters": [
+        {
+          "name": "Href",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Target",
+          "type": "string",
+          "optional": true
+        },
         {
           "name": "Keyboard",
           "type": "bool",
@@ -7574,6 +13064,16 @@
           "optional": true
         },
         {
+          "name": "Italic",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Title",
+          "type": "string",
+          "optional": true
+        },
+        {
           "name": "OnChange",
           "type": "EventCallback<string>",
           "optional": true
@@ -7587,6 +13087,26 @@
           "name": "ChildContent",
           "type": "RenderFragment",
           "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
+          "optional": true
         }
       ]
     },
@@ -7594,8 +13114,48 @@
       "component": "upload",
       "parameters": [
         {
+          "name": "ClassNames",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "Styles",
+          "type": "IReadOnlyDictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "RemoveIcon",
+          "type": "RenderFragment<UploadFileItem>",
+          "optional": true
+        },
+        {
+          "name": "PreviewIcon",
+          "type": "RenderFragment<UploadFileItem>",
+          "optional": true
+        },
+        {
+          "name": "DownloadIcon",
+          "type": "RenderFragment<UploadFileItem>",
+          "optional": true
+        },
+        {
+          "name": "Extra",
+          "type": "RenderFragment<UploadFileItem>",
+          "optional": true
+        },
+        {
+          "name": "DragSort",
+          "type": "bool",
+          "optional": true
+        },
+        {
           "name": "BeforeUpload",
           "type": "Func<UploadFileItem, bool>",
+          "optional": true
+        },
+        {
+          "name": "TransformFile",
+          "type": "Func<UploadFileTransformContext, Task<UploadFileTransformResult>>",
           "optional": true
         },
         {
@@ -7640,6 +13200,31 @@
         },
         {
           "name": "Multiple",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "MaxCount",
+          "type": "int?",
+          "optional": true
+        },
+        {
+          "name": "ProgressStrokeColor",
+          "type": "Dictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "ProgressStrokeWidth",
+          "type": "int?",
+          "optional": true
+        },
+        {
+          "name": "ProgressFormat",
+          "type": "Func<double, string>",
+          "optional": true
+        },
+        {
+          "name": "ProgressShowInfo",
           "type": "bool",
           "optional": true
         },
@@ -7762,6 +13347,26 @@
           "name": "Trigger",
           "type": "UploadTrigger",
           "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
+          "optional": true
         }
       ]
     },
@@ -7871,6 +13476,26 @@
         {
           "name": "ChildContent",
           "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
           "optional": true
         }
       ]

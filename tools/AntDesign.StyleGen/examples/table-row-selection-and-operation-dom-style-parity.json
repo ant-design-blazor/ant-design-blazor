@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "ant-design/ant-design",
+    "component": "Table"
+  },
+  "config": {
+    "timeoutMs": 45000,
+    "viewport": { "width": 1280, "height": 900, "deviceScaleFactor": 1 },
+    "colorScheme": "light",
+    "comparisonPolicy": {
+      "normalization": {
+        "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_r_[a-zA-Z0-9_-]+)$",
+        "removeAttributes": ["_bl_*", "id"],
+        "removeClassPatterns": ["^acss-[a-zA-Z0-9_-]+$", "^css-dev-only-do-not-override-", "^css-var-_[rR]_", "^css-[a-zA-Z0-9]+$"],
+        "removeCommentMarkers": ["<!--!-->"],
+        "sortClassTokens": true,
+        "removeInterTagWhitespace": true
+      }
+    }
+  },
+  "groups": [
+    {
+      "id": "table-row-selection-and-operation",
+      "component": "Table",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/table?theme=light",
+        "scopeSelector": "#table-demo-row-selection-and-operation",
+        "rootSelector": ".ant-table-wrapper"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/table?theme=light",
+        "scopeSelector": "#components-table-demo-row-selection-and-operation",
+        "rootSelector": ".ant-table-wrapper"
+      },
+      "styleProperties": [
+        "display", "position", "boxSizing", "width", "height", "paddingInline", "gap", "alignItems",
+        "fontSize", "fontWeight", "color", "backgroundColor", "borderRadius", "borderTopWidth", "borderBottomWidth"
+      ],
+      "semanticNodes": [
+        { "path": "table", "selector": ".ant-table", "minimumCount": 1 },
+        { "path": "body.row", "selector": ".ant-table-tbody tr", "minimumCount": 10 },
+        { "path": "selection.checkbox", "selector": ".ant-table-selection-column .ant-checkbox-input", "minimumCount": 10 },
+        { "path": "reload.button", "selector": "button", "minimumCount": 1 }
+      ],
+      "scenarios": [
+        { "id": "initial-unselected" },
+        {
+          "id": "select-row-and-reload",
+          "actions": [
+            {
+              "type": "click",
+              "reactSelector": "#table-demo-row-selection-and-operation tbody tr[data-row-key='0'] .ant-checkbox-input",
+              "blazorSelector": "#components-table-demo-row-selection-and-operation tbody tr[data-row-key='0'] .ant-checkbox-input"
+            },
+            { "type": "wait", "milliseconds": 300 },
+            {
+              "type": "click",
+              "reactSelector": "#table-demo-row-selection-and-operation button.ant-btn-primary",
+              "blazorSelector": "#components-table-demo-row-selection-and-operation button.ant-btn-primary"
+            },
+            { "type": "wait", "milliseconds": 1400 }
+          ]
+        }
+      ]
+    }
+  ]
+}

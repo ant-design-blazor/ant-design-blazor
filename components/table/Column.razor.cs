@@ -19,7 +19,9 @@ using AntDesign.Internal;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
+using OneOf;
 
 namespace AntDesign
 {
@@ -135,7 +137,7 @@ namespace AntDesign
         /// </summary>
         /// <default value="true"/>
         [Parameter]
-        public bool ShowSorterTooltip { get; set; } = true;
+        public OneOf<bool, TableSorterTooltipOptions>? ShowSorterTooltip { get; set; }
 
         /// <summary>
         /// Allowable sort directions
@@ -233,6 +235,18 @@ namespace AntDesign
         public bool FilterMultiple { get; set; } = true;
 
         /// <summary>
+        /// Display the filter search input.
+        /// </summary>
+        [Parameter]
+        public bool FilterSearch { get; set; }
+
+        /// <summary>
+        /// The display mode of the filter options.
+        /// </summary>
+        [Parameter]
+        public TableFilterMode FilterMode { get; set; } = TableFilterMode.Menu;
+
+        /// <summary>
         /// Filter type for the column
         /// </summary>
         [Parameter]
@@ -318,6 +332,8 @@ namespace AntDesign
 
         private bool _preventClose = false;
 
+        private string _filterSearchValue = string.Empty;
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -347,6 +363,17 @@ namespace AntDesign
                 {
                     var member = ColumnExpressionHelper.GetReturnMemberInfo(GetFieldExpression);
                     RelationContent = member?.GetCustomAttribute<RelationColumnAttribute>()?.CreateRelationComponentContent();
+                }
+            }
+            else if (IsMeasure)
+            {
+                if (GetFieldExpression != null)
+                {
+                    var member = ColumnExpressionHelper.GetReturnMemberInfo(GetFieldExpression);
+                    DisplayName = member?.GetCustomAttribute<DisplayNameAttribute>(true)?.DisplayName
+                               ?? member?.GetCustomAttribute<DisplayAttribute>(true)?.GetName()
+                               ?? member?.Name;
+                    FieldName = DataIndex ?? member?.Name;
                 }
             }
             else if (IsHeader)
@@ -500,12 +527,12 @@ namespace AntDesign
                     else
                     {
                         _filters = DefaultFilters;
-                        _hasFilterSelected = DefaultFilters.Any(f => f.Selected);
+                        _hasFilterSelected = GetFilterOptions().Any(f => f.Selected);
                     }
                 }
 
-                FilterModel = _filterable && _filters?.Any(x => x.Selected) == true ?
-                    new FilterModel<TData>(this, GetFieldExpression, FieldName, OnFilter, _filters.Where(x => x.Selected).ToList(), _columnFilterType, _fieldFilterType) :
+                FilterModel = _filterable && GetFilterOptions().Any(x => x.Selected) ?
+                    new FilterModel<TData>(this, GetFieldExpression, FieldName, OnFilter, GetFilterOptions().Where(x => x.Selected).ToList(), _columnFilterType, _fieldFilterType) :
                     null;
             }
         }
@@ -525,6 +552,18 @@ namespace AntDesign
             }
         }
 
+        private string BodyCellClass => string.Join(" ", (ClassMapper.Class ?? string.Empty)
+            .Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
+            .Where(className => className != "ant-table-column-has-sorters"));
+
+        private void HandleSortKeyDown(KeyboardEventArgs args)
+        {
+            if (args.Key == "Enter")
+            {
+                HandleSort();
+            }
+        }
+
         private string SorterTooltip
         {
             get
@@ -540,6 +579,13 @@ namespace AntDesign
                 };
             }
         }
+
+        private OneOf<bool, TableSorterTooltipOptions> EffectiveSorterTooltip => ShowSorterTooltip ?? Table.ShowSorterTooltip;
+
+        private bool IsSorterTooltipEnabled => EffectiveSorterTooltip.IsT0 ? EffectiveSorterTooltip.AsT0 : true;
+
+        private bool IsSorterIconTooltipTarget => EffectiveSorterTooltip.IsT1
+            && string.Equals(EffectiveSorterTooltip.AsT1?.Target, "sorter-icon", StringComparison.Ordinal);
 
         private SortDirection NextSortDirection()
         {
@@ -610,7 +656,7 @@ namespace AntDesign
             if (_columnFilterType == TableFilterType.FieldType) return;
             if (!FilterMultiple)
             {
-                _filters.ForEach(x => x.Selected = false);
+                foreach (var option in GetFilterOptions()) option.Selected = false;
                 filter.Selected = true;
             }
             else
@@ -618,8 +664,48 @@ namespace AntDesign
                 filter.Selected = !filter.Selected;
             }
 
-            _selectedFilterValues = _filters.Where(x => x.Selected).Select(x => x.Value?.ToString()).ToArray();
+            _selectedFilterValues = GetFilterOptions().Where(x => x.Selected).Select(x => x.Value?.ToString()).ToArray();
             StateHasChanged();
+        }
+
+        private string FilterKey(TreeNode<TableFilter> node) => node.DataItem.Value?.ToString() ?? node.DataItem.Text;
+
+        private string[] GetSelectedFilterValues() => GetFilterOptions()
+            .Where(x => x.Selected)
+            .Select(x => x.Value?.ToString() ?? x.Text)
+            .ToArray();
+
+        private void OnTreeFilterCheckedKeysChanged(string[] keys)
+        {
+            var selectedKeys = keys?.ToHashSet(StringComparer.Ordinal) ?? new HashSet<string>(StringComparer.Ordinal);
+            foreach (var filter in GetFilterOptions())
+            {
+                filter.Selected = selectedKeys.Contains(filter.Value?.ToString() ?? filter.Text);
+            }
+
+            _selectedFilterValues = GetSelectedFilterValues();
+        }
+
+        private bool AreAllFiltersSelected => GetFilterOptions().Any() && GetFilterOptions().All(x => x.Selected);
+
+        private bool AreSomeFiltersSelected => GetFilterOptions().Any(x => x.Selected);
+
+        private void ToggleAllFilters(bool selected)
+        {
+            foreach (var filter in GetFilterOptions())
+            {
+                filter.Selected = selected;
+            }
+
+            _selectedFilterValues = GetSelectedFilterValues();
+        }
+
+        private bool FilterMatchesSearch(TableFilter filter)
+        {
+            if (string.IsNullOrWhiteSpace(_filterSearchValue) || filter.Text?.Contains(_filterSearchValue, StringComparison.OrdinalIgnoreCase) == true)
+                return true;
+
+            return filter.Children?.Any(FilterMatchesSearch) == true;
         }
 
         private void FilterConfirm(bool isReset = false)
@@ -635,10 +721,10 @@ namespace AntDesign
                         f.FilterCompareOperator == TableFilterCompareOperator.IsNull;
                 });
             }
-            _hasFilterSelected = _filters?.Any(x => x.Selected) == true;
+            _hasFilterSelected = GetFilterOptions().Any(x => x.Selected);
             FilterModel = _hasFilterSelected
                 ? new FilterModel<TData>(this, GetFieldExpression, FieldName, OnFilter,
-                    _filters.Where(x => x.Selected).ToList(), _columnFilterType, _fieldFilterType)
+                    GetFilterOptions().Where(x => x.Selected).ToList(), _columnFilterType, _fieldFilterType)
                 : null;
 
             Table?.ColumnFilterChange();
@@ -648,7 +734,7 @@ namespace AntDesign
         {
             if (_columnFilterType == TableFilterType.List)
             {
-                _filters.ForEach(x => x.Selected = false);
+                foreach (var filter in GetFilterOptions()) filter.Selected = false;
             }
             else
             {
@@ -706,7 +792,7 @@ namespace AntDesign
 
             if (_columnFilterType == TableFilterType.List)
             {
-                foreach (var filter in _filters.Where(f => filterModel.Filters.Any(x => x.Value.Equals(f.Value))))
+                foreach (var filter in GetFilterOptions().Where(f => f.Value != null && filterModel.Filters.Any(x => Equals(x.Value, f.Value))))
                 {
                     filter.Selected = true;
                 }
@@ -717,9 +803,32 @@ namespace AntDesign
             }
 
             FilterModel = new FilterModel<TData>(this, GetFieldExpression, FieldName, OnFilter,
-                _filters.Where(x => x.Selected).ToList(), _columnFilterType, _fieldFilterType);
+                GetFilterOptions().Where(x => x.Selected).ToList(), _columnFilterType, _fieldFilterType);
 
             _hasFilterSelected = true;
+        }
+
+        private IEnumerable<TableFilter> GetFilterOptions()
+        {
+            return GetFilterOptions(_filters);
+        }
+
+        private static IEnumerable<TableFilter> GetFilterOptions(IEnumerable<TableFilter> filters)
+        {
+            foreach (var filter in filters ?? Enumerable.Empty<TableFilter>())
+            {
+                if (filter.Children?.Any() == true)
+                {
+                    foreach (var child in GetFilterOptions(filter.Children))
+                    {
+                        yield return child;
+                    }
+                }
+                else
+                {
+                    yield return filter;
+                }
+            }
         }
 
         void IFieldColumn.SetSortModel(ITableSortModel sortModel)

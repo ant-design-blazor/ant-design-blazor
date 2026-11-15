@@ -32,9 +32,15 @@ namespace AntDesign
             {
                 _visible = value;
                 if (_visible)
+                {
                     Type = AntDesign.InputType.Text;
+                    _eyeIcon = IconType.Outline.Eye;
+                }
                 else
+                {
                     Type = AntDesign.InputType.Password;
+                    _eyeIcon = IconType.Outline.EyeInvisible;
+                }
             }
         }
 
@@ -48,9 +54,8 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
-
-            Type = AntDesign.InputType.Password;
-            ToggleVisibility(new MouseEventArgs());
+            Type = _visible ? AntDesign.InputType.Text : AntDesign.InputType.Password;
+            _eyeIcon = _visible ? IconType.Outline.Eye : IconType.Outline.EyeInvisible;
         }
 
         protected override void SetClasses()
@@ -69,24 +74,49 @@ namespace AntDesign
                 {
                     if (IconRender is null)
                     {
-                        builder.OpenComponent<Icon>(2);
-                        builder.AddAttribute(3, "class", $"{PrefixCls}-password-icon");
-                        builder.AddAttribute(4, "type", _eyeIcon);
-                        builder.AddAttribute(5, "onclick", CallbackFactory.Create<MouseEventArgs>(this, async args =>
-                        {
-                            ToggleVisibility(args);
-
-                            await Focus(FocusBehavior.FocusAtLast);
-                        }));
+                        builder.OpenElement(2, "span");
+                        builder.AddAttribute(3, "role", "button");
+                        builder.AddAttribute(4, "tabindex", Disabled ? -1 : 0);
+                        builder.AddAttribute(5, "class", $"{PrefixCls}-password-icon");
+                        builder.AddAttribute(6, "aria-disabled", Disabled ? "true" : "false");
+                        builder.AddAttribute(7, "aria-pressed", _visible ? "true" : "false");
+                        builder.AddAttribute(8, "aria-label", _visible ? "Hide" : "Show");
+                        builder.AddAttribute(9, "onmousedown", CallbackFactory.Create<MouseEventArgs>(this, PreventDefault));
+                        builder.AddEventPreventDefaultAttribute(10, "onmousedown", true);
+                        builder.AddAttribute(11, "onmouseup", CallbackFactory.Create<MouseEventArgs>(this, PreventDefault));
+                        builder.AddEventPreventDefaultAttribute(12, "onmouseup", true);
+                        builder.AddAttribute(13, "onclick", CallbackFactory.Create<MouseEventArgs>(this, ToggleVisibilityAndFocusAsync));
+                        builder.AddAttribute(14, "onkeydown", CallbackFactory.Create<KeyboardEventArgs>(this, HandleToggleKeyDownAsync));
+                        builder.OpenComponent<Icon>(16);
+                        builder.AddAttribute(17, "type", _eyeIcon);
                         builder.CloseComponent();
+                        builder.CloseElement();
                     }
                     else
                     {
-                        builder.AddContent(6, IconRender);
+                        builder.OpenElement(2, "span");
+                        builder.AddAttribute(3, "role", "button");
+                        builder.AddAttribute(4, "tabindex", Disabled ? -1 : 0);
+                        builder.AddAttribute(5, "class", $"{PrefixCls}-password-icon");
+                        builder.AddAttribute(6, "aria-disabled", Disabled ? "true" : "false");
+                        builder.AddAttribute(7, "aria-pressed", _visible ? "true" : "false");
+                        builder.AddAttribute(8, "aria-label", _visible ? "Hide" : "Show");
+                        builder.AddAttribute(9, "onmousedown", CallbackFactory.Create<MouseEventArgs>(this, PreventDefault));
+                        builder.AddEventPreventDefaultAttribute(10, "onmousedown", true);
+                        builder.AddAttribute(11, "onmouseup", CallbackFactory.Create<MouseEventArgs>(this, PreventDefault));
+                        builder.AddEventPreventDefaultAttribute(12, "onmouseup", true);
+                        builder.AddAttribute(13, "onclick", CallbackFactory.Create<MouseEventArgs>(this, ToggleVisibilityAndFocusAsync));
+                        builder.AddAttribute(14, "onkeydown", CallbackFactory.Create<KeyboardEventArgs>(this, HandleToggleKeyDownAsync));
+                        builder.AddContent(16, IconRender);
+                        builder.CloseElement();
                     }
                 });
             }
         }
+
+        protected override bool AppliesStatusToInputElement => false;
+
+        protected override string GetAffixWrapperStatusClass(string statusClass) => $"ant-input-status-{statusClass}";
 
         /// <summary>
         /// Focus behavior for InputPassword component with optional behaviors.
@@ -109,21 +139,32 @@ namespace AntDesign
 
         private void ToggleVisibility(MouseEventArgs args)
         {
-            if (VisibilityToggle)
+            if (!VisibilityToggle || Disabled)
             {
-                if (_visible)
-                {
-                    _eyeIcon = IconType.Outline.Eye;
-                    Type = AntDesign.InputType.Text;
-                }
-                else
-                {
-                    _eyeIcon = IconType.Outline.EyeInvisible;
-                    Type = AntDesign.InputType.Password;
-                }
-
-                _visible = !_visible;
+                return;
             }
+
+            _visible = !_visible;
+            _eyeIcon = _visible ? IconType.Outline.Eye : IconType.Outline.EyeInvisible;
+            Type = _visible ? AntDesign.InputType.Text : AntDesign.InputType.Password;
+        }
+
+        private static void PreventDefault(MouseEventArgs args)
+        {
+        }
+
+        private async Task ToggleVisibilityAndFocusAsync(MouseEventArgs args)
+        {
+            if (Disabled) return;
+            ToggleVisibility(args);
+            await Focus(FocusBehavior.FocusAtLast);
+        }
+
+        private Task HandleToggleKeyDownAsync(KeyboardEventArgs args)
+        {
+            if (Disabled || args.Repeat || (args.Key != "Enter" && args.Key != " ")) return Task.CompletedTask;
+            ToggleVisibility(new MouseEventArgs());
+            return Task.CompletedTask;
         }
     }
 }

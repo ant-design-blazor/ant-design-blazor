@@ -11,12 +11,13 @@
     <CascadingValue Value=@("ant-select-dropdown") Name="PrefixCls" IsFixed>
         <OverlayTrigger @ref="@_dropDown" 
                             RefBack="RefBack"
-                            Visible="@Open"
+                            Visible="@DropdownVisible"
                             VisibleChanged="OpenChanged"
                             Disabled="Disabled"
                             Placement="@Placement"
                             Trigger="new[] { Trigger.Click }"
-                            ClickIgnoreSelector="@($".{ClassPrefix}-selection-item-remove, .{ClassPrefix}-clear")"
+                            DestroyOnHidden="@DestroyPopupOnHidden"
+                            ClickIgnoreSelector="@($".{ClassPrefix}-selection-item-remove, .{ClassPrefix}-clear, .ant-tag-close-icon")"
                             HiddenMode
                             ImmediateOpenOnPointerDown
                             ImmediateOpenClass="@(ClassPrefix + "-open")"
@@ -35,6 +36,7 @@
                             OverlayDisplayStyle="block"
                             UseCssZIndex
                             OverlayStyle="@(GetSemanticStyle("popup.root", _dropdownStyle))"
+                            GetPopupContainer="@GetPopupContainer"
                             OverlayEnterCls="ant-slide-up-enter ant-slide-up-enter-active ant-slide-up"
                             OverlayLeaveCls="ant-slide-up-leave ant-slide-up-leave-active ant-slide-up">
                 <Overlay>
@@ -73,12 +75,14 @@
                     <CascadingValue Value="@MaxTagPlaceholder" Name="ParentMaxTagPlaceholerTemplate">
                         <CascadingValue Value="@ShowSearchIcon" Name="ShowSearchIcon">
                             <CascadingValue Value="@ShowArrowIcon" Name="ShowArrowIcon">
+                            <CascadingValue Value="@LoadingIcon" Name="LoadingIcon">
                                 <CascadingValue Value="@Loading" Name="Loading">
                                     <SelectContent Prefix="@ClassPrefix"
                                                    RefBack="@context"
                                                    @ref="_selectContent"
                                                    TItemValue="TItemValue"
                                                    TItem="TItem"
+                                                   TagRender="@TagRender"
                                                    SearchValue="@_searchValue"
                                                    SearchDebounceMilliseconds="@SearchDebounceMilliseconds"
                                                    IsOverlayShow="@_dropDown.IsOverlayShow()"
@@ -92,6 +96,7 @@
                                                    OnRemoveSelected="@OnRemoveSelectedAsync"
                                                    Placeholder="@Placeholder" />
                                 </CascadingValue>
+                            </CascadingValue>
                             </CascadingValue>
                         </CascadingValue>
                     </CascadingValue>

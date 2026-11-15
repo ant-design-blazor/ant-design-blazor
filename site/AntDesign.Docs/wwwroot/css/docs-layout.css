@@ -3772,3 +3772,43 @@ html.en-us .design-card.main-card {
 .components-overview-search.ant-input-affix-wrapper .anticon {
   color: #bbb;
 }
+
+/* Keep the docs sidebar scrollable from its actual top edge. The legacy LESS
+   rule only enables vertical scrolling while hovering and caps it to 100vh,
+   which conflicts with the fixed 64px documentation header. */
+.main-wrapper > .ant-row > .main-menu .main-menu-inner {
+  height: calc(100vh - 64px);
+  max-height: calc(100vh - 64px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: auto;
+  scroll-padding-block-start: 0;
+}
+
+/* Docs layout styles are generated once and resolve token var() values to the
+   light palette. Restore the matching dark surfaces and text in dark mode. */
+[data-theme="dark"] .main-wrapper {
+  background: #000;
+}
+[data-theme="dark"] .main-wrapper .main-container,
+[data-theme="dark"] .main-wrapper .main-container-component {
+  background: #141414;
+  color: rgba(255, 255, 255, 0.85);
+}
+[data-theme="dark"] .main-wrapper .main-container .markdown,
+[data-theme="dark"] .main-wrapper .main-container .markdown h1,
+[data-theme="dark"] .main-wrapper .main-container .markdown h2,
+[data-theme="dark"] .main-wrapper .main-container .markdown h3,
+[data-theme="dark"] .main-wrapper .main-container .markdown h4,
+[data-theme="dark"] .main-wrapper .main-container .markdown h5,
+[data-theme="dark"] .main-wrapper .main-container .markdown h6,
+[data-theme="dark"] .main-wrapper .main-container .docs-component-overview-content > h1 {
+  color: rgba(255, 255, 255, 0.85);
+}
+[data-theme="dark"] .main-container-component .toc-affix .ant-anchor .ant-anchor-link-title {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+html[data-theme="dark"] body {
+  background: #000;
+  color: rgba(255, 255, 255, 0.85);
+}

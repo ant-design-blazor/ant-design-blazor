@@ -1,5 +1,5 @@
 ---
-order: 11
+order: 7
 title:
   zh-CN: 按钮紧凑排列
   en-US: Compact buttons

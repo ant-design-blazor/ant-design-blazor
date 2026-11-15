@@ -1,0 +1,21 @@
+<Space Direction="SpaceDirection.Vertical" Style="width:100%">
+    <AutoComplete TOption="string" Status="FormValidateStatus.Error" Style="width: 200px" Options="_errorOptions" OnInput="OnErrorSearch" />
+    <AutoComplete TOption="string" Status="FormValidateStatus.Warning" Style="width: 200px" Options="_warningOptions" OnInput="OnWarningSearch" />
+</Space>
+
+@code {
+    private IEnumerable<string> _errorOptions = [];
+    private IEnumerable<string> _warningOptions = [];
+
+    private void OnErrorSearch(ChangeEventArgs args)
+    {
+        var value = args.Value?.ToString() ?? string.Empty;
+        _errorOptions = string.IsNullOrEmpty(value) ? [] : [value, value + value, value + value + value];
+    }
+
+    private void OnWarningSearch(ChangeEventArgs args)
+    {
+        var value = args.Value?.ToString() ?? string.Empty;
+        _warningOptions = string.IsNullOrEmpty(value) ? [] : [value, value + value, value + value + value];
+    }
+}

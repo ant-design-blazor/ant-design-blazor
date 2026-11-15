@@ -38,8 +38,8 @@
     {
       "id": "select-semantic-style-popup",
       "component": "Select",
-      "react": { "url": "http://127.0.0.1:8000/components/select?theme=light", "scopeSelector": "body", "rootSelector": "#select-demo-style-class .ant-select-filled", "skeletonSelector": "" },
-      "blazor": { "url": "http://127.0.0.1:5000/en-US/components/select?theme=light", "scopeSelector": "body", "rootSelector": "#components-select-demo-style-class .ant-select-filled", "skeletonSelector": "" },
+      "react": { "url": "http://127.0.0.1:8000/components/select?theme=light#select-demo-style-class", "scopeSelector": "body", "rootSelector": "#select-demo-style-class .ant-select-filled", "skeletonSelector": "" },
+      "blazor": { "url": "http://127.0.0.1:5000/en-US/components/select?theme=light#components-select-demo-style-class", "scopeSelector": "body", "rootSelector": "#components-select-demo-style-class .ant-select-filled", "skeletonSelector": "" },
       "styleProperties": ["display", "position", "boxSizing", "width", "height", "paddingBlock", "paddingInline", "borderWidth", "borderStyle", "borderColor", "borderRadius", "boxShadow", "zIndex"],
       "semanticNodes": [
         { "path": "popup.root", "selector": ".ant-select-dropdown:not(.ant-select-dropdown-hidden):not([style*='display: none']):has(.ant-select-item-option[title='GuangZhou'])", "portal": true, "geometryAnchor": { "mode": "pixel-snap-to-trigger", "verticalOffset": 4 }, "minimumCount": 1 }

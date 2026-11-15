@@ -42,11 +42,8 @@ namespace AntDesign
             get => _name;
             set
             {
-                if (_name != value)
-                {
-                    _name = value;
-                    _nameChanged?.Invoke();
-                }
+                _name = value;
+                _nameChanged?.Invoke();
             }
         }
 
@@ -255,7 +252,42 @@ namespace AntDesign
 
         private string DisplayName => Label ?? _propertyReflector?.DisplayName;
 
-        private string[] ValidationMessages => _validationMessages.Length > 0 ? _validationMessages : string.IsNullOrEmpty(Help) ? [] : [Help];
+        private string LabelFor => _control is not null && !string.IsNullOrWhiteSpace(_controlId)
+            ? _controlId
+            : null;
+
+        private string _controlId;
+
+        private string HelpElementId => string.IsNullOrWhiteSpace(_controlId) ? null : $"{_controlId}_help";
+
+        private string ExtraElementId => string.IsNullOrWhiteSpace(_controlId) ? null : $"{_controlId}_extra";
+
+        private string[] ValidationMessages => _validationMessages.Length > 0
+            ? _validationMessages
+            : string.IsNullOrEmpty(Help) ? [] : [Help];
+
+        string IFormItem.AriaDescribedBy
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(_controlId)
+                    || (_validationMessages.Length == 0 && string.IsNullOrEmpty(Help) && Extra == null))
+                {
+                    return null;
+                }
+
+                var ids = new List<string>();
+                if (_validationMessages.Length > 0 || !string.IsNullOrEmpty(Help))
+                {
+                    ids.Add($"{_controlId}_help");
+                }
+                if (Extra != null)
+                {
+                    ids.Add($"{_controlId}_extra");
+                }
+                return string.Join(" ", ids);
+            }
+        }
 
         private string _name;
         private Action _nameChanged;
@@ -317,7 +349,10 @@ namespace AntDesign
         {
             ClassMapper
                 .Add(_prefixCls)
-                .If($"{_prefixCls}-with-help {_prefixCls}-has-error", () => !_isValid)
+                .Add("ant-form-css-var")
+                .If($"{_prefixCls}-inline", () => Form?.Layout == FormLayout.Inline)
+                .If($"{_prefixCls}-{Form?.Layout.ToString().ToLowerInvariant()}", () => Form != null && Form.Layout != FormLayout.Inline)
+                .If($"{_prefixCls}-with-help", () => !_isValid)
                 .If($"{_prefixCls}-rtl", () => RTL)
                 .If($"{_prefixCls}-has-feedback", () => HasFeedback || IsShowFeedbackOnError)
                 .If($"{_prefixCls}-is-validating", () => ValidateStatus == FormValidateStatus.Validating)
@@ -475,6 +510,14 @@ namespace AntDesign
         void IFormItem.AddControl<TValue>(AntInputComponentBase<TValue> control)
         {
             if (_control != null) return;
+
+            if (!string.IsNullOrWhiteSpace(Name))
+            {
+                _controlId = string.IsNullOrWhiteSpace(Form?.Id)
+                    ? Name.ToLowerInvariant()
+                    : $"{Form.Id}_{Name.ToLowerInvariant()}";
+                control.Id = _controlId;
+            }
 
             _vaildateStatusChanged = control.UpdateStyles;
             _nameChanged = control.OnNameChanged;

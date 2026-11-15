@@ -1732,19 +1732,6 @@
     },
     {
       "Component": "date-picker",
-      "Name": "addonBg",
-      "CssVariable": "--ant-date-picker-addon-bg",
-      "Type": "string",
-      "CSharpType": "string",
-      "Description": "\u524D/\u540E\u7F6E\u6807\u7B7E\u80CC\u666F\u8272",
-      "DescriptionEn": "Background color of addon",
-      "DefaultValue": "rgba(0,0,0,0.02)",
-      "Deprecated": false,
-      "Documented": true,
-      "Reserved": false
-    },
-    {
-      "Component": "date-picker",
       "Name": "cellActiveWithRangeBg",
       "CssVariable": "--ant-date-picker-cell-active-with-range-bg",
       "Type": "string",

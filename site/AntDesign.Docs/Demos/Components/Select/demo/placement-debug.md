@@ -1,5 +1,6 @@
 ---
 order: 93
+debug: true
 title:
   zh-CN: 弹层位置与动态选项调试
   en-US: Popup placement and dynamic options

@@ -1,0 +1,76 @@
+<SemanticDomPreview Component="table">
+    <Table TItem="SemanticTableRow" DataSource="_data" RowKey="row => row.Key"
+           Bordered="true" Size="TableSize.Medium" PageSize="3" Total="6"
+           Title="table title" Footer="table footer"
+           ClassNames="_classNames" Styles="_styles">
+        <HeaderTemplate Context="row">
+            <TableRow>
+                <SimpleTableHeader ColSpan="2">Personal Info</SimpleTableHeader>
+                <TableHeader @bind-Field="row.Address" />
+            </TableRow>
+            <TableRow>
+                <TableHeader @bind-Field="row.Name" />
+                <TableHeader @bind-Field="row.Age" />
+            </TableRow>
+        </HeaderTemplate>
+        <ColumnDefinitions Context="row">
+            <PropertyColumn Property="row => row.Name" Title="Name" />
+            <PropertyColumn Property="row => row.Age" Title="Age" />
+            <PropertyColumn Property="row => row.Address" Title="Address" />
+        </ColumnDefinitions>
+    </Table>
+</SemanticDomPreview>
+
+@code {
+    private static readonly SemanticTableRow[] _data =
+    [
+        new() { Key = "1", Name = "thinkasany", Age = 24, Address = "New York No. 1 Lake Park" },
+        new() { Key = "2", Name = "Jim Green", Age = 42, Address = "London No. 1 Lake Park" },
+        new() { Key = "3", Name = "Joe Black", Age = 32, Address = "Sydney No. 1 Lake Park" },
+        new() { Key = "4", Name = "Joe Black", Age = 32, Address = "Sydney No. 1 Lake Park" },
+        new() { Key = "5", Name = "Joe Black", Age = 32, Address = "Sydney No. 1 Lake Park" },
+        new() { Key = "6", Name = "Joe Black", Age = 32, Address = "Sydney No. 1 Lake Park" }
+    ];
+
+    private static readonly IReadOnlyDictionary<string, string> _classNames = new Dictionary<string, string>
+    {
+        ["root"] = "table-semantic-root",
+        ["section"] = "table-semantic-section",
+        ["title"] = "table-semantic-title",
+        ["footer"] = "table-semantic-footer",
+        ["content"] = "table-semantic-content",
+        ["header.wrapper"] = "table-semantic-header-wrapper",
+        ["header.row"] = "table-semantic-header-row",
+        ["header.cell"] = "table-semantic-header-cell",
+        ["body.wrapper"] = "table-semantic-body-wrapper",
+        ["body.row"] = "table-semantic-body-row",
+        ["body.cell"] = "table-semantic-body-cell",
+        ["pagination.root"] = "table-semantic-pagination-root",
+        ["pagination.item"] = "table-semantic-pagination-item"
+    };
+
+    private static readonly IReadOnlyDictionary<string, string> _styles = new Dictionary<string, string>
+    {
+        ["root"] = "--table-semantic-hook: root",
+        ["section"] = "--table-semantic-hook: section",
+        ["title"] = "--table-semantic-hook: title",
+        ["footer"] = "--table-semantic-hook: footer",
+        ["content"] = "--table-semantic-hook: content",
+        ["header.wrapper"] = "--table-semantic-hook: header-wrapper",
+        ["header.row"] = "--table-semantic-hook: header-row",
+        ["header.cell"] = "--table-semantic-hook: header-cell",
+        ["body.wrapper"] = "--table-semantic-hook: body-wrapper",
+        ["body.row"] = "--table-semantic-hook: body-row",
+        ["body.cell"] = "--table-semantic-hook: body-cell",
+        ["pagination.root"] = "--table-semantic-hook: pagination-root",
+        ["pagination.item"] = "--table-semantic-hook: pagination-item"
+    };
+
+    private sealed class SemanticTableRow
+    {
+        public string Key { get; set; }
+        public string Name { get; set; }
+        public int Age { get; set; }
+        public string Address { get; set; }
+    }
+}

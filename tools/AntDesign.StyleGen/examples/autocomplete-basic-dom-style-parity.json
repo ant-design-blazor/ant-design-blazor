@@ -1,0 +1,253 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "ant-design/ant-design",
+    "component": "AutoComplete",
+    "revision": "599b251da933709d7b25fc9e9018ed7f4c093b96"
+  },
+  "config": {
+    "timeoutMs": 30000,
+    "navigationTimeoutMs": 90000,
+    "viewport": {
+      "width": 1280,
+      "height": 900,
+      "deviceScaleFactor": 1
+    },
+    "colorScheme": "light",
+    "comparisonPolicy": {
+      "normalization": {
+        "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_[rR]_[a-zA-Z0-9_-]+)$",
+        "removeAttributes": [
+          "_bl_*",
+          "id"
+        ],
+        "removeEmptyAttributes": [
+          "style",
+          "value"
+        ],
+        "removeClassPatterns": [
+          "^css-dev-only-do-not-override-",
+          "^css-var-_[rR]_",
+          "^css-[a-zA-Z0-9]+$"
+        ],
+        "removeCommentMarkers": [
+          "<!--!-->"
+        ],
+        "normalizeStyleAttributes": true
+      }
+    }
+  },
+  "groups": [
+    {
+      "id": "autocomplete-basic-two-inputs",
+      "component": "AutoComplete",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/auto-complete?theme=light",
+        "scopeSelector": "#auto-complete-demo-basic .code-box-demo",
+        "rootSelector": ".ant-select-auto-complete",
+        "skeletonSelector": ""
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/autocomplete?theme=light",
+        "scopeSelector": "#components-autocomplete-demo-basic .code-box-demo",
+        "rootSelector": ".ant-select-auto-complete",
+        "skeletonSelector": ""
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "minHeight",
+        "paddingBlock",
+        "paddingInline",
+        "fontSize",
+        "lineHeight",
+        "fontWeight",
+        "color",
+        "backgroundColor",
+        "borderRadius",
+        "borderTopWidth",
+        "borderRightWidth",
+        "borderBottomWidth",
+        "borderLeftWidth",
+        "boxShadow"
+      ],
+      "includeAntDesignTokens": [
+        "--ant-select-"
+      ],
+      "semanticNodes": [
+        {
+          "path": "root",
+          "selector": "$root",
+          "minimumCount": 2
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "initial-two-input-layout",
+          "minimumRoots": 2
+        },
+        {
+          "id": "type-and-show-dynamic-suggestions",
+          "minimumRoots": 2,
+          "actions": [
+            {
+              "type": "fill",
+              "reactSelector": "#auto-complete-demo-basic input",
+              "blazorSelector": "#components-autocomplete-demo-basic input",
+              "value": "sample"
+            },
+            {
+              "type": "waitForSelector",
+              "reactSelector": "#auto-complete-demo-basic .ant-select-open",
+              "blazorSelector": "#components-autocomplete-demo-basic .ant-select-open"
+            },
+            {
+              "type": "waitForSelector",
+              "reactSelector": ".ant-select-dropdown .ant-select-item-option[title=\"samplesamplesample\"]",
+              "blazorSelector": ".ant-select-dropdown .ant-select-item-option[title=\"samplesamplesample\"]",
+              "visible": true
+            },
+            {
+              "type": "wait",
+              "milliseconds": 350
+            }
+          ]
+        },
+        {
+          "id": "type-and-update-input-state",
+          "minimumRoots": 2,
+          "actions": [
+            {
+              "type": "fill",
+              "reactSelector": "#auto-complete-demo-basic input",
+              "blazorSelector": "#components-autocomplete-demo-basic input",
+              "value": "sample"
+            },
+            {
+              "type": "waitForSelector",
+              "reactSelector": "#auto-complete-demo-basic .ant-select-open",
+              "blazorSelector": "#components-autocomplete-demo-basic .ant-select-open"
+            },
+            {
+              "type": "waitForSelector",
+              "reactSelector": "#auto-complete-demo-basic .ant-select-content-has-search-value",
+              "blazorSelector": "#components-autocomplete-demo-basic .ant-select-content-has-search-value"
+            },
+            {
+              "type": "wait",
+              "milliseconds": 350
+            }
+          ]
+        }
+      ],
+      "captureReactBeforeBlazor": true
+    },
+    {
+      "id": "autocomplete-basic-popup",
+      "component": "AutoComplete",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/auto-complete?theme=light",
+        "scopeSelector": "#auto-complete-demo-basic .code-box-demo",
+        "rootSelector": ".ant-select-auto-complete",
+        "skeletonSelector": ""
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/autocomplete?theme=light",
+        "scopeSelector": "#components-autocomplete-demo-basic .code-box-demo",
+        "rootSelector": ".ant-select-auto-complete",
+        "skeletonSelector": ""
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "minHeight",
+        "paddingBlock",
+        "paddingInline",
+        "fontSize",
+        "lineHeight",
+        "fontWeight",
+        "color",
+        "backgroundColor",
+        "borderRadius",
+        "borderTopWidth",
+        "borderRightWidth",
+        "borderBottomWidth",
+        "borderLeftWidth",
+        "boxShadow"
+      ],
+      "includeAntDesignTokens": [
+        "--ant-select-"
+      ],
+      "semanticNodes": [
+        {
+          "path": "root",
+          "selector": "$root",
+          "minimumCount": 2
+        },
+        {
+          "path": "popup.root",
+          "selector": ".ant-select-dropdown:not(.ant-select-dropdown-hidden):not([style*='display: none'])",
+          "portal": true,
+          "portalMatch": "nearest-trigger",
+          "geometryAnchor": {
+            "mode": "pixel-snap-to-trigger",
+            "verticalOffset": 4
+          },
+          "minimumCount": 1
+        },
+        {
+          "path": "popup.list",
+          "selector": ".ant-select-dropdown-list",
+          "portal": true,
+          "portalParentPath": "popup.root",
+          "geometryParentSelector": ".ant-select-dropdown",
+          "minimumCount": 1
+        },
+        {
+          "path": "popup.listItem",
+          "selector": ".ant-select-item-option",
+          "portal": true,
+          "portalParentPath": "popup.root",
+          "geometryParentSelector": ".ant-select-dropdown",
+          "minimumCount": 3
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "type-and-show-dynamic-suggestions",
+          "minimumRoots": 2,
+          "actions": [
+            {
+              "type": "fill",
+              "reactSelector": "#auto-complete-demo-basic input",
+              "blazorSelector": "#components-autocomplete-demo-basic input",
+              "value": "sample"
+            },
+            {
+              "type": "waitForSelector",
+              "reactSelector": "#auto-complete-demo-basic .ant-select-open",
+              "blazorSelector": "#components-autocomplete-demo-basic .ant-select-open"
+            },
+            {
+              "type": "waitForSelector",
+              "reactSelector": ".ant-select-dropdown .ant-select-item-option[title=\"samplesamplesample\"]",
+              "blazorSelector": ".ant-select-dropdown .ant-select-item-option[title=\"samplesamplesample\"]",
+              "visible": true
+            },
+            {
+              "type": "wait",
+              "milliseconds": 350
+            }
+          ]
+        }
+      ],
+      "captureReactBeforeBlazor": true
+    }
+  ]
+}

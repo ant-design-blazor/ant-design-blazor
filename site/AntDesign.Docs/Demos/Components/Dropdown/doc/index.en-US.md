@@ -25,6 +25,16 @@ There are 2 rendering approaches for `Dropdown`:
 
 | Property | Description | Type | Default Value | Version 
 | --- | --- | --- | --- |
+| AutoAdjustOverflow | Automatically adjusts popup placement when it would overflow the viewport; aliases `BoundaryAdjustMode` (`true` = `InView`, `false` = `None`). | bool? | - |  |
+| DestroyOnHidden | Remove popup content from the DOM after it closes. | bool | false |  |
+| ClassNames | Customize classes for Dropdown Semantic DOM nodes; keys include `root`, `item`, `itemTitle`, `itemIcon`, and `itemContent`. | IReadOnlyDictionary<string, string> | - |  |
+| Menu | React-style data API for dropdown menu entries. Supports nested items, groups, dashed dividers, icons, disabled and danger states, selection, active keys, CSS classes/styles, and item click callbacks. | DropdownMenuOptions | - |  |
+| OnOpenChange | Callback when the open state changes. | EventCallback<bool> | - |  |
+| Open | Whether the dropdown is currently open. Supports `@bind-Open`. | bool | false |  |
+| PopupRender | Customize popup content while retaining the original content through its `RenderFragment` context. | RenderFragment<RenderFragment> | - |  |
+| DropdownRender | React-compatible alias for the legacy `dropdownRender` name. Prefer `PopupRender`, which matches React's current `popupRender` API. | RenderFragment<RenderFragment> | - |  |
+| Styles | Customize inline styles for Dropdown Semantic DOM nodes. | IReadOnlyDictionary<string, string> | - |  |
+| OpenChanged | Callback used by `@bind-Open`. | EventCallback<bool> | - |  |
 | Arrow | Whether the dropdown arrow should be visible | boolean | false |  |
 | ArrowPointAtCenter | Whether the dropdown arrow should be visible and point at center | boolean | false |  |
 | BoundaryAdjustMode | `Dropdown` adjustment strategy (when for example browser resize is happening)         | TriggerBoundaryAdjustMode    | TriggerBoundaryAdjustMode.InView         |
@@ -41,20 +51,20 @@ There are 2 rendering approaches for `Dropdown`:
 | OnMouseLeave | Callback when mouse leaves `Dropdown` boundaries.         | Action    | -         |
 | OnOverlayHidding | Callback when overlay is hiding.         | Action<bool>    | -         |
 | OnVisibleChange |  Callback when overlay visibility is changing.        | Action<bool>    | -         |
-| Overlay | Overlay content (what will be rendered after `Dropdown` is triggered, the dropdown menu).          | RenderFragment    | -         |
-| OverlayClassName | The class name of the dropdown root element         | string    | -         |
+| Overlay | Legacy content parameter; prefer `PopupRender` when customizing the rendered menu. | RenderFragment | - |  |
+| OverlayClassName | Legacy root class parameter; prefer `ClassNames["root"]`. | string | - |  |
 | OverlayEnterCls | Css class added to overlay when overlay is shown.         | string    | -         |
 | OverlayHiddenCls | Css class added to overlay when overlay is hidden.         | string    | -         |
 | OverlayLeaveCls | Css class added to overlay when overlay is hiding.         | string    | -         |
-| OverlayStyle | The style of the dropdown root element.         | string    | -         |
+| OverlayStyle | Legacy root style parameter; prefer `Styles["root"]`. | string | - |  |
 | Placement | The position of the `Dropdown` overlay relative to the target, which can be one of `Top` `Left` `Right` `Bottom` `TopLeft` `TopRight` `BottomLeft` `BottomRight` `LeftTop` `LeftBottom` `RightTop` `RightBottom` | PlacementType | `PlacementType.BottomLeft` |  |
 | PlacementCls | Override default placement class which is based on `Placement` parameter.         | string    | -         |
-| PopupContainerSelector | Define what is going to be the container of the overlay. Example use case: when overlay has to be contained in a scrollable area.         | string    | "body"       |
+| PopupContainerSelector | Blazor equivalent of React `getPopupContainer`: CSS selector for the popup container (default `body`). | string | "body" |  |
 | Style | (not used in Unbound) Style of the wrapping div.          | string    | -         |
 | Trigger | `Dropdown` trigger mode. Could be multiple by passing an array | TriggerType[] | `TriggerType.Hover` |  |
 | TriggerReference | Manually set reference to element triggering `Dropdown`. | ElementReference | - |  |
 | Unbound | ChildElement with `ElementReference` set to avoid wrapping div.         | RenderFragment<ForwardRef>    | -         |
-| Visible | Whether the `Dropdown` menu is currently visible.         | bool    | false         |
+| Visible | Legacy alias for `Open`. | bool | false |  |
 
 ### DropdownButton
 | Property | Description | Type | Default Value | Version 

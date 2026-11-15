@@ -56,6 +56,12 @@ namespace AntDesign
         public bool Disabled { get; set; }
 
         /// <summary>
+        /// Whether this menu item uses the danger style.
+        /// </summary>
+        [Parameter]
+        public bool Danger { get; set; }
+
+        /// <summary>
         /// Callback for when item is clicked
         /// </summary>
         [Parameter]
@@ -125,9 +131,13 @@ namespace AntDesign
 
             ClassMapper
                 .Clear()
+                .If("ant-menu-overflow-item", () => IsOverflowRoot && RootMenu?.OverflowEnabled == true)
                 .Add(prefixCls)
                 .If($"{prefixCls}-selected", () => IsSelected)
-                .If($"{prefixCls}-disabled", () => Disabled);
+                .If($"{prefixCls}-active", () => string.Equals(RootMenu?.ActiveKey, Key, StringComparison.Ordinal))
+                .If($"{prefixCls}-danger", () => Danger)
+                .If($"{prefixCls}-disabled", () => Disabled)
+                .If($"{prefixCls}-only-child", () => string.IsNullOrEmpty(Icon) && IconTemplate == null);
         }
 
         protected override void OnInitialized()
@@ -146,6 +156,7 @@ namespace AntDesign
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
+            SetClass();
             RootMenu?.RememberMenuPath(this);
 
             if (RootMenu?.SelectedKey(Key) == true && !IsSelected)

@@ -4,35 +4,52 @@
 
 <style>@((MarkupString)(PreviewStyles.CssText + GlobalHighlightStyles))</style>
 <div class="@PreviewStyles["root"]" data-active-semantic="@ActiveKey">
-
-    <div class="@PreviewStyles["content"]">
-        @ChildContent
-    </div>
-
-    <ul class="@PreviewStyles["list"]">
-        @foreach (var node in Nodes)
-        {
-            var key = NodeKey(node);
-            <li class="@PreviewStyles["item"] @(ActiveKey == key ? PreviewStyles["active"] : null)"
-                role="button"
-                tabindex="0"
-                aria-pressed="@((ActiveKey == key).ToString().ToLowerInvariant())"
-                @onclick="() => Activate(key)"
-                @onmouseenter="() => Activate(key)"
-                @onfocus="() => Activate(key)"
-                @onkeydown="(args) => ActivateFromKeyboard(args, key)">
-                <div class="@PreviewStyles["itemHeader"]">
-                    <strong class="@PreviewStyles["itemName"]">@node.Name</strong>
-                    <code class="@PreviewStyles["selector"]">@node.Selector</code>
-                    @if (!string.IsNullOrWhiteSpace(node.Version))
-                    {
-                        <Tag Color="TagColor.Blue">@($"v{node.Version}")</Tag>
-                    }
-                </div>
-                <div>@node.Description</div>
-            </li>
-        }
-    </ul>
+    <Row>
+        <Col Span="16" Class="@PreviewStyles["content"]" Style="align-items: flex-start;">
+            @ChildContent
+        </Col>
+        <Col Span="8">
+            <ul class="@PreviewStyles["list"]">
+                @foreach (var node in Nodes)
+                {
+                    var key = NodeKey(node);
+                    <li class="@PreviewStyles["item"] @(ActiveKey == key ? PreviewStyles["active"] : null)"
+                        @onmouseenter="() => SetHovered(key)"
+                        @onmouseleave="() => ClearHovered(key)">
+                        <Flex Vertical Gap="FlexGap.Small">
+                            <Flex Gap="FlexGap.Small" Align="FlexAlign.Center" Justify="FlexJustify.SpaceBetween">
+                                <Flex Gap="FlexGap.Small" Align="FlexAlign.Center">
+                                    <Title Level="5" Style="margin:0;font-size:16px;line-height:24px;font-weight:600;font-family:var(--ant-font-family)">@node.Name</Title>
+                                    @if (!string.IsNullOrWhiteSpace(node.Version))
+                                    {
+                                        <Tag Color="TagColor.Blue">@($"v{node.Version}")</Tag>
+                                    }
+                                </Flex>
+                                <Flex Gap="FlexGap.Small" Align="FlexAlign.Center">
+                                    <Button Size="ButtonSize.Small"
+                                            Type="ButtonType.Default"
+                                            Variant="@(PinnedKey == key ? ButtonVariant.Solid : ButtonVariant.Text)"
+                                            ButtonColor="@(PinnedKey == key ? AntDesign.ButtonColor.Primary : AntDesign.ButtonColor.Default)"
+                                            Icon="@IconType.Outline.Pushpin"
+                                            Style="width:24px;height:24px;padding:0"
+                                            OnClick="() => TogglePin(key)" />
+                                    <Popover ContentTemplate="@GetSampleContent(node)">
+                                        <Unbound>
+                                            <Button RefBack="@context"
+                                                    Size="ButtonSize.Small" Type="ButtonType.Text"
+                                                    Icon="@IconType.Outline.InfoCircle"
+                                                    Style="width:24px;height:24px;padding:0" />
+                                        </Unbound>
+                                    </Popover>
+                                </Flex>
+                            </Flex>
+                            <Paragraph Style="margin:0;font-size:12px">@node.Description</Paragraph>
+                        </Flex>
+                    </li>
+                }
+            </ul>
+        </Col>
+    </Row>
 </div>
 
 @code {
@@ -40,11 +57,19 @@
     public string Component { get; set; } = string.Empty;
 
     [Parameter]
+    public string Language { get; set; } = "zh-CN";
+
+    [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
-    private string? ActiveKey { get; set; }
+    [Parameter]
+    public IReadOnlyList<SemanticDomNode>? NodesOverride { get; set; }
 
-    private IReadOnlyList<SemanticDomNode> Nodes => SemanticDomCatalog.Get(Component);
+    private string? PinnedKey { get; set; }
+    private string? HoveredKey { get; set; }
+    private string? ActiveKey => PinnedKey ?? HoveredKey;
+
+    private IReadOnlyList<SemanticDomNode> Nodes => NodesOverride ?? SemanticDomCatalog.Get(Component, Language);
 
     private CssStyleSheet PreviewStyles { get; set; } = null!;
     private string GlobalHighlightStyles { get; set; } = string.Empty;
@@ -82,9 +107,28 @@
         {
             ["position"] = "relative",
             ["zIndex"] = 0,
-            ["display"] = "grid",
-            ["gridTemplateColumns"] = "minmax(0, 2fr) minmax(0, 1fr)"
+            ["width"] = "100%"
         };
+
+        if (Component.Equals("select", StringComparison.OrdinalIgnoreCase))
+        {
+            // React's SelectSemanticTemplate aligns its control at the top of
+            // the semantic preview column, whose list gives the row a 600px
+            // height. Match that preview geometry for popup placement.
+            content["alignItems"] = "flex-start";
+            root["display"] = "flex";
+            root["height"] = 600;
+            root["& .ant-row"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["flexGrow"] = 0,
+                ["minHeight"] = 0
+            };
+            root["& .ant-col-16"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["minWidth"] = "auto"
+            };
+        }
+
 
         if (Component.Equals("collapse", StringComparison.OrdinalIgnoreCase))
         {
@@ -110,16 +154,6 @@
             }
         }
 
-        root["@media (max-width: 767.99px)"] = new System.Collections.Generic.Dictionary<string, object>
-        {
-            ["&"] = new System.Collections.Generic.Dictionary<string, object> { ["gridTemplateColumns"] = "minmax(0, 1fr)" },
-            ["& ." + "adb-semantic-preview-content"] = new System.Collections.Generic.Dictionary<string, object>
-            {
-                ["borderInlineEnd"] = 0,
-                ["borderBottom"] = "1px solid var(--ant-color-border-secondary, #f0f0f0)"
-            }
-        };
-
         return CssInJs.CreateStyles("semantic-preview", new System.Collections.Generic.Dictionary<string, object>
         {
             ["root"] = root,
@@ -127,7 +161,7 @@
             ["list"] = new System.Collections.Generic.Dictionary<string, object>
             {
                 ["display"] = "flex",
-                ["maxHeight"] = "min(600px, 50vh)",
+                ["maxHeight"] = 600,
                 ["flexDirection"] = "column",
                 ["margin"] = 0,
                 ["padding"] = 0,
@@ -176,6 +210,19 @@
     private string CreateGlobalHighlightStyles()
     {
         var rules = new System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<string, object>>();
+        // The semantic preview appears inside the documentation's Markdown
+        // container, whose `ul li` rules add margins, bullets and asymmetric
+        // padding. React renders this preview outside Markdown, so reset those
+        // inherited styles with a scoped, higher-specificity rule.
+        rules.Add(new System.Collections.Generic.KeyValuePair<string, object>(
+            $".markdown .{PreviewStyles["root"]} ul > .{PreviewStyles["item"]}",
+            new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["boxSizing"] = "border-box",
+                ["margin"] = 0,
+                ["padding"] = "var(--ant-padding-sm, 12px)",
+                ["listStyle"] = "none"
+            }));
         foreach (var node in Nodes)
         {
             if (!IsPortaledNode(node)) continue;
@@ -267,10 +314,18 @@
 
     private string NodeKey(SemanticDomNode node) => $"{Component}-{node.Name}";
 
-    private void Activate(string key) => ActiveKey = key;
+    private void SetHovered(string key) => HoveredKey = key;
 
-    private void ActivateFromKeyboard(KeyboardEventArgs args, string key)
+    private void ClearHovered(string key)
     {
-        if (args.Key is "Enter" or " ") Activate(key);
+        if (HoveredKey == key) HoveredKey = null;
     }
+
+    private void TogglePin(string key) => PinnedKey = PinnedKey == key ? null : key;
+
+    private RenderFragment GetSampleContent(SemanticDomNode node) => @<Typography Style="font-size:12px;min-width:300px">
+        <pre dir="ltr"><code dir="ltr">@($"&lt;{Component} classNames={{{{ {NodePath(node.Name)}: 'my-classname' }}}} styles={{{{ {NodePath(node.Name)}: {{ color: 'red' }} }}}} /&gt;")</code></pre>
+    </Typography>;
+
+    private static string NodePath(string name) => string.Join(".", name.Split('.'));
 }

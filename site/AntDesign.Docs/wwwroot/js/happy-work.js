@@ -1,6 +1,8 @@
 const targetAttribute = 'data-happy-wave-target';
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 let enabled = false;
+let systemAppearanceMedia;
+let systemAppearanceListener;
 
 function onClick(event) {
     if (!enabled || reducedMotion.matches) return;
@@ -40,4 +42,22 @@ document.addEventListener('click', onClick, true);
 
 export function setEnabled(value) {
     enabled = Boolean(value);
+}
+
+export function getSystemAppearance() {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
+export function watchSystemAppearance(dotnetReference) {
+    systemAppearanceMedia = window.matchMedia('(prefers-color-scheme: dark)');
+    systemAppearanceListener = event => dotnetReference.invokeMethodAsync('OnSystemAppearanceChanged', event.matches ? 'dark' : 'light');
+    systemAppearanceMedia.addEventListener('change', systemAppearanceListener);
+}
+
+export function stopWatchingSystemAppearance() {
+    if (systemAppearanceMedia && systemAppearanceListener) {
+        systemAppearanceMedia.removeEventListener('change', systemAppearanceListener);
+    }
+    systemAppearanceMedia = null;
+    systemAppearanceListener = null;
 }

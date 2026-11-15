@@ -63,7 +63,7 @@
   }
 
   &-square {
-    border-radius: var(--ant-border-radius);
+    border-radius: var(--ant-border-radius-lg);
   }
 
   &-icon-only {
@@ -188,8 +188,13 @@
     gap: var(--ant-padding);
   }
 
+  &-square &-list {
+    gap: var(--ant-padding);
+  }
+
   &-menu-mode &-list {
     position: absolute;
+    box-shadow: none;
 
     &::after {
       position: absolute;
@@ -201,7 +206,6 @@
   &-list {
     display: flex;
     flex-direction: column;
-    gap: var(--ant-padding);
     border-radius: var(--ant-border-radius-lg);
 
     &-closed {

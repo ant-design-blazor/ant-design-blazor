@@ -215,3 +215,15 @@ html {
   clip-path: inset(50%);
   white-space: nowrap;
 }
+
+/* docs-layout.css still carries v4 link aliases. Keep links in component
+   articles on the v6 token palette used by React's documentation. */
+.markdown a:not(.ant-btn),
+.code-box-demo a:not(.ant-btn) {
+  color: var(--ant-color-primary, #1677ff);
+}
+
+.markdown a:not(.ant-btn):hover,
+.code-box-demo a:not(.ant-btn):hover {
+  color: var(--ant-color-link-hover, #69b1ff);
+}

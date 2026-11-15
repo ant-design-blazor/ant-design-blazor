@@ -90,10 +90,15 @@
             ["&:not(.ant-layout-sider-collapsed)"] = new Dictionary<string, object> { ["boxShadow"] = "var(--ant-box-shadow-secondary)" },
             ["& .ant-layout-sider-zero-width-trigger"] = new Dictionary<string, object>
             {
-                ["top"] = 80, ["width"] = 40, ["height"] = 40, ["insetInlineEnd"] = -40,
+                // Keep the zero-width trigger aligned immediately below the
+                // 64px documentation header. A larger top offset makes its
+                // icon appear to drift down when the sider is collapsed.
+                ["top"] = 64, ["width"] = 40, ["height"] = 40, ["insetInlineEnd"] = -40,
+                ["display"] = "flex", ["alignItems"] = "center", ["justifyContent"] = "center", ["lineHeight"] = 1,
                 ["pointerEvents"] = "auto", ["color"] = "var(--ant-color-text,rgba(0,0,0,.88))",
                 ["background"] = "var(--ant-color-bg-container,#fff)", ["boxShadow"] = "var(--ant-box-shadow-secondary)"
             },
+            ["& .ant-layout-sider-zero-width-trigger .anticon"] = new Dictionary<string, object> { ["display"] = "block", ["verticalAlign"] = 0, ["lineHeight"] = 1 },
             ["@media (min-width: 768px)"] = new Dictionary<string, object> { ["display"] = "none" }
         }
     });

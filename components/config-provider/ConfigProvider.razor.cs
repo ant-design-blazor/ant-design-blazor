@@ -25,6 +25,18 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Sets the default size of supported components in this subtree.
+        /// Nested providers inherit the parent size when this value is omitted.
+        /// </summary>
+        [Parameter]
+        public FormSize? Size { get; set; }
+
+        [CascadingParameter(Name = "FormSize")]
+        private FormSize? ParentSize { get; set; }
+
+        public FormSize ResolvedSize => Size ?? ParentSize ?? FormSize.Default;
+
         [Parameter]
         public GlobalTheme Theme
         {

@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "ant-design/ant-design",
+    "revision": "599b251da933709d7b25fc9e9018ed7f4c093b96",
+    "component": "Icon"
+  },
+  "config": {
+    "timeoutMs": 90000,
+    "viewport": { "width": 1280, "height": 900, "deviceScaleFactor": 1 },
+    "colorScheme": "light",
+    "comparisonPolicy": {
+      "normalization": {
+        "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_r_[a-zA-Z0-9_-]+)$",
+        "removeAttributes": ["_bl_*", "id"],
+        "removeClassPatterns": ["^acss-[a-zA-Z0-9_-]+$", "^css-var-_[rR]_", "^css-[a-zA-Z0-9]+$", "^adb-docs-icon-gallery-.*$"],
+        "removeCommentMarkers": ["<!--!-->"],
+        "normalizeStyleAttributes": true,
+        "sortAttributes": true,
+        "sortClassTokens": true,
+        "removeInterTagWhitespace": true
+      }
+    }
+  },
+  "groups": [
+    {
+      "id": "icon-gallery-grid-and-labels",
+      "component": "Icon",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/icon?theme=light#list-of-icons",
+        "scopeSelector": "body",
+        "rootSelector": "article > div:nth-child(4) > div:nth-child(5) h3 + ul",
+        "scrollAnchorSelector": "#list-of-icons",
+        "skeletonSelector": ""
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/icon?theme=light#list-of-icons",
+        "scopeSelector": "body",
+        "rootSelector": "section.markdown:has(> #list-of-icons) h3 + ul",
+        "scrollAnchorSelector": "#list-of-icons",
+        "skeletonSelector": ""
+      },
+      "styleProperties": [
+        "display", "width", "height", "gridTemplateColumns", "gridGap", "margin", "padding",
+        "fontFamily", "fontSize", "lineHeight", "whiteSpace", "overflowWrap", "overflow",
+        "textAlign", "alignItems", "justifyContent", "backgroundColor", "color"
+      ],
+      "semanticNodes": [
+        { "path": "gallery.list", "selector": "$root", "minimumCount": 6 },
+        { "path": "gallery.item", "selector": "li", "minimumCount": 100 },
+        { "path": "gallery.icon", "selector": "li > .anticon", "minimumCount": 100 },
+        { "path": "gallery.label", "selector": "li > span:last-child", "minimumCount": 100 }
+      ],
+      "scenarios": [
+        { "id": "desktop" },
+        {
+          "id": "narrow-screen",
+          "actions": [
+            { "type": "viewport", "width": 500, "height": 744 },
+            { "type": "wait", "milliseconds": 250 }
+          ]
+        }
+      ]
+    }
+  ]
+}

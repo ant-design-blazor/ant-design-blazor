@@ -24,13 +24,13 @@
       "component": "Button",
       "react": {
         "url": "http://127.0.0.1:8000/components/button",
-        "scopeSelector": "#button-demo-basic .code-box-demo",
-        "rootSelector": "button.ant-btn"
+        "scopeSelector": "#button-demo-basic",
+        "rootSelector": "button.ant-btn:not(.ant-dropdown-trigger)"
       },
       "blazor": {
-        "url": "http://127.0.0.1:5000/en-US/components/button",
-        "scopeSelector": "#components-button-demo-Basic .code-box-demo",
-        "rootSelector": "button.ant-btn"
+        "url": "http://127.0.0.1:5011/en-US/components/button",
+        "scopeSelector": "#components-button-demo-Basic",
+        "rootSelector": "button.ant-btn:not(.ant-dropdown-trigger)"
       },
       "styleProperties": ["display", "position", "boxSizing", "width", "height", "paddingInline", "gap", "alignItems", "lineHeight", "fontSize", "fontWeight", "color", "backgroundColor", "borderRadius", "borderTopWidth", "borderRightWidth", "borderBottomWidth", "borderLeftWidth"],
       "semanticNodes": [

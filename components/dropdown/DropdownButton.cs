@@ -12,6 +12,30 @@ namespace AntDesign
 {
     public class DropdownButton : Dropdown
     {
+        /// <summary>HTML button type applied to the left button.</summary>
+        [Parameter]
+        public string HtmlType
+        {
+            get => ButtonHtmlType;
+            set => ButtonHtmlType = value;
+        }
+
+        /// <summary>Navigation URL applied to the left button.</summary>
+        [Parameter]
+        public string Href
+        {
+            get => ButtonHref;
+            set => ButtonHref = value;
+        }
+
+        /// <summary>Browser title applied to the left button.</summary>
+        [Parameter]
+        public string Title
+        {
+            get => ButtonTitle;
+            set => ButtonTitle = value;
+        }
+
         /// <summary>
         /// Option to fit button width to its parent width
         /// </summary>

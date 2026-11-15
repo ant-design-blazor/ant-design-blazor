@@ -392,7 +392,7 @@ namespace AntDesign
 
         protected void OnMouseEnter()
         {
-            if (!IsDisabled && !IsHidden)
+            if ((!SelectParent.UsesVirtualAccessibility || !SelectParent.UsesVirtualWindow) && !IsDisabled && !IsHidden)
                 SelectParent.ActiveOption = Model;
         }
 

@@ -8,7 +8,7 @@ import { createArtifact, createBaseline, readBaseline, sha256, writeBaseline } f
 import { compareArtifactSets, compareCss } from './style-diff.mjs';
 import { generateReactCssBaseline } from './react-css-baseline.mjs';
 import { generateIconCategoriesSource, syncAntDesignIconCategories } from './icon-categories.mjs';
-import { csharpTokenType, extractComponentTokenDefinitions } from './component-tokens.mjs';
+import { csharpTokenType, extractComponentTokenDefinitions, extractExcludedComponentTokenNames } from './component-tokens.mjs';
 import { syncGlobalTokenDocs } from './global-token-docs.mjs';
 import { renderComponentGlobalTokenCatalog } from './component-global-tokens.mjs';
 import { renderSeedTokenDefaults } from './seed-token-defaults.mjs';
@@ -128,6 +128,7 @@ async function discoverComponents(componentsPath, root) {
     // style generators in index.ts instead of a separate token.ts file.
     const tokenFile = existsSync(candidateTokenFile) ? candidateTokenFile : stylePath;
     const tokenDefinitions = tokenFile ? await discoverTokenDefinitions(tokenFile) : [];
+    const excludedTokenNames = tokenFile ? [...extractExcludedComponentTokenNames(await readFile(tokenFile, 'utf8'))] : [];
     const hasTokenSource = tokenDefinitions.length > 0;
     const tokenRelativePath = hasTokenSource ? relative(root, tokenFile).replaceAll('\\', '/') : null;
     const docsPath = join(componentPath, 'index.en-US.md');
@@ -140,6 +141,7 @@ async function discoverComponents(componentsPath, root) {
       hasTokenSource,
       hasTokenTable: /<ComponentTokenTable\b/.test(docsSource),
       tokenDefinitions,
+      excludedTokenNames,
     });
   }
   return components.sort((left, right) => left.name.localeCompare(right.name));
@@ -226,7 +228,7 @@ async function sync(args) {
     const metadata = componentTokenMetadata.get(normalizeTokenOwner(component.name)) ?? [];
     const definitions = [...component.tokenDefinitions];
     for (const item of metadata) {
-      if (!definitions.some((definition) => definition.name === item.token)) {
+      if (!component.excludedTokenNames.includes(item.token) && !definitions.some((definition) => definition.name === item.token)) {
         definitions.push({
           name: item.token,
           type: item.type ?? 'unknown',
@@ -598,19 +600,10 @@ async function generateCsharpThemeTokens(args) {
   await mkdir(dirname(output), { recursive: true });
   await writeFile(output, lines.join('\n'), 'utf8');
   if (args['shortcuts-output']) {
-    const mapFields = [
-      'colorText', 'colorBgContainer', 'colorBorder', 'colorPrimaryBg', 'colorPrimaryBgHover', 'colorPrimaryBorder', 'colorPrimaryBorderHover', 'colorPrimaryHover', 'colorPrimaryActive', 'colorPrimaryTextHover', 'colorPrimaryText', 'colorPrimaryTextActive',
-      'colorSuccessBg', 'colorSuccessBgHover', 'colorSuccessBorder', 'colorSuccessBorderHover', 'colorSuccessHover', 'colorSuccessActive', 'colorSuccessTextHover', 'colorSuccessText', 'colorSuccessTextActive',
-      'colorWarningBg', 'colorWarningBgHover', 'colorWarningBorder', 'colorWarningBorderHover', 'colorWarningHover', 'colorWarningActive', 'colorWarningTextHover', 'colorWarningText', 'colorWarningTextActive',
-      'colorErrorBg', 'colorErrorBgHover', 'colorErrorBgFilledHover', 'colorErrorBgActive', 'colorErrorBorder', 'colorErrorBorderHover', 'colorErrorHover', 'colorErrorActive', 'colorErrorTextHover', 'colorErrorText', 'colorErrorTextActive',
-      'colorInfoBg', 'colorInfoBgHover', 'colorInfoBorder', 'colorInfoBorderHover', 'colorInfoHover', 'colorInfoActive', 'colorInfoTextHover', 'colorInfoText', 'colorInfoTextActive', 'colorLinkHover', 'colorLinkActive',
-      'colorFill', 'colorFillSecondary', 'colorFillTertiary', 'colorFillQuaternary', 'colorTextSecondary', 'colorTextTertiary', 'colorTextQuaternary', 'colorBgLayout', 'colorBgElevated', 'colorBgSpotlight', 'colorBgBlur', 'colorBgMask', 'colorWhite', 'colorBorderSecondary', 'colorBorderDisabled', 'colorShadow',
-      'fontSizeSM', 'fontSizeLG', 'fontSizeXL', 'fontSizeHeading5', 'fontSizeHeading4', 'fontSizeHeading3', 'fontSizeHeading2', 'fontSizeHeading1', 'lineHeight', 'lineHeightSM', 'lineHeightLG', 'fontHeight', 'fontHeightSM', 'fontHeightLG', 'controlHeightSM', 'controlHeightXS', 'controlHeightLG',
-      'sizeXXL', 'sizeXL', 'sizeLG', 'sizeMD', 'sizeMS', 'size', 'sizeSM', 'sizeXS', 'sizeXXS', 'motionDurationFast', 'motionDurationMid', 'motionDurationSlow', 'lineWidthBold', 'borderRadiusXS', 'borderRadiusSM', 'borderRadiusLG', 'borderRadiusOuter',
-      'screenXS', 'screenXSMin', 'screenXSMax', 'screenSM', 'screenSMMin', 'screenSMMax', 'screenMD', 'screenMDMin', 'screenMDMax', 'screenLG', 'screenLGMin', 'screenLGMax', 'screenXL', 'screenXLMin', 'screenXLMax', 'screenXXL', 'screenXXLMin', 'screenXXLMax', 'screenXXXL', 'screenXXXLMin',
-      'boxShadow', 'boxShadowSecondary', 'boxShadowTertiary', 'boxShadowPopoverArrow', 'dropShadowPopover', 'boxShadowCard', 'boxShadowDrawerRight', 'boxShadowDrawerLeft', 'boxShadowDrawerUp', 'boxShadowDrawerDown', 'boxShadowTabsOverflowLeft', 'boxShadowTabsOverflowRight', 'boxShadowTabsOverflowTop', 'boxShadowTabsOverflowBottom',
-    ];
-    const shortcutNames = [...new Set([...models.flatMap((model) => model.fields.map((field) => field.name)), ...mapFields])].filter((name) => name !== 'presetColorType');
+    const shortcutNames = [...new Set([
+      ...models.flatMap((model) => model.fields.map((field) => field.name)),
+      ...globalTokens.map((token) => token.name),
+    ])].filter((name) => name !== 'presetColorType');
     const shortcutLines = [
       '// <auto-generated /> Generated by AntDesign.StyleGen. Do not edit manually.',
       'namespace AntDesign.Theming',
@@ -929,7 +922,11 @@ async function verifyGeneratedStructure(args) {
     upstreamFields[name] = match ? [...match[1].matchAll(/^\s*([A-Za-z_$][\w$]*)\??\s*:/gm)].map((item) => pascal(item[1])) : [];
   }
   const themeMissing = Object.values(upstreamFields).flat().filter((name) => !new RegExp(`public\\s+[^\\s]+\\s+${name}\\s*\\{`).test(themeSource));
-  const shortcutMissing = [...new Set(Object.values(upstreamFields).flat())].filter((name) => !new RegExp(`public\\s+string\\s+${name}\\s*\\{`).test(shortcutSource));
+  const shortcutExpected = [...new Set([
+    ...Object.values(upstreamFields).flat(),
+    ...Object.keys(globalTokenSource).map(pascal),
+  ])];
+  const shortcutMissing = shortcutExpected.filter((name) => !new RegExp(`public\\s+string\\s+${name}\\s*\\{`).test(shortcutSource));
   const missingGlobalDefinitions = Object.keys(globalTokenSource).filter((name) => !themeSource.includes(`new GlobalTokenDefinition("${name}"`));
   const globalDocsMissing = [];
   for (const path of args.globalTokenDocs ?? []) {
@@ -941,6 +938,7 @@ async function verifyGeneratedStructure(args) {
     valid: componentMissing.length === 0 && themeMissing.length === 0 && shortcutMissing.length === 0 && missingGlobalDefinitions.length === 0 && globalDocsMissing.length === 0,
     componentTokenCount: componentExpected.length,
     globalTokenCount: Object.keys(globalTokenSource).length,
+    globalShortcutCount: shortcutExpected.length,
     missingComponentTokens: componentMissing,
     missingThemeFields: themeMissing,
     missingShortcuts: shortcutMissing,

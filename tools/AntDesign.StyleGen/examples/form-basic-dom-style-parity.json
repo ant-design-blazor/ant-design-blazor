@@ -1,0 +1,195 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "ant-design/ant-design",
+    "component": "Form"
+  },
+  "config": {
+    "timeoutMs": 25000,
+    "viewport": {
+      "width": 1280,
+      "height": 900,
+      "deviceScaleFactor": 1
+    },
+    "colorScheme": "light",
+    "comparisonPolicy": {
+      "normalization": {
+        "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_r_[a-zA-Z0-9_-]+)$",
+        "removeAttributes": [
+          "_bl_*",
+          "id"
+        ],
+        "removeClassPatterns": [
+          "^css-dev-only-to-override-",
+          "^css-var-_r_",
+          "^css-var-_[rR]_",
+          "^css-[a-zA-Z0-9]+$"
+        ],
+        "removeCommentMarkers": [
+          "<!--!-->"
+        ],
+        "sortClassTokens": true,
+        "removeEmptyAttributes": [
+          "style"
+        ]
+      }
+    }
+  },
+  "groups": [
+    {
+      "id": "form-basic-demo",
+      "component": "Form",
+      "captureReactBeforeBlazor": true,
+      "react": {
+        "url": "http://127.0.0.1:8000/components/form?theme=light",
+        "scopeSelector": "#form-demo-basic .code-box-demo",
+        "rootSelector": "form.ant-form"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/form?theme=light",
+        "scopeSelector": "#components-form-demo-basic .code-box-demo",
+        "rootSelector": "form.ant-form"
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "maxWidth",
+        "marginTop",
+        "marginBottom",
+        "padding",
+        "fontSize",
+        "lineHeight",
+        "color",
+        "backgroundColor",
+        "borderRadius",
+        "borderWidth"
+      ],
+      "semanticNodes": [
+        {
+          "path": "root",
+          "reactSelector": "$root",
+          "blazorSelector": "$root",
+          "minimumCount": 1
+        },
+        {
+          "path": "formItem",
+          "reactSelector": ".ant-form-item",
+          "blazorSelector": ".ant-form-item",
+          "minimumCount": 4
+        },
+        {
+          "path": "label",
+          "reactSelector": ".ant-form-item-label",
+          "blazorSelector": ".ant-form-item-label",
+          "minimumCount": 2
+        },
+        {
+          "path": "control",
+          "reactSelector": ".ant-form-item-control",
+          "blazorSelector": ".ant-form-item-control",
+          "minimumCount": 4
+        },
+        {
+          "path": "input",
+          "reactSelector": ".ant-input",
+          "blazorSelector": ".ant-input",
+          "minimumCount": 1
+        },
+        {
+          "path": "checkbox",
+          "reactSelector": ".ant-checkbox",
+          "blazorSelector": ".ant-checkbox",
+          "minimumCount": 1
+        },
+        {
+          "path": "submit",
+          "reactSelector": "button[type=submit]",
+          "blazorSelector": "button[type=submit]",
+          "minimumCount": 1
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "default"
+        },
+        {
+          "id": "password-visible",
+          "actions": [
+            {
+              "type": "click",
+              "reactSelector": "#form-demo-basic .ant-input-password-icon",
+              "blazorSelector": "#components-form-demo-basic .ant-input-password-icon"
+            },
+            {
+              "type": "wait",
+              "milliseconds": 250
+            }
+          ]
+        }
+      ],
+      "geometryTolerancePx": 0.02,
+      "computedStylePixelToleranceByProperty": {
+        "width": 0.02
+      }
+    },
+    {
+      "id": "form-basic-validation",
+      "component": "Form",
+      "captureReactBeforeBlazor": true,
+      "react": {
+        "url": "http://127.0.0.1:8000/components/form?theme=light",
+        "scopeSelector": "#form-demo-basic .code-box-demo",
+        "rootSelector": ".ant-form-item:nth-child(-n+2)"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/form?theme=light",
+        "scopeSelector": "#components-form-demo-basic .code-box-demo",
+        "rootSelector": ".ant-form-item:nth-child(-n+2)"
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "minHeight",
+        "marginBottom",
+        "padding",
+        "fontSize",
+        "lineHeight",
+        "color",
+        "backgroundColor",
+        "borderRadius",
+        "borderWidth"
+      ],
+      "semanticNodes": [
+        { "path": "root", "selector": "$root", "minimumCount": 2 },
+        { "path": "help", "selector": ".ant-form-item-explain-connected", "minimumCount": 2 },
+        { "path": "input", "selector": "input.ant-input", "minimumCount": 2 }
+      ],
+      "scenarios": [
+        {
+          "id": "submit-empty-required-errors",
+          "actions": [
+            {
+              "type": "press",
+              "key": "Enter",
+              "reactSelector": "#form-demo-basic input[type=text]",
+              "blazorSelector": "#components-form-demo-basic input[type=text]"
+            },
+            {
+              "type": "wait",
+              "milliseconds": 250
+            }
+          ]
+        }
+      ],
+      "geometryTolerancePx": 0.02,
+      "computedStylePixelToleranceByProperty": {
+        "width": 0.02
+      }
+    }
+  ]
+}

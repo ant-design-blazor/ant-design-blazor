@@ -32,7 +32,11 @@ namespace AntDesign.Extensions.Localization.EmbeddedJson
 
         public IStringLocalizer Create(Type resourceSource)
         {
-            var cultureInfo = CultureInfo.CurrentUICulture;
+            return Create(resourceSource, CultureInfo.CurrentUICulture);
+        }
+
+        internal IStringLocalizer Create(Type resourceSource, CultureInfo cultureInfo)
+        {
             var typeInfo = resourceSource.GetTypeInfo();
             var baseName = GetResourcePrefix(typeInfo);
             var assembly = typeInfo.Assembly;
@@ -42,7 +46,11 @@ namespace AntDesign.Extensions.Localization.EmbeddedJson
 
         public IStringLocalizer Create(string baseName, string location)
         {
-            var cultureInfo = CultureInfo.CurrentUICulture;
+            return Create(baseName, location, CultureInfo.CurrentUICulture);
+        }
+
+        internal IStringLocalizer Create(string baseName, string location, CultureInfo cultureInfo)
+        {
             var assembly = Assembly.Load(new AssemblyName(location)) ?? _localizationOptions.Value.ResourcesAssembly;
 
             return GetCachedLocalizer(_resourcesRelativePath, assembly, cultureInfo);

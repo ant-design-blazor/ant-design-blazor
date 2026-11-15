@@ -13,6 +13,14 @@ namespace AntDesign
         private static readonly System.Collections.Generic.HashSet<string> GlobalTokenNames = new(GeneratedGlobalTokens.All.Select(token => token.Name), System.StringComparer.Ordinal);
         [Inject]
         private IComponentIdGenerator ComponentIdGenerator { get; set; }
+        private string _generatedId;
+
+        /// <summary>
+        /// Indicates that <see cref="Id"/> was generated internally instead of
+        /// being supplied by the component caller. Components can retain this
+        /// identifier for internal bookkeeping without emitting it into HTML.
+        /// </summary>
+        protected bool HasGeneratedId => _generatedId != null && string.Equals(Id, _generatedId, System.StringComparison.Ordinal);
 
         [CascadingParameter]
         public ConfigProvider ConfigProvider { get; set; }
@@ -79,7 +87,11 @@ namespace AntDesign
 
         protected override void OnInitialized()
         {
-            Id ??= ComponentIdGenerator.Generate(this);
+            if (Id == null)
+            {
+                Id = ComponentIdGenerator.Generate(this);
+                _generatedId = Id;
+            }
             base.OnInitialized();
         }
 

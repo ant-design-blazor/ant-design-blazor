@@ -2,7 +2,7 @@
 order: 13
 title:
   zh-CN: 菜单项附加内容
-  en-US: Extra content
+  en-US: Extra node
 ---
 
 ## zh-CN

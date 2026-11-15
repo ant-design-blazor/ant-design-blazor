@@ -1,30 +1,31 @@
 ﻿
-<h2>@(LocalizationService.CurrentCulture.Name == "zh-CN" ? "图标列表" : "List of icons")</h2>
+<h2 id="list-of-icons">@(LocalizationService.CurrentCulture.Name == "zh-CN" ? "图标列表" : "List of icons")</h2>
 <style>@((MarkupString)galleryStyles.CssText)</style>
-<div class="@galleryStyles["toolbar"]">
-    <RadioGroup @bind-Value="currentTheme" ButtonStyle="RadioButtonStyle.Solid" Size="InputSize.Large" TValue="IconGalleryTheme" OnChange="OnThemeChanged">
-        <Radio RadioButton Value="IconGalleryTheme.All">
-            <DynamicComponent Type="@GetThemeIconType("outlined")" />@Localizer["app.docs.components.icon.all"]
-        </Radio>
-        <Radio RadioButton Value="IconGalleryTheme.Outlined">
-            <DynamicComponent Type="@GetThemeIconType("outlined")" />@Localizer["app.docs.components.icon.outlined"]
-        </Radio>
-        <Radio RadioButton Value="IconGalleryTheme.Filled">
-            <DynamicComponent Type="@GetThemeIconType("filled")" />@Localizer["app.docs.components.icon.filled"]
-        </Radio>
-        <Radio RadioButton Value="IconGalleryTheme.TwoTone">
-            <DynamicComponent Type="@GetThemeIconType("twotone")" />@Localizer["app.docs.components.icon.two-tone"]
-        </Radio>
-    </RadioGroup>
-    <Search Size="InputSize.Large"
-    ClassicSearchIcon
-    AllowClear
-    AutoFocus
-    DebounceMilliseconds="300"
-    Class="ant-input-filled"
-    Placeholder="@Localizer["app.docs.components.icon.search.placeholder"]"
-    OnInput="@(args => OnSearching(args.Value?.ToString()))" />
-</div>
+<Affix OffsetTop="80" OnChange="OnToolbarAffixChanged">
+    <div class="@galleryStyles["toolbar"]" style="@ToolbarStyle">
+        <Segmented TValue="IconGalleryTheme" Value="@currentTheme" ValueChanged="OnThemeChanged" Size="SegmentedSize.Large" AriaLabel="segmented control" AriaOrientation="horizontal" Role="radiogroup" TabIndex="0">
+            <SegmentedItem TValue="IconGalleryTheme" Value="@IconGalleryTheme.All">
+                <span class="ant-segmented-item-icon"><Icon Type="@IconType.Outline.Appstore" /></span><span>@GetText("app.docs.components.icon.all", "All", "全部")</span>
+            </SegmentedItem>
+            <SegmentedItem TValue="IconGalleryTheme" Value="@IconGalleryTheme.Outlined">
+                <span class="ant-segmented-item-icon"><Icon Component="@GetThemeIcon("outlined")" Role="img" /></span><span>@GetText("app.docs.components.icon.outlined", "Outlined", "线框风格")</span>
+            </SegmentedItem>
+            <SegmentedItem TValue="IconGalleryTheme" Value="@IconGalleryTheme.Filled">
+                <span class="ant-segmented-item-icon"><Icon Component="@GetThemeIcon("filled")" Role="img" /></span><span>@GetText("app.docs.components.icon.filled", "Filled", "实底风格")</span>
+            </SegmentedItem>
+            <SegmentedItem TValue="IconGalleryTheme" Value="@IconGalleryTheme.TwoTone">
+                <span class="ant-segmented-item-icon"><Icon Component="@GetThemeIcon("twotone")" Role="img" /></span><span>@GetText("app.docs.components.icon.two-tone", "Two Tone", "双色风格")</span>
+            </SegmentedItem>
+        </Segmented>
+        <Search Size="InputSize.Large"
+        AllowClear
+        AutoFocus
+        DebounceMilliseconds="300"
+        Class="ant-input-filled"
+        Placeholder="@GetSearchPlaceholder()"
+        OnInput="@(args => OnSearching(args.Value?.ToString()))" />
+    </div>
+</Affix>
 
 @if (displayIcons == null || displayIcons.Count == 0)
 {
@@ -34,17 +35,17 @@ else
 {
     foreach (var item in displayIcons)
     {
-        <h3>@Localizer["app.docs.components.icon.category." + @item.Category]</h3>
+        <h3>@GetCategoryTitle(item.Category)</h3>
 
         <ul class="@galleryStyles["iconList"]">
             @foreach (var icon in item.Icons)
             {
-                <li class="@($"{galleryStyles["iconItem"]} {GetIconThemeClass(icon)} {(copiedIconName == icon.ComponentType.Name ? "copied" : string.Empty)}")" @onclick="(() => OnCopyClick(icon))">
+                <li class="@($"{galleryStyles["iconItem"]} {GetIconThemeClass(icon)} {(copiedIconName == icon.ComponentType.Name ? "copied" : string.Empty)}")" style="cursor: pointer;" @onclick="(() => OnCopyClick(icon))">
                     @if (NewIconNames.Contains(icon.ComponentType.Name, StringComparer.Ordinal))
                     {
                         <span class="@galleryStyles["newIconVersion"]">6.5.0</span>
                     }
-                    <DynamicComponent Type="@icon.ComponentType" Parameters="@iconParameters" @key="@icon.ComponentType.Name" />
+                    <DynamicComponent Type="@icon.ComponentType" Parameters="@GetIconParameters(icon)" @key="@icon.ComponentType.Name" />
                     <span class="@galleryStyles["iconName"]">@icon.ComponentType.Name</span>
                 </li>
             }
@@ -54,7 +55,7 @@ else
 
 
 @inject ILocalizationService LocalizationService
-@inject IStringLocalizer Localizer;
+@inject IStringLocalizer<AntDesign.Docs.Services.IconListService> Localizer
 @inject IMessageService messageService
 @inject IJSRuntime JsRuntime
 
@@ -64,14 +65,30 @@ else
     private sealed record IconDisplayCategory(string Category, IReadOnlyList<AntDesign.Icons.IconCatalogItem> Icons);
 
     private IconGalleryTheme currentTheme = IconGalleryTheme.All;
+    private bool toolbarAffixed;
     private string searchValue = string.Empty;
+    private int TotalIconCount => iconCatalog
+        .Select(icon => System.Text.RegularExpressions.Regex.Replace(icon.ComponentType.Name, "(Outlined|Filled|TwoTone)$", string.Empty))
+        .Distinct(StringComparer.Ordinal)
+        .Count();
     private string? copiedIconName;
     private IReadOnlyList<IconDisplayCategory> displayIcons = Array.Empty<IconDisplayCategory>();
     private readonly IReadOnlyList<AntDesign.Icons.IconCatalogItem> iconCatalog = AntDesign.Icons.IconCatalog.Items;
-    private readonly IDictionary<string, object> iconParameters = new Dictionary<string, object>
+    private string ToolbarStyle => toolbarAffixed
+        ? "box-shadow:rgba(50, 50, 93, 0.25) 0 6px 12px -2px, rgba(0, 0, 0, 0.3) 0 3px 7px -3px;padding:8px;margin:-8px;border-radius:var(--ant-border-radius, 6px);background-color:var(--ant-color-bg-container, #fff)"
+        : null;
+
+    private Task OnToolbarAffixChanged(bool affixed)
     {
-        ["Style"] = "font-size:36px"
-    };
+        if (toolbarAffixed == affixed)
+        {
+            return Task.CompletedTask;
+        }
+
+        toolbarAffixed = affixed;
+        return InvokeAsync(StateHasChanged);
+    }
+
     private static readonly CssStyleSheet galleryStyles = CssInJs.CreateStyles("docs-icon-gallery", new Dictionary<string, object>
     {
         ["toolbar"] = new Dictionary<string, object>
@@ -79,25 +96,35 @@ else
             ["display"] = "flex",
             ["gap"] = "16px",
             ["justifyContent"] = "space-between",
-            ["position"] = "sticky",
-            ["top"] = 24,
-            ["zIndex"] = 20,
-            ["padding"] = 8,
-            ["borderRadius"] = "var(--ant-border-radius-lg, 8px)",
-            ["backgroundColor"] = "var(--ant-color-bg-container, #fff)",
-            ["boxShadow"] = "rgba(50, 50, 93, 0.25) 0 6px 12px -2px, rgba(0, 0, 0, 0.3) 0 3px 7px -3px",
-            ["& > *:first-child"] = new Dictionary<string, object> { ["flex"] = "0 0 380px", ["whiteSpace"] = "nowrap" },
-            ["& > *:last-child"] = new Dictionary<string, object> { ["flex"] = "1" }
+            ["transition"] = "all var(--ant-motion-duration-slow, 0.3s)",
+            ["& > *:first-child"] = new Dictionary<string, object> { ["flex"] = "0 1 auto", ["height"] = 40 },
+            ["& > *:last-child"] = new Dictionary<string, object> { ["flex"] = "1" },
+            ["@media only screen and (max-width: 992px)"] = new Dictionary<string, object>
+            {
+                ["& > *:last-child"] = new Dictionary<string, object>
+                {
+                    ["flex"] = "1 1 79px",
+                    ["width"] = 79,
+                    ["minWidth"] = 79,
+                    ["maxWidth"] = 79,
+                    ["height"] = 40,
+                    ["& .ant-input-group-addon"] = new Dictionary<string, object> { ["paddingInline"] = 0 },
+                    ["& .ant-input-wrapper"] = new Dictionary<string, object> { ["height"] = 40 },
+                    ["& .ant-input-search-btn"] = new Dictionary<string, object> { ["width"] = 39 }
+                },
+                ["& > *:first-child"] = new Dictionary<string, object> { ["height"] = 40 }
+            }
         },
         ["iconList"] = new Dictionary<string, object>
         {
             ["display"] = "grid",
             ["gridGap"] = "var(--ant-margin, 16px)",
-            ["gridTemplateColumns"] = "repeat(6, minmax(0, 1fr))",
+            ["gridTemplateColumns"] = "repeat(auto-fill, minmax(120px, 1fr))",
             ["margin"] = "var(--ant-margin, 16px) 0",
             ["padding"] = 0,
             ["direction"] = "ltr",
-            ["listStyle"] = "none"
+            ["listStyle"] = "none",
+            ["overflow"] = "hidden"
         },
         ["iconItem"] = new Dictionary<string, object>
         {
@@ -111,7 +138,8 @@ else
             ["paddingInlineStart"] = "0 !important",
             ["paddingInlineEnd"] = "0 !important",
             ["width"] = "100%",
-            ["height"] = 100,
+            ["minWidth"] = 0,
+            ["minHeight"] = 100,
             ["overflow"] = "hidden",
             ["color"] = "#555",
             ["textAlign"] = "center",
@@ -155,10 +183,13 @@ else
         ["iconName"] = new Dictionary<string, object>
         {
             ["display"] = "block",
+            ["width"] = "100%",
             ["fontFamily"] = "'Lucida Console', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace",
-            ["whiteSpace"] = "nowrap",
-            ["textAlign"] = "center",
-            ["transform"] = "scale(0.8)"
+            ["fontSize"] = 14,
+            ["whiteSpace"] = "normal",
+            ["overflowWrap"] = "anywhere",
+            ["transform"] = "scale(0.8)",
+            ["textAlign"] = "center"
         },
         ["newIconVersion"] = new Dictionary<string, object>
         {
@@ -176,6 +207,40 @@ else
         }
     });
 
+    private string GetText(string key, string english, string chinese)
+    {
+        var value = Localizer[key];
+        if (!value.ResourceNotFound)
+        {
+            return value.Value;
+        }
+
+        return LocalizationService.CurrentCulture.Name == "zh-CN" ? chinese : english;
+    }
+
+    private string GetSearchPlaceholder()
+    {
+        var value = Localizer["app.docs.components.icon.search.placeholder"];
+        var fallback = LocalizationService.CurrentCulture.Name == "zh-CN"
+            ? $"在此搜索 {TotalIconCount} 个图标，点击图标可复制代码"
+            : $"Search {TotalIconCount} icons here, click icon to copy code";
+        return (value.ResourceNotFound ? fallback : value.Value).Replace("{total}", TotalIconCount.ToString(System.Globalization.CultureInfo.InvariantCulture), StringComparison.Ordinal);
+    }
+
+    private string GetCategoryTitle(string category)
+    {
+        var titles = category switch
+        {
+            "direction" => ("Directional Icons", "方向性图标"),
+            "suggestion" => ("Suggested Icons", "提示建议性图标"),
+            "editor" => ("Editor Icons", "编辑类图标"),
+            "data" => ("Data Icons", "数据类图标"),
+            "logo" => ("Brand and Logos", "品牌和标识"),
+            _ => ("Application Icons", "网站通用图标")
+        };
+        return GetText($"app.docs.components.icon.category.{category}", titles.Item1, titles.Item2);
+    }
+
     private static readonly string[] NewIconNames =
     [
         "AnthropicFilled", "ClaudeFilled", "GeminiFilled", "MistralFilled", "DeepSeekFilled",
@@ -183,9 +248,12 @@ else
         "ElevenLabsFilled", "TelegramFilled", "MastodonFilled", "ThreadsFilled", "SnapchatFilled"
     ];
 
-    private static Type GetThemeIconType(string theme) => AntDesign.Icons.IconCatalog.Items
-        .First(item => item.Name == "appstore" && item.Theme == theme)
-        .ComponentType;
+    private static RenderFragment GetThemeIcon(string theme) => builder => builder.AddMarkupContent(0, theme switch
+    {
+        "outlined" => "<svg width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\" focusable=\"false\" viewBox=\"0 0 1024 1024\"><title>Outlined Icon</title><path d=\"M864 64H160C107 64 64 107 64 160v704c0 53 43 96 96 96h704c53 0 96-43 96-96V160c0-53-43-96-96-96z m-12 800H172c-6.6 0-12-5.4-12-12V172c0-6.6 5.4-12 12-12h680c6.6 0 12 5.4 12 12v680c0 6.6-5.4 12-12 12z\"></path></svg>",
+        "filled" => "<svg width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\" focusable=\"false\" viewBox=\"0 0 1024 1024\"><title>Filled Icon</title><path d=\"M864 64H160C107 64 64 107 64 160v704c0 53 43 96 96 96h704c53 0 96-43 96-96V160c0-53-43-96-96-96z\"></path></svg>",
+        _ => "<svg width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\" focusable=\"false\" viewBox=\"0 0 1024 1024\"><title>TwoTone Icon</title><path d=\"M16 512c0 273.932 222.066 496 496 496s496-222.068 496-496S785.932 16 512 16 16 238.066 16 512z m496 368V144c203.41 0 368 164.622 368 368 0 203.41-164.622 368-368 368z\"></path></svg>"
+    });
 
     private static string GetIconThemeClass(AntDesign.Icons.IconCatalogItem icon) => icon.Theme switch
     {
@@ -193,6 +261,11 @@ else
         "twotone" => "TwoTone",
         _ => "Outlined"
     };
+
+    private static IDictionary<string, object> GetIconParameters(AntDesign.Icons.IconCatalogItem icon)
+        => icon.Theme == "twotone"
+            ? new Dictionary<string, object> { ["TwoToneColor"] = new[] { "#1677ff" } }
+            : null;
 
     protected override async Task OnInitializedAsync()
     {
@@ -255,6 +328,7 @@ else
             .OrderBy(group => Array.IndexOf(IconSearchCategories.Categories.ToArray(), group.Key))
             .ToDictionary(group => group.Key, group => (IReadOnlyList<AntDesign.Icons.IconCatalogItem>)group
                 .OrderBy(icon => IconSearchCategories.GetOrder(icon.ComponentType.Name))
+                .ThenBy(icon => IconSearchCategories.GetThemeOrder(icon.ComponentType.Name))
                 .ThenBy(icon => icon.Name, StringComparer.Ordinal)
                 .ToArray(), StringComparer.Ordinal);
 

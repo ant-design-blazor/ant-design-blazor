@@ -20,18 +20,16 @@
     <div class="ant-list-item-meta-content">
         @if (!string.IsNullOrWhiteSpace(Title) || TitleTemplate != null)
         {
-            <div>
-                <h4 class="ant-list-item-meta-title">
-                    @if (!string.IsNullOrWhiteSpace(Title))
-                    {
-                        @Title
-                    }
-                    else
-                    {
-                        @TitleTemplate
-                    }
-                </h4>
-            </div>
+            <h4 class="ant-list-item-meta-title">
+                @if (!string.IsNullOrWhiteSpace(Title))
+                {
+                    @Title
+                }
+                else
+                {
+                    @TitleTemplate
+                }
+            </h4>
         }
 
         <div class="ant-list-item-meta-description">

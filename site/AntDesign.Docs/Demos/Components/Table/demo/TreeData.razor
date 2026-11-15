@@ -1,127 +1,100 @@
 @using System.ComponentModel
-@using AntDesign.TableModels
 
-CheckStrictly:
-<Switch @bind-Checked="_checkStrictly" />
-<br />
-<RadioGroup @bind-Value="selectionType">
-    <Radio Value="SelectionType.Checkbox">Checkbox</Radio>
-    <Radio Value="SelectionType.Radio">Radio</Radio>
-</RadioGroup>
+<Space Align="SpaceAlign.Center" Style="margin-bottom: 16px;">
+    <SpaceItem>CheckStrictly:</SpaceItem>
+    <SpaceItem><Switch @bind-Checked="_checkStrictly" /></SpaceItem>
+</Space>
 
-<Table TItem="Data" DataSource="_data" TreeChildren="item=>item.Children" OnExpand="OnExpand" @bind-SelectedRows="_selectedRows" RowExpandable="@((record)=>record.Data.Name!="Not Expandable")">
-    <Selection CheckStrictly="_checkStrictly" Type="@selectionType" />
-    <PropertyColumn Property="c => c.Name" />
-    <PropertyColumn Property="c => c.Age" Width="12%" Sortable />
-    <PropertyColumn Property="c => c.Address" Width="30%" />
-    <ActionColumn>
-        <Button OnClick="@(() => AddChildren(context))">Add Children</Button>
-    </ActionColumn>
+<Table TItem="Data" DataSource="_data" RowKey="item => item.Key" TreeChildren="item => item.Children">
+    <Selection CheckStrictly="_checkStrictly" />
+    <PropertyColumn Property="item => item.Name" />
+    <PropertyColumn Property="item => item.Age" Width="12%" />
+    <PropertyColumn Property="item => item.Address" Width="30%" />
 </Table>
 
-@string.Join(",", _selectedRows.Select(x => x.Name))
-
 @code {
-    bool _checkStrictly;
-    SelectionType selectionType = SelectionType.Checkbox;
-    Data[] _data;
+    private bool _checkStrictly;
 
-    IEnumerable<Data> _selectedRows = [];
-
-    protected override async Task OnInitializedAsync()
-    {
-        await Task.Delay(500);
-        _data = data;
-    }
-
-    private async Task OnExpand(RowData row)
-    {
-        var data=((RowData<Data>)row).Data;
-        if (data.Children==null)
+    private readonly Data[] _data =
+    [
+        new()
         {
-            await AddChildren(data);
-        }
-    }
-
-    async Task AddChildren(Data row)
-    {
-        await Task.Delay(1000);
-        var index = row.Children?.Count() ?? 0;
-        row.Children = [new() {
-            Key = Guid.NewGuid().ToString(),
-            Name = "Jim Green No. "+index,
-            Age = 42 +index ,
-            Address = "London No. 1 Lake Park",
-        }, ..row.Children??[]];
-    }
-
-    Data[] data =
-    {
-        new() {
             Key = "1",
             Name = "John Brown sr.",
             Age = 60,
             Address = "New York No. 1 Lake Park",
-            Children = new Data[] {
-                new() {
+            Children =
+            [
+                new()
+                {
                     Key = "11",
-                    Name = "Jim Green",
+                    Name = "John Brown",
                     Age = 42,
+                    Address = "New York No. 2 Lake Park"
+                },
+                new()
+                {
+                    Key = "12",
+                    Name = "John Brown jr.",
+                    Age = 30,
+                    Address = "New York No. 3 Lake Park",
+                    Children =
+                    [
+                        new()
+                        {
+                            Key = "121",
+                            Name = "Jimmy Brown",
+                            Age = 16,
+                            Address = "New York No. 3 Lake Park"
+                        }
+                    ]
+                },
+                new()
+                {
+                    Key = "13",
+                    Name = "Jim Green sr.",
+                    Age = 72,
                     Address = "London No. 1 Lake Park",
-                },
-                new() {
-                    Key= "12",
-                    Name= "John Brown jr.",
-                    Age=30,
-                    Address= "New York No. 3 Lake Park",
-                    Children=new Data[] {
-                          new() {
-                              Key= "121",
-                              Name= "Jimmy Brown",
-                              Age= 16,
-                              Address= "New York No. 3 Lake Park",
-                        },
-                    }
-                },
-                new() {
-                    Key= "13",
-                    Name= "Jim Green sr.",
-                    Age= 72,
-                    Address= "London No. 1 Lake Park",
-                    Children= new Data[]{
-                        new() {
-                            Key= "131",
-                            Name= "Jim Green",
-                            Age= 42,
-                            Address= "London No. 2 Lake Park",
-                            Children= new Data[] {
-                                new() {
-                                    Key= "1311",
-                                    Name= "Jim Green jr.",
-                                    Age= 25,
-                                    Address= "London No. 3 Lake Park",
+                    Children =
+                    [
+                        new()
+                        {
+                            Key = "131",
+                            Name = "Jim Green",
+                            Age = 42,
+                            Address = "London No. 2 Lake Park",
+                            Children =
+                            [
+                                new()
+                                {
+                                    Key = "1311",
+                                    Name = "Jim Green jr.",
+                                    Age = 25,
+                                    Address = "London No. 3 Lake Park"
                                 },
-                                new() {
-                                   Key= "1312",
-                                   Name= "Jimmy Green sr.",
-                                   Age= 18,
-                                   Address= "London No. 4 Lake Park",
-                                },
-                            },
-                        },
-                    },
-                },
-            },
+                                new()
+                                {
+                                    Key = "1312",
+                                    Name = "Jimmy Green sr.",
+                                    Age = 18,
+                                    Address = "London No. 4 Lake Park"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
         },
-        new() {
+        new()
+        {
             Key = "2",
-            Name = "Not Expandable",
+            Name = "Joe Black",
             Age = 32,
-            Address = "Sidney No. 1 Lake Park",
-        },
-    };
+            Address = "Sydney No. 1 Lake Park"
+        }
+    ];
 
-    public class Data
+    private sealed class Data
     {
         [DisplayName("Key")]
         public string Key { get; set; }

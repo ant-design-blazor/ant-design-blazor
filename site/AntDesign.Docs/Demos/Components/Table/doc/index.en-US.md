@@ -62,6 +62,8 @@ Since 0.16.0, Table has supported ordinary classes, record, interface, and abstr
 | Bordered | Whether to display the outer border and column border | bool | false |
 | ScrollX | Set horizontal scrolling, can also be used to specify the width of the scrolling area, can be set as pixel value, percentage | string | - |
 | ScrollY | Set the vertical scroll, can also be used to specify the height of the scrolling area, can be set as a pixel value | string | - |
+| Virtual | Enable virtual rendering for large data sets. Use with `ScrollY`. | bool | false |
+| EnableVirtualization | Deprecated compatibility alias for `Virtual`. | bool | false |
 | ScrollBarWidth | Scroll bar width | string | "17px" |
 | IndentSize | When displaying tree data, the width of each level of indentation, in px | int | 15 |
 | ExpandIconColumnIndex | Index of the column where the custom expand icon is located | int | - |
@@ -94,6 +96,7 @@ The Column definition of the previous version, For .NET 6 and above, `PropertyCo
 | DefaultSortOrder | Default sort order | [SortDirection](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/core/SortDirection.cs) | - |
 | OnCell | Set cell properties | Func<CellData, Dictionary<string, object>> | - |
 | OnHeaderCell | Set header cell properties | Func<Dictionary<string, object>> | - |
+| RowScope | Set the scope for each body cell in this column, such as `row` or `rowgroup` | string | - |
 | Filterable | Whether to show filter | bool | false |
 | Filters | Specify the column to filter the menu | IEnumerable<TableFilter<TData>> | - |
 | FilterMultiple | Specify filter multiple selection and single selection | bool | true |

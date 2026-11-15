@@ -16,6 +16,8 @@ Use it when an application needs consistent Ant Design theme, direction, or glob
 | Parameter | Description | Type | Default |
 | --- | --- | --- | --- |
 | Direction | Text direction | string | -- |
+| Size | Default size inherited by supported components in this subtree | FormSize? (`Small`, `Default`, `Large`) | `Default` |
+| Variant | Default data-entry appearance inherited by supported components | `outlined` \| `filled` \| `borderless` \| `underlined` | `outlined` |
 | Theme | Global theme | GlobalTheme | -- |
 | ThemeConfig | Design Token and component theme configuration | ThemeConfig | -- |
 | Form | Global form configuration | FormConfig | -- |

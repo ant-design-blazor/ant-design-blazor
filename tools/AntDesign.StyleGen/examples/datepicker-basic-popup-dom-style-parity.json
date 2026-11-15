@@ -26,6 +26,7 @@
     {
       "id": "datepicker-basic-popup",
       "component": "DatePicker",
+      "alignRootViewportY": 200,
       "react": {
         "url": "http://127.0.0.1:8000/components/date-picker?theme=light",
         "scopeSelector": "body",
@@ -74,7 +75,7 @@
           "id": "open-basic-picker",
           "minimumRoots": 1,
           "actions": [
-            { "type": "click", "reactSelector": "#date-picker-demo-basic .ant-picker:first-of-type input", "blazorSelector": "#components-datepicker-demo-basic .ant-picker:first-of-type input" },
+            { "type": "click", "coordinateClick": true, "preserveViewport": true, "reactSelector": "#date-picker-demo-basic .ant-picker:first-of-type input", "blazorSelector": "#components-datepicker-demo-basic .ant-picker:first-of-type input" },
             {
               "type": "waitForPortal",
               "reactTriggerSelector": "#date-picker-demo-basic .ant-picker:first-of-type",
@@ -86,6 +87,26 @@
           ]
         }
       ]
+    },
+    {
+      "id": "datepicker-basic-flex",
+      "component": "DatePicker",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/date-picker?theme=light",
+        "scopeSelector": "body",
+        "rootSelector": "#date-picker-demo-basic .ant-flex:has(> .ant-picker)",
+        "skeletonSelector": ""
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/datepicker?theme=light",
+        "scopeSelector": "body",
+        "rootSelector": "#components-datepicker-demo-basic .ant-flex:has(> .ant-picker)",
+        "skeletonSelector": ""
+      },
+      "styleProperties": ["display", "flexDirection", "alignItems", "justifyContent", "gap", "width", "height"],
+      "semanticNodes": [{ "path": "demo.flex", "selector": "$root", "minimumCount": 1 }],
+      "scenarios": [{ "id": "basic-demo-layout", "minimumRoots": 1 }],
+      "geometryTolerancePx": 0.05
     }
   ]
 }

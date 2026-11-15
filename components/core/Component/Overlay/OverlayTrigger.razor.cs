@@ -5,6 +5,7 @@
 using System;
 using System.Linq;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using AntDesign.Core.Helpers;
 using AntDesign.JsInterop;
@@ -24,7 +25,27 @@ namespace AntDesign.Internal
         internal virtual bool IsTriggerWrappedInDiv => Unbound is null;
 
         [CascadingParameter(Name = "PrefixCls")]
+        [Parameter]
         public string PrefixCls { get; set; } = "ant-dropdown";
+
+        /// <summary>CSS transition class prefix for the popup motion.</summary>
+        [Parameter]
+        public string TransitionName { get; set; }
+
+        /// <summary>
+        /// Optional animation class configuration for the overlay. When omitted,
+        /// the placement-aware default slide animation is used.
+        /// </summary>
+        [Parameter]
+        public OverlayAnimationOptions OverlayAnimation { get; set; }
+
+        /// <summary>Delay in seconds before opening on hover.</summary>
+        [Parameter]
+        public double MouseEnterDelay { get; set; }
+
+        /// <summary>Delay in seconds before closing after hover ends.</summary>
+        [Parameter]
+        public double MouseLeaveDelay { get; set; }
 
         private string _popupContainerSelectorFromCascade = "";
 
@@ -78,11 +99,18 @@ namespace AntDesign.Internal
         [Parameter]
         public bool HiddenMode { get; set; } = false;
 
+        /// <summary>
+        /// Whether the popup content is removed from the DOM after it closes.
+        /// </summary>
+        [Parameter]
+        public bool DestroyOnHidden { get; set; }
+
         /// <summary>Use the popup's CSS token for its stacking level.</summary>
         [Parameter] public bool UseCssZIndex { get; set; }
 
         /// <summary>Display mode forwarded to Overlay; hidden popups remain hidden.</summary>
         [Parameter] public string OverlayDisplayStyle { get; set; }
+
 
         /// <summary>
         /// (not used in Unbound) Sets wrapping div style to `display: inline-flex;`.
@@ -158,13 +186,6 @@ namespace AntDesign.Internal
         public string OverlayEnterCls { get; set; }
 
         /// <summary>
-        /// CSS classes for the enter and leave animations. Factories receive the current
-        /// adjusted placement, allowing classes to change when the overlay flips.
-        /// </summary>
-        [Parameter]
-        public OverlayAnimationOptions OverlayAnimation { get; set; }
-
-        /// <summary>
         /// Css class added to overlay when overlay is hidden.
         /// </summary>
         [Parameter]
@@ -200,7 +221,8 @@ namespace AntDesign.Internal
         /// <summary>
         /// Width strategy used before an overlay becomes visible. Defaults to
         /// matching the trigger; set to <c>content</c> to size to the content
-        /// while keeping at least the trigger width, or <c>custom</c> to use
+        /// while keeping at least the trigger width, <c>content-only</c> to
+        /// size to content without a trigger-width minimum, or <c>custom</c> to use
         /// <see cref="PopupWidth"/>.
         /// </summary>
         [Parameter]
@@ -270,6 +292,19 @@ namespace AntDesign.Internal
         public string PopupContainerSelector { get; set; } = "body";
 
         /// <summary>
+        /// Select the popup container from the trigger element, matching React's
+        /// getPopupContainer callback. Use PopupContainerSelector when a CSS
+        /// selector is more convenient.
+        /// </summary>
+        [Parameter]
+        public Func<ElementReference, ElementReference> GetPopupContainer { get; set; }
+
+        private ElementReference? _popupContainerElement;
+        internal object EffectivePopupContainer => _popupContainerElement.HasValue
+            ? _popupContainerElement.Value
+            : PopupContainerSelector;
+
+        /// <summary>
         /// Trigger mode. Could be multiple by passing an array.
         /// </summary>
         /// <default value="TriggerType.Hover" />
@@ -315,8 +350,25 @@ namespace AntDesign.Internal
         /// Toggles overlay viability.
         /// </summary>
         /// <default value="false" />
+        private bool _visible;
+
         [Parameter]
-        public bool Visible { get; set; } = false;
+        public bool Visible
+        {
+            get => _visible;
+            set => _visible = value;
+        }
+
+        /// <summary>
+        /// Whether the overlay is open. This is the canonical state parameter;
+        /// <see cref="Visible"/> remains available for compatibility.
+        /// </summary>
+        [Parameter]
+        public bool Open
+        {
+            get => _visible;
+            set => _visible = value;
+        }
 
         /// <summary>
         /// Callback when visibility is changed.
@@ -324,17 +376,32 @@ namespace AntDesign.Internal
         [Parameter]
         public EventCallback<bool> VisibleChanged { get; set; }
 
+        /// <summary>
+        /// Callback invoked when <see cref="Open"/> changes.
+        /// </summary>
+        [Parameter]
+        public EventCallback<bool> OpenChanged { get; set; }
+
+        /// <summary>
+        /// Callback invoked when the overlay open state changes.
+        /// </summary>
+        [Parameter]
+        public EventCallback<bool> OnOpenChange { get; set; }
+
+        internal bool HasVisibilityChangeCallback => VisibleChanged.HasDelegate || OpenChanged.HasDelegate || OnOpenChange.HasDelegate || OnVisibleChange.HasDelegate;
+
         [Inject]
         protected IDomEventListener DomEventListener { get; set; }
 
         private bool _mouseInTrigger = false;
         private bool _mouseInOverlay = false;
-        private bool _mouseUpInOverlay = false;
         private int _overlayMouseEnterCount = 0;
 
         protected Overlay _overlay = null;
         private TriggerType[] _trigger = [TriggerType.Hover];
         private bool _shouldRender = true;
+        private CancellationTokenSource _mouseEnterDelayCancellation;
+        private CancellationTokenSource _mouseLeaveDelayCancellation;
 
         internal void SetShouldRender(bool shouldRender) => _shouldRender = shouldRender;
 
@@ -374,6 +441,11 @@ namespace AntDesign.Internal
             if (firstRender)
             {
                 DomEventListener.AddShared<JsonElement>("document", "mouseup", OnMouseUp);
+                // Some input paths (touch and synthetic activation in
+                // particular) do not produce a document mouseup. The click
+                // listener covers those while the bounds checks below keep
+                // clicks inside the trigger or popup from dismissing it.
+                DomEventListener.AddShared<JsonElement>("document", "click", OnMouseUp);
             }
 
             base.OnAfterRender(firstRender);
@@ -387,7 +459,13 @@ namespace AntDesign.Internal
 
                 if (isUnbound)
                 {
-                    Ref = RefBack.Current;
+                    // A component can supply a more precise anchor than the
+                    // element rendered by its Unbound fragment. Keep that
+                    // explicit reference; otherwise use the Unbound element.
+                    if (Ref.Id is null)
+                    {
+                        Ref = RefBack.Current;
+                    }
 
                     DomEventListener.AddExclusive<JsonElement>(Ref, "click", OnUnboundClick, ignoreSelector: ClickIgnoreSelector);
                     DomEventListener.AddExclusive<JsonElement>(Ref, "mouseover", OnUnboundMouseEnter);
@@ -421,6 +499,16 @@ namespace AntDesign.Internal
             }
 
             await base.OnAfterRenderAsync(firstRender);
+
+            if (firstRender && GetPopupContainer != null)
+            {
+                var container = GetPopupContainer(Ref);
+                if (container.Id != null)
+                {
+                    _popupContainerElement = container;
+                    StateHasChanged();
+                }
+            }
         }
 
         protected Task OnUnboundMouseEnter(JsonElement jsonElement) => OnTriggerMouseEnter();
@@ -446,6 +534,8 @@ namespace AntDesign.Internal
 
         protected override void Dispose(bool disposing)
         {
+            CancelMouseDelay(ref _mouseEnterDelayCancellation);
+            CancelMouseDelay(ref _mouseLeaveDelayCancellation);
             DomEventListener?.Dispose();
 
             base.Dispose(disposing);
@@ -454,10 +544,11 @@ namespace AntDesign.Internal
         protected virtual async Task OnTriggerMouseEnter()
         {
             _mouseInTrigger = true;
+            CancelMouseDelay(ref _mouseLeaveDelayCancellation);
 
             if (_overlay != null && IsContainTrigger(TriggerType.Hover))
             {
-                await Show();
+                await ShowAfterMouseDelay();
             }
             else
             {
@@ -471,10 +562,11 @@ namespace AntDesign.Internal
         protected virtual async Task OnTriggerMouseLeave()
         {
             _mouseInTrigger = false;
+            CancelMouseDelay(ref _mouseEnterDelayCancellation);
 
             if (_overlay != null && IsContainTrigger(TriggerType.Hover) && IsOverlayShow())
             {
-                await Hide();
+                await HideAfterMouseDelay();
             }
             else
             {
@@ -507,6 +599,7 @@ namespace AntDesign.Internal
 
         protected virtual void OnOverlayMouseEnter()
         {
+            CancelMouseDelay(ref _mouseLeaveDelayCancellation);
             _overlayMouseEnterCount++;
             _mouseInOverlay = true;
 
@@ -535,13 +628,62 @@ namespace AntDesign.Internal
             if (_overlay != null && IsContainTrigger(TriggerType.Hover))
             {
                 _overlay.SetMouseInOverlay(_mouseInTrigger);
-                await Hide();
+                await HideAfterMouseDelay();
             }
         }
 
         protected virtual void OnOverlayMouseUp()
         {
-            _mouseUpInOverlay = true;
+            // The popup stops mouseup propagation, so a document listener cannot
+            // consume a corresponding marker. Outside clicks are checked by bounds.
+        }
+
+        private async Task ShowAfterMouseDelay()
+        {
+            CancelMouseDelay(ref _mouseEnterDelayCancellation);
+            if (MouseEnterDelay > 0)
+            {
+                var cancellation = new CancellationTokenSource();
+                _mouseEnterDelayCancellation = cancellation;
+                try
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(MouseEnterDelay), cancellation.Token);
+                }
+                catch (OperationCanceledException)
+                {
+                    return;
+                }
+                if (cancellation.IsCancellationRequested || !_mouseInTrigger) return;
+            }
+            await Show();
+        }
+
+        private async Task HideAfterMouseDelay()
+        {
+            CancelMouseDelay(ref _mouseLeaveDelayCancellation);
+            if (MouseLeaveDelay > 0)
+            {
+                var cancellation = new CancellationTokenSource();
+                _mouseLeaveDelayCancellation = cancellation;
+                try
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(MouseLeaveDelay), cancellation.Token);
+                }
+                catch (OperationCanceledException)
+                {
+                    return;
+                }
+                if (cancellation.IsCancellationRequested || _mouseInTrigger || _mouseInOverlay) return;
+            }
+            await Hide();
+        }
+
+        private static void CancelMouseDelay(ref CancellationTokenSource cancellation)
+        {
+            if (cancellation == null) return;
+            cancellation.Cancel();
+            cancellation.Dispose();
+            cancellation = null;
         }
 
         /// <summary>
@@ -611,21 +753,38 @@ namespace AntDesign.Internal
         /// on document mouse up
         /// </summary>
         /// <param name="element"></param>
-        protected virtual void OnMouseUp(JsonElement element)
+        protected virtual async Task OnMouseUp(JsonElement element)
         {
-            if (_mouseUpInOverlay)
-            {
-                _mouseUpInOverlay = false;
-                return;
-            }
-
             if (!IsOverlayShow())
             {
                 return;
             }
 
-            if (_mouseInTrigger == false)
+            // Click-triggered overlays (including Select) must close on an
+            // outside pointer release even if the asynchronous mouseenter /
+            // mouseleave callbacks have left _mouseInTrigger stale. Use live
+            // bounds for both the trigger and popup as the source of truth.
+            if (_mouseInTrigger == false || IsContainTrigger(TriggerType.Click))
             {
+                // Document mouseup and the trigger click are dispatched as
+                // separate Blazor Server events. Under latency, the click can
+                // open the popup before this mouseup callback arrives, making
+                // an in-trigger mouseup look like an outside click. Check the
+                // original pointer coordinates against the trigger before
+                // closing; this also keeps click-open overlays stable when the
+                // mouseenter callback arrives later than the click callback.
+                if (element.TryGetProperty("clientX", out var clientX)
+                    && element.TryGetProperty("clientY", out var clientY))
+                {
+                    var pointerX = clientX.GetDouble();
+                    var pointerY = clientY.GetDouble();
+                    if (await IsPointerWithinAsync(Ref, pointerX, pointerY)
+                        || (_overlay != null && await IsPointerWithinAsync(_overlay.Ref, pointerX, pointerY)))
+                    {
+                        return;
+                    }
+                }
+
                 if (OnMaskClick.HasDelegate)
                 {
                     _ = OnMaskClick.InvokeAsync(null);
@@ -633,6 +792,24 @@ namespace AntDesign.Internal
                 _overlay?.PreventHide(false);
                 _ = Hide();
             }
+        }
+
+        private async Task<bool> IsPointerWithinAsync(ElementReference element, double x, double y)
+        {
+            if (element.Id == null)
+            {
+                return false;
+            }
+
+            var rect = await Js.InvokeAsync<JsonElement>(JSInteropConstants.GetBoundingClientRect, element);
+            return rect.TryGetProperty("left", out var left)
+                && rect.TryGetProperty("right", out var right)
+                && rect.TryGetProperty("top", out var top)
+                && rect.TryGetProperty("bottom", out var bottom)
+                && x >= left.GetDouble()
+                && x <= right.GetDouble()
+                && y >= top.GetDouble()
+                && y <= bottom.GetDouble();
         }
 
         protected virtual bool IsContainTrigger(TriggerType triggerType)
@@ -672,15 +849,20 @@ namespace AntDesign.Internal
 
         internal virtual string GetOverlayEnterClass()
         {
+            var configuredEnterClass = OverlayAnimation?.GetEnterClass(_actualPlacement.Placement);
+            if (!string.IsNullOrWhiteSpace(configuredEnterClass))
+            {
+                return configuredEnterClass;
+            }
+
             if (!string.IsNullOrEmpty(OverlayEnterCls))
             {
                 return OverlayEnterCls;
             }
-            var animationOptions = OverlayAnimation ?? DefaultOverlayAnimation;
-            var animationClasses = animationOptions.GetEnterClass(_actualPlacement.Placement);
-            return !string.IsNullOrEmpty(animationClasses)
-                ? animationClasses
-                : DefaultOverlayAnimation.GetEnterClass(_actualPlacement.Placement);
+            var transitionName = string.IsNullOrWhiteSpace(TransitionName)
+                ? $"ant-slide-{_actualPlacement.SlideName}"
+                : TransitionName;
+            return $"{transitionName}-enter {transitionName}-enter-active {transitionName}";
         }
 
         internal virtual string GetOverlayLeaveClass()
@@ -689,20 +871,19 @@ namespace AntDesign.Internal
             {
                 return OverlayLeaveCls;
             }
-            var animationOptions = OverlayAnimation ?? DefaultOverlayAnimation;
-            var animationClasses = animationOptions.GetLeaveClass(_actualPlacement.Placement);
-            if (!string.IsNullOrEmpty(animationClasses))
-            {
-                return animationClasses;
-            }
-            return DefaultOverlayAnimation.GetLeaveClass(_actualPlacement.Placement);
-        }
 
-        private static readonly OverlayAnimationOptions DefaultOverlayAnimation = new OverlayAnimationOptions
-        {
-            Animation = "slide",
-            DirectionFactory = placement => PlacementType.Create(placement).SlideName
-        };
+            var configuredLeaveClass = OverlayAnimation?.GetLeaveClass(_actualPlacement.Placement);
+            if (!string.IsNullOrWhiteSpace(configuredLeaveClass))
+            {
+                return configuredLeaveClass;
+            }
+
+            var leavePlacement = _actualPlacement.GetReverseType();
+            var transitionName = string.IsNullOrWhiteSpace(TransitionName)
+                ? $"ant-slide-{leavePlacement.SlideName}"
+                : TransitionName;
+            return $"{transitionName}-leave {transitionName}-leave-active {transitionName}";
+        }
 
         internal virtual string GetOverlayHiddenClass()
         {
@@ -768,6 +949,6 @@ namespace AntDesign.Internal
         /// Toggle overlay visibility.
         /// </summary>
         /// <param name="visible">boolean: visibility true/false</param>
-        internal void SetVisible(bool visible) => Visible = visible;
+        internal void SetVisible(bool visible) => _visible = visible;
     }
 }

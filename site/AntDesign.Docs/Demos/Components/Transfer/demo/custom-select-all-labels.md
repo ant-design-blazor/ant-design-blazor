@@ -8,8 +8,8 @@ title:
 
 ## zh-CN
 
-自定义穿梭框全选按钮的文字。
+自定义源和目标面板全选复选框旁的文字。
 
 ## en-US
 
-Custom the labels for select all checkboxs.
+Customize the labels beside the source and target select-all checkboxes.

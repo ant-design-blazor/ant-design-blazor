@@ -22,6 +22,8 @@ namespace AntDesign
 
         internal FormSize Size { get; }
 
+        FormLayout Layout { get; }
+
         internal bool UseLocaleValidateMessage { get; }
 
         internal void AddFormItem(IFormItem formItem);
@@ -50,6 +52,11 @@ namespace AntDesign
         /// The name of the form.
         /// </summary>
         public string Name { get; }
+
+        /// <summary>
+        /// The DOM id of the form, used to associate labels with controls.
+        /// </summary>
+        string Id { get; }
 
         /// <summary>
         /// Get the current EditContext from the Form.

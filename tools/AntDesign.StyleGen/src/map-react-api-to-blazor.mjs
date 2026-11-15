@@ -24,14 +24,23 @@ const aliases = new Map([
 // components.
 const scopedAliases = new Map([
   ['collapse:isActive', 'Active'],
-  ['progress:railColor', 'TrailColor'],
-  ['drawer:open', 'Visible'],
-  ['modal:open', 'Visible'],
-  ['select:onOpenChange', 'OpenChanged'],
   ['alert:title', 'Message'],
   ['alert:isClosable', 'Closable'],
   ['button:href', 'Url'],
   ['form:isRequired', 'Required'],
+]);
+
+// Same-name properties can still expose a different subset or shape. Keep
+// these cases visible in the generated inventory instead of implying that a
+// casing match means full API parity.
+const scopedShapeNotes = new Map([
+  ['select:fetchOptions', 'React fetchOptions owns an asynchronous remote-search lifecycle; Blazor has caller-controlled DataSource and OnSearch but no asynchronous option-fetch contract yet.'],
+  ['dropdown:menu', 'Blazor DropdownMenuOptions supports data-driven items, groups, submenus, selection, activeKey, icons, state, and click callbacks; verify remaining React MenuProps fields separately.'],
+  ['dropdown:getPopupContainer', 'Blazor accepts Func<ElementReference, ElementReference> to select the popup parent; the callback intent matches React, with Blazor DOM-reference types.'],
+  ['dropdown:align', 'React accepts rc-trigger AlignType (points, offset, targetOffset, and overflow); Blazor currently exposes Placement and scalar offsets, so arbitrary alignment objects are not yet represented.'],
+  ['dropdown:autoFocus', 'React focuses the popup menu when opened; Blazor does not yet provide equivalent popup focus management.'],
+  ['button:classNames', 'React classNames accepts an object or a callback; Blazor exposes the object as ClassNames and the callback as ClassNamesFunc receiving the current Button instance.'],
+  ['button:styles', 'React styles accepts an object or a callback; Blazor exposes the object as Styles and the callback as StylesFunc receiving the current Button instance.'],
 ]);
 
 const normalize = value => value.replace(/[^a-z0-9]/gi, '').toLowerCase();
@@ -74,6 +83,7 @@ export function mapReactApiToBlazor(reactApi, blazorApi) {
         blazorType: mapping.parameter?.type ?? null,
         status: blazorComponent ? mapping.status : 'missing-component',
         reason: blazorComponent ? mapping.reason : 'no-blazor-component',
+        shapeNote: scopedShapeNotes.get(`${normalize(row.component)}:${property.name}`) ?? null,
       };
     });
     return {
@@ -93,6 +103,7 @@ export function mapReactApiToBlazor(reactApi, blazorApi) {
     missingComponents: components.filter(component => component.status === 'missing-component').length,
     exact: allProps.filter(property => property.status === 'exact').length,
     alias: allProps.filter(property => property.status === 'alias').length,
+    shapeDifferences: allProps.filter(property => property.shapeNote).length,
     missing: allProps.filter(property => property.status === 'missing' || property.status === 'missing-component').length,
     callbacks: allProps.filter(property => property.kind === 'callback').length,
   };
@@ -109,6 +120,7 @@ if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(new URL(im
     summary: result.summary,
     aliases: Object.fromEntries(aliases),
     scopedAliases: Object.fromEntries(scopedAliases),
+    scopedShapeNotes: Object.fromEntries(scopedShapeNotes),
     components: result.components,
   };
 

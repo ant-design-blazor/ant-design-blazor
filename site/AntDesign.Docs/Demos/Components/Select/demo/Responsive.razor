@@ -1,22 +1,22 @@
 @using AntDesign.Select
 
 <Space Direction="SpaceDirection.Vertical" Style="width: 100%;">
-    <Select TItemValue="string" TItem="string" Mode="SelectMode.Multiple"
+    <SpaceItem><Select TItemValue="string" TItem="string" Mode="SelectMode.Multiple"
             Style="width: 100%;" Placeholder="Select Item..." MaxTagCount="ResponsiveTag.Responsive"
             DataSource="@_options" ItemValue="value => value" ItemLabel="value => FormatLabel(value)"
             @bind-Values="@_selectedValues">
-    </Select>
-    <Select TItemValue="string" TItem="string" Mode="SelectMode.Multiple"
+    </Select></SpaceItem>
+    <SpaceItem><Select TItemValue="string" TItem="string" Mode="SelectMode.Multiple"
             Style="width: 100%;" Placeholder="Select Item..." MaxTagCount="ResponsiveTag.Responsive"
             DataSource="@_options" ItemValue="value => value" ItemLabel="value => FormatLabel(value)"
             Disabled>
-    </Select>
-    <Select TItemValue="string" TItem="string" Mode="SelectMode.Multiple"
+    </Select></SpaceItem>
+    <SpaceItem><Select TItemValue="string" TItem="string" Mode="SelectMode.Multiple"
             Style="width: 100%;" Placeholder="Select Item..." MaxTagCount="ResponsiveTag.Responsive"
             DataSource="@_options" ItemValue="value => value" ItemLabel="value => FormatLabel(value)"
             MaxTagPlaceholder="@RenderMaxTagPlaceholder"
             @bind-Values="@_selectedValues">
-    </Select>
+    </Select></SpaceItem>
 </Space>
 
 @code {
@@ -29,14 +29,19 @@
     {
         builder.OpenComponent<Tooltip>(0);
         builder.AddAttribute(1, "Title", string.Join(", ", omittedValues.Select(FormatLabel)));
-        builder.AddAttribute(2, "ChildContent", (RenderFragment)(childBuilder =>
+        builder.AddAttribute(2, "Styles", _tooltipStyles);
+        builder.AddAttribute(3, "Unbound", (RenderFragment<ForwardRef>)(forwardRef => childBuilder =>
         {
             childBuilder.OpenElement(0, "span");
-            childBuilder.AddContent(1, "Hover Me");
+            childBuilder.AddElementReferenceCapture(1, forwardRef.Set);
+            childBuilder.AddContent(2, "Hover Me");
             childBuilder.CloseElement();
         }));
         builder.CloseComponent();
     };
+
+    private readonly IReadOnlyDictionary<string, string> _tooltipStyles =
+        new Dictionary<string, string> { ["root"] = "pointer-events: none;" };
 
     protected override void OnInitialized()
     {

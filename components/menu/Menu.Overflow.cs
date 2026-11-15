@@ -38,8 +38,9 @@ namespace AntDesign
         internal bool HasSelectedSubmenu(string key) => _selectedKeys.Any(selected =>
             _menuKeyPaths.TryGetValue(selected, out var path) && path.Contains(key));
         internal string OverflowKey => $"{Id}-overflow-indicator";
-        private string OverflowRootStyle => OverflowEnabled
-            ? $"position:relative;min-width:0;display:flex;flex-wrap:nowrap;{Style}" : Style;
+        internal string GetMenuDataId(string key) => $"rc-menu-uuid-{Id}-{(key == OverflowKey ? "rc-menu-more" : key)}";
+        internal string GetSubMenuPopupId(string key) => $"{GetMenuDataId(key)}-popup";
+        private string OverflowRootStyle => Style;
 
         internal void RememberMenuPath(MenuItem item)
         {
@@ -78,11 +79,19 @@ namespace AntDesign
         internal string OverflowItemStyle(string id, string style, bool indicator = false)
         {
             if (!OverflowEnabled) return style;
-            if (indicator || _overflowItems.Any(item => item.Id == id)) style = $"{style};flex:none;";
             var hidden = indicator ? _overflowIds.Count == 0 : _overflowIds.Contains(id);
+            var index = _overflowItems.FindIndex(item => item.Id == id);
+            if (!indicator && index < 0) return style;
+            var order = indicator
+                ? hidden ? int.MaxValue : Math.Max(0, _overflowItems.Count - _overflowIds.Count - 1)
+                : index;
+            var baseStyle = style?.Trim().TrimEnd(';');
+            var visibilityStyle = hidden
+                ? $"opacity:0;height:0px;overflow-y:hidden;order:{order};pointer-events:none;position:absolute;"
+                : $"opacity:1;order:{order};";
             // Keep the real item measurable after it moves into the rest menu.
             // Blazor retains ownership; JavaScript never reparents its DOM.
-            return hidden ? $"{style};position:absolute!important;visibility:hidden!important;pointer-events:none!important;inset-inline-start:0;top:0;" : style;
+            return string.IsNullOrEmpty(baseStyle) ? visibilityStyle : $"{baseStyle};{visibilityStyle}";
         }
 
         /// <summary>Receives the measured overflow keys from the browser.</summary>

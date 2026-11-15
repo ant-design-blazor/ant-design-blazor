@@ -9,11 +9,11 @@
 @if (RootMenu.InternalMode == MenuMode.Inline)
 {
     <li class="@ClassMapper.Class" role="menuitem" @key="Key" style="@($"position:relative;{Style}")" @ref="Ref">
-        <div class="@(prefixCls)-title" style="@PaddingStyle" role="button" aria-label="@(TitleTemplate != null ? Title : null)" @onclick="HandleOnTitleClick" aria-haspopup="true">
+        <div class="@(prefixCls)-title" style="@PaddingStyle" role="button" aria-label="@(TitleTemplate != null ? Title : null)" @onclick="HandleOnTitleClick" aria-haspopup="true" aria-controls="@RootMenu.GetSubMenuPopupId(Key)" aria-disabled="@(Disabled ? "true" : null)" data-menu-id="@RootMenu.GetMenuDataId(Key)">
             @SubMenuTitleContent
             <i class="@(prefixCls)-arrow"></i>
         </div>
-        <ul direction="ltr" class="@SubMenuMapper.Class" style="@_warpperStyle" @ref="@_warpperRef" role="menu" aria-expanded="@IsOpen">
+        <ul id="@RootMenu.GetSubMenuPopupId(Key)" direction="ltr" class="@SubMenuMapper.Class" style="@_warpperStyle" @ref="@_warpperRef" role="menu" aria-expanded="@IsOpen">
             <CascadingValue Value="this" IsFixed="@true">
                 @ChildContent
             </CascadingValue>
@@ -35,14 +35,16 @@ else if (RootMenu.InlineCollapsed || RootMenu.InternalMode == MenuMode.Horizonta
 						    BoundaryAdjustMode="@TriggerBoundaryAdjustMode.InView"
                             Disabled="@(Disabled || OverflowHidden)"
                             Placement="Placement.Value"
+                            PopupWidthMode="content-only"
+                            PopupMaxWidth="calc(100vw - 16px)"
                             OnVisibleChange="OnOverlayVisibleChange"
                             OnOverlayHiding="OnOverlayHiding"
                             Trigger="new Trigger[] { RootMenu?.TriggerSubMenuAction ?? AntDesign.Trigger.Hover }"
                             OverlayClassName="@RootMenu.GetSemanticClass("popup.root", PopupClassName)"
-                            OverlayStyle="@RootMenu.GetSemanticStyle("popup.root", "max-width:calc(100vw - 16px);")"
+                            OverlayStyle="@($"{RootMenu.GetSemanticStyle("popup.root", "max-width:calc(100vw - 16px);")}{(IsOverflowIndicator ? "margin-left:16px;" : string.Empty)}")"
                             PlacementCls="@($"{prefixCls}-popup {RootMenu.PrefixCls} {RootMenu.PrefixCls}-{EffectiveTheme.ToString().ToLowerInvariant()} {prefixCls}-placement-{_placement.Name}")">
                 <ChildContent>
-                    <div class="@(prefixCls)-title" role="button" aria-label="@(TitleTemplate != null ? Title : null)" aria-haspopup="true" aria-expanded="@(_overlayVisible ? "true" : "false")">
+                    <div class="@(prefixCls)-title" role="menuitem" tabindex="@(!(Disabled || OverflowHidden) ? "-1" : null)" aria-label="@(TitleTemplate != null && !IsOverflowIndicator ? Title : null)" aria-haspopup="true" aria-expanded="@(_overlayVisible ? "true" : "false")" aria-controls="@RootMenu.GetSubMenuPopupId(Key)" aria-disabled="@(Disabled || OverflowHidden ? "true" : null)" data-menu-id="@RootMenu.GetMenuDataId(IsOverflowIndicator ? RootMenu.OverflowKey : Key)">
                         @SubMenuTitleContent
                         @GetArrow()
                     </div>
@@ -57,7 +59,7 @@ else if (RootMenu.InlineCollapsed || RootMenu.InternalMode == MenuMode.Horizonta
 
 @code
 {
-    private RenderFragment DefaultPopup => @<ul direction="ltr" class="@SubMenuMapper.Class" style="@($"max-width:100%;{_popupMinWidthStyle}")" role="menu"><CascadingValue Value="this" IsFixed="true">@ChildContent</CascadingValue></ul>;
+    private RenderFragment DefaultPopup => @<ul id="@RootMenu.GetSubMenuPopupId(IsOverflowIndicator ? RootMenu.OverflowKey : Key)" direction="ltr" class="@SubMenuMapper.Class" style="@($"max-width:100%;{_popupMinWidthStyle}")" role="menu"><CascadingValue Value="this" IsFixed="true">@ChildContent</CascadingValue></ul>;
 
     private RenderFragment OverflowContent => @<SubMenu Key="@Key" Title="@Title" TitleTemplate="@TitleTemplate" Icon="@Icon" IconTemplate="@IconTemplate" Disabled="@Disabled" Class="@Class" Style="@Style" Theme="@Theme" PopupRender="@PopupRender" PopupClassName="@PopupClassName" OnTitleClick="@OnTitleClick" IsOpen="@IsOpen" Placement="AntDesign.Placement.RightTop">@ChildContent</SubMenu>;
 
@@ -67,12 +69,18 @@ else if (RootMenu.InlineCollapsed || RootMenu.InternalMode == MenuMode.Horizonta
 
     private RenderFragment SubMenuTitleContent => builder =>
     {
+        if (IsOverflowIndicator && TitleTemplate != null)
+        {
+            builder.AddContent(0, TitleTemplate);
+            return;
+        }
+
         if (IconTemplate != null)
         {
             builder.OpenElement(0, "span");
             builder.AddAttribute(1, "role", "img");
             builder.AddAttribute(2, "class", $"anticon anticon-container {SubMenuIconClass}");
-            builder.AddAttribute(3, "style", SubMenuIconStyle);
+            if (!string.IsNullOrWhiteSpace(SubMenuIconStyle)) builder.AddAttribute(3, "style", SubMenuIconStyle);
             builder.AddContent(4, IconTemplate);
             builder.CloseElement();
         }
@@ -81,7 +89,7 @@ else if (RootMenu.InlineCollapsed || RootMenu.InternalMode == MenuMode.Horizonta
             builder.OpenComponent<AntDesign.Icon>(5);
             builder.AddAttribute(6, "Type", Icon);
             builder.AddAttribute(7, "Class", SubMenuIconClass);
-            builder.AddAttribute(8, "Style", SubMenuIconStyle);
+            if (!string.IsNullOrWhiteSpace(SubMenuIconStyle)) builder.AddAttribute(8, "Style", SubMenuIconStyle);
             builder.CloseComponent();
         }
 
@@ -111,7 +119,7 @@ else if (RootMenu.InlineCollapsed || RootMenu.InternalMode == MenuMode.Horizonta
                 </span>
             </span>;
         }
-        else if (Parent is AntDesign.SubMenu || RootMenu.Mode == MenuMode.Vertical)
+        else if (Parent is AntDesign.SubMenu || RootMenu.InternalMode != MenuMode.Inline)
         {
             return @<i class="@(prefixCls)-arrow"></i>;
         }

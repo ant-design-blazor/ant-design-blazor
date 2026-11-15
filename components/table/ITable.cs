@@ -6,11 +6,18 @@ using System.Collections.Generic;
 using AntDesign.Filters;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
+using OneOf;
 
 namespace AntDesign
 {
     public interface ITable
     {
+        string GetSemanticClass(string slot, string baseClass = null);
+
+        string GetSemanticStyle(string slot, string baseStyle = null);
+
+        internal TableColumnDefaults Column { get; }
+
         void ReloadData();
 
         void ReloadData(int? pageIndex, int? pageSize = null);
@@ -39,6 +46,8 @@ namespace AntDesign
 
         internal bool TreeMode { get; }
 
+        internal bool Responsive { get; }
+
         internal int IndentSize { get; }
 
         internal string ScrollX { get; }
@@ -54,6 +63,8 @@ namespace AntDesign
         internal bool HasExpandTemplate { get; }
 
         internal SortDirection[] SortDirections { get; }
+
+        internal OneOf<bool, TableSorterTooltipOptions> ShowSorterTooltip { get; }
 
         internal void SetSelection(ISelectionColumn selectItem);
 
@@ -100,6 +111,10 @@ namespace AntDesign
         internal bool AutoColIndexes { get; }
 
         internal bool IsSticky { get; }
+
+        internal bool IsVirtual { get; }
+
+        internal string VirtualWidth { get; }
 
         internal bool ServerSide { get; }
     }

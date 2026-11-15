@@ -1,54 +1,115 @@
 ﻿@using System.Text.Json
+@using System.Text.Json.Serialization
 
-<Form Model="@_model" LabelColSpan="6" WrapperColSpan="18" Style="max-width:600px;">
-    @for (var i = 0; i < _model.Items.Count; i++)
-    {
-        var itemIndex = i;
-        var item = _model.Items[itemIndex];
-        <Card Size="CardSize.Small" Title="@($"Item {itemIndex + 1}")" @key="item.Id" Style="margin-bottom:16px;">
-            <FormItem Label="Name">
-                <Input @bind-Value="item.Name" />
-            </FormItem>
-            <FormItem Label="List">
-                @for (var j = 0; j < item.Children.Count; j++)
-                {
-                    var childIndex = j;
-                    var child = item.Children[childIndex];
-                    <div @key="child.Id" style="display:flex; gap:8px; margin-bottom:8px;">
-                        <FormItem NoStyle><Input @bind-Value="child.First" Placeholder="first" /></FormItem>
-                        <FormItem NoStyle><Input @bind-Value="child.Second" Placeholder="second" /></FormItem>
-                        <Button Type="ButtonType.Text" AriaLabel="Remove sub item" OnClick="@(() => RemoveChild(itemIndex, childIndex))">×</Button>
-                    </div>
-                }
-                <Button Type="ButtonType.Dashed" Block OnClick="@(() => AddChild(itemIndex))">＋ Add Sub Item</Button>
-            </FormItem>
-            <Button Type="ButtonType.Text" AriaLabel="Remove item" OnClick="@(() => RemoveItem(itemIndex))">Remove item</Button>
-        </Card>
-    }
-    <Button Type="ButtonType.Dashed" Block OnClick="AddItem">＋ Add Item</Button>
-    <Typography><pre>@JsonSerializer.Serialize(_model, _jsonOptions)</pre></Typography>
+<Form Model="@_model" LabelColSpan="6" WrapperColSpan="18" Id="dynamic_form_complex" Style="max-width: 600px;" Autocomplete="off">
+    <div style="display: flex; row-gap: 16px; flex-direction: column;">
+        @for (var i = 0; i < _model.Items.Count; i++)
+        {
+            var itemIndex = i;
+            var item = _model.Items[itemIndex];
+            var nameFieldId = GetFieldId(itemIndex, "name");
+            <Card Size="CardSize.Small" Title="@($"Item {itemIndex + 1}")" @key="item.Id">
+                <Extra>
+                    <Icon Type="@IconType.Outline.Close" @onclick="@(() => RemoveItem(itemIndex))" />
+                </Extra>
+                <ChildContent>
+                    <FormItem>
+                        <LabelTemplate><label for="@nameFieldId" title="Name">Name</label></LabelTemplate>
+                        <ChildContent><Input TValue="string" Id="@nameFieldId" Value="@item.Name" OnInput="@(args => item.Name = args.Value?.ToString())" /></ChildContent>
+                    </FormItem>
+                    <FormItem Label="List">
+                        <div style="display: flex; flex-direction: column; row-gap: 16px;">
+                            @for (var j = 0; j < item.Children.Count; j++)
+                            {
+                                var childIndex = j;
+                                var child = item.Children[childIndex];
+                                var firstFieldId = GetFieldId(itemIndex, $"list_{childIndex}_first");
+                                var secondFieldId = GetFieldId(itemIndex, $"list_{childIndex}_second");
+                                <Space @key="child.Id">
+                                    <SpaceItem><Input TValue="string" Id="@firstFieldId" Value="@child.First" OnInput="@(args => child.First = args.Value?.ToString())" Placeholder="first" /></SpaceItem>
+                                    <SpaceItem><Input TValue="string" Id="@secondFieldId" Value="@child.Second" OnInput="@(args => child.Second = args.Value?.ToString())" Placeholder="second" /></SpaceItem>
+                                    <SpaceItem><Icon Type="@IconType.Outline.Close" @onclick="@(() => RemoveChild(itemIndex, childIndex))" /></SpaceItem>
+                                </Space>
+                            }
+                            <Button Type="ButtonType.Dashed" OnClick="@(() => AddChild(itemIndex))" Block>+ Add Sub Item</Button>
+                        </div>
+                    </FormItem>
+                </ChildContent>
+            </Card>
+        }
+        <Button Type="ButtonType.Dashed" OnClick="AddItem" Block>+ Add Item</Button>
+    </div>
+
+    <Typography><pre>@JsonSerializer.Serialize(GetFormValues(), _jsonOptions)</pre></Typography>
 </Form>
 
 @code {
     private readonly ComplexListModel _model = new();
-    private static readonly JsonSerializerOptions _jsonOptions = new() { WriteIndented = true };
+    private static readonly JsonSerializerOptions _jsonOptions = new()
+    {
+        WriteIndented = true,
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+    };
+
+    private static string GetFieldId(int itemIndex, string fieldPath) => $"dynamic_form_complex_items_{itemIndex}_{fieldPath}";
+
+    private object GetFormValues()
+    {
+        var values = new List<object>();
+        for (var i = 0; i < _model.Items.Count; i++)
+        {
+            var item = _model.Items[i];
+            var hasName = !string.IsNullOrWhiteSpace(item.Name);
+            var children = item.Children
+                .Where(child => !string.IsNullOrWhiteSpace(child.First) || !string.IsNullOrWhiteSpace(child.Second))
+                .Select(child => new
+                {
+                    first = string.IsNullOrWhiteSpace(child.First) ? null : child.First,
+                    second = string.IsNullOrWhiteSpace(child.Second) ? null : child.Second
+                })
+                .ToArray();
+            var hasValues = i == 0 || hasName || children.Length > 0;
+            if (hasValues)
+            {
+                values.Add(new
+                {
+                    name = hasName ? item.Name : null,
+                    list = i == 0 || hasName || children.Length > 0 ? children : null
+                });
+            }
+        }
+
+        return new { items = values };
+    }
 
     private void AddItem() => _model.Items.Add(new ComplexItem());
     private void RemoveItem(int index) => _model.Items.RemoveAt(index);
     private void AddChild(int index) => _model.Items[index].Children.Add(new ComplexChild());
     private void RemoveChild(int itemIndex, int childIndex) => _model.Items[itemIndex].Children.RemoveAt(childIndex);
 
-    private sealed class ComplexListModel { public List<ComplexItem> Items { get; } = [new()]; }
+    private sealed class ComplexListModel
+    {
+        [JsonPropertyName("items")]
+        public List<ComplexItem> Items { get; } = [new()];
+    }
+
     private sealed class ComplexItem
     {
+        [JsonIgnore]
         public Guid Id { get; } = Guid.NewGuid();
-        public string Name { get; set; } = string.Empty;
-        public List<ComplexChild> Children { get; } = [new()];
+        public string Name { get; set; }
+        [JsonPropertyName("list")]
+        public List<ComplexChild> Children { get; } = [];
     }
+
     private sealed class ComplexChild
     {
+        [JsonIgnore]
         public Guid Id { get; } = Guid.NewGuid();
-        public string First { get; set; } = string.Empty;
-        public string Second { get; set; } = string.Empty;
+        [JsonPropertyName("first")]
+        public string First { get; set; }
+        [JsonPropertyName("second")]
+        public string Second { get; set; }
     }
 }

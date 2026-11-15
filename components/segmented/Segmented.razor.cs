@@ -151,6 +151,22 @@ namespace AntDesign
         [Parameter]
         public bool Block { get; set; }
 
+        /// <summary>Accessible name for the segmented control.</summary>
+        [Parameter]
+        public string AriaLabel { get; set; }
+
+        /// <summary>Accessible orientation for the segmented control.</summary>
+        [Parameter]
+        public string AriaOrientation { get; set; }
+
+        /// <summary>ARIA role for the segmented control root.</summary>
+        [Parameter]
+        public string Role { get; set; }
+
+        /// <summary>Tab order for the segmented control root.</summary>
+        [Parameter]
+        public int? TabIndex { get; set; }
+
         private IList<SegmentedItem<TValue>> _items = new List<SegmentedItem<TValue>>();
         private Dictionary<string, HtmlElement> _itemRefs;
 
@@ -161,6 +177,8 @@ namespace AntDesign
         private string _slidingStyle;
 
         private int _activeIndex;
+
+        internal string InputName { get; private set; }
 
         private List<TValue> _optionValues = new List<TValue>();
         private IEnumerable<SegmentedOption<TValue>> _options;
@@ -178,6 +196,8 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
+
+            InputName = $"ant-segmented-{Guid.NewGuid():N}";
 
             ClassMapper.Add(PrefixCls)
                 .If($"{PrefixCls}-lg", () => Size == SegmentedSize.Large)

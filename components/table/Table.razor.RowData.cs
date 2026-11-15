@@ -79,6 +79,7 @@ namespace AntDesign
                 groupRowData = new RowData<TItem>()
                 {
                     Key = grouping.Key.ToString(),
+                    DataKey = grouping.Key.ToString(),
                     IsGrouping = true,
                     RowIndex = rowIndex,
                     Level = level,
@@ -129,6 +130,7 @@ namespace AntDesign
                 currentRowData = new RowData<TItem>(currentDataItem)
                 {
                     Key = dataHashCode.ToString(),
+                    DataKey = RowKey?.Invoke(data)?.ToString() ?? dataHashCode.ToString(),
                     Expanded = DefaultExpandAllRows && level < DefaultExpandMaxLevel
                 };
                 rowCache.Add(dataHashCode, currentRowData);
@@ -137,6 +139,7 @@ namespace AntDesign
             currentRowData.Level = level;
             currentRowData.RowIndex = rowIndex;
             currentRowData.PageIndex = PageIndex;
+            currentRowData.DataKey = RowKey?.Invoke(data)?.ToString() ?? dataHashCode.ToString();
 
             if (currentDataItem.HasChildren && (level < DefaultExpandMaxLevel || currentRowData.Expanded))
             {

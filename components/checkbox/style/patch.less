@@ -1,60 +1,143 @@
 @import '../../style/mixins/index';
 
 @checkbox-prefix-cls: ~'@{ant-prefix}-checkbox';
-@checkbox-inner-prefix-cls: ~'@{checkbox-prefix-cls}-inner';
+@checkbox-wrapper-prefix-cls: ~'@{checkbox-prefix-cls}-wrapper';
 
-.ant-checkbox + span {
-    &:empty {
-        display: none;
-    }
+// Ant Design v6 draws the checkbox on the checkbox span itself. Keep the
+// checked, indeterminate, focus and disabled states on that same semantic node.
+.@{checkbox-wrapper-prefix-cls} {
+  display: inline-flex;
+  align-items: baseline;
+  cursor: pointer;
+
+  &.@{checkbox-wrapper-prefix-cls}-disabled {
+    cursor: not-allowed;
+  }
 }
 
-.@{checkbox-prefix-cls}-checked {
-    .@{checkbox-inner-prefix-cls} {
-        background-color: @checkbox-check-bg;
-        border-color:  @border-color-base;
+.@{checkbox-prefix-cls} {
+  position: relative;
+  top: auto;
+  display: block;
+  align-self: center;
+  box-sizing: border-box;
+  flex: none;
+  width: @checkbox-size;
+  height: @checkbox-size;
+  direction: ltr;
+  line-height: 1;
+  white-space: nowrap;
+  background-color: @component-background;
+  border: @border-width-base @border-style-base @border-color-base;
+  border-radius: @border-radius-sm;
+  border-collapse: separate;
+  cursor: pointer;
+  transition: all 0.3s;
+
+  &::after {
+    position: absolute;
+    top: calc(@checkbox-size / 2 - @border-width-base);
+    inset-inline-start: calc(@checkbox-size / 4 - @border-width-base);
+    display: table;
+    width: calc(@checkbox-size / 14 * 5);
+    height: calc(@checkbox-size / 14 * 8);
+    border: 2px solid @checkbox-check-color;
+    border-top: 0;
+    border-inline-start: 0;
+    border-radius: 0;
+    transform: rotate(45deg) scale(0) translate(-50%, -50%);
+    opacity: 0;
+    transition: all 0.1s @ease-in-back, opacity 0.1s;
+    content: '';
+  }
+
+  .@{checkbox-prefix-cls}-input {
+    position: absolute;
+    inset: calc(-1 * @border-width-base);
+    z-index: 1;
+    width: auto;
+    height: auto;
+    margin: 0;
+    cursor: pointer;
+    opacity: 0;
+  }
+
+  &:has(.@{checkbox-prefix-cls}-input:focus-visible) {
+    outline: 4px solid fade(@primary-color, 20%);
+    outline-offset: 1px;
+  }
+
+  & + span {
+    padding-inline-start: @padding-xs;
+    padding-inline-end: @padding-xs;
+  }
+
+  &.@{checkbox-prefix-cls}-checked {
+    background-color: @checkbox-color;
+    border-color: @checkbox-color;
+
+    &::after {
+      transform: rotate(45deg) scale(1) translate(-50%, -50%);
+      opacity: 1;
+      transition: all 0.2s @ease-out-back 0.1s;
     }
+  }
+
+  &.@{checkbox-prefix-cls}-indeterminate {
+    background-color: @component-background;
+    border-color: @border-color-base;
+
+    &::after {
+      top: 50%;
+      inset-inline-start: 50%;
+      width: @font-size-lg / 2;
+      height: @font-size-lg / 2;
+      background-color: @checkbox-color;
+      border: 0;
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+      content: '';
+    }
+  }
+
+  &.@{checkbox-prefix-cls}-disabled {
+    &, .@{checkbox-prefix-cls}-input {
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    background-color: @disabled-bg;
+    border-color: @border-color-base;
+
+    &::after {
+      border-color: @disabled-color;
+    }
+
+    & + span {
+      color: @disabled-color;
+    }
+
+    &.@{checkbox-prefix-cls}-indeterminate::after {
+      background-color: @disabled-color;
+    }
+  }
 }
 
-.@{checkbox-prefix-cls}-input:checked + & {
-    .@{checkbox-inner-prefix-cls} {
-        background-color: @checkbox-color;
-        border-color: @checkbox-color;
-    }
+@media (hover: hover) and (pointer: fine) {
+  .@{checkbox-wrapper-prefix-cls}:not(.@{checkbox-wrapper-prefix-cls}-disabled):hover,
+  .@{checkbox-prefix-cls}:not(.@{checkbox-prefix-cls}-disabled):hover {
+    border-color: @checkbox-color;
+  }
 
-    .@{checkbox-inner-prefix-cls}::after {
-        position: absolute;
-        display: table;
-        border: 2px solid @checkbox-check-color;
-        border-top: 0;
-        border-left: 0;
-        transform: rotate(45deg) scale(1) translate(-50%, -50%);
-        opacity: 1;
-        transition: all 0.2s @ease-out-back 0.1s;
-        content: ' ';
-    }
+  .@{checkbox-wrapper-prefix-cls}:not(.@{checkbox-wrapper-prefix-cls}-disabled):hover
+  .@{checkbox-prefix-cls}-checked:not(.@{checkbox-prefix-cls}-disabled) {
+    background-color: @primary-5;
+    border-color: transparent;
+  }
 }
 
-.@{checkbox-prefix-cls}-disabled {
-
-    .@{checkbox-inner-prefix-cls}::after {
-        border-color: @disabled-color !important;
-        animation-name: none;
-    }
-
-    .@{checkbox-inner-prefix-cls} {
-        background-color: @input-disabled-bg !important;
-        border-color: @border-color-base !important;
-
-        &::after {
-            border-color: @input-disabled-bg !important;
-            border-collapse: separate;
-            animation-name: none;
-        }
-    }
-
-    &.@{checkbox-prefix-cls}-checked .@{checkbox-inner-prefix-cls}::after {
-        border-color: @disabled-color !important;
-        animation-name: none;
-    }
+.@{checkbox-prefix-cls}-group {
+  display: inline-flex;
+  flex-wrap: wrap;
+  column-gap: @margin-sm;
 }

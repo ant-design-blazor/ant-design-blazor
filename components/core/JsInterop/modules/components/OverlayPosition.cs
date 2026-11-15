@@ -9,15 +9,22 @@ namespace AntDesign.Core.JsInterop.Modules.Components
     public class OverlayPosition
     {
         public decimal? Top { get; set; }
-        public string TopCss => $"top: " + GetAsString(Top);
+        public string TopCss => UseTop ? $"top: " + GetAsString(Top) : string.Empty;
         public decimal? Bottom { get; set; }
-        public string BottomCss => $"bottom: " + GetAsString(Bottom);
+        public string BottomCss => UseBottom ? $"bottom: " + GetAsString(Bottom) : string.Empty;
         public decimal? Left { get; set; }
-        public string LeftCss => $"left: " + GetAsString(Left);
+        public string LeftCss => UseLeft ? $"left: " + GetAsString(Left) : string.Empty;
         public decimal? Right { get; set; }
-        public string RightCss => $"right: " + GetAsString(Right);
-        public string PositionCss => ZIndexCss + LeftCss + RightCss + TopCss + BottomCss;
-        public string PositionCssWithoutZIndex => LeftCss + RightCss + TopCss + BottomCss;
+        public string RightCss => UseRight ? $"right: " + GetAsString(Right) : string.Empty;
+        public string PositionCss => ZIndexCss + FixedCss + LeftCss + RightCss + TopCss + BottomCss;
+        public string PositionCssWithoutZIndex => FixedCss + LeftCss + RightCss + TopCss + BottomCss;
+
+        public bool PositionFixed { get; set; }
+        private string FixedCss => PositionFixed ? "position:fixed;" : string.Empty;
+        public bool UseTop { get; set; }
+        public bool UseBottom { get; set; }
+        public bool UseLeft { get; set; }
+        public bool UseRight { get; set; }
 
         public int ZIndex { get; set; }
         public string ZIndexCss => $"z-index:{ZIndex};";

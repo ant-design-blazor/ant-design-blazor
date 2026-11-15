@@ -5,6 +5,7 @@
 #if NET5_0_OR_GREATER
 using System.Text.Json.Serialization;
 #endif
+using System.Collections.Generic;
 
 namespace AntDesign
 {
@@ -22,6 +23,11 @@ namespace AntDesign
         /// The value of the filter item
         /// </summary>
         public object Value { get; set; }
+
+        /// <summary>
+        /// Nested filter options rendered as a submenu.
+        /// </summary>
+        public IEnumerable<TableFilter> Children { get; set; }
 
         /// <summary>
         /// Whether the filter item is selected

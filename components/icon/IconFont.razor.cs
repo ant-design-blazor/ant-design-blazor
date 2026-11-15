@@ -27,11 +27,14 @@ namespace AntDesign
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
-            var scripts = ScriptUrl.Match(url => new[] { url }, urls => urls ?? Array.Empty<string>())
-                .Where(url => !string.IsNullOrWhiteSpace(url)).ToArray();
+            var scripts = GetScriptUrls();
             if (_requestedScriptUrls.SequenceEqual(scripts)) return;
             _requestedScriptUrls = scripts;
-            await IconService.CreateFromIconfontCN(scripts);
+            await IconService.CreateFromIconfontCN(scripts, Ref);
         }
+
+        private string[] GetScriptUrls()
+            => ScriptUrl.Match(url => new[] { url }, urls => urls ?? Array.Empty<string>())
+                .Where(url => !string.IsNullOrWhiteSpace(url)).ToArray();
     }
 }

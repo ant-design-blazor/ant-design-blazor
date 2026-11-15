@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Globalization;
+using AntDesign.Extensions.Localization.EmbeddedJson;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 
@@ -14,7 +15,9 @@ namespace AntDesign.Extensions.Localization
     {
         public override void LanguageChanged(object sender, CultureInfo culture)
         {
-            _localizer = factory.Create(typeof(TResourceSource));
+            _localizer = factory is SimpleEmbeddedJsonLocalizerFactory embeddedFactory
+                ? embeddedFactory.Create(typeof(TResourceSource), culture)
+                : factory.Create(typeof(TResourceSource));
         }
     }
 
@@ -56,7 +59,7 @@ namespace AntDesign.Extensions.Localization
 
             if (_localizer == null)
             {
-                LanguageChanged(this, CultureInfo.CurrentCulture);
+                LanguageChanged(this, _localizationService.CurrentCulture);
             }
         }
 
@@ -66,14 +69,19 @@ namespace AntDesign.Extensions.Localization
 
             _languageChanged = (object sender, CultureInfo culture) =>
             {
-                _localizer = _factory.Create(_options.Value.ResourcesPath, _options.Value.ResourcesAssembly.GetName().Name);
+                _localizer = _factory is SimpleEmbeddedJsonLocalizerFactory embeddedFactory
+                    ? embeddedFactory.Create(
+                        _options.Value.ResourcesPath,
+                        _options.Value.ResourcesAssembly.GetName().Name,
+                        culture)
+                    : _factory.Create(_options.Value.ResourcesPath, _options.Value.ResourcesAssembly.GetName().Name);
             };
 
             _localizationService.LanguageChanged += _languageChanged;
 
             if (_localizer == null)
             {
-                _languageChanged.Invoke(this, CultureInfo.CurrentCulture);
+                _languageChanged.Invoke(this, _localizationService.CurrentCulture);
             }
         }
 

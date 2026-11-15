@@ -1,0 +1,69 @@
+@using AntDesign.Theming
+
+<ConfigProvider ThemeConfig="@_theme">
+    <Divider Orientation="DividerOrientation.Left">Default Size</Divider>
+    <AntList DataSource="@_textData" Bordered>
+        <Header>Header</Header>
+        <ChildContent Context="item"><ListItem><Text Mark>[ITEM]</Text> @item</ListItem></ChildContent>
+        <Footer>Footer</Footer>
+    </AntList>
+
+    <Divider Orientation="DividerOrientation.Left">Small Size</Divider>
+    <AntList DataSource="@_textData" Bordered Size="ListSize.Small">
+        <Header>Header</Header><ChildContent Context="item"><ListItem>@item</ListItem></ChildContent><Footer>Footer</Footer>
+    </AntList>
+
+    <Divider Orientation="DividerOrientation.Left">Large Size</Divider>
+    <AntList DataSource="@_textData" Bordered Size="ListSize.Large">
+        <Header>Header</Header><ChildContent Context="item"><ListItem>@item</ListItem></ChildContent><Footer>Footer</Footer>
+    </AntList>
+
+    <Divider Orientation="DividerOrientation.Left">Meta</Divider>
+    <AntList DataSource="@_metaData">
+        <ChildContent Context="item"><ListItem><ListItemMeta AvatarTemplate="@Avatar(item.Index)" Title="@item.Title" Description="Ant Design, a design language for background applications, is refined by Ant UED Team" /></ListItem></ChildContent>
+    </AntList>
+
+    <Divider Orientation="DividerOrientation.Left">Vertical</Divider>
+    <AntList DataSource="@_metaData" ItemLayout="ListItemLayout.Vertical">
+        <ChildContent Context="item"><ListItem><ListItemMeta AvatarTemplate="@Avatar(item.Index)" Title="@item.Title" Description="Ant Design, a design language for background applications, is refined by Ant UED Team" /></ListItem></ChildContent>
+    </AntList>
+
+    <Divider Orientation="DividerOrientation.Left">Empty Text</Divider>
+    <AntList TItem="string" />
+</ConfigProvider>
+
+@code {
+    private static readonly ThemeConfig _theme = CreateTheme();
+    private readonly List<string> _textData = new()
+    {
+        "Racing car sprays burning fuel into crowd.",
+        "Japanese princess to wed commoner.",
+        "Australian walks 100km after outback crash.",
+        "Man charged over missing wedding girl.",
+        "Los Angeles battles huge wildfires."
+    };
+    private readonly List<MetaItem> _metaData = Enumerable.Range(1, 4).Select(i => new MetaItem(i, $"Ant Design Title {i}")).ToList();
+
+    private RenderFragment Avatar(int index) => @<Avatar Src="@($"https://api.dicebear.com/10.x/lorelei/svg?seed={index}")" />;
+
+    private static ThemeConfig CreateTheme()
+    {
+        var theme = new ThemeConfig();
+        theme.SetComponentToken("List", new ListComponentToken
+        {
+            HeaderBg = "pink",
+            FooterBg = "pink",
+            EmptyTextPadding = 32,
+            ItemPadding = "26px",
+            ItemPaddingSM = "16px",
+            ItemPaddingLG = "36px",
+            MetaMarginBottom = 20,
+            AvatarMarginRight = 20,
+            TitleMarginBottom = 10,
+            DescriptionFontSize = 20
+        });
+        return theme;
+    }
+
+    private sealed record MetaItem(int Index, string Title);
+}

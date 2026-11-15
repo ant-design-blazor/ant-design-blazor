@@ -54,6 +54,11 @@ export type overlayPosition = {
   bottom?: number,
   left?: number,
   right?: number,
+  useTop?: boolean,
+  useBottom?: boolean,
+  useLeft?: boolean,
+  useRight?: boolean,
+  positionFixed?: boolean,
   zIndex: number,
   placement?: Placement,
 }
@@ -176,6 +181,9 @@ export class Overlay {
   private isContainerBody: boolean;
   private isContainerOverBody = false;
   private isTriggerFixed: boolean; //refers to trigger or any of its parent having "position:fixed"
+  private usesFixedViewportCoordinates(): boolean {
+    return this.isContainerBody && this.isTriggerFixed;
+  }
   private lastScrollPosition: number; //used only if isTriggerFixed === true
 
   private scrollbarSize: {
@@ -245,6 +253,7 @@ export class Overlay {
     triggerIsWrappedInDiv: boolean,
     triggerPrefixCls: string
   ): boolean {
+    if (!overlay || !container || !trigger) return false;
     return this.overlay === overlay
       && this.container === container
       && this.trigger === Overlay.getFirstValidChild(trigger, triggerIsWrappedInDiv)
@@ -267,15 +276,20 @@ export class Overlay {
   }
 
   static getFirstValidChild(element: HTMLElement, triggerIsWrappedInDiv: boolean): HTMLElement {
+    if (!element) return null;
     if (triggerIsWrappedInDiv)
     {      
-      for(let i = 0; i < element.childNodes.length; i++) {
+      for(let i = 0; i < (element.childNodes?.length ?? 0); i++) {
         const childElement = element.childNodes[i] as HTMLElement;
         if (childElement.innerHTML)
           return childElement;
       }
     }
     return element
+  }
+
+  static isValidPlacement(placement: Placement): boolean {
+    return Overlay.appliedStylePositionMap.has(placement);
   }
 
   static setVerticalCalculation(placement: Placement, position: "top" | "bottom") {
@@ -571,7 +585,12 @@ export class Overlay {
       return;
     }
     //trigger no longer visible, hide
-    if (!overlayPreset && !this.trigger.offsetParent) {      
+    // Fixed-position elements have no offsetParent in the browser even while
+    // they are connected and visible. Treating them as detached skips the
+    // normal placement calculation and leaves overlays (for example
+    // FloatButton tooltips) at the body's origin. The fixed-position check is
+    // computed from the trigger and its ancestors when this Overlay is created.
+    if (!overlayPreset && !this.trigger.offsetParent && !this.isTriggerFixed) {
       if (!this.overlay.classList.contains(this.triggerPrefixCls + "-hidden")) {
         this.overlay.classList.add(this.triggerPrefixCls + "-hidden");
       }
@@ -612,14 +631,17 @@ export class Overlay {
     this.sanitizedPosition = { ...this.position};
     this.sanitizedPosition.zIndex = domInfoHelper.getMaxZIndex();
     this.sanitizedPosition.placement = this.placement;    
-    // A body popup in InView mode is bounded by the viewport, even when the
-    // document has horizontal overflow. Keep the measured viewport coordinate
-    // as an explicit left/top offset. Converting it to right/bottom against a
-    // wider document makes the browser anchor it to the document edge instead
-    // of the viewport edge (most visible with right-aligned mobile popovers).
-    const useViewportCoordinates = this.isContainerBody
-      && this.boundyAdjustMode === TriggerBoundyAdjustMode.InView;
-    if (useViewportCoordinates || this.selectedHorizontalPosition === "left") {
+    // Body portals are absolutely positioned against the document's containing
+    // block. Keep their coordinates in the same document space for every
+    // boundary mode; converting to right/bottom can anchor them to the viewport
+    // edge when the trigger is outside the current viewport.
+    const useViewportCoordinates = this.isContainerBody;
+    this.sanitizedPosition.positionFixed = this.usesFixedViewportCoordinates();
+    this.sanitizedPosition.useLeft = this.selectedHorizontalPosition === "left";
+    this.sanitizedPosition.useRight = !this.sanitizedPosition.useLeft;
+    this.sanitizedPosition.useTop = useViewportCoordinates || this.selectedVerticalPosition === "top";
+    this.sanitizedPosition.useBottom = !this.sanitizedPosition.useTop;
+    if (this.selectedHorizontalPosition === "left") {
       this.sanitizedPosition.right = null;
     }
     else {
@@ -656,11 +678,11 @@ export class Overlay {
       };
     }
     if (this.pixelSnapAxes.horizontal) {
-      const axis = this.selectedHorizontalPosition;
+      const axis = this.sanitizedPosition.useLeft ? "left" : "right";
       this.sanitizedPosition[axis] = Math.floor(this.sanitizedPosition[axis]);
     }
     if (this.pixelSnapAxes.vertical) {
-      const axis = this.selectedVerticalPosition;
+      const axis = this.sanitizedPosition.useTop ? "top" : "bottom";
       this.sanitizedPosition[axis] = Math.floor(this.sanitizedPosition[axis]);
     }
   }
@@ -810,6 +832,7 @@ export class Overlay {
    * @returns number - right position
    */
   private getAdjustedRight(): number {    
+    if (this.usesFixedViewportCoordinates()) return this.position.right;
     if (this.isContainerBody) {
       return this.position.right - (this.containerInfo.scrollWidth - window.innerWidth)
         - this.scrollbarSize.verticalWidth;
@@ -830,6 +853,7 @@ export class Overlay {
    * @returns number - bottom position
    */
   private getAdjustedBottom(): number {    
+    if (this.usesFixedViewportCoordinates()) return this.position.bottom;
     if (this.isContainerBody) {
       return this.position.bottom - (this.containerInfo.scrollHeight - window.innerHeight)
         - this.scrollbarSize.horizontalHeight;
@@ -838,7 +862,7 @@ export class Overlay {
   }
 
   private applyLocation() {
-    if (this.selectedHorizontalPosition === "left") {
+    if (this.sanitizedPosition.useLeft) {
       this.overlay.style.left = this.sanitizedPosition.left + "px";
       this.overlay.style.right = "unset";
     } else {
@@ -846,7 +870,7 @@ export class Overlay {
       this.overlay.style.left = "unset";
     }
 
-    if (this.selectedVerticalPosition === "top") {
+    if (this.sanitizedPosition.useTop) {
       this.overlay.style.top = this.sanitizedPosition.top + "px";
       this.overlay.style.bottom = "unset";
     } else {
@@ -855,8 +879,30 @@ export class Overlay {
     }
 
     this.applyPlacement();
+    this.applyArrowPointAtCenter();
     this.lastTriggerClientRect = this.getTriggerClientRect();
     this.monitorTriggerPosition();
+  }
+
+  private applyArrowPointAtCenter() {
+    if (!this.overlayConstraints.arrowPointAtCenter) return;
+
+    const arrow = this.overlay.querySelector(`.${this.triggerPrefixCls}-arrow`) as HTMLElement | null;
+    if (!arrow) return;
+
+    const triggerRect = this.trigger.getBoundingClientRect();
+    const overlayRect = this.overlay.getBoundingClientRect();
+    const arrowWidth = arrow.offsetWidth || arrow.getBoundingClientRect().width;
+    const arrowHeight = arrow.offsetHeight || arrow.getBoundingClientRect().height;
+    const placementClass = Overlay.appliedStylePositionMap.get(this.placement)?.class ?? "";
+
+    if (placementClass.startsWith("top") || placementClass.startsWith("bottom")) {
+      const left = triggerRect.left + triggerRect.width / 2 - overlayRect.left - arrowWidth / 2;
+      this.overlay.style.setProperty("--ant-overlay-arrow-left", `${left}px`);
+    } else {
+      const top = triggerRect.top + triggerRect.height / 2 - overlayRect.top - arrowHeight / 2;
+      this.overlay.style.setProperty("--ant-overlay-arrow-top", `${top}px`);
+    }
   }
 
   /**
@@ -974,6 +1020,16 @@ export class Overlay {
     const triggerRect = domInfoHelper.getBoundingClientRect(this.trigger);
     this.triggerPosition.height = triggerRect?.height || (this.triggerInfo.offsetHeight != 0 ? this.triggerInfo.offsetHeight
       : this.triggerInfo.clientHeight);
+    if (this.usesFixedViewportCoordinates() && !this.overlayPreset) {
+      const window = domInfoHelper.getWindow();
+      this.triggerPosition.top = triggerRect?.top ?? this.triggerInfo.absoluteTop;
+      this.triggerPosition.bottom = window.innerHeight - this.triggerPosition.top - this.triggerPosition.height;
+      this.triggerPosition.absoluteTop = this.triggerPosition.top;
+      const viewport = { ...this.containerInfo, scrollHeight: window.innerHeight, scrollTop: 0, absoluteTop: 0 };
+      const anchor = this.selectedVerticalPosition === "top" ? this.triggerPosition.top : this.triggerPosition.bottom;
+      return this.verticalCalculation(anchor, this.triggerPosition.height, viewport,
+        this.triggerInfo, this.getOverlayHeight(), this.overlayConstraints);
+    }
     if (this.overlayPreset) {
       this.triggerPosition.top = this.triggerInfo.absoluteTop + this.overlayPreset.y;
       this.triggerPosition.height = 0;
@@ -983,13 +1039,22 @@ export class Overlay {
     }
     this.triggerPosition.absoluteTop = this.triggerInfo.absoluteTop;
 
+    // A custom popup container may only be a positioned mount point, not a
+    // clipping box (for example, a small wrapper around a Select). Placement
+    // must use the visible boundary calculated for that container instead of
+    // its own scrollHeight, which can be much shorter than the available
+    // viewport space and incorrectly flip a popup above its trigger.
+    const verticalContainer = !this.isContainerBody
+      ? { ...this.containerInfo, scrollHeight: this.containerBoundarySize.bottom }
+      : this.containerInfo;
+
     if (this.selectedVerticalPosition === "top"){
-      position = this.verticalCalculation(this.triggerPosition.top, this.triggerPosition.height, this.containerInfo,
+      position = this.verticalCalculation(this.triggerPosition.top, this.triggerPosition.height, verticalContainer,
         this.triggerInfo, this.getOverlayHeight(), this.overlayConstraints);
     }
     else { //bottom
-      this.triggerPosition.bottom = this.containerInfo.scrollHeight - this.triggerPosition.top - this.triggerPosition.height;
-      position = this.verticalCalculation(this.triggerPosition.bottom, this.triggerPosition.height, this.containerInfo,
+      this.triggerPosition.bottom = verticalContainer.scrollHeight - this.triggerPosition.top - this.triggerPosition.height;
+      position = this.verticalCalculation(this.triggerPosition.bottom, this.triggerPosition.height, verticalContainer,
         this.triggerInfo, this.getOverlayHeight(), this.overlayConstraints);
     }
     return position;
@@ -1006,6 +1071,16 @@ export class Overlay {
     //usually first offsetHeight is taken, as the measurement contains the borders    
     const triggerRect = domInfoHelper.getBoundingClientRect(this.trigger);
     this.triggerPosition.width = triggerRect?.width || (this.triggerInfo.offsetWidth != 0 ? this.triggerInfo.offsetWidth : this.triggerInfo.clientWidth);
+    if (this.usesFixedViewportCoordinates() && !this.overlayPreset) {
+      const window = domInfoHelper.getWindow();
+      this.triggerPosition.left = triggerRect?.left ?? this.triggerInfo.absoluteLeft;
+      this.triggerPosition.right = window.innerWidth - this.triggerPosition.left - this.triggerPosition.width;
+      this.triggerPosition.absoluteLeft = this.triggerPosition.left;
+      const viewport = { ...this.containerInfo, scrollWidth: window.innerWidth, scrollLeft: 0, absoluteLeft: 0 };
+      const anchor = this.selectedHorizontalPosition === "left" ? this.triggerPosition.left : this.triggerPosition.right;
+      return this.horizontalCalculation(anchor, this.triggerPosition.width, viewport,
+        this.triggerInfo, this.getOverlayWidth(), this.overlayConstraints);
+    }
     
     //let triggerLeft: number;
     if (this.overlayPreset) {
@@ -1052,11 +1127,12 @@ export class Overlay {
   private setBodyBoundayrSize() {
     const window = domInfoHelper.getWindow();      
     const scroll = domInfoHelper.getScroll();
+    const fixedViewport = this.usesFixedViewportCoordinates();
     this.bodyBoundarySize = {
-      top : scroll.y,
-      left: scroll.x,
-      right: window.innerWidth + scroll.x,
-      bottom: window.innerHeight + scroll.y
+      top : fixedViewport ? 0 : scroll.y,
+      left: fixedViewport ? 0 : scroll.x,
+      right: window.innerWidth + (fixedViewport ? 0 : scroll.x),
+      bottom: window.innerHeight + (fixedViewport ? 0 : scroll.y)
     };     
   }
 
@@ -1069,6 +1145,10 @@ export class Overlay {
    * pixels of the container)
    */
   private getContainerBoundarySize(): coordinates {    
+    if (this.usesFixedViewportCoordinates()) {
+      const window = domInfoHelper.getWindow();
+      return { left: 0, right: window.innerWidth, top: 0, bottom: window.innerHeight };
+    }
     if (this.boundyAdjustMode === TriggerBoundyAdjustMode.InScroll) {      
       if (!this.isContainerBody) {
         this.setBodyBoundayrSize();
@@ -1084,43 +1164,56 @@ export class Overlay {
 
     if (this.isContainerBody) {       
       return this.bodyBoundarySize;
-    } else {         
-      //special care is needed when evaluating viewport of the container
-      const parentIsInsignificant = this.container.parentElement.clientHeight === 0
-        || this.container.parentElement.clientWidth === 0;
-      const verticalScrollBasedOnParent = !parentIsInsignificant
-        && this.container.parentElement.clientHeight < this.containerInfo.clientHeight;
-      const horizontalScrollBasedOnParent = !parentIsInsignificant
-        && this.container.parentElement.clientWidth < this.containerInfo.clientWidth;
+    }
 
-      let clientHeight: number;
-      let clientWidth: number;
-      let scrollTop: number;
-      let scrollLeft: number;
+    // The popup's mount container is not necessarily a clipping boundary. A
+    // common React pattern is to mount an overlay in a small, positioned
+    // trigger wrapper while allowing it to extend beyond that wrapper. Use
+    // the intersection of the viewport and actual overflow-clipping ancestors
+    // for flipping, then express that visible rectangle in the mount
+    // container's local coordinate space for positioning.
+    const viewport = domInfoHelper.getWindow();
+    let visibleTop = 0;
+    let visibleBottom = viewport.innerHeight;
+    let visibleLeft = 0;
+    let visibleRight = viewport.innerWidth;
 
-      if (verticalScrollBasedOnParent) {
-        clientHeight = this.container.parentElement.clientHeight;
-        scrollTop = this.container.parentElement.scrollTop;
-      } else {
-        clientHeight = this.containerInfo.clientHeight;
-        scrollTop = this.containerInfo.scrollTop;
+    for (let ancestor: HTMLElement | null = this.container; ancestor; ancestor = ancestor.parentElement) {
+      // The body can be the document's scrolling element (for example, the
+      // docs app sets overflow:auto on body). Its rect then moves by -scrollY,
+      // but the document viewport remains fixed at 0..innerHeight. The
+      // viewport bounds above already represent body/html scrolling; treating
+      // either document root as an ordinary clipping ancestor shifts the local
+      // boundary by the full page scroll offset.
+      if (ancestor === document.body || ancestor === document.documentElement) continue;
+
+      const style = window.getComputedStyle(ancestor);
+      const clipsVertical = style.overflowY !== "visible";
+      const clipsHorizontal = style.overflowX !== "visible";
+      if (!clipsVertical && !clipsHorizontal) continue;
+
+      const rect = ancestor.getBoundingClientRect();
+      if (clipsVertical) {
+        const top = rect.top + ancestor.clientTop;
+        visibleTop = Math.max(visibleTop, top);
+        visibleBottom = Math.min(visibleBottom, top + ancestor.clientHeight);
       }
-
-      if (horizontalScrollBasedOnParent) {
-        clientWidth = this.container.parentElement.clientWidth;clientWidth;
-        scrollLeft = this.container.parentElement.scrollLeft;
-      } else {
-        clientWidth = this.containerInfo.clientWidth;
-        scrollLeft = this.containerInfo.scrollLeft;
+      if (clipsHorizontal) {
+        const left = rect.left + ancestor.clientLeft;
+        visibleLeft = Math.max(visibleLeft, left);
+        visibleRight = Math.min(visibleRight, left + ancestor.clientWidth);
       }
-          
-      return { 
-        top : scrollTop,
-        bottom: scrollTop + clientHeight,
-        left: scrollLeft,
-        right: scrollLeft + clientWidth
-      };                
-    }  
+    }
+
+    const containerRect = this.container.getBoundingClientRect();
+    const localTop = containerRect.top + this.container.clientTop;
+    const localLeft = containerRect.left + this.container.clientLeft;
+    return {
+      top: visibleTop - localTop + this.containerInfo.scrollTop,
+      bottom: visibleBottom - localTop + this.containerInfo.scrollTop,
+      left: visibleLeft - localLeft + this.containerInfo.scrollLeft,
+      right: visibleRight - localLeft + this.containerInfo.scrollLeft
+    };
   }
 
   /**

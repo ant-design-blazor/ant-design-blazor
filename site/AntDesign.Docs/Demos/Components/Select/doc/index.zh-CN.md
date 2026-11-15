@@ -27,6 +27,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg
 | BoundaryAdjustMode | `Dropdown` 调整策略（例如当浏览器调整大小时）        | TriggerBoundaryAdjustMode    | TriggerBoundaryAdjustMode.InView         |
 | CustomTagLabelToValue | 将自定义标签（字符串）转换为 TItemValue 类型 | Func<string, TItemValue> | (label) => <br/>    (TItemValue)TypeDescriptor<br/>    .GetConverter(typeof(TItemValue))<br/>    .ConvertFromInvariantString(label) |  |
 | DataSource | 此组件的数据源 | IEnumerable&lt;TItem> | - |  |
+| Options | 选择项数据源，与 React 的 `options` 同名对应，为 `DataSource` 的兼容别名。 | IEnumerable&lt;TItem> | - | 6.0.0 |
 | DataSourceEqualityComparer | 将在 DataSource 更改检测期间使用的 EqualityComparer。 如果没有设置比较器，将使用默认比较器，它将仅比较标签和值属性的相等性. | IEqualityComparer&lt;TItem> | - |  |
 | DefaultActiveFirstOption | 是否默认高亮第一个选项  | bool | false |  |
 | DefaultValue | 当 `Mode = default` - 该值在初始化期间和在 Forms 中按下 Reset 按钮时使用. | TItemValue | - |  |
@@ -35,10 +36,13 @@ cover: https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg
 | DisabledName | 用作禁用指示器的属性名称. | string |  |  |
 | DisabledPredicate | 指定禁用选项的判断条件 |  -  |  -  |
 | DropdownMatchSelectWidth | 控制下拉宽度：`true` 与 Select 触发器同宽；`false` 适配最宽选项，但不会窄于触发器；字符串可指定宽度（例如 `256px`）。 | OneOf<bool, string> | true |  |
+| PopupMatchSelectWidth | 控制弹层是否与 Select 同宽，与 React 的 `popupMatchSelectWidth` 对应，为 `DropdownMatchSelectWidth` 的兼容别名。 | OneOf<bool, string> | true | 6.0.0 |
 | DropdownMaxWidth | 不允许下拉菜单的宽度超过此处的值（例如“768px”）. | string | "auto" |  |
 | DropdownRender | 自定义下拉框内容 | Renderfragment | - |  |
+| PopupRender | 自定义下拉框内容，与 React 的 `popupRender` 对应，为 `DropdownRender` 的兼容别名。 | RenderFragment&lt;RenderFragment> | - | 6.0.0 |
 | SearchDebounceMilliseconds |推迟对搜索输入事件的处理，直到用户停止输入一个预定的时间。 | int        | 250    |
 | EnableSearch | 为单选启用搜索。多选和标签模式默认可搜索，与 Ant Design v6 保持一致。 | bool | false |  |
+| ShowSearch | 是否启用搜索，对应 React 的布尔型 `showSearch`；省略时单选默认关闭，多选和标签模式默认开启。 | bool? | 按模式决定 | 6.0.0 |
 | FilterExpression | 自定义搜索时过滤的逻辑。 | Func<SelectOptionItem<TItemValue, TItem>, string, bool> | (item, searchValue) => item.Label.Contains(searchValue, StringComparison.InvariantCultureIgnoreCase) |  |
 | GroupName | 用作组指示符的属性的名称。 如果设置了该值，则条目将按组显示。 使用额外的 `SortByGroup` 和 `SortByLabel`. | string | - |  |
 | HideSelected | 是否隐藏选中项. | bool | false |  |
@@ -62,6 +66,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg
 | OnCreateCustomTag | 创建自定义标签时调用. | Action | - |  |
 | OnDataSourceChanged | 数据源更改时调用. | Action | - |  |
 | OnDropdownVisibleChange | 展开下拉菜单的回调 | Action | - |  |
+| OnOpenChange | 下拉菜单开合状态变化时的回调，与 React 的 `onOpenChange` 同名对应。 | EventCallback&lt;bool> | - | 6.0.0 |
 | OnFocus | 获得焦点时回调 | Action | - |  |
 | OnMouseEnter | 鼠标移入时回调 | Action | - |  |
 | OnMouseLeave | 鼠标移出时回调 | Action | - |  |
@@ -75,6 +80,8 @@ cover: https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg
 | PrefixIcon | 自定义前缀图标。 对于模式 `multiple` 和 `tags` 仅在未选择数据时可见. | RenderFragment | - |  |
 | SelectOptions | 用于手动渲染选择Option. | RenderFragment | - |  |
 | ShowArrowIcon | 是否显示下拉小箭头 | bool | true |  |
+| ShowArrow | 是否显示下拉箭头，与 React 的 `showArrow` 对应，为 `ShowArrowIcon` 的兼容别名。 | bool | true | 6.0.0 |
+| Virtual | 是否启用虚拟滚动，与 React 的 `virtual` 对应，为 `EnableVirtualization` 的兼容别名。 | bool | true | 6.0.0 |
 | ShowSearchIcon | 使单选模式可搜索 | bool | true |  |
 | Size | 组件大小,可选: `small` \| `default` \| `large` | string | default |  |
 | SortByGroup | 按组名排序项目. `None` \| `Ascending` \| `Descending` | SortDirection | SortDirection.None |  |

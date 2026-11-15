@@ -37,13 +37,13 @@
       "component": "Select",
       "react": {
         "url": "http://127.0.0.1:8000/components/select?theme=light",
-        "scopeSelector": "#select-demo-suffix",
+        "scopeSelector": "#select-demo-suffix .code-box-demo",
         "rootSelector": ".code-box-demo .ant-select",
         "skeletonSelector": ".ant-skeleton"
       },
       "blazor": {
         "url": "http://127.0.0.1:5000/en-US/components/select?theme=light",
-        "scopeSelector": "#components-select-demo-suffix",
+        "scopeSelector": "#components-select-demo-suffix .code-box-demo",
         "rootSelector": ".code-box-demo .ant-select",
         "skeletonSelector": ".ant-skeleton"
       },

@@ -92,20 +92,6 @@ namespace AntDesign
 
             column.ColIndex = CurrentColIndex;
 
-            if (_table.ScrollX != null && Columns.Any(x => x.Width == null))
-            {
-                var zeroWidthCols = Columns.Where(x => x.Width == null).ToArray();
-                var totalWidth = string.Join(" + ", Columns.Where(x => x.Width != null).Select(x => (CssSizeLength)x.Width));
-                if (string.IsNullOrEmpty(totalWidth))
-                {
-                    totalWidth = "0px";
-                }
-                foreach (var col in Columns.Where(x => x.Width == null))
-                {
-                    col.Width = $"calc(({(CssSizeLength)_table.ScrollX} - ({totalWidth}) ) / {zeroWidthCols.Length})";
-                }
-            }
-
             if (column.Width == null)
             {
                 var col = Columns.FirstOrDefault(x => x.ColIndex == column.ColIndex);

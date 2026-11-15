@@ -10,7 +10,7 @@ namespace AntDesign
     /// <summary>
     /// button props
     /// </summary>
-    public class ButtonProps
+    public class ButtonProps : ComponentProps
     {
         public bool Block { get; set; } = false;
 
@@ -30,6 +30,8 @@ namespace AntDesign
 
         private bool? _danger;
         public bool? Danger { get => _danger; set => _danger = value; }
+
+        public bool IsSet(string propertyName) => base.IsSet(propertyName) || propertyName == nameof(Danger) && Danger.HasValue;
 
         internal bool IsDanger
         {

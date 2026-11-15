@@ -1,65 +1,78 @@
 @using System.ComponentModel.DataAnnotations
-@using System.Text.Json
 
-<Form Model="@model" OnFinish="OnFinish" OnFinishFailed="OnFinishFailed" Style="max-width: 600px;">
+<Form Model="@model" Id="dynamic_form_item" Autocomplete="@((string)null)" OnFinish="OnFinish" RequiredMark="FormRequiredMark.None" Style="max-width: 600px;">
     @for (var i = 0; i < model.Passengers.Count; i++)
     {
         var index = i;
-        <FormItem @key="model.Passengers[index].Id"
+        var passenger = model.Passengers[index];
+        <FormItem @key="passenger.Id"
                   Label="@(index == 0 ? "Passengers" : null)"
-                  LabelColSpan="@(index == 0 ? 4 : 0)"
-                  WrapperColSpan="@(index == 0 ? 20 : 20)"
-                  WrapperColOffset="@(index == 0 ? 0 : 4)">
-            <div style="display:flex; align-items:center; gap:8px;">
-                <Input @bind-Value="model.Passengers[index].Name" Placeholder="passenger name" Style="width:60%;" />
-                @if (model.Passengers.Count > 1)
-                {
-                    <Button Type="ButtonType.Text" OnClick="@(() => Remove(index))" AriaLabel="Remove passenger">−</Button>
-                }
-            </div>
+                  Required="false"
+                  LabelCol="@GetLabelCol(index)"
+                  WrapperCol="@GetWrapperCol(index)">
+            <Input name="@((string)null)" @bind-Value="passenger.Name" Placeholder="passenger name" Style="width: 60%;" />
+            @if (model.Passengers.Count > 1)
+            {
+                <Icon Type="@IconType.Outline.MinusCircle" Class="dynamic-delete-button" Style="position: relative; top: 4px; margin: 0 8px; color: #999; font-size: 24px; cursor: pointer; transition: all 0.3s;" @onclick="@(() => Remove(index))" />
+            }
         </FormItem>
     }
-    <FormItem WrapperColSpan="20" WrapperColOffset="4">
-        <div style="width:60%; display:flex; flex-direction:column; gap:20px;">
-            <Button Type="ButtonType.Dashed" OnClick="@(() => Add())" Block>＋ Add field</Button>
-            <Button Type="ButtonType.Dashed" OnClick="@(() => AddAtHead())" Block>＋ Add field at head</Button>
-        </div>
-    </FormItem>
-    <FormItem WrapperColSpan="20" WrapperColOffset="4">
-        <Button Type="ButtonType.Primary" HtmlType="submit">Submit</Button>
-        @if (!string.IsNullOrEmpty(result))
+    <FormItem WrapperCol="@GetWrapperCol(null)">
+        <Button Type="ButtonType.Dashed" OnClick="@(() => Add())" Style="width: 60%;" Icon="@IconType.Outline.Plus">Add field</Button>
+        <Button Type="ButtonType.Dashed" OnClick="@(() => AddAtHead())" Style="width: 60%; margin-top: 20px;" Icon="@IconType.Outline.Plus">Add field at head</Button>
+        @if (!string.IsNullOrEmpty(_listError))
         {
-            <span style="margin-left:12px;">@result</span>
+            <div class="ant-form-css-var ant-form-item-explain"><div class="ant-form-item-explain-error">@_listError</div></div>
         }
+    </FormItem>
+    <FormItem WrapperCol="@GetWrapperCol(null)">
+        <Button Type="ButtonType.Primary" HtmlType="submit">Submit</Button>
     </FormItem>
 </Form>
 
 @code {
     private readonly PassengerForm model = new();
-    private string result;
+    private string _listError;
 
-    private void Add(string name = "") => model.Passengers.Add(new Passenger { Id = Guid.NewGuid(), Name = name });
+    private static ColLayoutParam GetLabelCol(int index) => index == 0
+        ? new ColLayoutParam { Xs = new EmbeddedProperty { Span = 24 }, Sm = new EmbeddedProperty { Span = 4 } }
+        : null;
 
-    private void AddAtHead() => model.Passengers.Insert(0, new Passenger { Id = Guid.NewGuid(), Name = "The head item" });
+    private static ColLayoutParam GetWrapperCol(int? index) => index == 0
+        ? new ColLayoutParam { Xs = new EmbeddedProperty { Span = 24 }, Sm = new EmbeddedProperty { Span = 20 } }
+        : new ColLayoutParam { Xs = new EmbeddedProperty { Span = 24, Offset = 0 }, Sm = new EmbeddedProperty { Span = 20, Offset = 4 } };
 
-    private void Remove(int index) => model.Passengers.RemoveAt(index);
-
-    private void OnFinish(EditContext editContext)
+    private void Add(string name = "")
     {
-        result = $"Received values: {JsonSerializer.Serialize(model.Passengers.Select(x => x.Name))}";
+        model.Passengers.Add(new Passenger { Id = Guid.NewGuid(), Name = name });
+        UpdateListError();
     }
 
-    private void OnFinishFailed(EditContext editContext) => result = "Please enter a name for each passenger.";
+    private void AddAtHead()
+    {
+        model.Passengers.Insert(0, new Passenger { Id = Guid.NewGuid(), Name = "The head item" });
+        UpdateListError();
+    }
+
+    private void Remove(int index)
+    {
+        model.Passengers.RemoveAt(index);
+        UpdateListError();
+    }
+
+    private void UpdateListError() => _listError = model.Passengers.Count < 2 ? "At least 2 passengers" : null;
+
+    private void OnFinish(EditContext editContext) { }
 
     private sealed class PassengerForm
     {
-        public List<Passenger> Passengers { get; } = [new Passenger { Id = Guid.NewGuid() }];
+        public List<Passenger> Passengers { get; } = [];
     }
 
     private sealed class Passenger
     {
         public Guid Id { get; init; }
-        [Required]
+        [Required(ErrorMessage = "Please input passenger's name or delete this field.")]
         public string Name { get; set; }
     }
 }

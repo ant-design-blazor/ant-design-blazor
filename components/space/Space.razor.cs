@@ -114,10 +114,18 @@ namespace AntDesign
                 .Get(() => $"{PrefixCls}-{Direction.ToString().ToLowerInvariant()}")
                 .GetIf(() => $"{PrefixCls}-align-{_alignMap[Align]}", () => HasAlign)
                 .If($"{PrefixCls}-align-center", () => !HasAlign && Direction == SpaceDirection.Horizontal)
-                .GetIf(() => $"{PrefixCls}-gap-row-{_size.AsT0.ToString().ToLowerInvariant()}", () => _size.IsT0)
-                .GetIf(() => $"{PrefixCls}-gap-col-{_size.AsT0.ToString().ToLowerInvariant()}", () => _size.IsT0)
+                .GetIf(() => $"{PrefixCls}-gap-row-{GetGapSizeName(_size.AsT0)}", () => _size.IsT0)
+                .GetIf(() => $"{PrefixCls}-gap-col-{GetGapSizeName(_size.AsT0)}", () => _size.IsT0)
                 .If($"{PrefixCls}-rtl", () => RTL);
         }
+
+        private static string GetGapSizeName(SpaceSize size) => size switch
+        {
+            SpaceSize.Small => "small",
+            SpaceSize.Middle => "medium",
+            SpaceSize.Large => "large",
+            _ => size.ToString().ToLowerInvariant()
+        };
 
         internal string SemanticClass(string slot, string baseClass)
         {

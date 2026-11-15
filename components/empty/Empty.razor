@@ -25,11 +25,11 @@
 
     @if (DescriptionTemplate != null)
     {
-        <p class="@SemanticClass("description", $"{_prefixCls}-description")" style="@SemanticStyle("description")">@DescriptionTemplate</p>
+    <div class="@SemanticClass("description", $"{_prefixCls}-description")" style="@SemanticStyle("description")">@DescriptionTemplate</div>
     }
     else if (Description.IsT1 == false || Description.AsT1 == true)
     {
-        <p class="@SemanticClass("description", $"{_prefixCls}-description")" style="@SemanticStyle("description")">@Description.AsT0</p>
+    <div class="@SemanticClass("description", $"{_prefixCls}-description")" style="@SemanticStyle("description")">@Description.AsT0</div>
     }
     <div class="@SemanticClass("footer", $"{_prefixCls}-footer")" style="@SemanticStyle("footer")">
         @ChildContent

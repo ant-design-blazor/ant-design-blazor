@@ -258,6 +258,10 @@ namespace AntDesign
         {
         }
 
+        void IDatePicker.ChangePreviewValue(string value, int index)
+        {
+        }
+
         int IDatePicker.GetOnFocusPickerIndex()
         {
             return 0;
@@ -266,6 +270,15 @@ namespace AntDesign
         void IDatePicker.ResetPlaceholder(int index)
         {
 
+        }
+
+        void IDatePicker.ResetPreviewValue(int index)
+        {
+        }
+
+        bool IDatePicker.IsDateSelected(DateTime date)
+        {
+            return false;
         }
 
         void IDatePicker.Close()

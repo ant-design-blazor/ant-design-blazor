@@ -1,0 +1,53 @@
+<Flex Vertical Gap="FlexGap.Middle">
+    <Title Level="3">[true, 0, false]</Title>
+    <Splitter Style="height: 200px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1)">
+        <SplitterPanel>
+            @Panel("1")
+        </SplitterPanel>
+        <SplitterPanel DefaultSize="0">
+            @Panel("2")
+        </SplitterPanel>
+        <SplitterPanel Resizable="false">
+            @Panel("3")
+        </SplitterPanel>
+    </Splitter>
+
+    <Title Level="3">[false, 0, true]</Title>
+    <Splitter Style="height: 200px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1)">
+        <SplitterPanel Resizable="false">
+            @Panel("1")
+        </SplitterPanel>
+        <SplitterPanel DefaultSize="0">
+            @Panel("2")
+        </SplitterPanel>
+        <SplitterPanel>
+            @Panel("3")
+        </SplitterPanel>
+    </Splitter>
+
+    <Title Level="3">Start have min &amp; max</Title>
+    <Splitter Style="height: 200px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1)">
+        <SplitterPanel Min="50px" Max="100px">
+            @Panel("1")
+        </SplitterPanel>
+        <SplitterPanel>
+            @Panel("2")
+        </SplitterPanel>
+    </Splitter>
+
+    <Title Level="3">End have min &amp; max</Title>
+    <Splitter Style="height: 200px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1)">
+        <SplitterPanel>
+            @Panel("1")
+        </SplitterPanel>
+        <SplitterPanel Min="20%" Max="70%">
+            @Panel("2")
+        </SplitterPanel>
+    </Splitter>
+</Flex>
+
+@code {
+    private RenderFragment Panel(string text) => @<Flex Justify="FlexJustify.Center" Align="FlexAlign.Center" Style="height: 100%">
+        <Title Type="TextElementType.Secondary" Level="5" Style="white-space: nowrap">Panel @text</Title>
+    </Flex>;
+}

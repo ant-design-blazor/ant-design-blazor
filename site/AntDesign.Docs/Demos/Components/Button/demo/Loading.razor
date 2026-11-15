@@ -1,45 +1,28 @@
-﻿<div>
-    <Button Type="ButtonType.Primary" Loading>Loading</Button>
-    <Button Type="ButtonType.Primary" Size="ButtonSize.Small" Loading>Loading</Button>
-    <Button Type="ButtonType.Primary" Icon="@IconType.Outline.Poweroff" Loading />
-    
-    <br />
-    
-    <Button Type="ButtonType.Primary"
-            AutoLoading
-            OnClick="EnterNoIconLoading">
-        Click me!
-    </Button>
-    <Button Type="ButtonType.Primary"
-            Icon="@IconType.Outline.Poweroff"
-            AutoLoading
-            OnClick="EnterWithIconLoading">
-        Click me!
-    </Button>
-    <Button Type="ButtonType.Primary"
-            Icon="@IconType.Outline.Poweroff"
-            Loading="_onlyIconLoading"
-            OnClick="EnterOnlyIconLoading" />
-</div>
+<Flex Gap="FlexGap.Small" Vertical>
+    <Flex Gap="FlexGap.Small" Align="FlexAlign.Center" Wrap="FlexWrap.Wrap">
+        <Button Type="ButtonType.Primary" Loading>Loading</Button>
+        <Button Type="ButtonType.Primary" Size="ButtonSize.Small" Loading>Loading</Button>
+        <Button Type="ButtonType.Primary" Icon="@IconType.Outline.Poweroff" Loading />
+        <Button Type="ButtonType.Primary" Loading LoadingIcon="@SyncLoadingIcon">Loading Icon</Button>
+    </Flex>
+    <Flex Gap="FlexGap.Small" Wrap="FlexWrap.Wrap">
+        <Button Type="ButtonType.Primary" Loading="@_loadings[0]" OnClick="@(() => EnterLoading(0))">Icon Start</Button>
+        <Button Type="ButtonType.Primary" Loading="@_loadings[2]" OnClick="@(() => EnterLoading(2))" IconPlacement="ButtonIconPlacement.End">Icon End</Button>
+        <Button Type="ButtonType.Primary" Icon="@IconType.Outline.Poweroff" Loading="@_loadings[1]" OnClick="@(() => EnterLoading(1))">Icon Replace</Button>
+        <Button Type="ButtonType.Primary" Icon="@IconType.Outline.Poweroff" Loading="@_loadings[3]" OnClick="@(() => EnterLoading(3))" />
+        <Button Type="ButtonType.Primary" Icon="@IconType.Outline.Poweroff" Loading="@(_loadings[3])" LoadingIcon="@SyncLoadingIcon" OnClick="@(() => EnterLoading(3))">Loading Icon</Button>
+    </Flex>
+</Flex>
 
-@code
-{
-    private bool _onlyIconLoading;
+@code {
+    private readonly bool[] _loadings = new bool[4];
 
-    private async Task EnterNoIconLoading()
+    private RenderFragment SyncLoadingIcon => @<Icon Type="@IconType.Outline.Sync" Spin />;
+
+    private async Task EnterLoading(int index)
     {
-        await Task.Delay(8000);
-    }
-
-    private async Task EnterWithIconLoading()
-    {
-        await Task.Delay(8000);
-    }
-
-    private async Task EnterOnlyIconLoading()
-    {
-        _onlyIconLoading = true;
-        await Task.Delay(8000);
-        _onlyIconLoading = false;
+        _loadings[index] = true;
+        await Task.Delay(3000);
+        _loadings[index] = false;
     }
 }

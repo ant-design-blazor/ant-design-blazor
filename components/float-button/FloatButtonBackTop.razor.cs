@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Globalization;
-using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.JSInterop;
 
 namespace AntDesign;
 
@@ -15,9 +14,6 @@ namespace AntDesign;
 */
 public partial class FloatButtonBackTop : AntDomComponentBase
 {
-    [Inject]
-    private IDomEventListener DomEventListener { get; set; }
-
     /// <summary>
     /// Time to return to top (ms). This property is ignored when enables reduced motion (`prefers-reduced-motion: reduce`)
     /// </summary>
@@ -81,107 +77,33 @@ public partial class FloatButtonBackTop : AntDomComponentBase
     [Parameter]
     public bool Disabled { get; set; }
 
-    private bool _visible;
-    internal bool _hidden = true;
-    private double _scrollProgress;
+    private string _boundBackTopButtonId;
 
-    private string ProgressStyle => ShowProgress
-        ? $"--ant-float-btn-progress:{_scrollProgress.ToString(CultureInfo.InvariantCulture)}turn;{Style}"
-        : Style;
+    private string ProgressStyle => $"{Style};visibility:hidden;opacity:0;pointer-events:none;transition:opacity 200ms linear;";
 
-    protected override async Task OnFirstAfterRenderAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (string.IsNullOrWhiteSpace(TargetSelector) || TargetSelector == "window")
-            DomEventListener.AddExclusive<JsonElement>("window", "scroll", OnScroll);
-        else
-            DomEventListener.AddExclusive<JsonElement>(TargetSelector, "scroll", OnScroll);
-
-        if (ShowProgress)
+        if (RefBack?.Current.Id is string buttonId && buttonId != _boundBackTopButtonId)
         {
-            DomEventListener.AddExclusive<JsonElement>("window", "resize", OnScroll);
+            await JsInvokeAsync(JSInteropConstants.BackTopComponentHelper.BindBackTop, RefBack.Current, TargetSelector, Duration, VisibilityHeight, ShowProgress);
+            _boundBackTopButtonId = buttonId;
         }
 
-        await UpdateScrollState();
-
-        await base.OnFirstAfterRenderAsync();
+        await base.OnAfterRenderAsync(firstRender);
     }
 
     private async Task OnButtonClick(MouseEventArgs args)
     {
-        if (string.IsNullOrWhiteSpace(TargetSelector) || TargetSelector == "window")
-            await JsInvokeAsync<DomRect>(JSInteropConstants.BackTop);
-        else
-            await JsInvokeAsync<DomRect>(JSInteropConstants.BackTop, TargetSelector);
-
         if (OnClick.HasDelegate)
             await OnClick.InvokeAsync(args);
     }
 
-    private async Task OnScroll(JsonElement obj)
-    {
-        await UpdateScrollState();
-    }
-
-    private async Task UpdateScrollState()
-    {
-        double offset;
-        HtmlElement scrollElement;
-
-        if (string.IsNullOrWhiteSpace(TargetSelector) || TargetSelector is "window" or "document")
-        {
-            var scrollInfo = await JsInvokeAsync<JsonElement>(JSInteropConstants.GetScroll);
-            offset = scrollInfo.GetProperty("y").GetDouble();
-            scrollElement = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, "html");
-        }
-        else
-        {
-            scrollElement = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, TargetSelector);
-            offset = (double)scrollElement.ScrollTop;
-        }
-
-        var maxScroll = Math.Max((double)scrollElement.ScrollHeight - (double)scrollElement.ClientHeight, 0);
-        if (ShowProgress)
-        {
-            _scrollProgress = maxScroll > 0 ? Math.Clamp(offset / maxScroll, 0, 1) : 0;
-        }
-
-        var visible = offset >= VisibilityHeight;
-
-        if (visible == _visible)
-        {
-            if (visible && _hidden)
-            {
-                _hidden = false;
-                await InvokeAsync(StateHasChanged);
-            }
-            else if (ShowProgress)
-            {
-                await InvokeAsync(StateHasChanged);
-            }
-
-            return;
-        }
-
-        _visible = visible;
-        if (_visible)
-        {
-            _hidden = false;
-        }
-        else
-        {
-            await Task.Delay(300);
-            if (!_visible)
-            {
-                _hidden = true;
-            }
-        }
-
-        await InvokeAsync(StateHasChanged);
-    }
-
     protected override void Dispose(bool disposing)
     {
-        DomEventListener?.DisposeExclusive();
+        if (_boundBackTopButtonId != null && RefBack?.Current is ElementReference button)
+        {
+            _ = Js.InvokeVoidAsync(JSInteropConstants.BackTopComponentHelper.UnbindBackTop, button);
+        }
         base.Dispose(disposing);
     }
 }

@@ -1,5 +1,5 @@
 ---
-order: 12
+order: 8
 title:
   zh-CN: 垂直按钮紧凑排列
   en-US: Vertical compact buttons

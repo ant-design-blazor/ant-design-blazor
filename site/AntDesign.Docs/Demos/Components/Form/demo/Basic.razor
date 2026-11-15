@@ -1,20 +1,22 @@
-﻿@using System.ComponentModel.DataAnnotations;
-@using System.Text.Json;
+﻿@using System.Text.Json;
 @using System.ComponentModel
 
-    <Form Model="@model"
+    <Form Id="basic"
+          Model="@model"
           OnFinish="OnFinish"
           OnFinishFailed="OnFinishFailed"
           LabelColSpan="8"
-          WrapperColSpan="16">
-        <FormItem Label="User Name">
-            <Input @bind-Value="@context.Username" />
+          WrapperColSpan="16"
+          Style="max-width: 600px;"
+          AutoComplete="off">
+        <FormItem Name="Username" Label="Username" Rules="_usernameRules">
+            <Input name="@((string)null)" @bind-Value="@context.Username" />
         </FormItem>
-        <FormItem Label="Password">
-            <InputPassword @bind-Value="@context.Password" />
+        <FormItem Name="Password" Label="Password" Rules="_passwordRules">
+            <InputPassword name="@((string)null)" @bind-Value="@context.Password" />
         </FormItem>
-        <FormItem Label="" WrapperColOffset="8" WrapperColSpan="16">
-            <Checkbox @bind-Value="context.RememberMe">Remember me</Checkbox>
+        <FormItem Name="RememberMe" Label="" WrapperColOffset="8" WrapperColSpan="16">
+            <Checkbox name="@((string)null)" @bind-Value="context.RememberMe">Remember me</Checkbox>
         </FormItem>
         <FormItem WrapperColOffset="8" WrapperColSpan="16">
             <Button Type="ButtonType.Primary" HtmlType="submit">
@@ -26,14 +28,14 @@
 {
     public class Model
     {
-        [Required]
-        public string Username { get; set; }
-        [Required]
-        public string Password { get; set; }
+        public string Username { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
         public bool RememberMe { get; set; } = true;
     }
 
     private Model model = new Model();
+    private static readonly FormValidationRule[] _usernameRules = [new() { Required = true, Message = "Please input your username!" }];
+    private static readonly FormValidationRule[] _passwordRules = [new() { Required = true, Message = "Please input your password!" }];
 
     private void OnFinish(EditContext editContext)
     {

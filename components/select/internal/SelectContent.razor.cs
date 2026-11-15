@@ -38,6 +38,7 @@ namespace AntDesign.Select.Internal
         }
 
         [Parameter] public string Placeholder { get; set; }
+        [Parameter] public RenderFragment<SelectTagRenderInfo<TItemValue, TItem>> TagRender { get; set; }
         [Parameter] public bool IsOverlayShow { get; set; }
 
         internal void RefreshActiveDescendant() => _ = InvokeAsync(StateHasChanged);
@@ -73,6 +74,7 @@ namespace AntDesign.Select.Internal
         private bool _isInitialized;
         private string _prefix;
         private int _calculatedMaxCount;
+        private decimal? _suffixFixedStart;
         private int _lastInputWidth;
 
         private ElementReference _ref;
@@ -192,7 +194,8 @@ namespace AntDesign.Select.Internal
             int i = 0;
             bool overflowing = false;
             bool renderAgain = false;
-            foreach (var item in ParentSelect.GetOrderedSelectedItems())
+            var selectedItems = ParentSelect.GetOrderedSelectedItems();
+            foreach (var item in selectedItems)
             {
                 if (item.Width == 0)
                 {
@@ -207,19 +210,11 @@ namespace AntDesign.Select.Internal
                         //current item will overflow; check if with aggregateTag will overflow
                         if (accumulatedWidth + _aggregateTagElement.Width > _overflowElement.Width)
                         {
-                            if (_calculatedMaxCount != Math.Max(0, i - 1))
-                            {
-                                _calculatedMaxCount = Math.Max(0, i - 1);
-                                renderAgain = true;
-                            }
+                            renderAgain |= SetResponsiveDisplayCount(selectedItems, Math.Max(0, i - 1));
                         }
                         else //aggregateTag will not overflow, so start aggregating from current item
                         {
-                            if (_calculatedMaxCount != i)
-                            {
-                                _calculatedMaxCount = i;
-                                renderAgain = true;
-                            }
+                            renderAgain |= SetResponsiveDisplayCount(selectedItems, i);
                         }
                         overflowing = true;
                     }
@@ -233,20 +228,51 @@ namespace AntDesign.Select.Internal
             if (!overflowing && _calculatedMaxCount != i)
             {
                 _calculatedMaxCount = i;
+                _suffixFixedStart = null;
                 renderAgain = true;
+            }
+            else if (!overflowing)
+            {
+                _suffixFixedStart = null;
             }
             if (renderAgain)
                 StateHasChanged();
 
             //force focus on cursor
-            if (ParentSelect.IsDropdownShown() || forceInputFocus)
+            if ((ParentSelect.IsDropdownShown() && !ParentSelect.Open) || forceInputFocus)
             {
                 var isFocused = await Js.InvokeAsync<bool>(JSInteropConstants.HasFocus, ParentSelect._inputRef);
                 if (!isFocused)
                 {
-                    await Js.FocusAsync(ParentSelect._inputRef);
+                    // Focus restoration runs after the popup has been positioned.
+                    // Scrolling the trigger here would leave the overlay at its
+                    // old viewport coordinates for the rest of the entrance.
+                    await Js.FocusAsync(ParentSelect._inputRef, preventScroll: true);
                 }
             }
+        }
+
+        private bool SetResponsiveDisplayCount(IList<SelectOptionItem<TItemValue, TItem>> items, int count)
+        {
+            var changed = _calculatedMaxCount != count;
+            _calculatedMaxCount = count;
+
+            // rc-overflow pins the input suffix immediately after the visible
+            // tags and the aggregate tag so it does not drift when hidden tags
+            // are removed from the flex layout.
+            var fixedStart = _prefixElement.Width + _aggregateTagElement.Width;
+            for (var index = 0; index < count && index < items.Count; index++)
+            {
+                fixedStart += items[index].Width;
+            }
+
+            if (_suffixFixedStart != fixedStart)
+            {
+                _suffixFixedStart = fixedStart;
+                changed = true;
+            }
+
+            return changed;
         }
 
         private async Task OnInputChange(ChangeEventArgs e)
@@ -375,12 +401,15 @@ namespace AntDesign.Select.Internal
             {
                 if (_calculatedMaxCount < order + 1)
                 {
-                    return $"opacity: 0.2; order: {order}; height: 0px; overflow-y: hidden; pointer-events: none;";
+                    return $"opacity: 0; height: 0px; overflow-y: hidden; order: {order}; pointer-events: none; position: absolute;";
                 }
                 return $"opacity: 1; order: {order};";
             }
             return "opacity: 1;";
         }
+
+        private bool IsOverflowed(int order) =>
+            (ParentSelect.HasTagCount || ParentSelect.IsResponsive) && _calculatedMaxCount < order + 1;
 
         private string FormatLabel(string label)
         {
@@ -418,6 +447,18 @@ namespace AntDesign.Select.Internal
             {
                 await OnRemoveSelected.InvokeAsync(selectedOption);
             }
+        }
+
+        private SelectTagRenderInfo<TItemValue, TItem> CreateTagRenderInfo(SelectOptionItem<TItemValue, TItem> selectedOption)
+        {
+            return new SelectTagRenderInfo<TItemValue, TItem>
+            {
+                Item = selectedOption.Item,
+                Value = selectedOption.Value,
+                Label = selectedOption.Label,
+                Closable = !ParentSelect.Disabled && !selectedOption.IsDisabled,
+                OnClose = EventCallback.Factory.Create<MouseEventArgs>(this, e => RemoveClicked(e, selectedOption))
+            };
         }
 
         //TODO: Use built in @onfocus once https://github.com/dotnet/aspnetcore/issues/30070 is solved

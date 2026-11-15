@@ -3,12 +3,12 @@
         DataSource="@_options"
         ValueName="@nameof(SelectLabelOption.Value)"
         LabelName="@nameof(SelectLabelOption.Label)"
-        DefaultValue="@("gold")"
+        Value="@("1")"
         Style="width: 100%;">
     <LabelTemplate Context="option">
-        @if (option is not null)
+        @if (option is not null && !string.IsNullOrEmpty(option.Label))
         {
-            <span><strong>@option.Label</strong> (@option.Value)</span>
+            @option.Value
         }
         else
         {
@@ -22,9 +22,9 @@
 
     private readonly SelectLabelOption[] _options =
     [
-        new("gold", "Gold"),
-        new("lime", "Lime"),
-        new("green", "Green"),
-        new("cyan", "Cyan")
+        new("gold", "gold"),
+        new("lime", "lime"),
+        new("green", "green"),
+        new("cyan", "cyan")
     ];
 }

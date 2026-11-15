@@ -45,6 +45,10 @@ namespace AntDesign
         [Parameter]
         public bool Readonly { get; set; }
 
+        /// <summary>Preferred placement for the mentions suggestion popup.</summary>
+        [Parameter]
+        public Placement Placement { get; set; } = Placement.BottomLeft;
+
         [Parameter]
         public bool Loading { get; set; }
 

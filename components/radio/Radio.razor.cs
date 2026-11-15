@@ -39,6 +39,10 @@ namespace AntDesign
         [Parameter]
         public string Title { get; set; }
 
+        /// <summary>Accessible name for the radio input.</summary>
+        [Parameter]
+        public string AriaLabel { get; set; }
+
         /// <summary>Marks the radio as required.</summary>
         [Parameter]
         public bool Required { get; set; }
@@ -118,6 +122,9 @@ namespace AntDesign
         [CascadingParameter(Name = "GroupBlock")]
         public bool GroupBlock { get; set; }
 
+        [CascadingParameter(Name = "IsInFormItem")]
+        public bool IsInFormItem { get; set; }
+
         private readonly ClassMapper _radioClassMapper = new();
         private readonly ClassMapper _inputClassMapper = new();
         private ElementReference _inputRef;
@@ -142,6 +149,7 @@ namespace AntDesign
                 .If($"{prefixCls}-button-wrapper-disabled", () => Disabled && RadioButton)
                 .If($"{prefixCls}-wrapper-block", () => GroupBlock && !RadioButton)
                 .If($"{prefixCls}-button-wrapper-block", () => GroupBlock && RadioButton)
+                .If($"{prefixCls}-button-wrapper-in-form-item", () => RadioButton && IsInFormItem)
                 .If($"{prefixCls}-button-wrapper-rtl", () => RTL)
                 .Add("ant-radio-css-var");
 

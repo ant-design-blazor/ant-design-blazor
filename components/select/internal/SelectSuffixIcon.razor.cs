@@ -12,6 +12,9 @@ namespace AntDesign.Select.Internal
 {
     public partial class SelectSuffixIcon<TItemValue, TItem>
     {
+        [Parameter]
+        public RenderFragment SuffixIcon { get; set; }
+
         [Parameter] public bool IsOverlayShow { get; set; }
 
         /// <summary>
@@ -32,6 +35,8 @@ namespace AntDesign.Select.Internal
         public EventCallback<MouseEventArgs> OnClearClick { get; set; }
 
         [CascadingParameter(Name = "ParentSelect")] internal SelectBase<TItemValue, TItem> ParentSelect { get; set; }
+
+        [CascadingParameter(Name = "LoadingIcon")] internal RenderFragment LoadingIcon { get; set; }
 
         [Inject] private IDomEventListener DomEventListener { get; set; }
 

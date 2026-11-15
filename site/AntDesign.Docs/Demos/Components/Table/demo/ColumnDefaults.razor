@@ -1,19 +1,25 @@
-﻿<Table TItem="ColumnDefaultsRow" DataSource="@_rows" HidePagination>
-    <PropertyColumn Property="x => x.Name" Title="Name" Align="ColumnAlign.Center" Ellipsis />
-    <PropertyColumn Property="x => x.Description" Title="Description" Width="180px" Align="ColumnAlign.Center" Ellipsis />
-    <PropertyColumn Property="x => x.Address" Title="Address" Width="220px" Align="ColumnAlign.Left" Ellipsis />
+<Table TItem="ColumnDefaultsRow" DataSource="@_rows" RowKey="x => x.Key" HidePagination Column="_columnDefaults">
+    <PropertyColumn Property="x => x.Name" Title="Name" Width="140px" />
+    <PropertyColumn Property="x => x.Description" Title="Description" Width="180px" />
+    <PropertyColumn Property="x => x.Address" Title="Address" Width="220px" Align="ColumnAlign.Left" />
 </Table>
-<p>Shared column presentation is applied explicitly to each Blazor column; Address overrides the centered alignment.</p>
 
 @code {
+    private readonly TableColumnDefaults _columnDefaults = new()
+    {
+        Align = ColumnAlign.Center,
+        Ellipsis = true
+    };
+
     private readonly ColumnDefaultsRow[] _rows =
     [
-        new() { Name = "John Brown", Description = "Shared column props let repeated settings live on the table.", Address = "No. 1 Lake Park Road, Hangzhou, Zhejiang, China" },
-        new() { Name = "Jim Green", Description = "Individual columns can override the common alignment.", Address = "No. 99 Garden Avenue, Pudong, Shanghai, China" }
+        new() { Key = "1", Name = "John Brown", Description = "Shared column props let repeated column settings live on the table.", Address = "No. 1 Lake Park Road, Hangzhou, Zhejiang, China" },
+        new() { Key = "2", Name = "Jim Green", Description = "Columns can still override the default alignment or other shared props.", Address = "No. 99 Garden Avenue, Pudong, Shanghai, China" }
     ];
 
     private sealed class ColumnDefaultsRow
     {
+        public string Key { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;

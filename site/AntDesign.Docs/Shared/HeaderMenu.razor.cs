@@ -72,7 +72,7 @@ namespace AntDesign.Docs.Shared
             if (firstRender)
             {
                 _firstRender = true;
-                if (!IsMobile) await JsInterop.InvokeVoidAsync("window.DocSearchInit", CurrentLanguage);
+                if (!IsMobile || ShowSearch) await JsInterop.InvokeVoidAsync("window.DocSearchInit", CurrentLanguage);
             }
         }
 
@@ -83,7 +83,7 @@ namespace AntDesign.Docs.Shared
                 return;
             }
             _menuItems = await DemoService.GetMenuAsync();
-            if (!IsMobile) await JsInterop.InvokeVoidAsync("window.DocSearchInit", culture.Name);
+            if (!IsMobile || ShowSearch) await JsInterop.InvokeVoidAsync("window.DocSearchInit", culture.Name);
             await InvokeAsync(StateHasChanged);
         }
 

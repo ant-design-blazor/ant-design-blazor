@@ -1,26 +1,26 @@
 ﻿@using AntDesign.Docs.Services
 <header id="header" class="clearfix @(IsHome?"home-header":"") @_styles["root"]">
     <Row Style="flex-flow: nowrap; height: 64px;" OnBreakpoint="OnBreakpoint">
-        <GridCol Class="docs-header-logo" Xs="24" Sm="24" Md="6" Lg="6" Xl="5" Xxl="4">
+        <GridCol Class="docs-header-logo" Flex="@(IsHome ? "none" : null)" Xs="24" Sm="24" Md="6" Lg="6" Xl="5" Xxl="4">
             <h1>
                 <a id="logo" href="/">
-                    <img alt="logo" src="/docs/assets/logo.svg">Ant Design Blazor
+                    <img alt="logo" src="/docs/assets/logo.svg"><span class="docs-brand-name">Ant Design<sup>Blazor</sup></span>
                 </a>
             </h1>
         </GridCol>
         @if (_isMobile)
         {
-            <Popover Class="docs-header-mobile-trigger" Style="position:absolute;inset-inline-end:16px;top:16px;width:32px;height:32px;margin:0;" Placement="Placement.BottomRight" BoundaryAdjustMode="TriggerBoundaryAdjustMode.InView" PopupWidthMode="custom" PopupWidth="min(300px, calc(100vw - 16px))" PopupMaxWidth="calc(100vw - 16px)" Trigger="new[] { Trigger.Click }" OverlayClassName="docs-header-mobile-popup">
+            <Popover Class="docs-header-mobile-trigger" Placement="Placement.BottomRight" BoundaryAdjustMode="TriggerBoundaryAdjustMode.InView" ArrowPointAtCenter PopupWidthMode="custom" PopupWidth="min(300px, calc(100vw - 32px))" PopupMaxWidth="calc(100vw - 32px)" Trigger="new[] { Trigger.Click }" OverlayClassName="docs-header-mobile-popup">
                 <ContentTemplate>
                     <HeaderMenu IsMobile />
                 </ContentTemplate>
                 <ChildContent><Button Type="ButtonType.Text" Icon="@IconType.Outline.UnorderedList" Class="nav-phone-icon" AriaLabel="Open navigation" /></ChildContent>
             </Popover>
         }
-        @if (!_isMobile)
+        @if (!_isMobile || IsHome)
         {
-            <GridCol Class="menu-row" Xs="0" Sm="0" Md="18" Lg="18" Xl="19" Xxl="20">
-                <HeaderMenu IsMobile="false" />
+            <GridCol Class="menu-row" Flex="@(IsHome ? "auto" : null)" Xs="@(IsHome ? 24 : 0)" Sm="@(IsHome ? 24 : 0)" Md="18" Lg="18" Xl="19" Xxl="20">
+                <HeaderMenu IsMobile="_isMobile" ShowSearch="@IsHome" ShowNavigation="@(!_isMobile)" />
             </GridCol>
         }
     </Row>
@@ -28,11 +28,26 @@
 
 <style>@((MarkupString)_styles.CssText)</style>
 <style>
+    #header #logo{gap:12px;flex:none;overflow:visible}
+    #header #logo img{flex:none;width:32px;height:32px;margin:0}
+    #header #logo .docs-brand-name{display:inline-flex;align-items:flex-start;flex:none;white-space:nowrap;font-size:18px;line-height:1;font-weight:700}
+    #header #logo .docs-brand-name sup{position:relative;top:-.2em;margin-inline-start:3px;font-size:.55em;line-height:1}
     .docs-header-mobile-popup .ant-popover-inner,.docs-header-mobile-popup .ant-popover-inner-content{padding:0;width:100%;box-sizing:border-box}
-    .docs-header-mobile-popup .ant-popover-content{width:100%}
+    .docs-header-mobile-popup .ant-popover-container,.docs-header-mobile-popup .ant-popover-content{width:100%;box-sizing:border-box}
     .docs-header-mobile-popup .ant-popover-inner{background:var(--ant-color-bg-elevated,#fff);border-radius:var(--ant-border-radius-lg,8px);box-shadow:var(--ant-box-shadow-secondary,0 6px 16px rgba(0,0,0,.12))}
     .docs-header-mobile-popup .header-navigation{width:100%}
     .docs-header-mobile-popup .ant-menu{width:100%;border-inline-end:0}
+    .docs-header-mobile-popup.ant-popover-arrow-point-at-center:is(.ant-popover-placement-top,.ant-popover-placement-topLeft,.ant-popover-placement-topRight,.ant-popover-placement-bottom,.ant-popover-placement-bottomLeft,.ant-popover-placement-bottomRight) .ant-popover-arrow{left:var(--ant-overlay-arrow-left);right:auto}
+    .docs-header-mobile-popup.ant-popover-arrow-point-at-center:is(.ant-popover-placement-left,.ant-popover-placement-leftTop,.ant-popover-placement-leftBottom,.ant-popover-placement-right,.ant-popover-placement-rightTop,.ant-popover-placement-rightBottom) .ant-popover-arrow{top:var(--ant-overlay-arrow-top);bottom:auto}
+    /* Let Overlay own arrow placement. Its final placement can flip at the
+       viewport boundary, so a fixed right offset would desynchronize the arrow. */
+    #header .docs-header-mobile-trigger{position:absolute;inset-inline-end:22px;top:20px;width:32px;height:32px;margin:0}
+    #header .docs-header-mobile-trigger .nav-phone-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:top;line-height:1}
+    @@media (min-width:768px){#header .docs-header-mobile-trigger{display:none!important}}
+    @@media (max-width:767.99px){#header.home-header>.ant-row>.ant-col.menu-row{display:flex!important;flex:1 1 auto!important;width:auto!important;max-width:none!important;min-width:0;margin:0!important}#header.home-header .menu-row #search-box{max-width:220px;margin-inline:0 8px!important}#header.home-header .docs-header-logo{flex:0 0 auto!important;width:auto!important;max-width:none!important}}
+    [data-theme="dark"] #header #nav .ant-menu-item>a,[data-theme="dark"] #header #nav .ant-menu-submenu-title{color:var(--ant-color-text,rgba(255,255,255,.85))}
+    [data-theme="dark"] #header #nav .ant-menu-item-selected>a,[data-theme="dark"] #header #nav .ant-menu-item>a:hover{color:var(--ant-color-primary,#1677ff)}
+    [data-theme="dark"] #header .header-button{color:var(--ant-color-text,rgba(255,255,255,.85));border-color:var(--ant-color-border,#434343)}
 </style>
 
 @code {
@@ -42,56 +57,56 @@
         {
             ["&#header"] = new System.Collections.Generic.Dictionary<string, object>
             {
-                ["position"] = "relative", ["zIndex"] = 10, ["maxWidth"] = "100%", ["background"] = "var(--ant-color-bg-container)", ["boxShadow"] = "0 2px 8px #f0f1f2",
+                ["position"] = "sticky", ["top"] = 0, ["zIndex"] = 1000, ["maxWidth"] = "100%", ["background"] = "var(--ant-color-bg-container)", ["boxShadow"] = "0 2px 8px #f0f1f2", ["backdropFilter"] = "blur(8px)",
                 ["transition"] = "all 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86)"
             },
             ["[data-theme='dark'] &#header"] = new System.Collections.Generic.Dictionary<string, object> { ["boxShadow"] = "0 2px 8px 0 rgba(0, 0, 0, 0.65)" },
             ["[data-theme='dark'] &#header #search-box input::placeholder"] = new System.Collections.Generic.Dictionary<string, object> { ["color"] = "rgba(255, 255, 255, 0.3)" },
             ["&#header > .ant-row > .ant-col h1"] = new System.Collections.Generic.Dictionary<string, object> { ["marginBottom"] = 0 },
-            ["&#header.home-header"] = new System.Collections.Generic.Dictionary<string, object>
-            {
-                ["position"] = "absolute", ["top"] = 0, ["right"] = 0, ["left"] = 0, ["maxWidth"] = 1280,
-                ["marginRight"] = "auto", ["marginLeft"] = "auto", ["background"] = "transparent", ["boxShadow"] = "none"
-            },
-            ["&#header.home-header #logo"] = new System.Collections.Generic.Dictionary<string, object> { ["paddingRight"] = 16, ["paddingLeft"] = 40 },
-            ["html.rtl &.home-header #logo"] = new System.Collections.Generic.Dictionary<string, object> { ["paddingRight"] = 40, ["paddingLeft"] = 16 },
-            ["&#header.home-header .ant-menu"] = new System.Collections.Generic.Dictionary<string, object> { ["background"] = "transparent" },
-            ["&#header .menu-row"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "flex", ["alignItems"] = "center", ["margin"] = 0 },
-            ["&#header .header-navigation"] = new System.Collections.Generic.Dictionary<string, object> { ["position"] = "relative", ["minWidth"] = 0, ["flex"] = "1 1 0 !important" },
+            ["&#header #logo"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "inline-flex", ["alignItems"] = "center", ["columnGap"] = 12 },
+            ["&#header #logo img"] = new System.Collections.Generic.Dictionary<string, object> { ["width"] = 32, ["height"] = 32, ["display"] = "inline-block", ["flex"] = "none", ["margin"] = 0 },
+            ["&#header.home-header"] = new System.Collections.Generic.Dictionary<string, object> { ["position"] = "sticky !important", ["top"] = 0, ["maxWidth"] = "100%", ["margin"] = 0, ["background"] = "var(--ant-color-bg-container)", ["boxShadow"] = "var(--ant-box-shadow-tertiary, 0 2px 8px rgba(0,0,0,.08))" },
+            ["&#header.home-header .docs-header-logo"] = new System.Collections.Generic.Dictionary<string, object> { ["width"] = "auto", ["maxWidth"] = "none", ["flex"] = "none" },
+            ["&#header.home-header .menu-row"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "flex", ["width"] = "auto", ["maxWidth"] = "none", ["minWidth"] = 0, ["flex"] = "1 1 auto" },
+            ["&#header .menu-row"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "flex", ["alignItems"] = "center", ["justifyContent"] = "flex-end", ["columnGap"] = 2, ["paddingInlineEnd"] = 16, ["minWidth"] = 0, ["margin"] = 0 },
+            ["&#header .header-navigation"] = new System.Collections.Generic.Dictionary<string, object> { ["position"] = "relative", ["minWidth"] = 0, ["flex"] = "none" },
             ["&#header #nav.ant-menu-horizontal"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "flex", ["flexWrap"] = "nowrap", ["width"] = "100%", ["minWidth"] = 0, ["borderBottom"] = "none" },
             ["&#header #nav > li"] = new System.Collections.Generic.Dictionary<string, object> { ["flex"] = "none", ["margin"] = 0 },
-            ["&#header .header-more-options"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "none" },
-            ["&#header .docs-header-mobile-trigger"] = new System.Collections.Generic.Dictionary<string, object> { ["position"] = "absolute", ["insetInlineEnd"] = 16, ["top"] = 16, ["width"] = 32, ["height"] = 32 },
-            ["&#header .nav-phone-icon"] = new System.Collections.Generic.Dictionary<string, object> { ["position"] = "relative", ["top"] = "auto", ["right"] = "auto", ["zIndex"] = "auto", ["display"] = "inline-flex", ["width"] = 32, ["height"] = 32, ["padding"] = 0 },
-            ["&#header .header-desktop-utilities"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "flex", ["alignItems"] = "center", ["gap"] = 12 },
+            ["&#header .docs-header-mobile-trigger"] = new System.Collections.Generic.Dictionary<string, object> { ["position"] = "absolute", ["insetInlineEnd"] = 16, ["top"] = 16, ["width"] = 32, ["height"] = 32, ["margin"] = 0 },
+            ["&#header .nav-phone-icon"] = new System.Collections.Generic.Dictionary<string, object> { ["position"] = "relative", ["top"] = "auto", ["right"] = "auto", ["zIndex"] = "auto", ["display"] = "inline-flex", ["alignItems"] = "center", ["justifyContent"] = "center", ["verticalAlign"] = "top", ["lineHeight"] = 1, ["width"] = 32, ["height"] = 32, ["padding"] = 0 },
+            ["&#header .header-desktop-utilities"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "flex", ["alignItems"] = "center", ["gap"] = 2 },
             ["@media (min-width: 768px)"] = new System.Collections.Generic.Dictionary<string, object>
             {
                 ["&#header .docs-header-logo"] = new System.Collections.Generic.Dictionary<string, object> { ["flex"] = "0 0 auto", ["width"] = "auto", ["maxWidth"] = "none" },
                 ["&#header .menu-row"] = new System.Collections.Generic.Dictionary<string, object> { ["minWidth"] = 0, ["flex"] = "1 1 0", ["maxWidth"] = "none" },
+                ["&#header .docs-header-mobile-trigger"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "none" },
             },
             ["@media (width < 768px)"] = new System.Collections.Generic.Dictionary<string, object>
             {
                 // Apply the narrow layout immediately, including while the
                 // debounced Row breakpoint callback is still in flight.
-                ["&#header .menu-row"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "none" },
-                ["&#header .docs-header-logo"] = new System.Collections.Generic.Dictionary<string, object> { ["flex"] = "1 1 0", ["width"] = "100%", ["maxWidth"] = "100%" },
+                ["&#header:not(.home-header) .menu-row"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "none" },
+                ["&#header:not(.home-header) .docs-header-logo"] = new System.Collections.Generic.Dictionary<string, object> { ["flex"] = "1 1 0", ["width"] = "100%", ["maxWidth"] = "100%" },
+                ["&#header.home-header .docs-header-logo"] = new System.Collections.Generic.Dictionary<string, object> { ["flex"] = "0 0 auto", ["width"] = "auto", ["maxWidth"] = "none" },
+                ["&#header.home-header .menu-row"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "flex", ["flex"] = "1 1 auto", ["width"] = "auto", ["maxWidth"] = "none", ["minWidth"] = 0, ["paddingInlineEnd"] = 48 },
                 ["&#header"] = new System.Collections.Generic.Dictionary<string, object> { ["textAlign"] = "center" },
                 ["&#header #logo"] = new System.Collections.Generic.Dictionary<string, object> { ["paddingInline"] = 0 },
+                ["&#header .docs-header-mobile-trigger"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "block" }
             },
             ["@media (width < 1120px)"] = new System.Collections.Generic.Dictionary<string, object>
             {
                 ["&#header .header-desktop-utilities"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "none" },
-                ["&#header .header-more-options"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "inline-block" },
-                ["&#header .DocSearch-Button-Placeholder, &#header .DocSearch-Button-Keys"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "none" },
             },
-            ["&#header .menu-row > *"] = new System.Collections.Generic.Dictionary<string, object> { ["flex"] = "none", ["margin"] = "0 12px 0 0" },
-            ["&#header .menu-row > *:last-child"] = new System.Collections.Generic.Dictionary<string, object> { ["marginRight"] = 40 },
-            ["&#header .ant-row-rtl .menu-row > *:last-child"] = new System.Collections.Generic.Dictionary<string, object> { ["marginRight"] = 12, ["marginLeft"] = 40 },
+            ["@media (width >= 1200px)"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["&#header .header-navigation"] = new System.Collections.Generic.Dictionary<string, object> { ["minWidth"] = 393 },
+            },
+            ["&#header .menu-row > *"] = new System.Collections.Generic.Dictionary<string, object> { ["flex"] = "none", ["margin"] = 0 },
             ["&#header .header-button"] = new System.Collections.Generic.Dictionary<string, object> { ["color"] = "rgba(0, 0, 0, 0.85)", ["borderColor"] = "#d9d9d9" },
             ["&#header #nav"] = new System.Collections.Generic.Dictionary<string, object>
             {
                 ["height"] = "100%", ["fontSize"] = 14,
-                ["fontFamily"] = "Avenir, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif",
+                ["fontFamily"] = "Avenir, AlibabaSans, -apple-system, 'system-ui', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif",
                 ["border"] = 0
             },
             ["&#header #nav.ant-menu-horizontal > .ant-menu-item, &#header #nav.ant-menu-horizontal > .ant-menu-submenu"] = new System.Collections.Generic.Dictionary<string, object>
@@ -109,14 +124,14 @@
             ["&#header #nav .ant-menu-item-selected > a, &#header #nav .ant-menu-item > a:hover"] = new System.Collections.Generic.Dictionary<string, object> { ["color"] = "var(--ant-primary-color)" },
             ["&#header #search-box"] = new System.Collections.Generic.Dictionary<string, object>
             {
-                ["position"] = "relative", ["display"] = "flex", ["flex"] = "0 1 180px !important", ["minWidth"] = 0, ["alignItems"] = "center", ["height"] = 22,
-                ["margin"] = "0 auto 0 0 !important", ["paddingLeft"] = 16, ["lineHeight"] = "22px", ["whiteSpace"] = "nowrap",
-                ["borderLeft"] = "1px solid rgba(0, 0, 0, 0.06)", ["transition"] = "width 0.5s"
+                ["position"] = "relative", ["display"] = "flex", ["flex"] = "1 1 auto !important", ["maxWidth"] = 220, ["minWidth"] = 0, ["alignItems"] = "center", ["height"] = 32,
+                ["margin"] = "0 16px 0 0 !important", ["paddingLeft"] = 0, ["lineHeight"] = "32px", ["whiteSpace"] = "nowrap",
+                ["borderLeft"] = "none", ["transition"] = "width 0.5s"
             },
             [".ant-row-rtl &#header #search-box"] = new System.Collections.Generic.Dictionary<string, object>
             {
-                ["margin"] = "0 0 0 auto !important", ["paddingRight"] = 16, ["paddingLeft"] = 0,
-                ["borderRight"] = "1px solid rgba(0, 0, 0, 0.06)", ["borderLeft"] = "none"
+                ["margin"] = "0 0 0 16px !important", ["paddingRight"] = 0, ["paddingLeft"] = 0,
+                ["borderRight"] = "none", ["borderLeft"] = "none"
             },
             ["&#header #search-box > *"] = new System.Collections.Generic.Dictionary<string, object> { ["flex"] = "auto" },
             ["&#header .DocSearch-Button"] = new System.Collections.Generic.Dictionary<string, object> { ["width"] = "100%", ["maxWidth"] = "100%", ["minWidth"] = 0, ["boxSizing"] = "border-box", ["overflow"] = "hidden" },
@@ -144,14 +159,15 @@
             ["&#header #github-btn.responsive-mode .gh-count, .ant-row-rtl &#header #github-btn .gh-count"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "none !important" },
             ["&#header #logo"] = new System.Collections.Generic.Dictionary<string, object>
             {
+                ["display"] = "inline-flex", ["alignItems"] = "center", ["columnGap"] = 12,
                 ["height"] = 64, ["paddingLeft"] = 40, ["overflow"] = "hidden", ["color"] = "var(--ant-color-text)",
                 ["fontWeight"] = "bold", ["fontSize"] = 18,
                 ["fontFamily"] = "PuHuiTi, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif",
                 ["lineHeight"] = "64px", ["letterSpacing"] = "-0.18px", ["whiteSpace"] = "nowrap", ["textDecoration"] = "none"
             },
-            ["&#header #logo img"] = new System.Collections.Generic.Dictionary<string, object> { ["height"] = 32, ["marginRight"] = 12 },
+            ["&#header #logo img"] = new System.Collections.Generic.Dictionary<string, object> { ["width"] = 32, ["height"] = 32, ["display"] = "inline-block", ["flex"] = "none", ["marginRight"] = 0 },
             ["&#header .ant-row-rtl #logo"] = new System.Collections.Generic.Dictionary<string, object> { ["float"] = "right", ["paddingRight"] = 40, ["paddingLeft"] = 0 },
-            ["&#header .ant-row-rtl #logo img"] = new System.Collections.Generic.Dictionary<string, object> { ["marginRight"] = 0, ["marginLeft"] = 16 },
+            ["&#header .ant-row-rtl #logo img"] = new System.Collections.Generic.Dictionary<string, object> { ["marginRight"] = 0, ["marginLeft"] = 0 },
             ["@media only screen and (max-width: 767.99px)"] = new System.Collections.Generic.Dictionary<string, object>
             {
                 ["&#header"] = new System.Collections.Generic.Dictionary<string, object> { ["textAlign"] = "center" },

@@ -60,6 +60,14 @@ namespace AntDesign
         [Parameter]
         public bool Disabled { get; set; }
 
+        /// <summary>Whether to prevent the default action when the Tag is pressed with a mouse.</summary>
+        [Parameter]
+        public bool PreventMouseDownDefault { get; set; }
+
+        /// <summary>Whether to stop mouse down events from bubbling past the Tag.</summary>
+        [Parameter]
+        public bool StopMouseDownPropagation { get; set; }
+
         /// <summary>Visual variant. Defaults to filled, or solid for legacy inverse colors.</summary>
         [Parameter] public TagVariant? Variant { get; set; }
 

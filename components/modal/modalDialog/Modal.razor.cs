@@ -205,11 +205,26 @@ namespace AntDesign
         [Parameter]
         public bool Visible { get; set; }
 
+        /// <summary>Whether the modal is open. React-compatible alias for <see cref="Visible"/>.</summary>
+        [Parameter]
+        public bool? Open
+        {
+            get => Visible;
+            set
+            {
+                if (value.HasValue) Visible = value.Value;
+            }
+        }
+
         /// <summary>
         /// Specify a function invoke when the modal dialog is visible or not
         /// </summary>
         [Parameter]
         public EventCallback<bool> VisibleChanged { get; set; }
+
+        /// <summary>Callback for changes to the React-compatible <see cref="Open"/> parameter.</summary>
+        [Parameter]
+        public EventCallback<bool> OpenChanged { get; set; }
 
         /// <summary>
         /// Width of the modal dialog, the default value is 520
@@ -386,6 +401,10 @@ namespace AntDesign
                         {
                             await VisibleChanged.InvokeAsync(false);
                         }
+                        if (OpenChanged.HasDelegate)
+                        {
+                            await OpenChanged.InvokeAsync(false);
+                        }
 
                         if (OnCancel.HasDelegate)
                         {
@@ -407,6 +426,10 @@ namespace AntDesign
                         if (VisibleChanged.HasDelegate)
                         {
                             await VisibleChanged.InvokeAsync(false);
+                        }
+                        if (OpenChanged.HasDelegate)
+                        {
+                            await OpenChanged.InvokeAsync(false);
                         }
 
                         if (OnOk.HasDelegate)

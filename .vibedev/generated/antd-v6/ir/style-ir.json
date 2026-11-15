@@ -2209,21 +2209,6 @@
       "reserved": false
     },
     {
-      "name": "addonBg",
-      "kind": "component",
-      "type": "string",
-      "sourceType": "string",
-      "description": "前/后置标签背景色",
-      "descriptionEn": "Background color of addon",
-      "defaultValue": "rgba(0,0,0,0.02)",
-      "documented": true,
-      "value": null,
-      "cssVariable": "--ant-date-picker-addon-bg",
-      "component": "date-picker",
-      "source": "components/date-picker/style/token.ts",
-      "reserved": false
-    },
-    {
       "name": "errorActiveShadow",
       "kind": "component",
       "type": "string",

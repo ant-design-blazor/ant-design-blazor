@@ -3,7 +3,8 @@
 <div id="select-semantic-preview" style="min-height: 180px; display: grid; place-items: center;">
     <Select TItemValue="string" TItem="string"
             DefaultValue='@("lucy")'
-            Open="true"
+            @bind-Open="_open"
+            BoundaryAdjustMode="TriggerBoundaryAdjustMode.None"
             AllowClear
             Style="width: 220px;"
             PopupContainerSelector="#select-semantic-preview">
@@ -15,3 +16,7 @@
         </SelectOptions>
     </Select>
 </div>
+
+@code {
+    private bool _open = true;
+}

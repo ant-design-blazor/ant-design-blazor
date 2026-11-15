@@ -4,6 +4,7 @@
 
 <CascadingValue Value="this" IsFixed="@true">
 	<CascadingValue Value="Block" Name="GroupBlock" IsFixed="@true">
+	<CascadingValue Value="@(FormItem != null)" Name="IsInFormItem" IsFixed="@true">
 	<CascadingValue Value="true" Name="InGroup" IsFixed>
         <div class="@ClassMapper.Class" style="@Style" id="@Id" role="radiogroup" @ref="Ref">
 			@if (Options.Value != null)
@@ -30,6 +31,7 @@
 				@ChildContent
 			}
 		</div>
+	</CascadingValue>
 	</CascadingValue>
 	</CascadingValue>
 </CascadingValue>

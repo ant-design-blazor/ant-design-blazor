@@ -117,6 +117,9 @@
                 {
                     Icon = @<Icon Type="@IconType.Outline.Smile" Style="color:hotpink" />,
                     Description = (RenderFragment)(b => Description(b)),
+                    // Keep the persistent sponsorship notice below the fixed
+                    // header so it cannot intercept clicks on header controls.
+                    Style = "margin-top: 64px",
                     Duration = 0
                 });
             });

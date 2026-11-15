@@ -31,6 +31,27 @@ export function captureDomStyles({ side, scopeSelector, rootSelector, semanticNo
     }
     return styles;
   };
+  const serializeLiveDom = element => {
+    const clone = element.cloneNode(true);
+    const originals = [element, ...element.querySelectorAll('input, textarea, select')];
+    const copies = [clone, ...clone.querySelectorAll('input, textarea, select')];
+    originals.forEach((original, index) => {
+      const copy = copies[index];
+      if (original instanceof HTMLInputElement) {
+        copy.setAttribute('value', original.value);
+        if (original.checked) copy.setAttribute('checked', '');
+        else copy.removeAttribute('checked');
+      } else if (original instanceof HTMLTextAreaElement) {
+        copy.textContent = original.value;
+      } else if (original instanceof HTMLSelectElement) {
+        [...copy.options].forEach((option, optionIndex) => {
+          if (original.options[optionIndex]?.selected) option.setAttribute('selected', '');
+          else option.removeAttribute('selected');
+        });
+      }
+    });
+    return clone.outerHTML;
+  };
   const semantic = {};
   const semanticElements = {};
   for (const definition of semanticNodes) {
@@ -56,7 +77,19 @@ export function captureDomStyles({ side, scopeSelector, rootSelector, semanticNo
         return textNode?.textContent.trim() === definition.portalText;
       })
       : roots.flatMap(root => selector === '$root' ? [root] : [...root.querySelectorAll(selector)]);
-    if (definition.portal && definition.portalMatch === 'nearest-trigger') {
+    if (definition.portal && definition.portalMatch === 'aria-controls') {
+      const triggerSelector = definition[`${side}TriggerSelector`] ?? definition.triggerSelector;
+      const trigger = triggerSelector ? document.querySelector(triggerSelector) : roots[0];
+      if (!trigger) throw new Error(`portal trigger not found: ${triggerSelector ?? rootSelector}`);
+      portalTrigger = trigger;
+      const input = trigger.matches('input[aria-controls], input[aria-owns]')
+        ? trigger
+        : trigger.querySelector('input[aria-controls], input[aria-owns]');
+      const popupId = input?.getAttribute('aria-controls') ?? input?.getAttribute('aria-owns');
+      const controlledNode = popupId ? document.getElementById(popupId) : null;
+      const popup = controlledNode?.closest('.ant-select-dropdown');
+      nodes = popup && popup.matches(selector) ? [popup] : [];
+    } else if (definition.portal && definition.portalMatch === 'nearest-trigger') {
       const triggerSelector = definition[`${side}TriggerSelector`] ?? definition.triggerSelector;
       const trigger = triggerSelector ? document.querySelector(triggerSelector) : roots[0];
       if (!trigger) throw new Error(`portal trigger not found: ${triggerSelector ?? rootSelector}`);
@@ -72,7 +105,7 @@ export function captureDomStyles({ side, scopeSelector, rootSelector, semanticNo
     }
     semanticElements[definition.path] = nodes;
     semantic[definition.path] = nodes.map(element => ({
-      html: element.outerHTML,
+      html: serializeLiveDom(element),
       tag: element.tagName.toLowerCase(),
       computedStyle: readComputedStyle(element),
       ...(definition.verifySvgUse ? (() => {
@@ -118,7 +151,7 @@ export function captureDomStyles({ side, scopeSelector, rootSelector, semanticNo
     }));
   }
   return {
-    html: roots.map(root => root.outerHTML).join('\n'),
+    html: roots.map(serializeLiveDom).join('\n'),
     semantic,
     computedStyles: Object.fromEntries(roots.map((element, index) => [`root[${index}]`, readComputedStyle(element, true)])),
     rootCount: roots.length,

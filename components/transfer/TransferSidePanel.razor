@@ -1,6 +1,8 @@
 @typeparam TItem
 @namespace AntDesign.Internal
+@using AntDesign
 @using AntDesign.Icons
+@using OneOf
 
 <div class="@PanelClass" @onscroll="OnScroll" style="@PanelStyle">
     <div class="@(ResolvedClass("header", "ant-transfer-list-header"))" style="@(ResolvedStyle("header"))">
@@ -8,7 +10,7 @@
         {
             <Checkbox WrapperClass="@(ResolvedClass("itemIcon", "ant-transfer-list-checkbox"))" Style="@(ResolvedStyle("itemIcon"))" HideEmptyLabel="true"
                       Checked="AllSelected" Indeterminate="Indeterminate" Disabled="Disabled"
-                      CheckedChange="SelectAllAsync" />
+                      CheckedChange="SelectAllAsync" ChildContent="SelectAllLabelContent" />
             @if (ShowDropdown)
             {
                 <DownOutlined Class="ant-dropdown-trigger" />
@@ -80,6 +82,7 @@
     [Parameter] public string Title { get; set; }
     [Parameter] public IEnumerable<string> SelectedKeys { get; set; } = Array.Empty<string>();
     [Parameter] public IEnumerable<string> TargetKeys { get; set; } = Array.Empty<string>();
+    [Parameter] public OneOf<string, RenderFragment<TransferSelectAllLabelInfo>> SelectAllLabel { get; set; }
     [Parameter] public bool Disabled { get; set; }
     [Parameter] public bool Selectable { get; set; } = true;
     [Parameter] public bool ShowSelectAll { get; set; } = true;
@@ -113,7 +116,10 @@
     private IEnumerable<TItem> VisibleDataSource => PageSize > 0 ? DataItems.Skip((CurrentPage - 1) * PageSize).Take(PageSize) : DataItems;
     private bool AllSelected => AllSelectedOverride ?? (DataItems.Any(x => !IsItemDisabled(x)) && DataItems.Where(x => !IsItemDisabled(x)).All(x => SelectedKeys.Contains(KeySelector(x))));
     private bool Indeterminate => IndeterminateOverride ?? (!AllSelected && DataItems.Any(x => SelectedKeys.Contains(KeySelector(x))));
-    private int SelectedCount => DataItems.Count(x => SelectedKeys.Contains(KeySelector(x)));
+    private int SelectedCount => DataItems.Count(x => SelectedKeys.Contains(KeySelector(x)) && !IsItemDisabled(x));
+    private RenderFragment SelectAllLabelContent => SelectAllLabel.Match<RenderFragment>(
+        text => string.IsNullOrEmpty(text) ? null : builder => builder.AddContent(0, text),
+        template => template is null ? null : template(new TransferSelectAllLabelInfo(SelectedCount, DataItems.Count)));
     private static string FormatItemCount(int count) => $"{count} {(count == 1 ? "item" : "items")}";
     private string ResolvedClass(string slot, string baseClass) => ClassResolver?.Invoke(slot, baseClass, Direction) ?? baseClass;
     private string ResolvedStyle(string slot) => StyleResolver?.Invoke(slot, null, Direction);

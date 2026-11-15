@@ -399,6 +399,14 @@ test('normalizes only CSS declaration separator whitespace when explicitly reque
   assert.equal(normalizeRuntimeHtml(html), html);
 });
 
+test('can ignore empty attributes that have the same DOM state as missing attributes', () => {
+  const html = '<input value="" style=" "><div style=""></div>';
+  assert.equal(normalizeRuntimeHtml(html, { removeEmptyAttributes: ['value', 'style'] }),
+    '<input><div></div>');
+  assert.equal(normalizeRuntimeHtml('<input value="x">', { removeEmptyAttributes: ['value'] }),
+    '<input value="x">');
+});
+
 test('drops an empty class attribute when all its tokens are declared generated classes', () => {
   assert.equal(normalizeRuntimeHtml('<div class="acss-1obg1u7"></div>', {
     removeClassPatterns: ['^acss-[a-zA-Z0-9]+$'],
@@ -420,6 +428,16 @@ test('compares computed styles per semantic path with exact values', () => {
   );
   assert.equal(result.equal, false);
   assert.deepEqual(result.differences, [{ path: 'root', property: 'height', expected: '32px', actual: '33px' }]);
+});
+
+test('allows a declared subpixel tolerance for selected computed CSS lengths', () => {
+  const result = compareComputedStyles(
+    { label: { width: '199.984px', height: '32px' } },
+    { label: { width: '200px', height: '32.03px' } },
+    { width: 0.02 },
+  );
+  assert.equal(result.equal, false);
+  assert.deepEqual(result.differences, [{ path: 'label', property: 'height', expected: '32px', actual: '32.03px' }]);
 });
 
 test('DOM parity uses parsed structure as the gate and retains raw HTML only as a diagnostic', () => {

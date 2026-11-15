@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "ant-design/ant-design",
+    "revision": "599b251da933709d7b25fc9e9018ed7f4c093b96",
+    "component": "Table"
+  },
+  "config": {
+    "timeoutMs": 90000,
+    "viewport": {
+      "width": 1280,
+      "height": 1200,
+      "deviceScaleFactor": 1
+    },
+    "colorScheme": "light",
+    "comparisonPolicy": {
+      "normalization": {
+        "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_r_[a-zA-Z0-9_-]+)$",
+        "removeAttributes": [
+          "_bl_*",
+          "id",
+          "name"
+        ],
+        "removeClassPatterns": [
+          "^acss-[a-zA-Z0-9_-]+$",
+          "^css-dev-only-do-not-override-",
+          "^css-var-_[rR]_",
+          "^css-var-root$",
+          "^css-[a-zA-Z0-9]+$",
+          "^table-style-class-static-root$"
+        ],
+        "removeCommentMarkers": [
+          "<!--!-->"
+        ],
+        "normalizeStyleAttributes": true,
+        "sortAttributes": true,
+        "sortClassTokens": true,
+        "removeInterTagWhitespace": true
+      }
+    }
+  },
+  "groups": [
+    {
+      "id": "table-virtual-list",
+      "component": "Table",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/table",
+        "scopeSelector": "#table-demo-virtual-list",
+        "rootSelector": ".ant-table-wrapper"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/table",
+        "scopeSelector": "#components-table-demo-virtual-list",
+        "rootSelector": ".ant-table-wrapper"
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "padding",
+        "marginBottom",
+        "flexDirection",
+        "alignItems",
+        "gap",
+        "fontSize",
+        "fontWeight",
+        "lineHeight",
+        "color",
+        "backgroundColor",
+        "borderRadius",
+        "boxShadow",
+        "borderBottomWidth",
+        "borderBottomStyle",
+        "borderBottomColor"
+      ],
+      "semanticNodes": [
+        {
+          "path": "root",
+          "selector": "$root",
+          "minimumCount": 1
+        },
+        {
+          "path": "header.cell",
+          "selector": ".ant-table-thead th",
+          "minimumCount": 3
+        },
+        {
+          "path": "body.row",
+          "selector": ".ant-table-tbody-virtual-holder-inner .ant-table-row[data-row-key=\"992\"]",
+          "minimumCount": 1
+        },
+        {
+          "path": "body.cell",
+          "selector": ".ant-table-tbody-virtual-holder-inner .ant-table-row[data-row-key=\"992\"] .ant-table-cell",
+          "minimumCount": 9
+        },
+        {
+          "path": "expand.icon",
+          "selector": ".ant-table-row-expand-icon",
+          "minimumCount": 0
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "scroll-to-index-999",
+          "actions": [
+            { "type": "wait", "milliseconds": 500 },
+            {
+              "type": "click",
+              "reactSelector": "#table-demo-virtual-list .ant-btn",
+              "blazorSelector": "#components-table-demo-virtual-list .ant-btn"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,18 +1,39 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
 
-@if (Simple)
-{
-    @simpleTemplate(this)
-}
-else
-{
-    <div class="@WrapperClassMapper.Class" @ref="Ref">
-        <div>
-            @simpleTemplate(this)
+<div class="@RootClass" id="@Id" style="@RootStyle" aria-live="polite" aria-busy="@_isLoading.ToString().ToLowerInvariant()" @ref="Ref">
+    @if (_isLoading)
+    {
+        @if (Simple)
+        {
+            <span class="@SemanticClass("indicator", "ant-spin-dot-holder")" style="@SemanticStyle("indicator")">
+                @if (Indicator != null) { @Indicator } else { @defaultTemplate }
+            </span>
+            @if (EffectiveDescription != null)
+            {
+                <div class="@SemanticClass("description", "ant-spin-description ant-spin-text", "tip")" style="@SemanticStyle("description", legacySlot: "tip")">@EffectiveDescription</div>
+            }
+        }
+        else
+        {
+            <div class="@SemanticClass("section", "ant-spin-section")" style="@SemanticStyle("section")">
+                <span class="@SemanticClass("indicator", "ant-spin-dot-holder")" style="@SemanticStyle("indicator")">
+                    @if (Indicator != null) { @Indicator } else { @defaultTemplate }
+                </span>
+                @if (EffectiveDescription != null)
+                {
+                    <div class="@SemanticClass("description", "ant-spin-description ant-spin-text", "tip")" style="@SemanticStyle("description", legacySlot: "tip")">@EffectiveDescription</div>
+                }
+            </div>
+        }
+    }
+    @if (!Simple)
+    {
+        <div class="@SemanticClass("container", $"ant-spin-container {ContainerClass}")" style="@SemanticStyle("container")">
+            @ChildContent
         </div>
-    </div>
-}
+    }
+</div>
 
 @code{
     RenderFragment defaultTemplate =
@@ -23,35 +44,6 @@ else
             <i class="ant-spin-dot-item"></i>
         </span>;
 
-    RenderFragment<Spin> simpleTemplate = spin=>
-        @<Template>
-            @if (spin._isLoading)
-            {
-                <div class="@spin.SemanticClass("root", $"{spin.ClassMapper.Class} {(spin.Simple ? "ant-spin-section" : string.Empty)}", spin.Simple ? "section" : null)" id="@spin.Id" style="@spin.SemanticStyle("root", spin.Style, spin.Simple ? "section" : null)" aria-live="polite" aria-busy="@spin._isLoading.ToString().ToLowerInvariant()" @ref="spin.Ref">
-                    @if (!spin.Simple)
-                    {
-                        <div class="@spin.SemanticClass("section", "ant-spin-section")" style="@spin.SemanticStyle("section")">
-                            <span class="@spin.SemanticClass("indicator", "ant-spin-dot-holder")" style="@spin.SemanticStyle("indicator")">
-                                @if (spin.Indicator != null) { @spin.Indicator } else { @spin.defaultTemplate }
-                            </span>
-                            @if (spin.EffectiveDescription != null) { <div class="@spin.SemanticClass("description", "ant-spin-description ant-spin-text", "tip")" style="@spin.SemanticStyle("description", legacySlot: "tip")">@spin.EffectiveDescription</div> }
-                        </div>
-                    }
-                    else
-                    {
-                        <span class="@spin.SemanticClass("indicator", "ant-spin-dot-holder")" style="@spin.SemanticStyle("indicator")">
-                            @if (spin.Indicator != null) { @spin.Indicator } else { @spin.defaultTemplate }
-                        </span>
-                        @if (spin.EffectiveDescription != null) { <div class="@spin.SemanticClass("description", "ant-spin-description ant-spin-text", "tip")" style="@spin.SemanticStyle("description", legacySlot: "tip")">@spin.EffectiveDescription</div> }
-                    }
-                </div>
-            }
-
-            @if (!spin.Simple)
-            {
-                <div class="@spin.SemanticClass("container", $"ant-spin-container {spin.ContainerClass}")" style="@spin.SemanticStyle("container")">
-                    @spin.ChildContent
-                </div>
-            }
-        </Template>;
+    private string RootClass => SemanticClass("root", $"{ClassMapper.Class} {WrapperClassMapper.Class} {(Simple ? "ant-spin-section" : _isLoading ? "ant-spin-nested-loading" : string.Empty)}", Simple ? "section" : null);
+    private string RootStyle => SemanticStyle("root", Style, Simple ? "section" : null);
 }

@@ -145,7 +145,7 @@ namespace AntDesign
                 .Add("ant-tree")
                 .If("ant-select-tree", () => IsInTreeSelect)
                 .If("ant-tree-show-line", () => ShowLine)
-                .If("ant-tree-icon-hide", () => ShowIcon)
+                .If("ant-tree-icon-hide", () => !ShowIcon)
                 .If("ant-tree-block-node", () => BlockNode)
                 .If("ant-tree-directory", () => Directory)
                 .If("draggable-tree", () => Draggable)

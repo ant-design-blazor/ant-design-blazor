@@ -4,11 +4,22 @@
 @using Microsoft.AspNetCore.Components.Forms;
 @using AntDesign.Internal;
 
-<Spin Spinning="Loading" WrapperClassName="ant-form-spin-wrapper">
-    <EditForm class="@ClassMapper.Class"
+@if (Loading)
+{
+    <Spin Spinning="true" WrapperClassName="ant-form-spin-wrapper">
+        @FormContent
+    </Spin>
+}
+else
+{
+    @FormContent
+}
+
+@code {
+    private RenderFragment FormContent => @<EditForm class="@ClassMapper.Class"
               style="@Style"
               id="@Id"
-              method="@Method"
+              method="@(string.IsNullOrEmpty(Name) ? null : Method.Method)"
               FormName="@Name"
               Enhance="@Enhance"
               autocomplete="@Autocomplete"
@@ -39,5 +50,5 @@
                 @ChildContent(Model)
             }
         </CascadingValue>
-    </EditForm>
-</Spin>
+    </EditForm>;
+}

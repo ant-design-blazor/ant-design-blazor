@@ -1,3 +1,41 @@
 .ant-popover {
   position: relative;
+
+  &-arrow-point-at-center {
+    &.ant-popover-placement-top,
+    &.ant-popover-placement-topLeft,
+    &.ant-popover-placement-topRight {
+      .ant-popover-arrow {
+        right: auto;
+        left: var(--ant-overlay-arrow-left);
+      }
+    }
+
+    &.ant-popover-placement-bottom,
+    &.ant-popover-placement-bottomLeft,
+    &.ant-popover-placement-bottomRight {
+      .ant-popover-arrow {
+        right: auto;
+        left: var(--ant-overlay-arrow-left);
+      }
+    }
+
+    &.ant-popover-placement-left,
+    &.ant-popover-placement-leftTop,
+    &.ant-popover-placement-leftBottom {
+      .ant-popover-arrow {
+        bottom: auto;
+        top: var(--ant-overlay-arrow-top);
+      }
+    }
+
+    &.ant-popover-placement-right,
+    &.ant-popover-placement-rightTop,
+    &.ant-popover-placement-rightBottom {
+      .ant-popover-arrow {
+        bottom: auto;
+        top: var(--ant-overlay-arrow-top);
+      }
+    }
+  }
 }

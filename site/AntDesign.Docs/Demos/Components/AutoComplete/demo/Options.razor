@@ -1,0 +1,13 @@
+<AutoComplete TOption="string" Style="width: 200px" Placeholder="input here" Options="_options" OnInput="OnSearch" />
+
+@code {
+    private IEnumerable<string> _options = [];
+
+    private void OnSearch(ChangeEventArgs args)
+    {
+        var value = args.Value?.ToString() ?? string.Empty;
+        _options = string.IsNullOrEmpty(value) || value.Contains('@')
+            ? []
+            : [$"{value}@gmail.com", $"{value}@163.com", $"{value}@qq.com"];
+    }
+}

@@ -1,39 +1,31 @@
 @using AntDesign.TableModels
+@using AntDesign.Filters
 
-<div class="table-dynamic-settings" style="display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;margin-bottom:16px">
-    <Checkbox @bind-Checked="_bordered">Bordered</Checkbox>
-    <Checkbox @bind-Checked="_loading">Loading</Checkbox>
-    <Checkbox @bind-Checked="_showTitle">Title</Checkbox>
-    <Checkbox @bind-Checked="_showHeader">Column Header</Checkbox>
-    <Checkbox @bind-Checked="_showFooter">Footer</Checkbox>
-    <Checkbox @bind-Checked="_expandable">Expandable</Checkbox>
-    <Checkbox @bind-Checked="_rowSelection">Checkbox</Checkbox>
-    <Checkbox @bind-Checked="_fixedHeader">Fixed Header</Checkbox>
-    <Checkbox @bind-Checked="_hasData">Has Data</Checkbox>
-    <Checkbox @bind-Checked="_ellipsis">Ellipsis</Checkbox>
-</div>
-
-<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;margin-bottom:16px">
-    <span>Size</span>
-    <RadioGroup Options="_sizes" @bind-Value="_size" ButtonStyle="RadioButtonStyle.Outline" />
-    <span>Table Scroll</span>
-    <RadioGroup Options="_scrollOptions" @bind-Value="_xScrollMode" ButtonStyle="RadioButtonStyle.Outline" />
-    <span>Table Layout</span>
-    <RadioGroup Options="_layoutOptions" @bind-Value="_tableLayout" ButtonStyle="RadioButtonStyle.Outline" />
-</div>
-
-<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;margin-bottom:16px">
-    <span>Pagination</span>
-    <RadioGroup Options="_paginationOptions" @bind-Value="_paginationPosition" ButtonStyle="RadioButtonStyle.Outline" />
-</div>
+<Form Model="_controlModel" Layout="FormLayout.Inline" Autocomplete="@(null)">
+    <FormItem Label="Bordered"><Switch @bind-Checked="_bordered" /></FormItem>
+    <FormItem Label="loading"><Switch @bind-Checked="_loading" /></FormItem>
+    <FormItem Label="Title"><Switch @bind-Checked="_showTitle" /></FormItem>
+    <FormItem Label="Column Header"><Switch @bind-Checked="_showHeader" /></FormItem>
+    <FormItem Label="Footer"><Switch @bind-Checked="_showFooter" /></FormItem>
+    <FormItem Label="Expandable"><Switch @bind-Checked="_expandable" /></FormItem>
+    <FormItem Label="Checkbox"><Switch @bind-Checked="_rowSelection" /></FormItem>
+    <FormItem Label="Fixed Header"><Switch @bind-Checked="_fixedHeader" /></FormItem>
+    <FormItem Label="Has Data"><Switch @bind-Checked="_hasData" /></FormItem>
+    <FormItem Label="Ellipsis"><Switch @bind-Checked="_ellipsis" /></FormItem>
+    <FormItem Label="Size"><RadioGroup Options="_sizes" @bind-Value="_size" ButtonStyle="RadioButtonStyle.Outline" /></FormItem>
+    <FormItem Label="Table Scroll"><RadioGroup Options="_scrollOptions" @bind-Value="_xScrollMode" ButtonStyle="RadioButtonStyle.Outline" /></FormItem>
+    <FormItem Label="Table Layout"><RadioGroup Options="_layoutOptions" @bind-Value="_tableLayout" ButtonStyle="RadioButtonStyle.Outline" /></FormItem>
+    <FormItem Label="Pagination Top"><RadioGroup Options="_paginationTopOptions" @bind-Value="_paginationTop" ButtonStyle="RadioButtonStyle.Outline" /></FormItem>
+    <FormItem Label="Pagination Bottom"><RadioGroup Options="_paginationBottomOptions" @bind-Value="_paginationBottom" ButtonStyle="RadioButtonStyle.Outline" /></FormItem>
+</Form>
 
 <Table TItem="DynamicRow" DataSource="_hasData ? _rows : Array.Empty<DynamicRow>()"
        RowKey="row=>row.Key" Bordered="_bordered" Loading="_loading"
        Title="@(_showTitle ? "Here is title" : null)" Footer="@(_showFooter ? "Here is footer" : null)"
        Size="CurrentSize" ShowHeader="_showHeader" ScrollY="@(_fixedHeader ? "240px" : null)"
-       ScrollX="@(_xScrollMode == "unset" ? null : "1200px")"
+       ScrollX="@(_xScrollMode == "unset" ? null : "120vw")"
        TableLayout="@(_tableLayout == "unset" ? null : _tableLayout)"
-       PaginationPosition="_paginationPosition" HidePagination="@(_paginationPosition == "none")" PageSize="5"
+       PaginationPlacement="PaginationPlacement"
        RowExpandable="@(_expandable ? (_ => true) : (_ => false))">
     <ColumnDefinitions>
         @if (_rowSelection)
@@ -42,11 +34,18 @@
         }
         <PropertyColumn Property="row=>row.Name" Title="Name" Ellipsis="_ellipsis" Fixed="@(_xScrollMode == "fixed" ? ColumnFixPlacement.Left : null)" />
         <PropertyColumn Property="row=>row.Age" Title="Age" Sortable Ellipsis="_ellipsis" />
-        <PropertyColumn Property="row=>row.Address" Title="Address" Ellipsis="_ellipsis" Fixed="@(_xScrollMode == "fixed" ? ColumnFixPlacement.Right : null)" />
-        <ActionColumn Title="Action">
+        <PropertyColumn Property="row=>row.Address" Title="Address" Ellipsis="_ellipsis" Filters="_addressFilters" OnFilter="(value, address) => address.StartsWith(value, StringComparison.Ordinal)" Fixed="@(_xScrollMode == "fixed" ? ColumnFixPlacement.Right : null)" />
+        <ActionColumn Title="Action" Sortable>
             <Space Size="SpaceSize.Middle">
-                <a>Delete</a>
-                <a>More actions</a>
+                <SpaceItem><a>Delete</a></SpaceItem>
+                <SpaceItem>
+                    <a>
+                        <Space>
+                            <SpaceItem>More actions</SpaceItem>
+                            <SpaceItem><Icon Type="@IconType.Outline.Down" /></SpaceItem>
+                        </Space>
+                    </a>
+                </SpaceItem>
             </Space>
         </ActionColumn>
     </ColumnDefinitions>
@@ -59,6 +58,7 @@
 </Table>
 
 @code {
+    private readonly object _controlModel = new();
     private bool _bordered;
     private bool _loading;
     private bool _showTitle;
@@ -72,17 +72,47 @@
     private string _size = "large";
     private string _xScrollMode = "unset";
     private string _tableLayout = "unset";
-    private string _paginationPosition = "bottomRight";
+    private string _paginationTop = "none";
+    private string _paginationBottom = "bottomEnd";
 
-    private readonly string[] _sizes = ["large", "middle", "small"];
-    private readonly string[] _scrollOptions = ["unset", "scroll", "fixed"];
-    private readonly string[] _layoutOptions = ["unset", "fixed"];
-    private readonly string[] _paginationOptions = ["topLeft", "topCenter", "topRight", "none", "bottomLeft", "bottomCenter", "bottomRight"];
+    private readonly RadioOption<string>[] _sizes = [
+        new() { Label = "Large", Value = "large" },
+        new() { Label = "Medium", Value = "medium" },
+        new() { Label = "Small", Value = "small" }
+    ];
+    private readonly RadioOption<string>[] _scrollOptions = [
+        new() { Label = "Unset", Value = "unset" },
+        new() { Label = "Scroll", Value = "scroll" },
+        new() { Label = "Fixed Columns", Value = "fixed" }
+    ];
+    private readonly RadioOption<string>[] _layoutOptions = [
+        new() { Label = "Unset", Value = "unset" },
+        new() { Label = "Fixed", Value = "fixed" }
+    ];
+    private readonly RadioOption<string>[] _paginationTopOptions = [
+        new() { Label = "TopStart", Value = "topStart" },
+        new() { Label = "TopCenter", Value = "topCenter" },
+        new() { Label = "TopEnd", Value = "topEnd" },
+        new() { Label = "None", Value = "none" }
+    ];
+    private readonly RadioOption<string>[] _paginationBottomOptions = [
+        new() { Label = "BottomStart", Value = "bottomStart" },
+        new() { Label = "BottomCenter", Value = "bottomCenter" },
+        new() { Label = "BottomEnd", Value = "bottomEnd" },
+        new() { Label = "None", Value = "none" }
+    ];
+
+    private readonly TableFilter<string>[] _addressFilters = [
+        new() { Text = "London", Value = "London" },
+        new() { Text = "New York", Value = "New York" }
+    ];
+
+    private string[] PaginationPlacement => [_paginationTop, _paginationBottom];
 
     private TableSize CurrentSize => _size switch
     {
         "small" => TableSize.Small,
-        "middle" => TableSize.Middle,
+        "medium" => TableSize.Medium,
         _ => TableSize.Default
     };
 

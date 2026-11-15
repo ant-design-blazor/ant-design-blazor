@@ -1,40 +1,33 @@
 @{
     var semanticClasses = new Dictionary<string, string>
     {
-        ["root"] = "button-semantic-root",
-        ["content"] = "button-semantic-content"
+        ["root"] = "acss-blazor-root",
+        ["content"] = "acss-blazor-content"
     };
     var rootStyles = new Dictionary<string, string>
     {
-        ["root"] = "box-shadow: 0 1px 2px 0 rgba(0,0,0,.05); border-radius: 6px; padding: 8px 16px; height: auto;",
-        ["content"] = "letter-spacing: .02em;"
+        ["root"] = "box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 2px 0px;"
     };
     var primaryStyles = new Dictionary<string, string>
     {
-        ["root"] = "background-color: #171717; border-color: #171717;",
-        ["content"] = "color: #fff;"
+        ["root"] = "background-color: rgb(23, 23, 23);",
+        ["content"] = "color: rgb(255, 255, 255);"
     };
+    Func<Button, IReadOnlyDictionary<string, string>> primaryStylesFunc = button =>
+        button.Type == ButtonType.Primary ? primaryStyles : new Dictionary<string, string>();
 }
 
 <style>
-    .button-semantic-root { border: 1px solid var(--ant-color-border); }
-    .button-semantic-content { color: var(--ant-color-text); }
-    .button-semantic-icon { color: var(--ant-color-primary); }
+    .acss-blazor-root {
+        border: 1px solid var(--ant-color-border);
+        border-radius: var(--ant-border-radius);
+        padding: var(--ant-padding-xs) var(--ant-padding);
+        height: auto;
+    }
+    .acss-blazor-content { color: var(--ant-color-text); }
 </style>
 
-<Flex Gap="FlexGap.Small" Wrap="FlexWrap.Wrap">
-    <Button Type="ButtonType.Default" ClassNames="semanticClasses" Styles="rootStyles">Object styles</Button>
-    <Button Type="ButtonType.Primary" ClassNames="semanticClasses" Styles="primaryStyles">Function styles equivalent</Button>
-    <Button Type="ButtonType.Default" Icon="@IconType.Outline.Search" ClassNames="_iconSlotClasses">
-        Root, icon, and content slots
-    </Button>
+<Flex Gap="FlexGap.Small">
+    <Button Type="ButtonType.Default" ClassNames="semanticClasses" Styles="rootStyles">Object</Button>
+    <Button Type="ButtonType.Primary" ClassNames="semanticClasses" StylesFunc="primaryStylesFunc">Function</Button>
 </Flex>
-
-@code {
-    private static readonly Dictionary<string, string> _iconSlotClasses = new()
-    {
-        ["root"] = "button-semantic-root",
-        ["icon"] = "button-semantic-icon",
-        ["content"] = "button-semantic-content"
-    };
-}

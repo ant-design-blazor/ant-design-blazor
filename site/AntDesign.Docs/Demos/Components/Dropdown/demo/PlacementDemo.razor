@@ -1,0 +1,83 @@
+<Space Direction="SpaceDirection.Vertical" Style="width:100%">
+<Space Wrap>
+<Dropdown Placement="AntDesign.Placement.BottomLeft">
+    <Overlay>
+        @_overlayMenu
+    </Overlay>
+    <ChildContent>
+        <Button>BottomLeft</Button>
+    </ChildContent>
+</Dropdown>
+<Dropdown Placement="AntDesign.Placement.Bottom">
+    <Overlay>
+        @_overlayMenu
+    </Overlay>
+    <ChildContent>
+        <Button>Bottom</Button>
+    </ChildContent>
+</Dropdown>
+<Dropdown Placement="AntDesign.Placement.BottomRight">
+    <Overlay>
+        @_overlayMenu
+    </Overlay>
+    <ChildContent>
+        <Button>BottomRight</Button>
+    </ChildContent>
+</Dropdown>
+<Dropdown Placement="AntDesign.Placement.TopLeft">
+    <Overlay>
+        @_overlayMenu
+    </Overlay>
+    <ChildContent>
+        <Button>TopLeft</Button>
+    </ChildContent>
+</Dropdown>
+<Dropdown Placement="AntDesign.Placement.Top">
+    <Overlay>
+        @_overlayMenu
+    </Overlay>
+    <ChildContent>
+        <Button>Top</Button>
+    </ChildContent>
+</Dropdown>
+<Dropdown Placement="AntDesign.Placement.TopRight">
+    <Overlay>
+        @_overlayMenu
+    </Overlay>
+    <ChildContent>
+        <Button>TopRight</Button>
+    </ChildContent>
+</Dropdown>
+</Space>
+<Space Wrap>
+<Dropdown Placement="AntDesign.Placement.LeftTop"><Overlay>@_overlayMenu</Overlay><ChildContent><Button>LeftTop</Button></ChildContent></Dropdown>
+<Dropdown Placement="AntDesign.Placement.Left"><Overlay>@_overlayMenu</Overlay><ChildContent><Button>Left</Button></ChildContent></Dropdown>
+<Dropdown Placement="AntDesign.Placement.LeftBottom"><Overlay>@_overlayMenu</Overlay><ChildContent><Button>LeftBottom</Button></ChildContent></Dropdown>
+</Space>
+<Space Wrap>
+<Dropdown Placement="AntDesign.Placement.RightTop"><Overlay>@_overlayMenu</Overlay><ChildContent><Button>RightTop</Button></ChildContent></Dropdown>
+<Dropdown Placement="AntDesign.Placement.Right"><Overlay>@_overlayMenu</Overlay><ChildContent><Button>Right</Button></ChildContent></Dropdown>
+<Dropdown Placement="AntDesign.Placement.RightBottom"><Overlay>@_overlayMenu</Overlay><ChildContent><Button>RightBottom</Button></ChildContent></Dropdown>
+</Space>
+</Space>
+
+@code
+{
+    private RenderFragment _overlayMenu =@<Menu>
+        <MenuItem>
+            <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
+                1st menu item
+            </a>
+        </MenuItem>
+        <MenuItem>
+            <a target="_blank" rel="noopener noreferrer" href="http://www.taobao.com/">
+                2nd menu item
+            </a>
+        </MenuItem>
+        <MenuItem>
+            <a target="_blank" rel="noopener noreferrer" href="http://www.tmall.com/">
+                3rd menu item
+            </a>
+        </MenuItem>
+    </Menu>;
+}

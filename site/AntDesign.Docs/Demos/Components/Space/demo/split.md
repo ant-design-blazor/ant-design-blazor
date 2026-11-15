@@ -1,5 +1,5 @@
 ---
-order: 99
+order: 16
 title:
   zh-CN: 分隔符
   en-US: Split

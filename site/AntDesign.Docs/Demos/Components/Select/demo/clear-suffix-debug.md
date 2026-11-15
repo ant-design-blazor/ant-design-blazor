@@ -1,5 +1,6 @@
 ---
 order: 90
+debug: true
 title:
   zh-CN: 清除与后缀交互
   en-US: Clear and suffix interaction

@@ -1,0 +1,22 @@
+<Tabs DefaultActiveKey="1">
+    <TabPane Key="1" Tab="General">Content of Tab Pane 1</TabPane>
+    <TabPane Key="2" Tab="Splitter Tab">
+        <Splitter Style="height: 200px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1)">
+            <SplitterPanel Collapsible>
+                @Panel("1")
+            </SplitterPanel>
+            <SplitterPanel Collapsible>
+                @Panel("2")
+            </SplitterPanel>
+            <SplitterPanel>
+                @Panel("3")
+            </SplitterPanel>
+        </Splitter>
+    </TabPane>
+</Tabs>
+
+@code {
+    private RenderFragment Panel(string text) => @<Flex Justify="FlexJustify.Center" Align="FlexAlign.Center" Style="height: 100%">
+        <Title Type="TextElementType.Secondary" Level="5" Style="white-space: nowrap">@text</Title>
+    </Flex>;
+}

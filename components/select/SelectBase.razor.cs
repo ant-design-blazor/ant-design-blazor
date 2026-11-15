@@ -97,6 +97,7 @@ namespace AntDesign
 
         internal string ListboxId => $"{Id}_list";
         internal virtual bool UsesVirtualAccessibility => false;
+        internal virtual bool UsesVirtualWindow => false;
         internal string GetOptionId(Guid optionId) => $"{ListboxId}_{optionId:N}";
         internal string ActiveOptionId => ActiveOption is { IsHidden: false, IsDisabled: false }
             ? GetOptionId(ActiveOption.InternalId) : null;
@@ -104,7 +105,63 @@ namespace AntDesign
         // The dropdown is rendered outside the Select root element. Give it the
         // Select CSS-variable scope so the v6 popup and option tokens are available
         // when the React-compatible styles are resolved.
-        protected virtual string OverlayClassName => $"ant-select-css-var {GetSemanticClass("popup.root")}";
+        protected virtual string OverlayClassName => string.Join(" ", new[]
+        {
+            "ant-select-css-var",
+            GetSemanticClass("popup.root"),
+            PopupClassName,
+            DropdownClassName
+        }.Where(value => !string.IsNullOrWhiteSpace(value)));
+
+        /// <summary>Additional class applied to the Select root element.</summary>
+        [Parameter]
+        public string RootClassName { get; set; }
+
+        /// <summary>Accessible label applied to the Select input.</summary>
+        [Parameter]
+        public string AriaLabel { get; set; }
+
+        /// <summary>Title text for the selected value container.</summary>
+        [Parameter]
+        public string SelectionTitle { get; set; }
+
+        /// <summary>Remove the popup after its close transition completes.</summary>
+        [Parameter]
+        public bool DestroyPopupOnHidden { get; set; }
+
+        /// <summary>Additional class applied to the popup. React-compatible name.</summary>
+        [Parameter]
+        public string PopupClassName { get; set; }
+
+        /// <summary>Legacy name for <see cref="PopupClassName"/>.</summary>
+        [Parameter]
+        public string DropdownClassName { get; set; }
+
+        /// <summary>Custom inline style for the popup. React-compatible legacy name.</summary>
+        [Parameter]
+        public string DropdownStyle
+        {
+            get => _dropdownStyle;
+            set => _dropdownStyle = value ?? string.Empty;
+        }
+
+        /// <summary>Search input debounce interval in milliseconds. React-compatible name.</summary>
+        [Parameter]
+        public int DebounceTimeout
+        {
+            get => SearchDebounceMilliseconds;
+            set => SearchDebounceMilliseconds = Math.Max(0, value);
+        }
+
+        /// <summary>Custom loading indicator rendered in place of the default loading icon.</summary>
+        [Parameter]
+        public RenderFragment LoadingIcon { get; set; }
+
+        internal string GetRootClass(string baseClass) => string.Join(" ", new[]
+        {
+            baseClass,
+            RootClassName
+        }.Where(value => !string.IsNullOrWhiteSpace(value)));
 
         /// <summary>
         /// CSS classes for semantic parts of the selector. Nested popup slots use dotted keys such as <c>popup.root</c>.
@@ -207,10 +264,19 @@ namespace AntDesign
         [Parameter]
         public bool Open { get; set; }
 
+        protected bool _isDropdownVisible;
+
+        protected bool DropdownVisible => Open || (!OpenChanged.HasDelegate && _isDropdownVisible);
+
         /// <summary>
         /// Callback function that is called when open state changes.
         /// </summary>
         [Parameter] public EventCallback<bool> OpenChanged { get; set; }
+
+        /// <summary>
+        /// Callback invoked when the dropdown open state changes.
+        /// </summary>
+        [Parameter] public EventCallback<bool> OnOpenChange { get; set; }
 
         /// <summary>
         /// Placeholder of select.
@@ -498,7 +564,8 @@ namespace AntDesign
         ///     Returns whether the user can input a pattern to search matched items
         /// </summary>
         /// <returns>true if search is enabled</returns>
-        internal bool IsSearchEnabled => EnableSearch || Mode != SelectMode.Default;
+        internal virtual bool? SearchEnabledOverride => null;
+        internal bool IsSearchEnabled => SearchEnabledOverride ?? (EnableSearch || Mode != SelectMode.Default);
 
         /// <summary>
         ///     Sorted list of SelectOptionItems
@@ -1303,8 +1370,19 @@ namespace AntDesign
             if (!Focused)
             {
                 Focused = true;
+                SetClassMap();
 
-                await FocusAsync(_inputRef);
+                // Publish the focused state before awaiting the browser focus
+                // interop. On Blazor Server, waiting for that round trip can
+                // let the popup render while its trigger still has the stale
+                // unfocused class, unlike React's synchronous focus update.
+                await InvokeAsync(StateHasChanged);
+
+                // The input may already have received native pointer focus
+                // while the Blazor Server focus event is still in flight.
+                // Re-applying focus must not scroll the trigger after the
+                // overlay has measured its position.
+                await FocusAsync(_inputRef, preventScroll: true);
 
                 await OnFocus.InvokeAsync(Focused);
             }
@@ -1432,14 +1510,35 @@ namespace AntDesign
         [Parameter] public string PopupContainerSelector { get; set; } = "body";
 
         /// <summary>
+        /// Gets the element that hosts the dropdown overlay, matching React's getPopupContainer.
+        /// </summary>
+        [Parameter] public Func<ElementReference, ElementReference> GetPopupContainer { get; set; }
+
+        /// <summary>
         /// Customize dropdown content. The context is the original content.
         /// </summary>
         [Parameter] public RenderFragment<RenderFragment> DropdownRender { get; set; }
 
         /// <summary>
+        /// Customize dropdown content. React-compatible name for <c>DropdownRender</c>.
+        /// </summary>
+        [Parameter]
+        public RenderFragment<RenderFragment> PopupRender
+        {
+            get => DropdownRender;
+            set => DropdownRender = value;
+        }
+
+        /// <summary>
         /// Is used to customize the label style.
         /// </summary>
         [Parameter] public RenderFragment<TItem> LabelTemplate { get; set; }
+
+        /// <summary>
+        /// Customizes the rendered tag for a selected option in multiple or tags mode.
+        /// This is the Blazor equivalent of React Select's <c>tagRender</c> prop.
+        /// </summary>
+        [Parameter] public RenderFragment<SelectTagRenderInfo<TItemValue, TItem>> TagRender { get; set; }
 
         /// <summary>
         /// Placeholder for hidden tags. If used with ResponsiveTag.Responsive, implement your own handling logic.
@@ -1493,7 +1592,11 @@ namespace AntDesign
         /// </summary>
         protected async Task OnInputFocusAsync(FocusEventArgs _)
         {
-            Focused = true;
+            if (!Focused)
+            {
+                Focused = true;
+                SetClassMap();
+            }
             await SetInputFocusAsync();
         }
 
@@ -1502,7 +1605,11 @@ namespace AntDesign
         /// </summary>
         protected async Task OnInputBlurAsync(FocusEventArgs _)
         {
-            Focused = false;
+            if (Focused)
+            {
+                Focused = false;
+                SetClassMap();
+            }
             await SetInputBlurAsync();
         }
 

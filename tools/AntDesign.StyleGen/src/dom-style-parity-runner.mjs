@@ -56,16 +56,82 @@ async function navigate(page, url, side, timeoutMs) {
   }
 }
 
-export async function scrollScopeAnchorIntoView(page, scopeSelector) {
+export async function scrollScopeAnchorIntoView(page, scopeSelector, rootSelector, timeoutMs = 20000, explicitAnchorSelector = null) {
   // Dumi mounts demos lazily as their preview containers approach the
-  // viewport. Scroll the outer demo anchor first so a deep-linked demo's
-  // `.code-box-demo` exists before waiting for that inner selector.
-  if (scopeSelector.includes(' ')) {
-    const scopeAnchorSelector = scopeSelector.split(/\s+/)[0];
+  // viewport. For portal comparisons the capture scope is often `body`, so
+  // use the component root's outer demo anchor to trigger that lazy mount.
+  const hasDocumentScope = /^(?:body|html|:root)$/.test(scopeSelector);
+  const anchorSource = explicitAnchorSelector ?? (hasDocumentScope ? rootSelector : scopeSelector);
+  if (anchorSource) {
+    const scopeAnchorSelector = anchorSource.split(/\s+/)[0];
+    // Demo sections are hydrated lazily by the docs site. A fresh navigation
+    // may not have created the section when waitForDemo first tries to scroll;
+    // wait for its stable outer anchor before scrolling to trigger the demo.
+    await page.waitForSelector(scopeAnchorSelector, { timeout: timeoutMs });
     await page.evaluate(selector => {
-      document.querySelector(selector)?.scrollIntoView({ block: 'center', inline: 'nearest' });
+      // The docs page enables smooth scrolling globally. Disable it for the
+      // automated page only so lazy demo mounting and subsequent geometry
+      // alignment do not race an in-flight scroll animation.
+      document.documentElement.style.scrollBehavior = 'auto';
+      document.body.style.scrollBehavior = 'auto';
+      document.querySelector(selector)?.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'instant' });
     }, scopeAnchorSelector);
   }
+}
+
+async function alignRootViewportY(page, rootSelector, targetY, timeoutMs) {
+  await page.waitForSelector(rootSelector, { timeout: timeoutMs });
+  await page.evaluate(() => {
+    document.documentElement.style.scrollBehavior = 'auto';
+    document.body.style.scrollBehavior = 'auto';
+  });
+
+  const waitForStableLayout = async () => page.waitForFunction(({ rootSelector }) => {
+    const root = document.querySelector(rootSelector);
+    if (!root) return false;
+    const rect = root.getBoundingClientRect();
+    const signature = `${rect.top}:${rect.width}:${rect.height}:${document.documentElement.scrollHeight}`;
+    const state = window.__antdV6ParityLayoutStability ??= { signature: '', stablePolls: 0 };
+    if (state.signature === signature) state.stablePolls += 1;
+    else {
+      state.signature = signature;
+      state.stablePolls = 0;
+    }
+    return state.stablePolls >= 3;
+  }, { timeout: timeoutMs, polling: 100 }, { rootSelector });
+
+  for (let attempt = 0; attempt < 6; attempt += 1) {
+    await waitForStableLayout();
+    await page.$eval(rootSelector, (element, y) => {
+      let scrollContainer = element.parentElement;
+      while (scrollContainer && scrollContainer !== document.body) {
+        const style = getComputedStyle(scrollContainer);
+        const canScroll = /(auto|scroll|overlay)/.test(style.overflowY)
+          && scrollContainer.scrollHeight > scrollContainer.clientHeight;
+        if (canScroll) break;
+        scrollContainer = scrollContainer.parentElement;
+      }
+
+      const top = element.getBoundingClientRect().top;
+      if (scrollContainer && scrollContainer !== document.body) {
+        scrollContainer.style.scrollBehavior = 'auto';
+        scrollContainer.scrollTop += top - y;
+      } else {
+        window.scrollTo({ top: window.scrollY + top - y, left: window.scrollX, behavior: 'instant' });
+      }
+    }, targetY);
+    await page.evaluate(() => new Promise(resolvePromise => requestAnimationFrame(() => requestAnimationFrame(resolvePromise))));
+    try {
+      await waitForStableLayout();
+    } catch {
+      continue;
+    }
+    const aligned = await page.$eval(rootSelector, (element, y) => Math.abs(element.getBoundingClientRect().top - y) < 0.5, targetY);
+    if (aligned) return;
+  }
+
+  const finalTop = await page.$eval(rootSelector, element => element.getBoundingClientRect().top);
+  throw new Error(`Could not align ${rootSelector} to viewport y=${targetY}; final top=${finalTop}`);
 }
 
 async function waitForDemo(page, sideSpec, timeoutMs, minimumRoots, { scroll = true } = {}) {
@@ -76,11 +142,21 @@ async function waitForDemo(page, sideSpec, timeoutMs, minimumRoots, { scroll = t
   // while a Puppeteer page is in the background, so activate each side before
   // deciding that its DOM is ready to compare.
   await page.bringToFront();
-  if (scroll) await scrollScopeAnchorIntoView(page, scopeSelector);
+  if (scroll) await scrollScopeAnchorIntoView(page, scopeSelector, rootSelector, timeoutMs, sideSpec.scrollAnchorSelector);
   await page.waitForSelector(scopeSelector, { timeout: timeoutMs });
   try {
     await page.waitForFunction(({ scopeSelector, rootSelector, skeletonSelector, minimumRoots }) => {
       const scope = document.querySelector(scopeSelector);
+      // Earlier lazy demos can change the document height after the initial
+      // scroll, pushing this demo back out of the viewport before its
+      // IntersectionObserver callback runs. Keep the target visible while we
+      // wait so the docs page can finish mounting the requested demo.
+      if (scope && !/^(?:body|html|:root)$/.test(scopeSelector)) {
+        const rect = scope.getBoundingClientRect();
+        if (rect.bottom <= 0 || rect.top >= window.innerHeight) {
+          scope.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'instant' });
+        }
+      }
       return Boolean(scope)
         && (!skeletonSelector || scope.querySelectorAll(skeletonSelector).length === 0)
         && scope.querySelectorAll(rootSelector).length >= minimumRoots;
@@ -102,13 +178,20 @@ async function waitForDemo(page, sideSpec, timeoutMs, minimumRoots, { scroll = t
     }, { scopeSelector, rootSelector, skeletonSelector: sideSpec.skeletonSelector ?? '.ant-skeleton' });
     throw new Error(`${safeError(error)} (scope=${scopeSelector}, roots=${state.roots}, skeletons=${state.skeletons}, title=${JSON.stringify(state.title)}, blazor=${state.blazorStarted})`);
   }
+  await page.evaluate(async () => {
+    if (document.fonts?.ready) await document.fonts.ready;
+    await new Promise(requestAnimationFrame);
+    await new Promise(requestAnimationFrame);
+  });
   // A body-wide scope is common for portals, but scrolling body does not align
   // the component demo. Center the actual trigger so page layout/scroll offsets
   // do not masquerade as component popup-positioning differences.
   if (scroll) {
     await page.evaluate(({ rootSelector, scopeSelector }) => {
+      document.documentElement.style.scrollBehavior = 'auto';
+      document.body.style.scrollBehavior = 'auto';
       (document.querySelector(rootSelector) ?? document.querySelector(scopeSelector))
-        ?.scrollIntoView({ block: 'center', inline: 'nearest' });
+        ?.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'instant' });
     }, { rootSelector, scopeSelector });
   }
 }
@@ -159,6 +242,19 @@ export async function waitForSvgUses(page, side, sideSpec, semanticNodes, timeou
   });
 }
 
+async function clickAtCenter(page, selector, timeoutMs, preserveViewport = false) {
+  await page.waitForSelector(selector, { timeout: timeoutMs });
+  const point = await page.$eval(selector, (element, shouldScroll) => {
+    if (shouldScroll) element.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'instant' });
+    const rect = element.getBoundingClientRect();
+    return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+  }, !preserveViewport);
+  // Send a real pointer sequence at the freshly measured center. Locator.click
+  // can focus a readonly Select input without dispatching the pointerdown path
+  // used by OverlayTrigger's immediate-open handler in interactive server docs.
+  await page.mouse.click(point.x, point.y);
+}
+
 export async function applyAction(page, side, action, timeoutMs) {
   // CSS transitions and ResizeObserver callbacks are throttled in background
   // tabs. Activate the page before dispatching input so the resulting DOM and
@@ -198,21 +294,26 @@ export async function applyAction(page, side, action, timeoutMs) {
         // the viewport and use smooth scrolling. Puppeteer's locator can wait
         // indefinitely for that scroll to settle before clicking; move it into
         // view instantly so the action tests the component, not page scrolling.
-        await page.$eval(selector, (element) => element.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'instant' }));
-        await page.locator(selector).click({ timeout: timeoutMs });
+        if (action.coordinateClick) {
+          await clickAtCenter(page, selector, timeoutMs, action.preserveViewport === true);
+        } else {
+          await page.$eval(selector, (element) => element.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'instant' }));
+          await page.locator(selector).click({ timeout: timeoutMs });
+        }
       }
       if (action[`${side}CheckedValue`] !== undefined) {
         const expectedValue = action[`${side}CheckedValue`];
+        const checkedSelector = action[`${side}CheckedSelector`] ?? action.checkedSelector ?? selector;
         await page.waitForFunction(({ selector, expectedValue }) => {
           const element = document.querySelector(selector);
           return element instanceof HTMLInputElement && element.checked && element.value === expectedValue;
-        }, { timeout: timeoutMs }, { selector, expectedValue });
+        }, { timeout: timeoutMs }, { selector: checkedSelector, expectedValue });
       }
       break;
     case 'measureClickVisible': {
       const visibleSelector = action[`${side}VisibleSelector`] ?? action.visibleSelector;
       if (!visibleSelector) throw new Error(`${side}VisibleSelector is required for measureClickVisible`);
-      await page.evaluate((targetSelector, popupSelector, timeout) => {
+      await page.evaluate((targetSelector, popupSelector, timeout, portalMatch) => {
         window.__antDesignParityVisibilityPromise = new Promise((resolve) => {
           let startedAt;
           let rafId;
@@ -225,12 +326,63 @@ export async function applyAction(page, side, action, timeoutMs) {
             clearTimeout(timeoutId);
             resolve(elapsed);
           };
-          const isPaintVisible = () => [...document.querySelectorAll(popupSelector)].some((element) => {
+          const isPaintVisible = () => {
+            let candidates = [...document.querySelectorAll(popupSelector)];
+            if (portalMatch === 'aria-controls') {
+              const trigger = document.querySelector(targetSelector);
+              // The click target can itself be the combobox input before
+              // Blazor has rendered aria-controls/aria-owns. Keep that input
+              // as the association anchor so immediate-open popup timing is
+              // measured during the server round trip instead of returning a
+              // false null for an unassociated portal.
+              const input = trigger?.matches('[role="combobox"], [aria-controls], [aria-owns]')
+                ? trigger
+                : trigger?.querySelector('[aria-controls], [aria-owns]');
+              const popupId = input?.getAttribute('aria-controls') || input?.getAttribute('aria-owns');
+              const controlledNode = popupId && document.getElementById(popupId);
+              const controlledPopup = controlledNode?.closest(popupSelector);
+              if (controlledPopup) {
+                candidates = [controlledPopup];
+              } else if (input?.getAttribute('aria-expanded') === 'true') {
+                // Some Blazor Server overlays are positioned and revealed on
+                // pointerdown before the server round trip writes
+                // aria-controls. Associate the popup geometrically in that
+                // interval, but still require the popup itself to be visible;
+                // the open class can be applied before its first painted frame.
+                const triggerRoot = input.closest('.ant-select') ?? input;
+                const triggerRect = triggerRoot.getBoundingClientRect();
+                const isVisible = (element) => {
+                  const style = getComputedStyle(element);
+                  const rect = element.getBoundingClientRect();
+                  return style.display !== 'none' && style.visibility !== 'hidden'
+                    && Number(style.opacity) > 0 && rect.width > 0 && rect.height > 0;
+                };
+                candidates = candidates
+                  .filter(isVisible)
+                  .map(element => ({ element, rect: element.getBoundingClientRect() }))
+                  .filter(({ rect }) => rect.right > triggerRect.left && rect.left < triggerRect.right)
+                  .map(({ element, rect }) => ({
+                    element,
+                    verticalDistance: Math.min(
+                      Math.abs(rect.top - triggerRect.bottom),
+                      Math.abs(rect.bottom - triggerRect.top),
+                    ),
+                  }))
+                  .filter(candidate => candidate.verticalDistance <= 24)
+                  .sort((a, b) => a.verticalDistance - b.verticalDistance)
+                  .slice(0, 1)
+                  .map(candidate => candidate.element);
+              } else {
+                candidates = [];
+              }
+            }
+            return candidates.some((element) => {
             const style = getComputedStyle(element);
             const rect = element.getBoundingClientRect();
             return style.display !== 'none' && style.visibility !== 'hidden'
               && Number(style.opacity) > 0 && rect.width > 0 && rect.height > 0;
-          });
+            });
+          };
           const check = () => {
             if (startedAt !== undefined && isPaintVisible()) {
               finish(performance.now() - startedAt);
@@ -249,9 +401,34 @@ export async function applyAction(page, side, action, timeoutMs) {
           document.addEventListener('pointerdown', onPointerDown, true);
           timeoutId = setTimeout(() => finish(null), timeout);
         });
-      }, selector, visibleSelector, timeoutMs);
-      await page.locator(selector).click({ timeout: timeoutMs });
-      return await page.evaluate(() => window.__antDesignParityVisibilityPromise);
+      }, selector, visibleSelector, timeoutMs, action.portalMatch ?? action[`${side}PortalMatch`]);
+      await clickAtCenter(page, selector, timeoutMs);
+      const elapsed = await page.evaluate(() => window.__antDesignParityVisibilityPromise);
+      if (elapsed === null && action.requireVisible !== false) {
+        const state = await page.evaluate(() => {
+          const trigger = document.querySelector('.ant-select input[role="combobox"]');
+          const root = trigger?.closest('.ant-select');
+          const rect = trigger?.getBoundingClientRect();
+          return {
+            expanded: trigger?.getAttribute('aria-expanded') ?? null,
+            focused: document.activeElement === trigger,
+            rootClass: root?.className ?? null,
+            triggerRect: rect?.toJSON() ?? null,
+            hitGrid: rect ? [0.1, 0.5, 0.9].map((x) => [0.2, 0.5, 0.8].map((y) => {
+              const hit = document.elementFromPoint(rect.left + rect.width * x, rect.top + rect.height * y);
+              return hit === trigger || trigger.contains(hit) ? 'target' : hit?.className?.toString?.().slice(0, 80) ?? hit?.tagName ?? null;
+            })) : null,
+            visiblePopups: [...document.querySelectorAll('.ant-select-dropdown')].filter((element) => {
+              const style = getComputedStyle(element);
+              const rect = element.getBoundingClientRect();
+              return style.display !== 'none' && style.visibility !== 'hidden'
+                && Number(style.opacity) > 0 && rect.width > 0 && rect.height > 0;
+            }).length,
+          };
+        });
+        throw new Error(`${side} popup did not become visible after click; state=${JSON.stringify(state)}`);
+      }
+      return elapsed;
     }
     case 'hover':
       await page.locator(selector).hover({ timeout: timeoutMs });
@@ -263,7 +440,25 @@ export async function applyAction(page, side, action, timeoutMs) {
           timeout: timeoutMs,
         });
       } catch (error) {
-        throw new Error(`${side} ${selector}: ${safeError(error)}`);
+        const selectState = selector.includes('ant-select')
+          ? await page.evaluate(() => {
+            const trigger = document.querySelector('.ant-select input[role="combobox"]');
+            const root = trigger?.closest('.ant-select');
+            const popup = [...document.querySelectorAll('.ant-select-dropdown')].find((element) => {
+              const style = getComputedStyle(element);
+              const rect = element.getBoundingClientRect();
+              return style.display !== 'none' && style.visibility !== 'hidden'
+                && Number(style.opacity) > 0 && rect.width > 0 && rect.height > 0;
+            });
+            return {
+              expanded: trigger?.getAttribute('aria-expanded') ?? null,
+              focused: document.activeElement === trigger,
+              rootClass: root?.className ?? null,
+              popupVisible: Boolean(popup),
+            };
+          })
+          : null;
+        throw new Error(`${side} ${selector}: ${safeError(error)}${selectState ? `; state=${JSON.stringify(selectState)}` : ''}`);
       }
       break;
     case 'waitForSelectOptions': {
@@ -436,9 +631,11 @@ export async function capture(page, side, sideSpec, semanticNodes, styleProperti
   });
 }
 
-async function runGroup(browser, group, config) {
-  const reactPage = await browser.newPage();
-  const blazorPage = await browser.newPage();
+async function runGroup(reactBrowser, blazorBrowser, group, config) {
+  const reactPage = await reactBrowser.newPage();
+  const blazorPage = await blazorBrowser.newPage();
+  let reactPageClosed = false;
+  let blazorPageClosed = false;
   await Promise.all([
     reactPage.setViewport(config.viewport),
     blazorPage.setViewport(config.viewport),
@@ -453,6 +650,14 @@ async function runGroup(browser, group, config) {
   const reactNavigation = await navigate(reactPage, group.react.url, 'react', navigationTimeoutMs);
   const blazorNavigation = await navigate(blazorPage, group.blazor.url, 'blazor', navigationTimeoutMs);
   const result = { id: group.id, component: group.component, scenarios: [] };
+  for (const [side, page, sideSpec] of [
+    ['react', reactPage, group.react],
+    ['blazor', blazorPage, group.blazor],
+  ]) {
+    for (const action of sideSpec.beforeWaitActions ?? []) {
+      await applyAction(page, side, action, config.timeoutMs);
+    }
+  }
   const minimumRoots = Math.max(1, ...group.scenarios.map((scenario) => scenario.minimumRoots ?? 1));
   let readinessBlocker = [reactNavigation, blazorNavigation]
     .filter((navigation) => !navigation.loaded)
@@ -471,6 +676,14 @@ async function runGroup(browser, group, config) {
         readinessBlocker = `blazor: ${safeError(error)}`;
       }
     }
+  }
+
+  if (!readinessBlocker && group.postMountSettleMs > 0) {
+    // Interactive component setup (including JavaScript event bindings) can
+    // finish after the first demo roots appear. Let it settle before timing a
+    // click-to-visible interaction.
+    await new Promise(resolvePromise => setTimeout(resolvePromise, group.postMountSettleMs));
+    await waitForDemo(blazorPage, group.blazor, config.timeoutMs, minimumRoots, { scroll: false });
   }
 
   for (const scenario of group.scenarios) {
@@ -495,20 +708,37 @@ async function runGroup(browser, group, config) {
         const sourceSpec = group[sourceSide];
         const targetSpec = group[targetSide];
         await sourcePage.bringToFront();
-        await scrollScopeAnchorIntoView(sourcePage, sourceSpec.scopeSelector);
+        await scrollScopeAnchorIntoView(sourcePage, sourceSpec.scopeSelector, sourceSpec.rootSelector, config.timeoutMs, sourceSpec.scrollAnchorSelector);
         await sourcePage.waitForSelector(sourceSpec.scopeSelector, { timeout: config.timeoutMs });
         const sourceWidth = await sourcePage.$eval(sourceSpec.scopeSelector,
           (element) => element.getBoundingClientRect().width);
         await targetPage.bringToFront();
-        await scrollScopeAnchorIntoView(targetPage, targetSpec.scopeSelector);
+        await scrollScopeAnchorIntoView(targetPage, targetSpec.scopeSelector, targetSpec.rootSelector, config.timeoutMs, targetSpec.scrollAnchorSelector);
         await targetPage.waitForSelector(targetSpec.scopeSelector, { timeout: config.timeoutMs });
         await targetPage.$eval(targetSpec.scopeSelector, (element, width) => {
           element.style.width = `${width}px`;
         }, sourceWidth);
       }
+      if (Number.isFinite(group.alignRootViewportY)) {
+        await reactPage.bringToFront();
+        await alignRootViewportY(reactPage, group.react.rootSelector, group.alignRootViewportY, config.timeoutMs);
+        await blazorPage.bringToFront();
+        await alignRootViewportY(blazorPage, group.blazor.rootSelector, group.alignRootViewportY, config.timeoutMs);
+      }
       const finalHover = getFinalHoverAction(scenario.actions);
       const actions = scenario.actions ?? [];
       const runSideActions = async (side, page) => {
+        // The previous side may have been brought to the front to capture its
+        // popup before it blurs. Activate this page before sending clicks or
+        // keyboard input so browser focus-dependent state is exercised in the
+        // same foreground context on both implementations.
+        await page.bringToFront();
+        if (group.singleBrowserContext) {
+          await page.waitForFunction(() => document.visibilityState === 'visible', { timeout: config.timeoutMs });
+          // Blazor Server can need one event-loop turn after tab activation to
+          // resume its browser-side event dispatch before the next pointer input.
+          await new Promise(resolvePromise => setTimeout(resolvePromise, 250));
+        }
         for (const action of actions) {
           activeStage = `${side} ${action.type} action`;
           const durationMs = await applyAction(page, side, action, config.timeoutMs);
@@ -533,7 +763,12 @@ async function runGroup(browser, group, config) {
         // state even though the scenario did not request a hover comparison.
         // Start every capture from the same neutral pointer state; explicit
         // hover scenarios re-enter their target below.
-        await page.mouse.move(0, 0);
+        // A visible portal may be bound to the trigger's focused/open state.
+        // Moving the pointer to the page corner after a popup action can cause
+        // some components to blur or close before capture, so keep the pointer
+        // on the trigger for open-popup scenarios.
+        const preserveOpenPopup = actions.some(action => action.type === 'measureClickVisible');
+        if (!preserveOpenPopup) await page.mouse.move(0, 0);
         await waitForDemo(page, sideSpec, config.timeoutMs, minimumRoots, { scroll: false });
         await new Promise((resolvePromise) => setTimeout(resolvePromise, 800));
         await waitForDemo(page, sideSpec, config.timeoutMs, minimumRoots, { scroll: false });
@@ -560,15 +795,51 @@ async function runGroup(browser, group, config) {
           group.includeAntDesignTokens ?? false);
       };
 
+      const alignTargetForCapture = async (page, sideSpec) => {
+        if (!Number.isFinite(group.alignRootViewportY)) return;
+        await alignRootViewportY(page, sideSpec.rootSelector, group.alignRootViewportY, config.timeoutMs);
+        if (actions.some(action => action.type === 'measureClickVisible')) {
+          const point = await page.$eval(sideSpec.rootSelector, (element) => {
+            const rect = element.getBoundingClientRect();
+            return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+          });
+          await page.mouse.move(point.x, point.y);
+        }
+      };
+
       let react;
       let blazor;
-      if (group.captureReactBeforeBlazor) {
+      if (group.captureBlazorBeforeReact) {
+        // Keep the Blazor Server circuit active while its browser-side events
+        // run and its state is captured. React is client-only and can safely
+        // be activated after the Blazor snapshot is complete.
+        await runSideActions('blazor', blazorPage);
+        scenarioResult.actions = actions.map((action) => action.id ?? action.type);
+        await alignTargetForCapture(blazorPage, group.blazor);
+        blazor = await captureSide('blazor', blazorPage, group.blazor);
+        if (scenario === group.scenarios.at(-1)) {
+          await blazorPage.close();
+          blazorPageClosed = true;
+        }
+        await runSideActions('react', reactPage);
+        await alignTargetForCapture(reactPage, group.react);
+        react = await captureSide('react', reactPage, group.react);
+      } else if (group.captureReactBeforeBlazor) {
         // Some popup components close on blur. Finish and snapshot React before
         // activating Blazor so the portal remains in the intended open state.
+        // Close React's page before interacting with Blazor: Chromium can
+        // throttle a background interactive-server page while React's popup
+        // is being captured, leaving its first pointer/focus callbacks queued.
         await runSideActions('react', reactPage);
         scenarioResult.actions = actions.map((action) => action.id ?? action.type);
+        await alignTargetForCapture(reactPage, group.react);
         react = await captureSide('react', reactPage, group.react);
+        if (scenario === group.scenarios.at(-1)) {
+          await reactPage.close();
+          reactPageClosed = true;
+        }
         await runSideActions('blazor', blazorPage);
+        await alignTargetForCapture(blazorPage, group.blazor);
         blazor = await captureSide('blazor', blazorPage, group.blazor);
       } else {
         for (const action of actions) {
@@ -591,6 +862,8 @@ async function runGroup(browser, group, config) {
           }
           scenarioResult.actions.push(action.id ?? action.type);
         }
+        await alignTargetForCapture(reactPage, group.react);
+        await alignTargetForCapture(blazorPage, group.blazor);
         react = await captureSide('react', reactPage, group.react);
         blazor = await captureSide('blazor', blazorPage, group.blazor);
       }
@@ -598,6 +871,8 @@ async function runGroup(browser, group, config) {
       const comparison = compareDomSnapshots(react, blazor, {
         ...comparisonPolicy,
         geometryTolerancePx: group.geometryTolerancePx ?? config.comparisonPolicy.geometryTolerancePx ?? 0,
+        computedStylePixelToleranceByProperty: group.computedStylePixelToleranceByProperty
+          ?? comparisonPolicy.computedStylePixelToleranceByProperty,
         semanticMinimumCounts: Object.fromEntries((group.semanticNodes ?? []).map(({ path, minimumCount }) => [path, minimumCount ?? 0])),
         svgUsePaths: (group.semanticNodes ?? []).filter(node => node.verifySvgUse).map(node => node.path),
       });
@@ -613,7 +888,10 @@ async function runGroup(browser, group, config) {
   }
 
   result.navigationErrors = { react: reactNavigation.errors, blazor: blazorNavigation.errors };
-  await Promise.all([reactPage.close(), blazorPage.close()]);
+  await Promise.allSettled([
+    ...(reactPageClosed ? [] : [reactPage.close()]),
+    ...(blazorPageClosed ? [] : [blazorPage.close()]),
+  ]);
   return result;
 }
 
@@ -627,14 +905,28 @@ export async function runDomStyleParity(manifest, { puppeteer, executablePath } 
     comparisonPolicy: manifest.config?.comparisonPolicy ?? {},
   };
   const browserType = puppeteer ?? puppeteerFor(manifest.reactRoot);
-  const browser = await browserType.launch({
+  const launchOptions = {
     ...(executablePath ? { executablePath } : {}),
     headless: true,
     args: ['--no-sandbox', '--disable-dev-shm-usage'],
-  });
+  };
+  const reactBrowser = await browserType.launch(launchOptions);
+  let blazorBrowser;
   try {
+    const singleBrowserContext = manifest.groups.every(group => group.singleBrowserContext === true);
+    if (singleBrowserContext) {
+      // Some Blazor Server environments drop the first interactive event when
+      // React and Blazor run in separate Chromium processes. These manifests
+      // capture Blazor first, so a shared browser keeps the circuit active and
+      // does not background it before the interaction snapshot is taken.
+      blazorBrowser = reactBrowser;
+    } else {
+      // Keep interactive Blazor Server in an independent browser process for
+      // the default path; Chromium may throttle its circuit when React is active.
+      blazorBrowser = await browserType.launch(launchOptions);
+    }
     const groups = [];
-    for (const group of manifest.groups) groups.push(await runGroup(browser, group, config));
+    for (const group of manifest.groups) groups.push(await runGroup(reactBrowser, blazorBrowser, group, config));
     const scenarios = groups.flatMap((group) => group.scenarios);
     return {
       schemaVersion: 1,
@@ -652,7 +944,14 @@ export async function runDomStyleParity(manifest, { puppeteer, executablePath } 
       groups,
     };
   } finally {
-    await browser.close();
+    if (blazorBrowser === reactBrowser) {
+      await reactBrowser.close();
+    } else {
+      await Promise.allSettled([
+        reactBrowser.close(),
+        ...(blazorBrowser ? [blazorBrowser.close()] : []),
+      ]);
+    }
   }
 }
 
@@ -664,9 +963,20 @@ export function validateParityManifest(manifest) {
     if (!group.id || !group.react?.url || !group.blazor?.url) {
       throw new Error('each group requires id and React/Blazor URLs');
     }
+    if (group.singleBrowserContext !== undefined && typeof group.singleBrowserContext !== 'boolean') {
+      throw new Error(`${group.id}.singleBrowserContext must be a boolean`);
+    }
     for (const side of ['react', 'blazor']) {
       if (!group[side].scopeSelector || !group[side].rootSelector) {
         throw new Error(`${group.id}.${side} requires scopeSelector and rootSelector`);
+      }
+      for (const action of group[side].beforeWaitActions ?? []) {
+        if (!['click', 'hover', 'focus', 'fill', 'typeText', 'press', 'wait'].includes(action.type)) {
+          throw new Error(`${group.id}.${side} has unsupported beforeWaitAction ${action.type}`);
+        }
+        if (!action.selector && !action[`${side}Selector`]) {
+          throw new Error(`${group.id}.${side} beforeWaitAction requires a selector`);
+        }
       }
     }
     if (!Array.isArray(group.scenarios) || group.scenarios.length === 0) {
@@ -674,6 +984,9 @@ export function validateParityManifest(manifest) {
     }
     if (group.matchScopeWidth !== undefined && !['react', 'blazor'].includes(group.matchScopeWidth)) {
       throw new Error(`${group.id}.matchScopeWidth must be react or blazor`);
+    }
+    if (group.alignRootViewportY !== undefined && !Number.isFinite(group.alignRootViewportY)) {
+      throw new Error(`${group.id}.alignRootViewportY must be a finite viewport coordinate`);
     }
     const scenarioIds = new Set();
     for (const scenario of group.scenarios) {

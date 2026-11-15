@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "ant-design/ant-design",
+    "component": "Typography"
+  },
+  "config": {
+    "timeoutMs": 20000,
+    "viewport": { "width": 1280, "height": 900, "deviceScaleFactor": 1 },
+    "colorScheme": "light",
+    "comparisonPolicy": {
+      "normalization": {
+        "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_r_[a-zA-Z0-9_-]+)$",
+        "removeAttributes": ["_bl_*", "id"],
+        "removeClassPatterns": ["^css-dev-only-do-not-override-", "^css-var-_r_", "^css-var-_[rR]_", "^css-[a-zA-Z0-9]+$"],
+        "removeCommentMarkers": ["<!--!-->"]
+      }
+    }
+  },
+  "groups": [
+    {
+      "id": "typography-basic-demo",
+      "component": "Typography",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/typography?theme=light",
+        "scopeSelector": "#typography-demo-basic .code-box-demo",
+        "rootSelector": "article.ant-typography"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/typography?theme=light",
+        "scopeSelector": "#components-typography-demo-Basic .code-box-demo",
+        "rootSelector": "article.ant-typography"
+      },
+      "styleProperties": [
+        "display", "position", "boxSizing", "width", "height", "marginTop", "marginBottom",
+        "paddingInline", "lineHeight", "fontSize", "fontWeight", "color", "backgroundColor",
+        "borderRadius", "borderTopWidth", "borderRightWidth", "borderBottomWidth", "borderLeftWidth"
+      ],
+      "semanticNodes": [
+        { "path": "root", "reactSelector": "$root", "blazorSelector": "$root", "minimumCount": 1 },
+        { "path": "title1", "reactSelector": "h1.ant-typography", "blazorSelector": "h1.ant-typography", "minimumCount": 2 },
+        { "path": "title2", "reactSelector": "h2.ant-typography", "blazorSelector": "h2.ant-typography", "minimumCount": 2 },
+        { "path": "paragraph", "reactSelector": "div.ant-typography", "blazorSelector": "div.ant-typography", "minimumCount": 11 },
+        { "path": "inlineText", "reactSelector": "span.ant-typography", "blazorSelector": "span.ant-typography", "minimumCount": 9 },
+        { "path": "link", "reactSelector": "a.ant-typography-link", "blazorSelector": "a.ant-typography-link", "minimumCount": 6 },
+        { "path": "divider", "reactSelector": ".ant-divider[role=separator]", "blazorSelector": ".ant-divider[role=separator]", "minimumCount": 1 },
+        { "path": "keyboard", "reactSelector": "kbd", "blazorSelector": "kbd", "minimumCount": 2 },
+        { "path": "code", "reactSelector": "code", "blazorSelector": "code", "minimumCount": 4 },
+        { "path": "blockquote", "reactSelector": "blockquote", "blazorSelector": "blockquote", "minimumCount": 1 },
+        { "path": "pre", "reactSelector": "pre", "blazorSelector": "pre", "minimumCount": 1 }
+      ],
+      "scenarios": [{ "id": "default" }]
+    }
+  ]
+}

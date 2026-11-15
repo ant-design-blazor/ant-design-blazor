@@ -1,7 +1,4 @@
 ﻿{
-  "ID for the component's HTML": {
-    "Translated": "组件 HTML 的 ID"
-  },
   "<p>Hyperlinks to scroll on one page.</p><h2>When To Use</h2><p>For displaying anchor hyperlinks on page and jumping between them.</p>": {
     "Translated": "<p>在一页上滚动的超链接。</p><h2>何时使用</h2><p>用于在页面上显示锚超链接并在它们之间跳转。</p>"
   },
@@ -190,9 +187,6 @@
   },
   "ChildElement with ElementReference set to avoid wrapping div.": {
     "Translated": "设置了 ElementReference 的 ChildElement 以避免包装 div。"
-  },
-  "Toggles overlay viability.": {
-    "Translated": "切换覆盖可行性。"
   },
   "Will hide the overlay.": {
     "Translated": "将隐藏叠加层。"
@@ -2627,12 +2621,6 @@
   "Point the tooltip arrow at the center": {
     "Translated": "将工具提示箭头指向中心"
   },
-  "Delay (in seconds) before showing popconfirm when trigger is Hover and mouse enters": {
-    "Translated": "当触发器悬停且鼠标进入时显示 popconfirm 之前的延迟（以秒为单位）"
-  },
-  "Delay (in seconds) before hiding popconfirm when trigger is Hover and mouse leaves": {
-    "Translated": "当触发器悬停且鼠标离开时隐藏 popconfirm 之前的延迟（以秒为单位）"
-  },
   "Title string of the card": {
     "Translated": "卡片的标题字符串"
   },
@@ -2647,12 +2635,6 @@
   },
   "Point the arrow at the center of the wrapped element or not": {
     "Translated": "是否将箭头指向被包裹元素的中心"
-  },
-  "Delay in seconds, before tooltip is shown on mouse enter": {
-    "Translated": "以秒为单位的延迟，在鼠标输入时显示工具提示之前"
-  },
-  "Delay in seconds, before tooltip is hidden on mouse leave": {
-    "Translated": "以秒为单位的延迟，在鼠标离开时隐藏工具提示之前"
   },
   "progress size": {
     "Translated": "进度大小"
@@ -4447,9 +4429,6 @@
   },
   "Callback executed when the tree node is selected": {
     "Translated": "选择树节点时执行的回调"
-  },
-  "Set the style of the dropdown menu": {
-    "Translated": "设置下拉菜单的样式"
   },
   "The selected value": {
     "Translated": "所选值"

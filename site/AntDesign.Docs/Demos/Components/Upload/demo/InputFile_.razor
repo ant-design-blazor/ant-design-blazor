@@ -26,10 +26,10 @@
     
   List<UploadFileItem> fileList = new List<UploadFileItem>();
   
-  #if NET5_0_OR_GREATER
-  IList<IBrowserFile> files = new List<IBrowserFile>();
-  private void UploadFiles(InputFileChangeEventArgs e)
-  {
+    IList<IBrowserFile> files = new List<IBrowserFile>();
+
+    private void UploadFiles(InputFileChangeEventArgs e)
+    {
     foreach (var file in e.GetMultipleFiles())
     {
         files.Add(file);
@@ -37,7 +37,6 @@
     //TODO upload the files to the server
     
      fileList = files.Select(file => new UploadFileItem { FileName = file.Name, Size = file.Size }).ToList();
-  }
-#endif
+    }
 
 }

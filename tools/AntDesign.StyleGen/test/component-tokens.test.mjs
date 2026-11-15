@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { csharpTokenType, extractComponentTokenDefinitions } from '../src/component-tokens.mjs';
+import { csharpTokenType, extractComponentTokenDefinitions, extractExcludedComponentTokenNames } from '../src/component-tokens.mjs';
 
 test('C# property and documentation types use one shared mapping without changing React source types', () => {
   for (const [source, expected] of [
@@ -40,6 +40,41 @@ test('extracts inherited token properties before component-specific overrides', 
     { name: 'color', type: "'red' | 'blue'" },
     { name: 'size', type: 'number' },
   ]);
+});
+
+test('honors Exclude and Omit utility types in inherited component tokens', () => {
+  const definitions = extractComponentTokenDefinitions(`
+    interface SharedComponentToken {
+      addonBg: string;
+      activeBg: string;
+      borderColor: string;
+    }
+    interface PanelComponentToken {
+      cellHeight: number;
+    }
+    interface ComponentToken extends Exclude<SharedComponentToken, 'addonBg' | 'borderColor'>, PanelComponentToken {
+      ownToken: boolean;
+    }
+  `);
+
+  assert.deepEqual(definitions, [
+    { name: 'activeBg', type: 'string' },
+    { name: 'cellHeight', type: 'number' },
+    { name: 'ownToken', type: 'boolean' },
+  ]);
+
+  const omitted = extractComponentTokenDefinitions(`
+    interface Shared {
+      visible: boolean;
+      internal: string;
+    }
+    interface ComponentToken extends Omit<Shared, 'internal'> {}
+  `);
+  assert.deepEqual(omitted, [{ name: 'visible', type: 'boolean' }]);
+
+  assert.deepEqual([...extractExcludedComponentTokenNames(`
+    interface ComponentToken extends Exclude<SharedComponentToken, 'addonBg' | 'colorBg'> {}
+  `)], ['addonBg', 'colorBg']);
 });
 
 test('extracts bilingual token descriptions and deprecation metadata', () => {

@@ -14,6 +14,7 @@
         "descriptionEn": "z-index of popup"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -49,6 +50,7 @@
         "descriptionEn": "Padding with description"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -72,6 +74,7 @@
         "descriptionEn": "Horizontal padding of link"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -82,6 +85,7 @@
     "hasTokenSource": false,
     "hasTokenTable": true,
     "tokenDefinitions": [],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -165,6 +169,7 @@
         "descriptionEn": "Font size of small Avatar"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -182,6 +187,7 @@
         "descriptionEn": "z-index of popup"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -247,6 +253,7 @@
         "descriptionEn": "Font weight of badge text"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -257,7 +264,8 @@
     "hasTokenSource": false,
     "hasTokenTable": true,
     "tokenDefinitions": [],
-    "implementedInBlazor": false
+    "excludedTokenNames": [],
+    "implementedInBlazor": true
   },
   {
     "name": "breadcrumb",
@@ -310,6 +318,7 @@
         "descriptionEn": "Margin of separator"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -584,6 +593,7 @@
         "descriptionEn": "Default text color for text buttons on hover"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -631,6 +641,7 @@
         "descriptionEn": "Width of year select"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -720,6 +731,7 @@
         "descriptionEn": "Margin bottom of tabs component"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -778,6 +790,7 @@
         "deprecated": true
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -837,6 +850,7 @@
         "descriptionEn": "Font weight of selected item"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -847,6 +861,7 @@
     "hasTokenSource": false,
     "hasTokenTable": true,
     "tokenDefinitions": [],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -857,6 +872,7 @@
     "hasTokenSource": false,
     "hasTokenTable": false,
     "tokenDefinitions": [],
+    "excludedTokenNames": [],
     "implementedInBlazor": false
   },
   {
@@ -928,6 +944,7 @@
         "descriptionEn": "Padding of small header"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -938,6 +955,7 @@
     "hasTokenSource": false,
     "hasTokenTable": false,
     "tokenDefinitions": [],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -948,6 +966,7 @@
     "hasTokenSource": false,
     "hasTokenTable": false,
     "tokenDefinitions": [],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -1049,6 +1068,9 @@
         "descriptionEn": "z-index of popup"
       }
     ],
+    "excludedTokenNames": [
+      "addonBg"
+    ],
     "implementedInBlazor": true
   },
   {
@@ -1120,6 +1142,7 @@
         "descriptionEn": "Bottom margin of title"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -1149,6 +1172,7 @@
         "descriptionEn": "Horizontal margin of vertical Divider"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -1184,6 +1208,7 @@
         "descriptionEn": "z-index of drawer"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -1207,6 +1232,7 @@
         "descriptionEn": "z-index of dropdown"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -1217,6 +1243,7 @@
     "hasTokenSource": false,
     "hasTokenTable": true,
     "tokenDefinitions": [],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -1227,6 +1254,7 @@
     "hasTokenSource": false,
     "hasTokenTable": true,
     "tokenDefinitions": [],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -1237,6 +1265,7 @@
     "hasTokenSource": false,
     "hasTokenTable": true,
     "tokenDefinitions": [],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -1312,6 +1341,7 @@
         "descriptionEn": "Vertical layout label padding"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -1322,6 +1352,7 @@
     "hasTokenSource": false,
     "hasTokenTable": true,
     "tokenDefinitions": [],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -1369,6 +1400,7 @@
         "descriptionEn": "z-index of preview popup"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -1482,6 +1514,7 @@
         "descriptionEn": "Box-shadow when active in warning status"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -1555,6 +1588,7 @@
         "descriptionEn": "Width of control button"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -1677,6 +1711,7 @@
         "descriptionEn": "Width of sider trigger when collapse is 0"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -1754,6 +1789,7 @@
         "descriptionEn": "Margin bottom of title"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -1777,6 +1813,7 @@
         "descriptionEn": "Horizontal padding of a list item."
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -1787,6 +1824,7 @@
     "hasTokenSource": false,
     "hasTokenTable": true,
     "tokenDefinitions": [],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -1816,6 +1854,7 @@
         "descriptionEn": "z-index of popup"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -2275,6 +2314,7 @@
         "descriptionEn": "z-index of popup menu"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -2304,6 +2344,7 @@
         "descriptionEn": "z-index of Message"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -2399,6 +2440,7 @@
         "descriptionEn": "Line height of title"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -2452,6 +2494,7 @@
         "descriptionEn": "z-index of Notification"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -2535,6 +2578,7 @@
         "descriptionEn": "Top of Pagination size changer"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -2552,6 +2596,7 @@
         "descriptionEn": "z-index of Popconfirm"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -2609,6 +2654,7 @@
         "descriptionEn": "z-index of Popover"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -2656,6 +2702,7 @@
         "descriptionEn": "Color of remaining part of progress bar"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -2666,6 +2713,7 @@
     "hasTokenSource": false,
     "hasTokenTable": true,
     "tokenDefinitions": [],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -2676,6 +2724,7 @@
     "hasTokenSource": false,
     "hasTokenTable": false,
     "tokenDefinitions": [],
+    "excludedTokenNames": [],
     "implementedInBlazor": false
   },
   {
@@ -2779,6 +2828,7 @@
         "descriptionEn": "Margin right of Radio button"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -2826,6 +2876,7 @@
         "descriptionEn": "Small star size"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -2861,6 +2912,7 @@
         "descriptionEn": "Title font size"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -2871,6 +2923,7 @@
     "hasTokenSource": false,
     "hasTokenTable": false,
     "tokenDefinitions": [],
+    "excludedTokenNames": [],
     "implementedInBlazor": false
   },
   {
@@ -2930,6 +2983,7 @@
         "descriptionEn": "Padding of Segmented container"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -3085,6 +3139,7 @@
         "descriptionEn": "z-index of dropdown"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -3142,6 +3197,7 @@
         "descriptionEn": "Height of title skeleton"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -3261,6 +3317,7 @@
         "descriptionEn": "Background color of track when hover"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -3271,6 +3328,7 @@
     "hasTokenSource": false,
     "hasTokenTable": true,
     "tokenDefinitions": [],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -3306,6 +3364,7 @@
         "descriptionEn": "Small loading icon size"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -3342,6 +3401,7 @@
         "descriptionEn": "Drag and drop trigger area size"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -3365,6 +3425,7 @@
         "descriptionEn": "Title font size"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -3456,6 +3517,7 @@
         "deprecated": true
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -3545,6 +3607,7 @@
         "descriptionEn": "Padding of Switch"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -3766,6 +3829,7 @@
         "descriptionEn": "Border radius of sticky scrollbar"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -3933,6 +3997,7 @@
         "descriptionEn": "z-index of dropdown menu"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -3962,6 +4027,7 @@
         "descriptionEn": "Default text color for solid tag."
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -4009,6 +4075,7 @@
         "descriptionEn": "Line width"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -4032,6 +4099,7 @@
         "descriptionEn": "z-index of tooltip"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -4067,6 +4135,7 @@
         "descriptionEn": "Tour popup z-index"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -4114,6 +4183,7 @@
         "descriptionEn": "Width of large list"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -4179,6 +4249,7 @@
         "descriptionEn": "Node title height"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -4189,6 +4260,7 @@
     "hasTokenSource": false,
     "hasTokenTable": true,
     "tokenDefinitions": [],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -4212,6 +4284,7 @@
         "descriptionEn": "Margin top of title"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   },
   {
@@ -4235,6 +4308,7 @@
         "descriptionEn": "Size of list items in card type (affects both picture-card and picture-circle)"
       }
     ],
+    "excludedTokenNames": [],
     "implementedInBlazor": true
   }
 ]

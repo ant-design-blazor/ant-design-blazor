@@ -1,11 +1,11 @@
 ﻿<div>
     <RadioGroup @bind-Value="_selectionType">
-        <Radio Value="SelectionType.Checkbox">Checkbox</Radio>
-        <Radio Value="SelectionType.Radio">radio</Radio>
+        <Radio Value="@("checkbox")">Checkbox</Radio>
+        <Radio Value="@("radio")">radio</Radio>
     </RadioGroup>
     <Divider />
     <Table TItem="Row" DataSource="_rows" RowKey="x => x.Key" @bind-SelectedRows="_selectedRows">
-        <Selection Type="_selectionType" Disabled="@(context.Name == "Disabled User")" />
+        <Selection Type="@(_selectionType == "radio" ? SelectionType.Radio : SelectionType.Checkbox)" Disabled="@(context.Name == "Disabled User")" GetCheckboxProps="GetCheckboxProps" />
         <PropertyColumn Property="x => x.Name" Title="Name"><a>@context.Name</a></PropertyColumn>
         <PropertyColumn Property="x => x.Age" Title="Age" />
         <PropertyColumn Property="x => x.Address" Title="Address" />
@@ -13,7 +13,15 @@
 </div>
 
 @code {
-    private SelectionType _selectionType = SelectionType.Checkbox;
+    private static IDictionary<string, object> GetCheckboxProps(object record)
+    {
+        return new Dictionary<string, object>
+        {
+            ["name"] = ((Row)record).Name
+        };
+    }
+
+    private string _selectionType = "checkbox";
     private IEnumerable<Row> _selectedRows = [];
     private readonly Row[] _rows =
     [

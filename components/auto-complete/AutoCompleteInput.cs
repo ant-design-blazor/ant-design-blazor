@@ -12,9 +12,14 @@ namespace AntDesign
     {
         public AutoCompleteInput()
         {
-            AutoComplete = false;
-            Type = AntDesign.InputType.Search;
+            AutoComplete = true;
+            Type = AntDesign.InputType.Text;
             BindOnInput = true;
+        }
+
+        protected override void SetClasses()
+        {
+            ClassMapper.Clear();
         }
 
         [CascadingParameter]

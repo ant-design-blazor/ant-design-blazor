@@ -1,0 +1,16 @@
+<Flex Direction="FlexDirection.Vertical" Gap="@("12px")">
+    <AutoComplete TOption="string" Variant="outlined" Style="width: 200px" Placeholder="Outlined" Options="_options" OnInput="OnSearch" />
+    <AutoComplete TOption="string" Variant="filled" Style="width: 200px" Placeholder="Filled" Options="_options" OnInput="OnSearch" />
+    <AutoComplete TOption="string" Variant="borderless" Style="width: 200px" Placeholder="Borderless" Options="_options" OnInput="OnSearch" />
+    <AutoComplete TOption="string" Variant="underlined" Style="width: 200px" Placeholder="Underlined" Options="_options" OnInput="OnSearch" />
+</Flex>
+
+@code {
+    private IEnumerable<string> _options = [];
+
+    private void OnSearch(ChangeEventArgs args)
+    {
+        var value = args.Value?.ToString() ?? string.Empty;
+        _options = string.IsNullOrEmpty(value) ? [] : [value, value + value, value + value + value];
+    }
+}

@@ -18,6 +18,8 @@ export function normalizeRuntimeHtml(html, policy = {}) {
     'aria-details', 'aria-errormessage', 'aria-flowto', 'headers', 'form', 'list', 'popovertarget', 'commandfor',
   ]);
   const removeAttributes = policy.removeAttributes ?? [];
+  const removeEmptyAttributes = new Set(policy.removeEmptyAttributes ?? []);
+  const runtimeIdAttributes = new Set(policy.runtimeIdAttributes ?? []);
   const removeClassPatterns = (policy.removeClassPatterns ?? []).map((pattern) => compilePattern(pattern));
   const idMap = new Map();
   let nextId = 1;
@@ -36,6 +38,12 @@ export function normalizeRuntimeHtml(html, policy = {}) {
   for (const marker of policy.removeCommentMarkers ?? []) {
     source = source.split(marker).join('');
   }
+  if (policy.removeInterTagWhitespace) {
+    // Razor templates serialize indentation between adjacent elements while
+    // React's renderer generally does not. This whitespace-only text is
+    // ignored by the DOM tree comparator and does not affect these fixtures.
+    source = source.replace(/>\s+</g, '><');
+  }
   const referencedIds = new Set();
   if (policy.removeUnreferencedRuntimeIds) {
     for (const [, name, , value] of source.matchAll(/\s+([\w:-]+)=(['"])(.*?)\2/g)) {
@@ -49,15 +57,23 @@ export function normalizeRuntimeHtml(html, policy = {}) {
     // Seed IDs in DOM order before rewriting any references. Markup often
     // emits aria-controls before id, and the mapping must remain relationship-
     // stable regardless of each framework's attribute order.
-    for (const match of source.matchAll(/\sid=(['"])(.*?)\1/g)) {
-      if (!dropRuntimeId(match[2])) normalizeId(match[2]);
+    for (const match of source.matchAll(/\s([\w:-]+)=(['"])(.*?)\2/g)) {
+      const [, name, , value] = match;
+      if (removeAttributes.some((removed) => removed.endsWith('*')
+        ? name.startsWith(removed.slice(0, -1))
+        : name === removed)) continue;
+      if (name === 'id' && !dropRuntimeId(value)) normalizeId(value);
+      if (runtimeIdAttributes.has(name)) {
+        for (const id of value.split(/\s+/)) normalizeId(id);
+      }
     }
   }
 
-  return source.replace(/\s+([\w:-]+)=(['"])(.*?)\2/g, (attribute, name, quote, value) => {
+  source = source.replace(/\s+([\w:-]+)=(['"])(.*?)\2/g, (attribute, name, quote, value) => {
     if (removeAttributes.some((removed) => removed.endsWith('*')
       ? name.startsWith(removed.slice(0, -1))
       : name === removed)) return '';
+    if (removeEmptyAttributes.has(name) && value.trim() === '') return '';
 
     if (name === 'id' && idPattern) {
       if (dropRuntimeId(value)) return '';
@@ -66,6 +82,9 @@ export function normalizeRuntimeHtml(html, policy = {}) {
     if (referenceAttributes.has(name) && idPattern) {
       const normalizedReferences = value.replace(/\S+/g, normalizeId);
       return ` ${name}=${quote}${normalizedReferences}${quote}`;
+    }
+    if (runtimeIdAttributes.has(name) && idPattern) {
+      return ` ${name}=${quote}${value.replace(/\S+/g, normalizeId)}${quote}`;
     }
     if (idPattern && (name === 'href' || name === 'xlink:href') && value.startsWith('#')) {
       return ` ${name}=${quote}#${normalizeId(value.slice(1))}${quote}`;
@@ -96,6 +115,17 @@ export function normalizeRuntimeHtml(html, policy = {}) {
 
     return attribute;
   });
+
+  if (policy.sortAttributes) {
+    source = source.replace(/<([A-Za-z][\w:-]*)([^<>]*)>/g, (tag, name, attributes) => {
+      const parsedAttributes = [...attributes.matchAll(/\s+([\w:-]+)=(['"])(.*?)\2/g)]
+        .map(([, attributeName, quote, value]) => ({ attributeName, quote, value }))
+        .sort((left, right) => left.attributeName.localeCompare(right.attributeName));
+      return `<${name}${parsedAttributes.map(({ attributeName, quote, value }) => ` ${attributeName}=${quote}${value}${quote}`).join('')}>`;
+    });
+  }
+
+  return source;
 }
 
 export function compareRawHtml(expected, actual) {
@@ -121,7 +151,7 @@ export function compareRawHtml(expected, actual) {
   };
 }
 
-export function compareComputedStyles(expected = {}, actual = {}) {
+export function compareComputedStyles(expected = {}, actual = {}, pixelToleranceByProperty = {}) {
   const differences = [];
   const paths = [...new Set([...Object.keys(expected), ...Object.keys(actual)])].sort();
   for (const path of paths) {
@@ -131,7 +161,17 @@ export function compareComputedStyles(expected = {}, actual = {}) {
     for (const property of properties) {
       const expectedValue = expectedProperties[property] ?? null;
       const actualValue = actualProperties[property] ?? null;
-      if (expectedValue !== actualValue) differences.push({ path, property, expected: expectedValue, actual: actualValue });
+      if (expectedValue === actualValue) continue;
+
+      const tolerancePx = pixelToleranceByProperty[property] ?? 0;
+      const expectedPx = typeof expectedValue === 'string' ? /^(-?\d+(?:\.\d+)?)px$/.exec(expectedValue) : null;
+      const actualPx = typeof actualValue === 'string' ? /^(-?\d+(?:\.\d+)?)px$/.exec(actualValue) : null;
+      if (tolerancePx > 0 && expectedPx && actualPx
+        && Math.abs(Number(expectedPx[1]) - Number(actualPx[1])) <= tolerancePx) {
+        continue;
+      }
+
+      differences.push({ path, property, expected: expectedValue, actual: actualValue });
     }
   }
   return { equal: differences.length === 0, differences };
@@ -188,6 +228,7 @@ export function compareDomSnapshots(expected, actual, policy = {}) {
     const computedStyles = compareComputedStyles(
       Object.fromEntries(left.map((node, index) => [`${path}[${index}]`, node.computedStyle ?? {}])),
       Object.fromEntries(right.map((node, index) => [`${path}[${index}]`, node.computedStyle ?? {}])),
+      policy.computedStylePixelToleranceByProperty,
     );
     const semanticTree = left.length === right.length
       ? left.reduce((result, node, index) => {
@@ -238,7 +279,8 @@ export function compareDomSnapshots(expected, actual, policy = {}) {
       svgUse,
     };
   });
-  const styles = compareComputedStyles(expected?.computedStyles, actual?.computedStyles);
+  const styles = compareComputedStyles(expected?.computedStyles, actual?.computedStyles,
+    policy.computedStylePixelToleranceByProperty);
   const htmlExact = compareRawHtml(expectedHtml, actualHtml);
   // Raw outerHTML is retained as a diagnostic because renderer-specific
   // whitespace/comment serialization is not a DOM structure difference.

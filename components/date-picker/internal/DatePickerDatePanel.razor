@@ -4,30 +4,11 @@
 @inherits DatePickerPanelBase<TValue>
 
 @{
-    var calendar = Calendar;
+    var calendar = CultureInfo.Calendar;
     var calendarWeekRule = CultureInfo.DateTimeFormat.CalendarWeekRule;
 
-    DateTime monthFirstDayDate = DateHelper.CreateDate(calendar, calendar.GetYear(PickerValue), calendar.GetMonth(PickerValue), 1, PickerValue);
-    int monthFirstDayOfWeek = (int)calendar.GetDayOfWeek(monthFirstDayDate);
-
-    // sunday should be 7
-    if (monthFirstDayOfWeek == 0)
-    {
-        monthFirstDayOfWeek = DayOfWeekHelper.GetDiffForDayOfWeek(Locale.FirstDayOfWeek);
-    }
-
-    int diffDay = (int) Locale.FirstDayOfWeek - monthFirstDayOfWeek;
-    DateTime startDate;
-    int skipDays = 0;
-    if (monthFirstDayDate == DateTime.MinValue)
-    {
-        startDate = monthFirstDayDate;
-        skipDays = monthFirstDayOfWeek - (int)Locale.FirstDayOfWeek;
-    }
-    else
-    {
-        startDate = monthFirstDayDate.AddDays(diffDay);
-    }
+    DateTime monthFirstDayDate = new DateTime(PickerValue.Year, PickerValue.Month, 1, 0, 0, 0);
+    DateTime startDate = DayOfWeekHelper.GetWeekStartDate(monthFirstDayDate, Locale.FirstDayOfWeek, out int skipDays);
 }
 
 <div class='@($"{PrefixCls}-panel{(RTL ? $" {PrefixCls}-panel-rtl" : string.Empty)}")' tabindex="0" @ref="Ref">
@@ -38,10 +19,10 @@
                            ViewStartDate="startDate"
                            ShowFooter="@ShowToday"
                            GetRowClass="GetRowClass"
-                           IsInView="date => calendar.GetYear(date) == calendar.GetYear(PickerValue) && calendar.GetMonth(date) == calendar.GetMonth(PickerValue)"
-                           IsToday="date => calendar.GetYear(date) == calendar.GetYear(DatePicker.CurrentDate) && calendar.GetDayOfYear(date) == calendar.GetDayOfYear(DatePicker.CurrentDate)"
-                           IsSelected="date => !IsWeek && Value.HasValue && calendar.GetYear(date) == calendar.GetYear(Value.Value) && calendar.GetDayOfYear(date) == calendar.GetDayOfYear(Value.Value)"
-                           GetColTitle='date => FormatDate(date, Locale.Lang.DateFormat)'
+                           IsInView="date => DateHelper.IsSameMonth(date, PickerValue)"
+                           IsToday="date => DateHelper.IsSameDay(date, DatePicker.CurrentDate)"
+                           IsSelected="date => !IsWeek && (DatePicker.IsDateSelected(date) || DateHelper.IsSameDay(date, Value))"
+                           GetColTitle='date => date.ToString(Locale.Lang.DateFormat, CultureInfo)'
                            OnRowSelect="OnRowSelect"
                            OnValueSelect="OnValueSelect"
                            GetNextColValue="date => DateHelper.AddDaysSafely(date, 1)"
@@ -79,7 +60,7 @@
             }
         </RenderFirstCol>
         <RenderColValue Context="currentColDate">
-            @FormatDay(currentColDate)
+            @currentColDate.Day
         </RenderColValue>
     </DatePickerTemplate>
 </div>

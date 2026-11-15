@@ -11,6 +11,7 @@ using AntDesign.Core.Documentation;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using OneOf;
 
 namespace AntDesign
 {
@@ -39,11 +40,11 @@ namespace AntDesign
             {
                 if (Effect == CarouselEffect.ScrollX && IsHorizontal)
                 {
-                    return $"width: {TotalWidth}px; opacity: 1; transform: translate3d(-{SlickWidth * (IndexOfSlick(ActiveSlick) + 1)}px, 0px, 0px);transition: -webkit-transform 500ms ease 0s;";
+                    return $"width: {TotalWidth}px; opacity: 1; transform: translate3d(-{SlickWidth * (IndexOfSlick(ActiveSlick) + (Infinite ? 1 : 0))}px, 0px, 0px);transition: -webkit-transform 500ms ease 0s;";
                 }
                 else if (Effect == CarouselEffect.ScrollX && !IsHorizontal)
                 {
-                    return $"height: {TotalHeight}px; opacity: 1; transform: translate3d(0px, -{SlickHeight * (IndexOfSlick(ActiveSlick) + 1)}px, 0px);transition: -webkit-transform 500ms ease 0s;";
+                    return $"height: {TotalHeight}px; opacity: 1; transform: translate3d(0px, -{SlickHeight * (IndexOfSlick(ActiveSlick) + (Infinite ? 1 : 0))}px, 0px);transition: -webkit-transform 500ms ease 0s;";
                 }
                 else if (Effect == CarouselEffect.Fade && IsHorizontal)
                 {
@@ -58,17 +59,48 @@ namespace AntDesign
             }
         }
 
-        internal string SlickClonedStyle => $"width: {SlickWidth}px;";
+        internal string SlickClonedStyle => IsHorizontal ? $"width: {SlickWidth}px;" : $"height: {SlickHeight}px;";
         private string SlickListStyle => IsHorizontal ? string.Empty : $"height: {SlickHeight}px";
         internal int SlickWidth { get; set; } = -1;
         private int SlickHeight { get; set; } = -1;
-        private int TotalWidth => SlickWidth * (_slicks.Count * 2 + 1);
-        private int TotalHeight => SlickHeight * (_slicks.Count * 2 + 1);
+        private int TotalWidth => SlickWidth * (_slicks.Count + (Infinite ? 2 : 0));
+        private int TotalHeight => SlickHeight * (_slicks.Count + (Infinite ? 2 : 0));
         private List<CarouselSlick> _slicks = new List<CarouselSlick>();
         internal CarouselSlick ActiveSlick { get; set; }
         private Timer _timer;
         private ClassMapper SlickSliderClassMapper { get; } = new ClassMapper();
-        private bool IsHorizontal => DotPosition == CarouselDotPosition.Top || DotPosition == CarouselDotPosition.Bottom;
+        private bool IsHorizontal => EffectiveDotPlacement == CarouselDotPosition.Top || EffectiveDotPlacement == CarouselDotPosition.Bottom;
+        private bool IsAutoplayEnabled => Autoplay.IsT0
+            ? Autoplay.AsT0
+            : Autoplay.IsT1 ? Autoplay.AsT1 != TimeSpan.Zero : true;
+        private bool IsDotDurationEnabled => DotDuration || (Autoplay.IsT2 && Autoplay.AsT2.DotDuration);
+        private TimeSpan AutoplayInterval => Autoplay.IsT1 && Autoplay.AsT1 > TimeSpan.Zero
+            ? Autoplay.AsT1
+            : TimeSpan.FromMilliseconds(AutoplaySpeed);
+        private string RootStyle
+        {
+            get
+            {
+                var style = Style;
+                if (IsDotDurationEnabled && IsAutoplayEnabled)
+                {
+                    style += $"--dot-duration:{AutoplayInterval.TotalMilliseconds}ms;";
+                }
+
+                var componentStyle = GetComponentStyle("Carousel", style);
+                return string.IsNullOrWhiteSpace(componentStyle) ? null : componentStyle;
+            }
+        }
+        private CarouselDotPosition EffectiveDotPlacement => DotPlacement ?? DotPosition;
+        internal string DotPositionClass => EffectiveDotPlacement switch
+        {
+            CarouselDotPosition.Left or CarouselDotPosition.Start => "start",
+            CarouselDotPosition.Right or CarouselDotPosition.End => "end",
+            _ => EffectiveDotPlacement.ToString().ToLowerInvariant(),
+        };
+        internal string DotsClassName => $"slick-dots slick-dots-{DotPositionClass}{(string.IsNullOrWhiteSpace(DotsClass) ? string.Empty : $" {DotsClass}")}";
+        internal bool IsPreviousDisabled => !Infinite && IndexOfSlick(ActiveSlick) <= 0;
+        internal bool IsNextDisabled => !Infinite && IndexOfSlick(ActiveSlick) >= _slicks.Count - 1;
 
         private DotNetObjectReference<Carousel> _dotNetHelper;
         #region Parameters
@@ -86,10 +118,40 @@ namespace AntDesign
         public CarouselDotPosition DotPosition { get; set; } = CarouselDotPosition.Bottom;
 
         /// <summary>
+        /// The position of the dots: Top, Bottom, Start, or End.
+        /// </summary>
+        [Parameter]
+        public CarouselDotPosition? DotPlacement { get; set; }
+
+        /// <summary>
         /// Whether to scroll automatically
         /// </summary>
         [Parameter]
-        public TimeSpan Autoplay { get; set; } = TimeSpan.Zero;
+        public OneOf<bool, TimeSpan, CarouselAutoplayOptions> Autoplay { get; set; } = false;
+
+        /// <summary>
+        /// Autoplay interval in milliseconds.
+        /// </summary>
+        [Parameter]
+        public int AutoplaySpeed { get; set; } = 3000;
+
+        /// <summary>
+        /// Whether to animate the active dot for the autoplay interval.
+        /// </summary>
+        [Parameter]
+        public bool DotDuration { get; set; }
+
+        /// <summary>
+        /// Whether to show switch arrows.
+        /// </summary>
+        [Parameter]
+        public bool Arrows { get; set; }
+
+        /// <summary>
+        /// Whether to infinitely wrap around at the start or end.
+        /// </summary>
+        [Parameter]
+        public bool Infinite { get; set; } = true;
 
         /// <summary>
         /// Transition effect, <see cref="CarouselEffect"/>
@@ -98,7 +160,7 @@ namespace AntDesign
         public CarouselEffect Effect { get; set; } = CarouselEffect.ScrollX;
 
         [Parameter]
-        public bool Dots { get; set; }
+        public bool Dots { get; set; } = true;
 
         [Parameter]
         public string DotsClass { get; set; }
@@ -151,13 +213,22 @@ namespace AntDesign
         /// <param name="index"></param>
         public void GoTo(int index)
         {
-            if (index >= _slicks.Count)
+            if (_slicks.Count == 0)
+            {
+                return;
+            }
+
+            if (Infinite && index >= _slicks.Count)
             {
                 index = 0;
             }
-            else if (index < 0)
+            else if (Infinite && index < 0)
             {
                 index = _slicks.Count - 1;
+            }
+            else
+            {
+                index = Math.Clamp(index, 0, _slicks.Count - 1);
             }
 
             Activate(_slicks[index]);
@@ -188,9 +259,15 @@ namespace AntDesign
             }
 
             _timer?.Dispose();
-            if (Autoplay != TimeSpan.Zero)
+            if (AutoplaySpeed <= 0)
             {
-                _timer = new Timer(AutoplaySlick, null, (int)Autoplay.TotalMilliseconds, (int)Autoplay.TotalMilliseconds);
+                throw new ArgumentOutOfRangeException(nameof(AutoplaySpeed), "AutoplaySpeed must be greater than zero.");
+            }
+
+            if (IsAutoplayEnabled)
+            {
+                var interval = (int)AutoplayInterval.TotalMilliseconds;
+                _timer = new Timer(AutoplaySlick, null, interval, interval);
             }
         }
 
@@ -284,13 +361,19 @@ namespace AntDesign
 
         private async void AutoplaySlick(object state)
         {
+            if (_slicks == null || _slicks.Count == 0)
+            {
+                return;
+            }
+
             var index = IndexOfSlick(ActiveSlick) + 1;
-            if (index == _slicks.Count)
+            if (index == _slicks.Count && Infinite)
             {
                 index = 0;
             }
-            if (_slicks == null || _slicks.Count == 0)
+            else if (index == _slicks.Count)
             {
+                _timer?.Change(Timeout.Infinite, Timeout.Infinite);
                 return;
             }
             this.Activate(_slicks[index]);
@@ -301,7 +384,7 @@ namespace AntDesign
 
             if (index == 0 && Effect == CarouselEffect.ScrollX)
             {
-                await Task.Delay((int)Autoplay.TotalMilliseconds / 2);
+                await Task.Delay((int)AutoplayInterval.TotalMilliseconds / 2);
             }
 
             await InvokeAsync(() => StateHasChanged());

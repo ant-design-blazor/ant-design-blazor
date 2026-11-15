@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using AntDesign.Core.Documentation;
 using AntDesign.Core.Extensions;
@@ -74,6 +75,19 @@ namespace AntDesign
 
         private void ProcessDefaults()
         {
+            if (Multiple)
+            {
+                var initialDates = GetSelectedDates();
+                if (initialDates.Count > 0)
+                {
+                    PickerValues[0] = initialDates[initialDates.Count - 1];
+                    _pickerStatus[0].SelectedValue = initialDates[initialDates.Count - 1];
+                    _pickerStatus[0].IsValueSelected = true;
+                }
+                UseDefaultPickerValue[0] = false;
+                return;
+            }
+
             UseDefaultPickerValue[0] = true;
             if (DefaultPickerValue?.Equals(default(TValue)) == true)
             {
@@ -122,7 +136,17 @@ namespace AntDesign
             }
             await _dropDown.Show();
 
-            if (!_inputStart.IsOnFocused && _pickerStatus[0].IsValueSelected && !UseDefaultPickerValue[0])
+            if (Multiple)
+            {
+                var selectedDates = GetSelectedDates();
+                if (selectedDates.Count > 0)
+                {
+                    PickerValues[0] = selectedDates[selectedDates.Count - 1];
+                    RefreshComponentState();
+                }
+            }
+
+            if (!Multiple && _inputStart?.IsOnFocused != true && _pickerStatus[0].IsValueSelected && !UseDefaultPickerValue[0])
             {
                 GetIfNotNull(Value, 0, notNullValue =>
                 {
@@ -229,6 +253,12 @@ namespace AntDesign
                 throw new ArgumentOutOfRangeException("DatePicker should have only single picker.");
             }
 
+            if (Multiple)
+            {
+                var selectedDates = GetSelectedDates();
+                return selectedDates.Count > 0 ? selectedDates[selectedDates.Count - 1] : null;
+            }
+
             if (_pickerStatus[index].SelectedValue is not null)
             {
                 return _pickerStatus[index].SelectedValue.Value;
@@ -260,6 +290,21 @@ namespace AntDesign
             }
 
             UseDefaultPickerValue[0] = false;
+
+            if (Multiple)
+            {
+                if (IsDisabledDate(value)) return;
+                var selected = GetSelectedDates().ToList();
+                var existingIndex = selected.FindIndex(item => DateHelper.IsSameDay(item, value));
+                if (existingIndex >= 0) selected.RemoveAt(existingIndex);
+                else selected.Add(value);
+                CurrentValue = DataConversionExtensions.Convert<Array, TValue>(CreateMultipleValue(selected));
+                _pickerStatus[0].SelectedValue = value;
+                _pickerStatus[0].IsValueSelected = selected.Count > 0;
+                InvokeOnChange();
+                RefreshComponentState();
+                return;
+            }
 
             if (closeDropdown && !IsShowTime && Picker != DatePickerType.Time)
             {

@@ -3,59 +3,90 @@
 @typeparam TOption
 @using AntDesign.Internal
 
-<div class="@RootClass" style="@RootStyle">
+<div class="@RootClass" style="@RootStyle" @ref="_rootReference">
 <CascadingValue Value='$"ant-select-dropdown"' Name="PrefixCls">
     <OverlayTrigger @ref="_overlayTrigger"
                     Style="display: inline"
                     IsButton="@true"
                     Disabled="false"
                     Trigger="[]"
+                    TriggerReference="@_rootReference"
                     BoundaryAdjustMode="@BoundaryAdjustMode"
                     PopupContainerSelector="@PopupContainerSelector"
                     OverlayEnterCls="ant-slide-up-enter ant-slide-up-enter-active ant-slide-up"
                     OverlayLeaveCls="ant-slide-up-leave ant-slide-up-leave-active ant-slide-up"
                     OverlayClassName="@PopupClass"
                     OverlayStyle="@PopupStyle"
+                    OverlayDisplayStyle="block"
                     OnVisibleChange="@OnOverlayTriggerVisibleChange">
         <Overlay>
             <CascadingValue Value="this" IsFixed="@true">
-                <div class="@PopupListClass" style="@PopupListStyle">
-                    @if (OverlayTemplate != null)
+                <div>
+                    @if (OverlayTemplate == null && _filteredOptions?.Any() == true)
                     {
-                        @OverlayTemplate
-                    }
-                    else if (_filteredOptions?.Any()==true)
-                    {
-                        @foreach (var option in _filteredOptions)
-                        {
-                            @if (OptionTemplate != null)
+                        <div role="listbox" id="@ListboxId" style="height: 0px; width: 0px; overflow: hidden;">
+                            @foreach (var optionIndex in GetAccessibilityOptionIndexes())
                             {
-                                @OptionTemplate(option)
+                                var option = _filteredOptions[optionIndex];
+                                <div aria-label="@option.Label" role="option" id="@GetOptionId(optionIndex)"
+                                     aria-selected="@(IsActive(optionIndex) ? "true" : "false")"
+                                     aria-disabled="@(option.IsDisabled ? "true" : null)">@option.Value</div>
                             }
-                            else
-                            {
-                                var label = OptionFormat == null ? option.Label : OptionFormat(option);
-                                <AutoCompleteOption Value="@option.Value" Label="@option.Label" Disabled="option.IsDisabled">
-                                    @label
-                                </AutoCompleteOption>
-                            }
-                        }
+                        </div>
                     }
+                    <div class="@PopupListClass" style="@PopupListStyle">
+                        <div class="ant-select-dropdown-list-holder" style="max-height: 256px; overflow-y: auto; overflow-anchor: none;">
+                            <div class="ant-select-dropdown-list-holder-inner">
+                                @if (OverlayTemplate != null)
+                                {
+                                    @OverlayTemplate
+                                }
+                                else if (_filteredOptions?.Any() == true)
+                                {
+                                    @for (var index = 0; index < _filteredOptions.Count; index++)
+                                    {
+                                        var option = _filteredOptions[index];
+                                        @if (OptionTemplate != null)
+                                        {
+                                            @OptionTemplate(option)
+                                        }
+                                        else
+                                        {
+                                            var label = OptionFormat == null ? option.Label : OptionFormat(option);
+                                            <AutoCompleteOption Value="@option.Value" Label="@option.Label" Disabled="option.IsDisabled" Active="@IsActive(index)">
+                                                @label
+                                            </AutoCompleteOption>
+                                        }
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </CascadingValue>
         </Overlay>
         <Unbound>
             <CascadingValue Value="this" IsFixed="@true">
-                <CascadingValue Value="context" Name="OverlayTriggerContext" IsFixed>
-                    @if (ChildContent == null)
-                    {
-                        <AutoCompleteInput @bind-Value="@CurrentValue" Placeholder="@Placeholder" Disabled="@Disabled" AllowClear="@AllowClear" Bordered="@InputBordered" InputElementSuffixClass="@InputStatusClass" Style="@InputStyle" Id="@Id" DebounceMilliseconds="DebounceMilliseconds" BindOnInput Class="@Class" />
-                    }
-                    else
-                    {
+                @if (ChildContent == null)
+                {
+                    <div @ref="context.Current" class="@ContentClass" style="@ContentStyle" title="@ContentTitle">
+                        @if (string.IsNullOrEmpty(CurrentValue) && !string.IsNullOrEmpty(Placeholder))
+                        {
+                            <div class="@PlaceholderClass" style="@PlaceholderStyle">@Placeholder</div>
+                        }
+                        else if (!string.IsNullOrEmpty(CurrentValue))
+                        {
+                            @CurrentValue
+                        }
+                        <AutoCompleteInput @bind-Value="@CurrentValue" Disabled="@Disabled" AllowClear="@AllowClear" ClearIconTemplate="@ClearIconTemplate" Variant="@InputStyleVariant" Bordered="@InputBordered" InputElementSuffixClass="@InputStatusClass" Style="@InputStyle" Id="@Id" DebounceMilliseconds="DebounceMilliseconds" BindOnInput AutoComplete AdditionalAttributes="@InputAttributes" Class="@InputClass" />
+                    </div>
+                }
+                else
+                {
+                    <CascadingValue Value="context" Name="OverlayTriggerContext" IsFixed>
                         @ChildContent
-                    }
-                </CascadingValue>
+                    </CascadingValue>
+                }
             </CascadingValue>
         </Unbound>
     </OverlayTrigger>

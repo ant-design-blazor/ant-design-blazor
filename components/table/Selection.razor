@@ -20,9 +20,14 @@ else if (IsMeasure)
 }
 else if (IsColGroup)
 {
+	@if (AppendExpandColumn)
+	{
+		<col class="ant-table-expand-icon-col">
+	}
+
 	if (Width != null)
 	{
-		<col class="ant-table-selection-col" style="width: @((CssSizeLength)Width); min-width: @((CssSizeLength)Width);">
+		<col class="ant-table-selection-col" style="width: @((CssSizeLength)Width);">
 	}
 	else
 	{
@@ -31,16 +36,70 @@ else if (IsColGroup)
 }
 else if (IsHeader && HeaderColSpan != 0)
 {
-	<th class="@ClassMapper.Class ant-table-selection-column" style="@FixedStyle @HeaderStyle" @key="@Key" colspan="@HeaderColSpan">
+	@if (AppendExpandColumn)
+	{
+		<th class="ant-table-cell ant-table-row-expand-icon-cell"></th>
+	}
+
+    <th class="@ClassMapper.Class ant-table-selection-column" scope="@(Table.IsVirtual ? null : "col")" style="@(string.IsNullOrWhiteSpace($"{FixedStyle}{HeaderStyle}") ? null : $"{FixedStyle}{HeaderStyle}")" @key="@Key" colspan="@(HeaderColSpan > 1 ? HeaderColSpan : false)">
 		@if (Type == SelectionType.Checkbox)
 		{
-			<Checkbox Checked="Table.AllSelected" CheckedChange="OnCheckedChange" Indeterminate="Indeterminate" Disabled="IsHeaderDisabled" />
+			<div class="ant-table-selection">
+				<Checkbox aria-label="Select all" Checked="Table.AllSelected" CheckedChange="OnCheckedChange" Indeterminate="Indeterminate" Disabled="IsHeaderDisabled" HideEmptyLabel="true" />
+			</div>
 		}
 	</th>
 }
 else if (!IsHeader && RowSpan != 0 && ColSpan != 0)
 {
-	<td class="@ClassMapper.Class ant-table-selection-column" style="@FixedStyle @Style" @key="@Key" rowspan="@RowSpan" colspan="@ColSpan">
+	@if (AppendExpandColumn)
+	{
+		<td class="ant-table-cell ant-table-row-expand-icon-cell">
+			@if (RowExpandable && !Table.TreeMode)
+			{
+				<button type="button" @onclick="ToggleTreeNode" @onclick:stopPropagation
+						class="ant-table-row-expand-icon @(RowData.Expanded ? "ant-table-row-expand-icon-expanded" : "ant-table-row-expand-icon-collapsed")"
+						aria-label="@(RowData.Expanded ? Table.Locale.Collapse : Table.Locale.Expand)"
+						aria-expanded="@(RowData.Expanded ? "true" : "false")"></button>
+			}
+			else if (!Table.TreeMode)
+			{
+				<button type="button" class="ant-table-row-expand-icon ant-table-row-expand-icon-spaced"
+						aria-label="@Table.Locale.Expand" aria-expanded="false"></button>
+			}
+		</td>
+	}
+
+    @if (Table.IsVirtual)
+    {
+        <div class="@ClassMapper.Class ant-table-selection-column" style="@GetVirtualSelectionStyle()" @key="@Key" rowspan="@(RowSpan > 1 ? RowSpan : false)" colspan="@(ColSpan > 1 ? ColSpan : false)" data-virtual-column="@VirtualColumnIndex">
+            @if (CellRender != null)
+            {
+                var cellData = new CellData(RowData);
+                @CellRender(cellData)
+            }
+            else if (ChildContent != null)
+            {
+                @ChildContent
+            }
+            else
+            {
+                HandleSelected();
+
+                @if (Type == SelectionType.Checkbox)
+                {
+                    <Checkbox aria-label="@(_selected.Value ? $"Row {RowData.RowIndex} selected" : $"Select row {RowData.RowIndex}")" Checked="_selected.Value" Disabled="Disabled" CheckedChange="OnCheckedChange" HideEmptyLabel="true" @attributes="CheckboxProps" />
+                }
+                else if (Type == SelectionType.Radio)
+                {
+                    <Radio AriaLabel="@(_selected.Value ? $"Row {RowData.RowIndex} selected" : $"Select row {RowData.RowIndex}")" Checked="_selected.Value" Disabled="Disabled" CheckedChange="OnCheckedChange" TValue="bool" />
+                }
+            }
+        </div>
+    }
+    else
+    {
+    <td class="@ClassMapper.Class ant-table-selection-column" style="@(string.IsNullOrWhiteSpace($"{FixedStyle}{Style}") ? null : $"{FixedStyle}{Style}")" @key="@Key" rowspan="@(RowSpan > 1 ? RowSpan : false)" colspan="@(ColSpan > 1 ? ColSpan : false)">
 
 		@if (CellRender != null)
 		{
@@ -57,7 +116,7 @@ else if (!IsHeader && RowSpan != 0 && ColSpan != 0)
 
 			@if (Type == SelectionType.Checkbox)
 			{
-				<Checkbox Checked="_selected.Value" Disabled="Disabled" CheckedChange="OnCheckedChange" />
+				<Checkbox aria-label="@(_selected.Value ? $"Row {RowData.RowIndex} selected" : $"Select row {RowData.RowIndex}")" Checked="_selected.Value" Disabled="Disabled" CheckedChange="OnCheckedChange" HideEmptyLabel="true" @attributes="CheckboxProps" />
 			}
 			else if (Type == SelectionType.Radio)
 			{
@@ -65,4 +124,15 @@ else if (!IsHeader && RowSpan != 0 && ColSpan != 0)
 			}
 		}
 	</td>
+    }
+}
+
+@code {
+    private string GetVirtualSelectionStyle()
+    {
+        var width = Width != null ? ((CssSizeLength)Width).ToString() : "32px";
+        var baseStyle = $"flex: 0 0 {width}; width: {width}; margin-right: 0px; pointer-events: auto;";
+        var customStyle = $"{FixedStyle}{Style}".Trim();
+        return string.IsNullOrWhiteSpace(customStyle) ? baseStyle : $"{customStyle.TrimEnd(';')}; {baseStyle}";
+    }
 }

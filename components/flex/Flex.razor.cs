@@ -144,7 +144,7 @@ namespace AntDesign
         {
             [FlexGap.Normal] = "normal",
             [FlexGap.Small] = "small",
-            [FlexGap.Middle] = "medium",
+            [FlexGap.Middle] = "middle",
             [FlexGap.Medium] = "medium",
             [FlexGap.Large] = "large",
         };
@@ -166,10 +166,10 @@ namespace AntDesign
         private void SetClass()
         {
             ClassMapper.Add("ant-flex")
+                .GetIf(() => $"ant-flex-wrap-{_wrapMap[Wrap.AsT0]}", () => Wrap.IsT0 && Wrap.AsT0 != FlexWrap.NoWrap)
                 .GetIf(() => "ant-flex-align-stretch", () => Direction == FlexDirection.Vertical && Align.IsT0 && Align.AsT0 == FlexAlign.Normal)
                 .GetIf(() => $"ant-flex-align-{_alignMap[Align.AsT0]}", () => Align.IsT0 && Align.AsT0 != FlexAlign.Normal)
                 .GetIf(() => $"ant-flex-justify-{_justifyMap[Justify.AsT0]}", () => Justify.IsT0 && Justify.AsT0 != FlexJustify.Normal)
-                .GetIf(() => $"ant-flex-wrap-{_wrapMap[Wrap.AsT0]}", () => Wrap.IsT0 && Wrap.AsT0 != FlexWrap.NoWrap)
                 .GetIf(() => $"ant-flex-gap-{_gapMap[Gap.AsT0]}", () => Gap.IsT0 && Gap.AsT0 != FlexGap.Normal)
                 .GetIf(() => "ant-flex-vertical", () => Direction == FlexDirection.Vertical)
                 ;

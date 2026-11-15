@@ -22,7 +22,7 @@
 </Space>
 
 @code {
-    private sealed record Option(string Value, string Label, bool Disabled = false);
+    private sealed record Option(string Value, string Label, bool? Disabled = null);
 
     private readonly Option[] _options =
     {

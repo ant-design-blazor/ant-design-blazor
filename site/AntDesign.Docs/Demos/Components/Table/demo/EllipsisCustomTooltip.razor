@@ -5,23 +5,31 @@
         </PropertyColumn>
         <PropertyColumn Property="row => row.Age" Title="Age" Width="80" />
         <PropertyColumn Property="row => row.Address" Title="Address" Ellipsis EllipsisShowTitle="false">
-            <Tooltip Placement="Placement.TopLeft" Title="@context.Address" Style="display:inline;">
-                @context.Address
+            <Tooltip Placement="Placement.TopLeft" Title="@context.Address">
+                <Unbound Context="forwardRef">
+                    <span @ref="@forwardRef.Current">@context.Address</span>
+                </Unbound>
             </Tooltip>
         </PropertyColumn>
         <PropertyColumn Property="row => row.Address" Title="Long Column Long Column Long Column" Ellipsis EllipsisShowTitle="false">
-            <Tooltip Placement="Placement.TopLeft" Title="@context.Address" Style="display:inline;">
-                @context.Address
+            <Tooltip Placement="Placement.TopLeft" Title="@context.Address">
+                <Unbound Context="forwardRef">
+                    <span @ref="@forwardRef.Current">@context.Address</span>
+                </Unbound>
             </Tooltip>
         </PropertyColumn>
         <PropertyColumn Property="row => row.Address" Title="Long Column Long Column" Ellipsis EllipsisShowTitle="false">
-            <Tooltip Placement="Placement.TopLeft" Title="@context.Address" Style="display:inline;">
-                @context.Address
+            <Tooltip Placement="Placement.TopLeft" Title="@context.Address">
+                <Unbound Context="forwardRef">
+                    <span @ref="@forwardRef.Current">@context.Address</span>
+                </Unbound>
             </Tooltip>
         </PropertyColumn>
         <PropertyColumn Property="row => row.Address" Title="Long Column" Ellipsis EllipsisShowTitle="false">
-            <Tooltip Placement="Placement.TopLeft" Title="@context.Address" Style="display:inline;">
-                @context.Address
+            <Tooltip Placement="Placement.TopLeft" Title="@context.Address">
+                <Unbound Context="forwardRef">
+                    <span @ref="@forwardRef.Current">@context.Address</span>
+                </Unbound>
             </Tooltip>
         </PropertyColumn>
     </ColumnDefinitions>

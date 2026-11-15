@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "ant-design/ant-design",
+    "revision": "599b251da933709d7b25fc9e9018ed7f4c093b96",
+    "component": "Icon"
+  },
+  "config": {
+    "timeoutMs": 60000,
+    "navigationTimeoutMs": 120000,
+    "viewport": { "width": 1280, "height": 900, "deviceScaleFactor": 1 },
+    "colorScheme": "light",
+    "comparisonPolicy": {
+      "normalization": {
+        "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|ant-segmented-[a-fA-F0-9]+|_[rR]_[a-zA-Z0-9_-]+|__runtime-id-\\d+)$",
+        "runtimeIdAttributes": ["name"],
+        "removeUnreferencedRuntimeIds": true,
+        "removeAttributes": ["_bl_*"],
+        "removeClassPatterns": ["^css-dev-only-do-not-override-", "^css-var-_[rR]_", "^css-[a-zA-Z0-9]+$"],
+        "removeCommentMarkers": ["<!--!-->"]
+      }
+    }
+  },
+  "groups": [
+    {
+      "id": "icon-gallery-responsive",
+      "component": "Icon",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/icon?theme=light#list-of-icons",
+        "scopeSelector": "body",
+        "rootSelector": "div:has(> #list-of-icons) + div .ant-segmented",
+        "scrollAnchorSelector": "#list-of-icons",
+        "skeletonSelector": ""
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/icon?theme=light#list-of-icons",
+        "scopeSelector": "body",
+        "rootSelector": "section.markdown:has(> #list-of-icons) .ant-segmented",
+        "scrollAnchorSelector": "#list-of-icons",
+        "skeletonSelector": ""
+      },
+      "styleProperties": ["display", "position", "boxSizing", "width", "height", "minWidth", "flex", "flexBasis", "flexGrow", "flexShrink", "gap", "gridTemplateColumns", "alignItems", "justifyContent", "fontFamily", "fontSize", "lineHeight", "whiteSpace", "overflowWrap", "overflow", "textAlign", "color", "backgroundColor", "borderRadius", "boxShadow", "transform"],
+      "semanticNodes": [
+        { "path": "root", "selector": "$root", "minimumCount": 1 }
+      ],
+      "scenarios": [
+        { "id": "desktop", "minimumRoots": 1 },
+        {
+          "id": "narrow-screen",
+          "minimumRoots": 1,
+          "actions": [
+            { "type": "viewport", "width": 390, "height": 844 },
+            { "type": "wait", "milliseconds": 250 }
+          ]
+        }
+      ]
+    }
+  ]
+}

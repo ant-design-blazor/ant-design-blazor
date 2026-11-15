@@ -2,19 +2,13 @@
 order: 6
 title:
   zh-CN: 滚动加载
-  en-US: Scrolling loaded
+  en-US: Infinite Load
 ---
 
 ## zh-CN
 
-结合 [react-infinite-scroller](https://github.com/CassetteRocks/react-infinite-scroller) 实现滚动自动加载列表。
+滚动列表时自动加载下一页数据。示例使用浏览器的 `IntersectionObserver` 监听滚动容器底部，并在加载期间显示骨架屏。
 
 ## en-US
 
-The example of infinite load with [react-infinite-scroller](https://github.com/CassetteRocks/react-infinite-scroller).
-
-<style>
-  [data-theme="dark"] .demo-infinite-container {
-    border: 1px solid #303030;
-  }
-</style>
+Scroll the list to load the next page automatically. The example uses the browser's `IntersectionObserver` to watch the bottom of the scroll container and displays a skeleton while loading.

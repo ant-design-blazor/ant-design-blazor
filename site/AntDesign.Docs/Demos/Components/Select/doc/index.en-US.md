@@ -27,6 +27,7 @@ Select component to select value from options.
 | BoundaryAdjustMode | `Dropdown` adjustment strategy (when for example browser resize is happening)         | TriggerBoundaryAdjustMode    | TriggerBoundaryAdjustMode.InView         |
 | CustomTagLabelToValue | Converts custom tag (a string) to TItemValue type. | Func<string, TItemValue> | (label) => <br/>    (TItemValue)TypeDescriptor<br/>    .GetConverter(typeof(TItemValue))<br/>    .ConvertFromInvariantString(label) |  |
 | DataSource | The datasource for this component. | IEnumerable&lt;TItem> | - |  |
+| Options | Select options. React-compatible alias for `DataSource`. | IEnumerable&lt;TItem> | - | 6.0.0 |
 | DataSourceEqualityComparer | EqualityComparer that will be used during DataSource change detection. If no comparer set, default comparer will be used that is going to compare only equiality of label & value properties. | IEqualityComparer&lt;TItem> | - |  |
 | DefaultActiveFirstOption | Activates the first item that is not deactivated.  | bool | false |  |
 | DefaultValue | When `Mode = default` - The value is used during initialization and when pressing the Reset button within Forms. | TItemValue | - |  |
@@ -35,10 +36,13 @@ Select component to select value from options.
 | DisabledName | The name of the property to be used as a disabled indicator. | string |  |  |
 | DisabledPredicate | Specifies predicate for disabled options |  -  |  -  |
 | DropdownMatchSelectWidth | Controls dropdown width: `true` matches the Select trigger; `false` fits the widest option while keeping the trigger width as a minimum; a string sets an explicit width (e.g. `256px`). | OneOf<bool, string> | true |  |
+| PopupMatchSelectWidth | Controls whether the popup matches the Select width. React-compatible alias for `DropdownMatchSelectWidth`. | OneOf<bool, string> | true | 6.0.0 |
 | DropdownMaxWidth | Will not allow dropdown width to grow above stated in here value (eg. "768px"). | string | "auto" |  |
 | DropdownRender | Customize dropdown content. | Renderfragment | - |  |
+| PopupRender | Customize dropdown content. React-compatible alias for `DropdownRender`. | RenderFragment&lt;RenderFragment> | - | 6.0.0 |
 | SearchDebounceMilliseconds | Delays the processing of the search input event until the user has stopped typing for a predetermined amount of time | int        |  250         |
 | EnableSearch | Enables search in single mode. Multiple and tags modes are searchable by default, matching Ant Design v6. | bool | false |  |
+| ShowSearch | Whether Select is searchable. React-compatible boolean form; when omitted, single mode defaults off and multiple/tags default on. | bool? | mode-based | 6.0.0 |
 | FilterExpression | Customize the logic to filter when searching. | Func<SelectOptionItem<TItemValue, TItem>, string, bool> | (item, searchValue) => item.Label.Contains(searchValue, StringComparison.InvariantCultureIgnoreCase) |  |
 | GroupName | The name of the property to be used as a group indicator. If the value is set, the entries are displayed in groups. Use additional `SortByGroup` and `SortByLabel`. | string | - |  |
 | HideSelected | Hides the selected items when they are selected. | bool | false |  |
@@ -62,6 +66,7 @@ Select component to select value from options.
 | OnCreateCustomTag | Called when custom tag is created. | Action | - |  |
 | OnDataSourceChanged | Called when the datasource changes. | Action | - |  |
 | OnDropdownVisibleChange | Called when the dropdown visibility changes. | Action | - |  |
+| OnOpenChange | Called when the dropdown open state changes. React-compatible callback name. | EventCallback&lt;bool> | - | 6.0.0 |
 | OnFocus | Called when focus. | Action | - |  |
 | OnMouseEnter | Called when mouse enter. | Action | - |  |
 | OnMouseLeave | Called when mouse leave. | Action | - |  |
@@ -75,6 +80,8 @@ Select component to select value from options.
 | PrefixIcon | The custom prefix icon. For mode `multiple` and `tags` visible only when no data selected. | RenderFragment | - |  |
 | SelectOptions | Used for rendering select options manually. | RenderFragment | - |  |
 | ShowArrowIcon | Whether to show the drop-down arrow | bool | true |  |
+| ShowArrow | Whether to show the dropdown arrow. React-compatible alias for `ShowArrowIcon`. | bool | true | 6.0.0 |
+| Virtual | Whether to use virtual scrolling. React-compatible alias for `EnableVirtualization`. | bool | true | 6.0.0 |
 | ShowSearchIcon | Whether show search input in single mode. | bool | true |  |
 | Size | The size of the component. `small` \| `default` \| `large` | string | default |  |
 | SortByGroup | Sort items by group name. `None` \| `Ascending` \| `Descending` | SortDirection | SortDirection.None |  |

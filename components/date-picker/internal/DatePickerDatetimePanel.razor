@@ -5,29 +5,8 @@
 @inherits DatePickerPanelBase<TValue>
 
 @{
-    var calendar = Calendar;
-
-    DateTime monthFirstDayDate = DateHelper.CreateDate(calendar, calendar.GetYear(PickerValue), calendar.GetMonth(PickerValue), 1, PickerValue);
-    int monthFirstDayOfWeek = (int)calendar.GetDayOfWeek(monthFirstDayDate);
-
-    // sunday should be 7
-    if (monthFirstDayOfWeek == 0)
-    {
-        monthFirstDayOfWeek = DayOfWeekHelper.GetDiffForDayOfWeek(Locale.FirstDayOfWeek);
-    }
-
-    int diffDay = (int)Locale.FirstDayOfWeek - monthFirstDayOfWeek;
-    DateTime startDate;
-    int skipDays = 0;
-    if (monthFirstDayDate == DateTime.MinValue)
-    {
-        startDate = monthFirstDayDate;
-        skipDays = monthFirstDayOfWeek - (int)Locale.FirstDayOfWeek;
-    }
-    else
-    {
-        startDate = monthFirstDayDate.AddDays(diffDay);
-    }
+    DateTime monthFirstDayDate = new DateTime(PickerValue.Year, PickerValue.Month, 1, 0, 0, 0);
+    DateTime startDate = DayOfWeekHelper.GetWeekStartDate(monthFirstDayDate, Locale.FirstDayOfWeek, out int skipDays);
 }
 
 <div class='@($"{PrefixCls}-datetime-panel")' @ref="Ref">
@@ -39,10 +18,10 @@
                             MaxCol="7"
                             ViewStartDate="startDate"
                             ShowFooter="@ShowToday"
-                            IsInView="date => calendar.GetYear(date) == calendar.GetYear(PickerValue) && calendar.GetMonth(date) == calendar.GetMonth(PickerValue)"
-                            IsToday="date => calendar.GetYear(date) == calendar.GetYear(DatePicker.CurrentDate) && calendar.GetDayOfYear(date) == calendar.GetDayOfYear(DatePicker.CurrentDate)"
-                            IsSelected="date => Value.HasValue && calendar.GetYear(date) == calendar.GetYear(Value.Value) && calendar.GetDayOfYear(date) == calendar.GetDayOfYear(Value.Value)"
-                            GetColTitle='date => FormatDate(date, Locale.Lang.DateFormat)'
+                            IsInView="date => DateHelper.IsSameMonth(date, PickerValue)"
+                            IsToday="date => DateHelper.IsSameDay(date, DatePicker.CurrentDate)"
+                            IsSelected="date => DateHelper.IsSameDay(date, Value) || IsRange && DateHelper.IsSameDay(date, GetIndexValue(Math.Abs(PickerIndex-1)))"
+                            GetColTitle='date => date.ToString(Locale.Lang.DateFormat, CultureInfo)'
                             OnValueSelect="OnSelectDate"
                             GetNextColValue="date => DateHelper.AddDaysSafely(date, 1)"
                             SkipDays="skipDays">
@@ -61,7 +40,7 @@
                 </tr>
             </RenderTableHeader>
             <RenderColValue Context="currentColDate">
-                @FormatDay(currentColDate)
+                @currentColDate.Day
             </RenderColValue>
         </DatePickerTemplate>
     }
@@ -110,7 +89,7 @@
 
                 <ul @ref="@_hoursParent" class="@(PrefixCls)-time-panel-column" style="position: relative;">
 
-                    @for (int hour = 0; hour < (use12Hours ? 12 : 24); hour++)
+                    @for (int hour = 0; hour < (use12Hours ? 12 : 24); hour += Math.Max(1, HourStep))
                     {
                         var viewTime = startTime;
 
@@ -119,7 +98,8 @@
                         string disabledCls = disabled ? $"{PrefixCls}-time-panel-cell-disabled" : "";
                         var hourValue=use12Hours && hour==0? 12 :  hour;
 
-                        <li @ref="@_hours[hourValue]" class="@SemanticClass("popup.item", $"{PrefixCls}-time-panel-cell @isSelectedCls @disabledCls")" style="@SemanticStyle("popup.item")">
+                        <li @ref="@_hours[hourValue]" class="@SemanticClass("popup.item", $"{PrefixCls}-time-panel-cell @isSelectedCls @disabledCls")" style="@SemanticStyle("popup.item")"
+                            @onmouseenter="e => { if (!disabled) OnPreviewHour(viewTime.AddHours(hoursOffset)); }" @onmouseleave="ResetPreviewValue">
                                 <div class="@(PrefixCls)-time-panel-cell-inner" @onclick="e => { if (!disabled) OnSelectHour(viewTime.AddHours(hoursOffset)); }">
                                 @hourValue
                             </div>
@@ -138,14 +118,15 @@
             @if (timeFormat.Contains("mm", StringComparison.OrdinalIgnoreCase))
             {
                 <ul @ref="@_minutesParent" class="@(PrefixCls)-time-panel-column" style="position: relative;">
-                    @for (int minute = 0; minute < 60; minute++)
+                    @for (int minute = 0; minute < 60; minute += Math.Max(1, MinuteStep))
                     {
                         var viewTime = startTime;
                         bool disabled = disabledTime._disabledMinutes.Contains(minute);
                         string isSelectedCls = selected(viewTime.Minute, Value?.Minute);
                         string disabledCls = disabled ? $"{PrefixCls}-time-panel-cell-disabled" : "";
 
-                        <li @ref="@_minutes[viewTime.Minute]" class="@SemanticClass("popup.item", $"{PrefixCls}-time-panel-cell @isSelectedCls @disabledCls")" style="@SemanticStyle("popup.item")">
+                        <li @ref="@_minutes[viewTime.Minute]" class="@SemanticClass("popup.item", $"{PrefixCls}-time-panel-cell @isSelectedCls @disabledCls")" style="@SemanticStyle("popup.item")"
+                            @onmouseenter="e => { if (!disabled) OnPreviewMinute(viewTime); }" @onmouseleave="ResetPreviewValue">
                             <div class="@(PrefixCls)-time-panel-cell-inner" @onclick="e => { if (!disabled) OnSelectMinute(viewTime); }">
                                 @minute
                             </div>
@@ -158,14 +139,15 @@
             @if (timeFormat.Contains("ss", StringComparison.OrdinalIgnoreCase))
             {
                 <ul @ref="_secondsParent" class="@(PrefixCls)-time-panel-column" style="position: relative;">
-                    @for (int second = 0; second < 60; second++)
+                    @for (int second = 0; second < 60; second += Math.Max(1, SecondStep))
                     {
                         var viewTime = startTime;
                         bool disabled = disabledTime._disabledSeconds.Contains(second);
                         string isSelectedCls = selected(viewTime.Second, Value?.Second);
                         string disabledCls = disabled ? $"{PrefixCls}-time-panel-cell-disabled" : "";
 
-                        <li @ref="@_seconds[viewTime.Second]" class="@SemanticClass("popup.item", $"{PrefixCls}-time-panel-cell @isSelectedCls @disabledCls")" style="@SemanticStyle("popup.item")">
+                        <li @ref="@_seconds[viewTime.Second]" class="@SemanticClass("popup.item", $"{PrefixCls}-time-panel-cell @isSelectedCls @disabledCls")" style="@SemanticStyle("popup.item")"
+                            @onmouseenter="e => { if (!disabled) OnPreviewSecond(viewTime); }" @onmouseleave="ResetPreviewValue">
                             <div class="@(PrefixCls)-time-panel-cell-inner" @onclick="e => { if (!disabled) OnSelectSecond(viewTime); }">
                                 @second
                             </div>

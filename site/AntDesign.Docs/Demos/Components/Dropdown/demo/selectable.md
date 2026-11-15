@@ -2,7 +2,7 @@
 order: 10
 title:
   zh-CN: 可选择
-  en-US: Selectable
+  en-US: Selectable Menu
 ---
 
 ## zh-CN

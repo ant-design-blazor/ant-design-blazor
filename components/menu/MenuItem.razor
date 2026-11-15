@@ -24,35 +24,57 @@
     RenderFragment MenuItemContent(ForwardRef refBack, bool overflow = false)
     {
         var slot = overflow ? "subMenu.item" : SemanticSlot("item");
-        return@<li class="@RootMenu.GetSemanticClass(slot, ClassMapper.Class)" role="menuitem" style="@(overflow ? RootMenu.GetSemanticStyle(slot, Style) : RootMenu.OverflowItemStyle(Id, RootMenu.GetSemanticStyle(slot, $"{PaddingStyle} {Style}")))" data-menu-overflow-item="@(!overflow ? RootMenu.OverflowItemId(Id, IsOverflowRoot) : null)" aria-hidden="@(!overflow && RootMenu.IsOverflowed(Id) ? "true" : null)" inert="@(!overflow && RootMenu.IsOverflowed(Id))" @onclick="HandleOnClick" @key="Key" @ref="refBack.Current">
-            @if (overflow) { @OverflowIcon } else { @icon }
-            <span class="@RootMenu.GetSemanticClass(overflow ? "subMenu.itemContent" : SemanticSlot("itemContent"), $"{RootMenu?.PrefixCls ?? "ant-menu"}-title-content")" style="@RootMenu.GetSemanticStyle(overflow ? "subMenu.itemContent" : SemanticSlot("itemContent"))">
-                @if (RouterLink == null)
-                {
-                    @content
-                }
-                else
-                {
-                    <MenuLink Href="@RouterLink" Match="@RouterMatch" Target="Target">@content</MenuLink>
-                }
-                @if (Extra != null)
-                {
-                    <span class="@(RootMenu?.PrefixCls ?? "ant-menu")-item-extra">@Extra</span>
-                }
-            </span>
+        var itemStyle = overflow ? RootMenu.GetSemanticStyle(slot, Style) : RootMenu.OverflowItemStyle(Id, RootMenu.GetSemanticStyle(slot, $"{PaddingStyle} {Style}"));
+        return@<li class="@RootMenu.GetSemanticClass(slot, ClassMapper.Class)" role="menuitem" style="@(string.IsNullOrWhiteSpace(itemStyle) ? null : itemStyle)" data-menu-id="@RootMenu.GetMenuDataId(Key)" data-menu-overflow-item="@(!overflow ? RootMenu.OverflowItemId(Id, IsOverflowRoot) : null)" aria-disabled="@(Disabled ? "true" : null)" aria-hidden="@(!overflow && RootMenu.IsOverflowed(Id) ? "true" : null)" tabindex="@(!Disabled ? "-1" : null)" @onclick="HandleOnClick" @key="Key" @ref="refBack.Current">
+            @if (overflow) { @OverflowIcon } else { @icon }@ItemContent(overflow)
         </li>;
     }
 
-    void content(RenderTreeBuilder __builder)
+    private RenderFragment ItemContent(bool overflow) => builder =>
     {
-        @if (Title != null)
+        var sequence = 0;
+        var contentSlot = overflow ? "subMenu.itemContent" : SemanticSlot("itemContent");
+        builder.OpenElement(sequence++, "span");
+        builder.AddAttribute(sequence++, "class", RootMenu.GetSemanticClass(contentSlot, $"{RootMenu?.PrefixCls ?? "ant-menu"}-title-content"));
+        builder.AddAttribute(sequence++, "style", RootMenu.GetSemanticStyle(contentSlot));
+
+        RenderFragment title = titleBuilder =>
         {
-            @Title
-        }
+            if (Title != null)
+                titleBuilder.AddContent(0, Title);
+            else
+                titleBuilder.AddContent(1, ChildContent);
+        };
+
+        if (RouterLink == null)
+            builder.AddContent(sequence++, title);
         else
         {
-            @ChildContent
+            builder.OpenComponent<MenuLink>(sequence++);
+            builder.AddAttribute(sequence++, nameof(MenuLink.Href), RouterLink);
+            builder.AddAttribute(sequence++, nameof(MenuLink.Match), RouterMatch);
+            builder.AddAttribute(sequence++, nameof(MenuLink.Target), Target);
+            builder.AddAttribute(sequence++, nameof(MenuLink.ChildContent), title);
+            builder.CloseComponent();
         }
+
+        if (Extra != null)
+        {
+            builder.OpenElement(sequence++, "span");
+            builder.AddAttribute(sequence++, "class", $"{RootMenu?.PrefixCls ?? "ant-menu"}-item-extra");
+            builder.AddContent(sequence++, Extra);
+            builder.CloseElement();
+        }
+
+        builder.CloseElement();
+    };
+
+    private void content(RenderTreeBuilder builder)
+    {
+        if (Title != null)
+            builder.AddContent(0, Title);
+        else
+            builder.AddContent(1, ChildContent);
     }
 
 
@@ -60,13 +82,20 @@
     {
         if (IconTemplate != null)
         {
-            <span role="img" class="anticon anticon-container @MenuItemIconClass" style="@MenuItemIconStyle">
-                @IconTemplate
-            </span>
+            __builder.OpenElement(0, "span");
+            __builder.AddAttribute(1, "role", "img");
+            __builder.AddAttribute(2, "class", $"anticon anticon-container {MenuItemIconClass}");
+            if (!string.IsNullOrWhiteSpace(MenuItemIconStyle)) __builder.AddAttribute(3, "style", MenuItemIconStyle);
+            __builder.AddContent(4, IconTemplate);
+            __builder.CloseElement();
         }
         else if (Icon != null)
         {
-            <Icon Type="@Icon" Class="@MenuItemIconClass" Style="@MenuItemIconStyle" />
+            __builder.OpenComponent<AntDesign.Icon>(0);
+            __builder.AddAttribute(1, "Type", Icon);
+            __builder.AddAttribute(2, "Class", MenuItemIconClass);
+            if (!string.IsNullOrWhiteSpace(MenuItemIconStyle)) __builder.AddAttribute(3, "Style", MenuItemIconStyle);
+            __builder.CloseComponent();
         }
     }
 

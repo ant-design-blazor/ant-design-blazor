@@ -63,9 +63,17 @@ namespace AntDesign.Docs.Pages
 
         private bool HasComponentMetadata => _demoComponent?.Category == "Components" && _demoComponent.Title != "Overview";
 
-        private Type? SemanticPreviewType => _demos.Count > 0
-            ? DemoService.GetShowCase(_demos[0].Type)
-            : null;
+        private Type? SemanticPreviewType
+        {
+            get
+            {
+                var previewDemo = _demos.FirstOrDefault(demo =>
+                    string.Equals(demo.Name, "_semantic", StringComparison.OrdinalIgnoreCase))
+                    ?? _demos.FirstOrDefault();
+
+                return previewDemo != null ? DemoService.GetShowCase(previewDemo.Type) : null;
+            }
+        }
 
         private List<DemoItem> _demos = [];
 
@@ -182,26 +190,32 @@ namespace AntDesign.Docs.Pages
             }
         }
 
-        private async Task LoadDemos(string pageName)
+        private Task LoadDemos(string pageName)
         {
             var version = ++_demoLoadVersion;
-            var showDemos = _demoComponent?.DemoList?.Where(x => (_showDebugDemos || !x.Debug) && !x.Docs.HasValue).OrderBy(x => x.Order) ?? Enumerable.Empty<DemoItem>();
+            var showDemos = _demoComponent?.DemoList?
+                .Where(x => (_showDebugDemos || !x.Debug) && !x.Docs.HasValue)
+                .OrderBy(x => x.Order)
+                .ToList() ?? [];
+
+            if (pageName != _currentPageName || version != _demoLoadVersion)
+                return Task.CompletedTask;
+
             _anchors = showDemos.Select(x => (x.Name, x.Title)).ToArray();
-            _demos = [];
+            _demos = showDemos;
             _filePaths = new() { _filePath };
             foreach (var item in showDemos)
             {
-                // compoennt is changed
-                if (pageName != _currentPageName || version != _demoLoadVersion)
-                {
-                    return;
-                }
                 _filePaths.Add($"site/AntDesign.Docs/Demos/Components/{_demoComponent?.Title}/demo/{item.Name}.md");
                 _filePaths.Add($"site/AntDesign.Docs/{item.Type.Replace(".", "/")}.razor");
-                _demos.Add(item);
-                StateHasChanged();
-                await Task.Delay(100); //Make outgoing threads avoid lagging operations (e.g. switching menus)
             }
+
+            // Render the lightweight CodeBox shells together. Each demo body is
+            // mounted separately when its preview approaches the viewport, so
+            // staggering the shell list only makes in-page anchors unstable
+            // during interactive hydration.
+            StateHasChanged();
+            return Task.CompletedTask;
         }
 
         private bool _showDebugDemos;

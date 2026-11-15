@@ -62,15 +62,18 @@
                 @onclick="Prev"
                 tabIndex="@(HasPrev() ? 0 : null)"
                 @onkeypress="RunIfEnterPrev"
-                class="@_prevClass.Class"
-                aria-disabled="@(!HasPrev())">
+                class="@($"{_prevClass.Class} {ItemClass}")"
+                style="@ItemStyle"
+                aria-disabled="@(!HasPrev() ? "true" : "false")">
                 @RenderPrev(prevPage)
             </li>
             <li
                 title="@(ShowTitle ? $"{_current}/{allPages}" : null)"
-                class="@($"{PrefixCls}-simple-pager")">
+                class="@($"{PrefixCls}-simple-pager {ItemClass}")"
+                style="@ItemStyle">
                 <input
                     type="text"
+                    aria-label="Go to"
                     value="@_currentInputValue"
                     disabled="@Disabled"
                     @onkeyup="HandleKeyUp"
@@ -84,8 +87,9 @@
                 @onclick="Next"
                 tabIndex="@(HasPrev() ? 0 : null)"
                 @onkeypress="RunIfEnterNext"
-                class="@_nextClass.Class"
-                aria-disabled="@(!HasNext())">
+                class="@($"{_nextClass.Class} {ItemClass}")"
+                style="@ItemStyle"
+                aria-disabled="@(!HasNext() ? "true" : "false")">
                 @RenderNext(nextPage)
             </li>
             @gotoButton
@@ -167,7 +171,6 @@
             }
             lastPager =
                 @<PaginationPager
-                     Last
                      RootPrefixCls="@PrefixCls"
                      OnClick="HandleChange"
                      OnKeyPress="args => RunIfEnter(args.e, args.callback)"
@@ -297,7 +300,6 @@
         <ul
             class="@ClassMapper.Class"
             style="@(GetComponentStyle("Pagination", Style))"
-            unselectable="unselectable"
             @ref="Ref"
             @attributes="@dataOrAriaAttributeProps">
             @totalText
@@ -344,7 +346,7 @@
 
     private void SetIcon()
     {
-        RenderFragment ellipsis = @<span class="@($"{PrefixCls}-item-ellipsis")">•••</span>;
+        RenderFragment ellipsis = @<span class="@($"{PrefixCls}-item-ellipsis")"><Icon Type="@IconType.Outline.Ellipsis" /></span>;
         RenderFragment<PaginationItemRenderContext> prevIcon = context =>
             @<button class="@($"{PrefixCls}-item-link")" type="button" tabIndex="-1" disabled="@context.Disabled">
                 <Icon Type="@IconType.Outline.Left" />

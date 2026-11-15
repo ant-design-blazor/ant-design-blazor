@@ -59,7 +59,7 @@
                                                               Size="@props.Size"
                                                               Icon="@props.Icon"
                                                               Disabled="@props.Disabled"
-                                                              Danger="@props.Danger"
+                                                              Danger="@(props.Danger ?? false)"
                                                               Id="@id"
                                                               >
                         @{

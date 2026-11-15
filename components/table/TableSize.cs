@@ -6,8 +6,10 @@ namespace AntDesign
 {
     public enum TableSize
     {
-        Default,
-        Middle,
-        Small
+        Default = 0,
+        Medium = 1,
+        [System.Obsolete("Use Medium to match the Ant Design Table size API.")]
+        Middle = Medium,
+        Small = 2
     }
 }

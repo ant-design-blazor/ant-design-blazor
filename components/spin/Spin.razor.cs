@@ -127,8 +127,7 @@ namespace AntDesign
         private void SetClass()
         {
             WrapperClassMapper
-                .If(WrapperClassName, () => !string.IsNullOrWhiteSpace(WrapperClassName))
-                .If($"{PrefixCls}-nested-loading", () => !Simple);
+                .If(WrapperClassName, () => !string.IsNullOrWhiteSpace(WrapperClassName));
 
             ClassMapper
                 .Add(PrefixCls)

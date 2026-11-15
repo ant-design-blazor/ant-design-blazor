@@ -1,29 +1,32 @@
-﻿<div>
-    <Tooltip Title="@IconType.Outline.Search">
-        <Button Type="ButtonType.Primary" Shape="ButtonShape.Circle" Icon="@IconType.Outline.Search" />
-    </Tooltip>
-    <Button Type="ButtonType.Primary" Shape="ButtonShape.Circle">A</Button>
-    <Button Type="ButtonType.Primary" Icon="@IconType.Outline.Search">Search</Button>
-    <Tooltip Title="@IconType.Outline.Search">
-        <Button Shape="ButtonShape.Circle" Icon="@IconType.Outline.Search" />
-    </Tooltip>
-    <Button Icon="@IconType.Outline.Search">Search</Button>
-    
-    <br />
-    
-    <Tooltip Title="@IconType.Outline.Search">
-        <Button Shape="ButtonShape.Circle" Icon="@IconType.Outline.Search" />
-    </Tooltip>
-    <Button Icon="@IconType.Outline.Search">Search</Button>
-    <Tooltip Title="@IconType.Outline.Search">
-        <Button Type="ButtonType.Dashed" Shape="ButtonShape.Circle" Icon="@IconType.Outline.Search" />
-    </Tooltip>
-    <Button Type="ButtonType.Dashed" Icon="@IconType.Outline.Search">Search</Button>
-    
-    <br />
-    
-
-	<Button IconFont="icon-tuichu">Exit</Button>
-</div>
-
-<script src="//at.alicdn.com/t/font_8d5l8fzk5b87iudi.js"></script>
+﻿<Flex Gap="FlexGap.Small" Vertical>
+    <Flex Gap="FlexGap.Small" Wrap="FlexWrap.Wrap">
+        <Tooltip Title="search">
+            <Unbound>
+                <Button Type="ButtonType.Primary" Shape="ButtonShape.Circle" Icon="@IconType.Outline.Search" RefBack="@context" />
+            </Unbound>
+        </Tooltip>
+        <Button Type="ButtonType.Primary" Shape="ButtonShape.Circle">A</Button>
+        <Button Type="ButtonType.Primary" Icon="@IconType.Outline.Search">Search</Button>
+        <Tooltip Title="search">
+            <Unbound>
+                <Button Shape="ButtonShape.Circle" Icon="@IconType.Outline.Search" RefBack="@context" />
+            </Unbound>
+        </Tooltip>
+        <Button Icon="@IconType.Outline.Search">Search</Button>
+    </Flex>
+    <Flex Gap="FlexGap.Small" Wrap="FlexWrap.Wrap">
+        <Tooltip Title="search">
+            <Unbound>
+                <Button Shape="ButtonShape.Circle" Icon="@IconType.Outline.Search" RefBack="@context" />
+            </Unbound>
+        </Tooltip>
+        <Button Icon="@IconType.Outline.Search">Search</Button>
+        <Tooltip Title="search">
+            <Unbound>
+                <Button Type="ButtonType.Dashed" Shape="ButtonShape.Circle" Icon="@IconType.Outline.Search" RefBack="@context" />
+            </Unbound>
+        </Tooltip>
+        <Button Type="ButtonType.Dashed" Icon="@IconType.Outline.Search">Search</Button>
+        <Button Href="https://www.google.com" Target="_blank" Icon="@IconType.Outline.Search" />
+    </Flex>
+</Flex>

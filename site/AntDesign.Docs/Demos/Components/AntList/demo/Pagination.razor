@@ -1,0 +1,55 @@
+<Flex Vertical Gap="@("20px")" Style="margin-bottom:20px">
+    <Flex Gap="@("8px")" Align="FlexAlign.Center">
+        <span>Pagination Position:</span>
+        <RadioGroup TValue="string" ButtonStyle="RadioButtonStyle.Outline" Value="@_position" ValueChanged="OnPositionChanged">
+            <Radio Value="@("top")" RadioButton="true">top</Radio>
+            <Radio Value="@("bottom")" RadioButton="true">bottom</Radio>
+            <Radio Value="@("both")" RadioButton="true">both</Radio>
+        </RadioGroup>
+    </Flex>
+    <Flex Gap="@("8px")" Align="FlexAlign.Center">
+        <span>Pagination Align:</span>
+        <RadioGroup TValue="string" ButtonStyle="RadioButtonStyle.Outline" Value="@_align" ValueChanged="OnAlignChanged">
+            <Radio Value="@("start")" RadioButton="true">start</Radio>
+            <Radio Value="@("center")" RadioButton="true">center</Radio>
+            <Radio Value="@("end")" RadioButton="true">end</Radio>
+        </RadioGroup>
+    </Flex>
+</Flex>
+
+<AntList DataSource="@_data" Pagination="@_pagination">
+    <ListItem>
+        <ListItemMeta AvatarTemplate="@Avatar(context.Index)" Description="Ant Design, a design language for background applications, is refined by Ant UED Team">
+            <TitleTemplate><a href="https://ant.design">@context.Title</a></TitleTemplate>
+        </ListItemMeta>
+    </ListItem>
+</AntList>
+
+@code {
+    private string _position = "bottom";
+    private string _align = "center";
+    private PaginationOptions _pagination = CreatePagination("bottom", "center");
+    private readonly List<DemoItem> _data = Enumerable.Range(0, 4).Select(i => new DemoItem(i, $"Ant Design Title {i + 1}")).ToList();
+
+    private RenderFragment Avatar(int index) => @<Avatar Src="@($"https://api.dicebear.com/10.x/lorelei/svg?seed={index}")" />;
+
+    private void OnPositionChanged(string value)
+    {
+        _position = value;
+        _pagination = CreatePagination(_position, _align);
+    }
+
+    private void OnAlignChanged(string value)
+    {
+        _align = value;
+        _pagination = CreatePagination(_position, _align);
+    }
+
+    private static PaginationOptions CreatePagination(string position, string align) => new()
+    {
+        Position = position,
+        Align = align
+    };
+
+    private sealed record DemoItem(int Index, string Title);
+}

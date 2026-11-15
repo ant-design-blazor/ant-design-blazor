@@ -1,5 +1,38 @@
-﻿<h3>CustomSelectAllLabels</h3>
+﻿<Transfer DataSource="@_dataSource"
+          TargetKeys="@_targetKeys"
+          @bind-SelectedKeys="_selectedKeys"
+          Render="RenderItem"
+          SelectAllLabels="@_selectAllLabels"
+          OnChange="HandleChange" />
 
 @code {
+    private readonly List<TransferItem> _dataSource = Enumerable.Range(0, 10)
+        .Select(index => new TransferItem
+        {
+            Key = index.ToString(),
+            Title = $"content{index + 1}",
+            Description = $"description of content{index + 1}"
+        })
+        .ToList();
 
+    private List<string> _targetKeys = Enumerable.Range(0, 10)
+        .Where(index => index % 3 > 1)
+        .Select(index => index.ToString())
+        .ToList();
+
+    private IEnumerable<string> _selectedKeys = Array.Empty<string>();
+
+    private readonly OneOf.OneOf<string, RenderFragment<TransferSelectAllLabelInfo>>[] _selectAllLabels =
+    [
+        "Select All",
+        new RenderFragment<TransferSelectAllLabelInfo>(info => builder =>
+            builder.AddContent(0, $"{info.SelectedCount}/{info.TotalCount}"))
+    ];
+
+    private static OneOf.OneOf<string, RenderFragment> RenderItem(TransferItem item) => item.Title;
+
+    private void HandleChange(TransferChangeArgs args)
+    {
+        _targetKeys = args.TargetKeys.ToList();
+    }
 }

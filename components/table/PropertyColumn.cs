@@ -21,7 +21,7 @@ namespace AntDesign
         {
             if (Property != null)
             {
-                if (IsInitialize || IsHeader)
+                if (IsInitialize || IsHeader || IsMeasure)
                 {
                     GetFieldExpression = Property;
                 }

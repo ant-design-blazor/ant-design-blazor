@@ -106,18 +106,50 @@ namespace AntDesign
         private readonly Func<DateTime, bool> _defaultDisabledDateCheck;
 
         private Func<DateTime, bool> _disabledDate;
+        private DateTime? _rangeStartForDisabledDate;
 
         [Parameter]
         public override Func<DateTime, bool> DisabledDate
         {
             get
             {
-                return _disabledDate;
+                return date => _disabledDate?.Invoke(date) == true
+                    || DisabledDateWithInfo?.Invoke(date, new DatePickerDisabledDateInfo(GetRangeStartForDisabledDate(), Picker)) == true
+                    || (DisabledDateWithInfo is null && _defaultDisabledDateCheck(date));
             }
             set
             {
-                _disabledDate = (date) => (value?.Invoke(date) is true) || _defaultDisabledDateCheck(date);
+                _disabledDate = value;
             }
+        }
+
+        /// <summary>Determines whether a date is disabled with the current range start and picker mode.</summary>
+        [Parameter]
+        public Func<DateTime, DatePickerDisabledDateInfo, bool> DisabledDateWithInfo { get; set; }
+
+        private DateTime? GetRangeStartForDisabledDate()
+        {
+            if (_rangeStartForDisabledDate is DateTime rangeStart)
+            {
+                return rangeStart;
+            }
+
+            if (_pickerStatus[0].SelectedValue is DateTime selectedStart)
+            {
+                return selectedStart;
+            }
+
+            return GetIndexValue(0);
+        }
+
+        protected override async Task OnSelect(DateTime date, int index)
+        {
+            if (index == 0)
+            {
+                _rangeStartForDisabledDate = date;
+            }
+
+            await base.OnSelect(date, index);
         }
 
         /// <summary>
@@ -586,6 +618,11 @@ namespace AntDesign
         internal override void ClearValue(int index = -1, bool closeDropdown = true)
         {
             _isSetPicker = false;
+
+            if (index is -1 or 0)
+            {
+                _rangeStartForDisabledDate = null;
+            }
 
             var array = Value as Array;
             if (array == null || !_isInitialized)

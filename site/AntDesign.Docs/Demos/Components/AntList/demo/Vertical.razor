@@ -1,11 +1,12 @@
-﻿@inject HttpClient HttpClient
-
-<AntList DataSource="@ListData" ItemLayout="@ListItemLayout.Vertical">
+<AntList DataSource="@ListData"
+         ItemLayout="ListItemLayout.Vertical"
+         Size="ListSize.Large"
+         Pagination="@_pagination">
     <ChildContent Context="item">
-        <ListItem Extra="@extra" Actions="@(new[] { iconText(("start","156")),iconText(("like","156")),iconText(("message","2")) })">
+        <ListItem Extra="@Extra" Actions="@Actions">
             <ListItemMeta Description="@item.Description">
                 <AvatarTemplate>
-                    @avatar
+                    <Avatar Src="@item.Avatar" />
                 </AvatarTemplate>
                 <TitleTemplate>
                     <a href="@item.Href">@item.Title</a>
@@ -22,55 +23,30 @@
 </AntList>
 
 @code {
+    private readonly PaginationOptions _pagination = new() { PageSize = 3 };
 
-    RenderFragment avatar =@<Avatar Src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></Avatar>;
+    private readonly IReadOnlyList<DataModel> ListData = Enumerable.Range(0, 23)
+        .Select(index => new DataModel(
+            "https://ant.design",
+            $"ant design part {index}",
+            $"https://api.dicebear.com/10.x/lorelei/svg?seed={index}",
+            "Ant Design, a design language for background applications, is refined by Ant UED Team.",
+            "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently."))
+        .ToArray();
 
-    RenderFragment extra = @<img width="272" alt="logo" src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png" />;
+    private static readonly RenderFragment Extra = @<img draggable="false" width="272" alt="logo" src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png" />;
 
-    RenderFragment<(string icon, string text)> iconText = context =>
-    @<Template>
-        <Space>
-            <SpaceItem><Icon Type="@context.icon" /></SpaceItem>
-            <SpaceItem>@context.text</SpaceItem>
-        </Space>
-    </Template> ;
+    private static readonly RenderFragment[] Actions =
+    [
+        Action(IconType.Outline.Star, "156"),
+        Action(IconType.Outline.Like, "156"),
+        Action(IconType.Outline.Message, "2")
+    ];
 
-    public int count = 3;
+    private static RenderFragment Action(string icon, string text) => @<Space>
+        <SpaceItem><Icon Type="@icon" /></SpaceItem>
+        <SpaceItem>@text</SpaceItem>
+    </Space>;
 
-    public string FakeDataUrl { get { return $"https://randomuser.me/api/?results={count}&inc=name,gender,email,nat&noinfo"; } }
-
-    public List<DataModel> ListData { get; set; } = new List<DataModel>();
-
-    public bool Loading { get; set; } = false;
-
-    protected override async Task OnInitializedAsync()
-    {
-        for (int i = 0; i < 3; i++)
-        {
-            ListData.Add(new DataModel
-            {
-                Href = "http://ant.design",
-                Title = $"ant design part {i}",
-                Avatar = "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
-                Description = "Ant Design, a design language for background applications, is refined by Ant UED Team.",
-                Content = "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.",
-            });
-        }
-        await base.OnInitializedAsync();
-    }
-
-
-    public class DataModel
-    {
-        public string Href { get; set; }
-
-        public string Title { get; set; }
-
-        public string Avatar { get; set; }
-
-        public string Description { get; set; }
-
-        public string Content { get; set; }
-    }
-
+    private sealed record DataModel(string Href, string Title, string Avatar, string Description, string Content);
 }

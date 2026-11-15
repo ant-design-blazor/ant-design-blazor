@@ -26,6 +26,16 @@ There are 2 rendering approaches for `Dropdown`:
 
 | Property | Description | Type | Default Value | Version 
 | --- | --- | --- | --- |
+| AutoAdjustOverflow | 弹层超出视口时自动调整位置；对应 `BoundaryAdjustMode`（`true` 为 `InView`，`false` 为 `None`）。 | bool? | - |  |
+| DestroyOnHidden | 关闭后从 DOM 中移除弹层内容。 | bool | false |  |
+| ClassNames | 按 Dropdown Semantic DOM 节点自定义类名，支持 `root`、`item`、`itemTitle`、`itemIcon`、`itemContent`。 | IReadOnlyDictionary<string, string> | - |  |
+| Menu | React 风格的下拉菜单数据 API，支持嵌套菜单、分组、虚线分割线、图标、禁用和危险状态、选择状态、活动项、类名/样式及条目点击回调。 | DropdownMenuOptions | - |  |
+| Open | 控制下拉菜单是否展开，支持 `@bind-Open`。 | bool | false |  |
+| OpenChanged | `@bind-Open` 使用的状态变化回调。 | EventCallback<bool> | - |  |
+| OnOpenChange | 下拉菜单展开状态变化时调用。 | EventCallback<bool> | - |  |
+| PopupRender | 自定义弹出内容，通过 `RenderFragment` 上下文保留并组合原始菜单内容。 | RenderFragment<RenderFragment> | - |  |
+| DropdownRender | 兼容旧版 React `dropdownRender` 命名的别名。推荐使用与当前 React `popupRender` 对齐的 `PopupRender`。 | RenderFragment<RenderFragment> | - |  |
+| Styles | 按 Dropdown Semantic DOM 节点自定义内联样式。 | IReadOnlyDictionary<string, string> | - |  |
 | Arrow | 下拉框箭头是否显示 | boolean | false |  |
 | ArrowPointAtCenter | 下拉框箭头是否显示并且居中 | boolean | false |  |
 | BoundaryAdjustMode | `Dropdown` adjustment strategy (when for example browser resize is happening)         | TriggerBoundaryAdjustMode    | TriggerBoundaryAdjustMode.InView         |
@@ -42,20 +52,20 @@ There are 2 rendering approaches for `Dropdown`:
 | OnMouseLeave | Callback when mouse leaves `Dropdown` boundaries.         | Action    | -         |
 | OnOverlayHidding | Callback when overlay is hiding.         | Action<bool>    | -         |
 | OnVisibleChange |  Callback when overlay visibility is changing.        | Action<bool>    | -         |
-| Overlay | Overlay content (what will be rendered after `Dropdown` is triggered, the dropdown menu).          | RenderFragment    | -         |
-| OverlayClassName | 下拉根元素的类名称       | string    | -         |
+| Overlay | 旧的弹出内容参数；自定义菜单优先使用 `PopupRender`。 | RenderFragment | - |  |
+| OverlayClassName | 旧的根元素类名参数；优先使用 `ClassNames["root"]`。 | string | - |  |
 | OverlayEnterCls | Css class added to overlay when overlay is shown.         | string    | -         |
 | OverlayHiddenCls | Css class added to overlay when overlay is hidden.         | string    | -         |
 | OverlayLeaveCls | Css class added to overlay when overlay is hiding.         | string    | -         |
-| OverlayStyle | 下拉根元素的样式         | string    | -         |
+| OverlayStyle | 旧的根元素样式参数；优先使用 `Styles["root"]`。 | string | - |  |
 | Placement | The position of the `Dropdown` overlay relative to the target, which can be one of `Top` `Left` `Right` `Bottom` `TopLeft` `TopRight` `BottomLeft` `BottomRight` `LeftTop` `LeftBottom` `RightTop` `RightBottom` | PlacementType | `PlacementType.BottomLeft` |  |
 | PlacementCls | Override default placement class which is based on `Placement` parameter.         | string    | -         |
-| PopupContainerSelector | Define what is going to be the container of the overlay. Example use case: when overlay has to be contained in a scrollable area.         | string    | "body"       |
+| PopupContainerSelector | React `getPopupContainer` 在 Blazor 中的对应项：用于指定弹层容器的 CSS selector（默认 `body`）。 | string | "body" |  |
 | Style | (not used in Unbound) Style of the wrapping div.          | string    | -         |
 | Trigger | `Dropdown` trigger mode. Could be multiple by passing an array | TriggerType[] | `TriggerType.Hover` |  |
 | TriggerReference | Manually set reference to element triggering `Dropdown`. | ElementReference | - |  |
 | Unbound | ChildElement with `ElementReference` set to avoid wrapping div.         | RenderFragment<ForwardRef>    | -         |
-| Visible | 菜单是否显示        | bool    | false         |
+| Visible | `Open` 的兼容别名。 | bool | false |  |
 
 ### DropdownButton
 | Property | Description | Type | Default Value | Version 

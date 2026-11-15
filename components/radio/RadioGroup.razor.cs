@@ -135,7 +135,11 @@ namespace AntDesign
 
             if (string.IsNullOrEmpty(Name))
             {
-                Name = NameAttributeValue ?? PropertyName ?? ComponentIdGenerator.Generate(this);
+                Name = !string.IsNullOrWhiteSpace(NameAttributeValue)
+                    ? NameAttributeValue
+                    : !string.IsNullOrWhiteSpace(PropertyName)
+                        ? PropertyName
+                        : ComponentIdGenerator.Generate(this);
             }
         }
 

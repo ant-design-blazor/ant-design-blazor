@@ -219,6 +219,18 @@ async function readPageDemos(page, url) {
       };
       const serializeRenderedSubtree = (element) => {
         const clone = element.cloneNode(true);
+        // outerHTML does not include the live checked property changed by
+        // Blazor's interactive renderer. Reflect the actual radio/checkbox
+        // state into the clone so it compares with React's checked attribute.
+        const sourceInputs = [element, ...element.querySelectorAll('input[type="checkbox"], input[type="radio"]')];
+        const clonedInputs = [clone, ...clone.querySelectorAll('input[type="checkbox"], input[type="radio"]')];
+        sourceInputs.forEach((input, index) => {
+          if (input.tagName !== 'INPUT' || !['checkbox', 'radio'].includes(input.type)) return;
+          const clonedInput = clonedInputs[index];
+          if (!clonedInput) return;
+          if (input.checked) clonedInput.setAttribute('checked', '');
+          else clonedInput.removeAttribute('checked');
+        });
         const removeHiddenChildren = (source, copy) => {
           const sourceChildren = [...source.children];
           const copyChildren = [...copy.children];
@@ -231,8 +243,9 @@ async function readPageDemos(page, url) {
         removeHiddenChildren(element, clone);
         return clone.outerHTML;
       };
-      return [...document.querySelectorAll('.code-box-demo')].map((scope, index) => {
+      return [...document.querySelectorAll('.code-box-demo, [data-parity-demo]')].map((scope, index) => {
       const owner = scope.closest('[id]');
+      const parityName = scope.getAttribute('data-parity-demo');
       const counts = new Map();
       const allElements = [...scope.querySelectorAll('[class]')];
       const elements = allElements.filter(isRenderedInCurrentState);
@@ -286,9 +299,9 @@ async function readPageDemos(page, url) {
       });
       return {
         index,
-        id: owner?.id ?? '',
-        key: owner?.id ? owner.id.split('-demo-').slice(1).join('-demo-') : `index-${index}`,
-        name: owner?.id ? owner.id.split('-demo-').slice(1).join('-demo-') : `index-${index}`,
+        id: parityName ? `components-select-demo-${parityName}` : owner?.id ?? '',
+        key: parityName ?? (owner?.id ? owner.id.split('-demo-').slice(1).join('-demo-') : `index-${index}`),
+        name: parityName ?? (owner?.id ? owner.id.split('-demo-').slice(1).join('-demo-') : `index-${index}`),
         elementCount: elements.length,
         hiddenComponentNodeCount: allElements.filter((element) =>
           [...element.classList].some((name) => name.startsWith('ant-')) && !isRenderedInCurrentState(element),
@@ -336,10 +349,11 @@ async function readRouteDemos(browser, url) {
 }
 
 const HTML_NORMALIZATION = {
-  runtimeIdPattern: '^(?:ant-blazor-[a-zA-Z0-9_-]+|_[rR]_[a-zA-Z0-9_-]+)$',
+  runtimeIdPattern: '^(?:ant-blazor-[a-zA-Z0-9_-]+|ant-segmented-[a-zA-Z0-9_-]+|_[rR]_[a-zA-Z0-9_-]+)$',
+  runtimeIdAttributes: ['name'],
   removeUnreferencedRuntimeIds: true,
   removeAttributes: ['_bl_*'],
-  removeClassPatterns: ['^css-dev-only-do-not-override-', '^css-var-_[rR]_', '^css-[a-zA-Z0-9]+$', '^acss-[a-zA-Z0-9_-]+$'],
+  removeClassPatterns: ['^css-dev-only-do-not-override-', '^css-var-_[rR]_', '^css-[a-zA-Z0-9]+$', '^acss-[a-zA-Z0-9_-]+$', '^adb-[a-zA-Z0-9_-]+$'],
   removeCommentMarkers: ['<!--!-->'],
   sortClassTokens: true,
 };
@@ -388,7 +402,14 @@ export function compareRuntimeDemo(reactDemo, blazorDemo) {
   const comparison = compareDomSnapshots(
     { html: reactDemo.html, semantic: semanticNodes, computedStyles: expectedStyles },
     { html: blazorDemo.html, semantic: actualSemanticNodes, computedStyles: actualStyles },
-    { normalization: HTML_NORMALIZATION, geometryTolerancePx: 1 },
+    {
+      normalization: HTML_NORMALIZATION,
+      // Chromium serializes fractional computed widths to three decimals.
+      // Allow 0.02px so a one-unit serialization difference at that precision
+      // does not become a false CSS mismatch between the two render trees.
+      computedStylePixelToleranceByProperty: { width: 0.02 },
+      geometryTolerancePx: 1,
+    },
   );
   return {
     html: {

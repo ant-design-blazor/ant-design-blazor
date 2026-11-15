@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "ant-design/ant-design",
+    "component": "FloatButton"
+  },
+  "config": {
+    "viewport": { "width": 1280, "height": 900, "deviceScaleFactor": 1 },
+    "colorScheme": "light",
+    "comparisonPolicy": {
+      "normalization": {
+        "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_r_[a-zA-Z0-9_-]+)$",
+        "removeAttributes": ["_bl_*", "id", "style"],
+        "removeClassPatterns": ["^css-dev-only-do-not-override-", "^css-var-_r_", "^css-var-_[rR]_", "^css-[a-zA-Z0-9]+$"],
+        "removeCommentMarkers": ["<!--!-->"]
+      }
+    }
+  },
+  "groups": [
+    {
+      "id": "float-button-render-panel",
+      "component": "FloatButton",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/float-button?theme=light",
+        "scopeSelector": "#float-button-demo-render-panel .code-box-demo",
+        "rootSelector": ".ant-float-btn-pure"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5011/en-US/components/floatbutton?theme=light",
+        "scopeSelector": "#components-floatbutton-demo-render-panel",
+        "beforeWaitActions": [
+          { "type": "click", "selector": "button.docs-debug-toggle" }
+        ],
+        "rootSelector": ".ant-float-btn-pure"
+      },
+      "styleProperties": [
+        "display", "position", "insetInlineEnd", "bottom", "zIndex", "width", "height", "minHeight",
+        "padding", "margin", "fontSize", "lineHeight", "borderRadius", "backgroundColor", "color",
+        "boxShadow", "transform", "opacity"
+      ],
+      "semanticNodes": [
+        { "path": "root", "reactSelector": "$root", "blazorSelector": "$root", "minimumCount": 5 },
+        { "path": "icon", "reactSelector": ".ant-float-btn-icon", "blazorSelector": ".ant-float-btn-icon", "minimumCount": 5 },
+        { "path": "content", "reactSelector": ".ant-float-btn-content", "blazorSelector": ".ant-float-btn-content", "minimumCount": 1 },
+        { "path": "group-list", "reactSelector": ".ant-float-btn-group-list", "blazorSelector": ".ant-float-btn-group-list", "minimumCount": 2 }
+      ],
+      "scenarios": [{ "id": "default" }]
+    }
+  ]
+}

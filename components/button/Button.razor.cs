@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
@@ -40,6 +41,8 @@ namespace AntDesign
     public partial class Button : AntDomComponentBase
     {
         private FormSize? _formSize;
+        private bool _hasExplicitSizeParameter;
+        private ButtonSize _size = ButtonSize.Default;
 
         [CascadingParameter]
         internal SpaceCompactItemContext CompactItemContext { get; set; }
@@ -56,18 +59,6 @@ namespace AntDesign
             set
             {
                 _formSize = value;
-
-                if (_formSize.HasValue)
-                {
-                    Size = _formSize.Value switch
-                    {
-                        AntDesign.FormSize.Large => ButtonSize.Large,
-                        AntDesign.FormSize.Small => ButtonSize.Small,
-                        _ => ButtonSize.Default,
-                    };
-                }
-                else
-                    Size = ButtonSize.Default;
             }
         }
 
@@ -149,6 +140,10 @@ namespace AntDesign
         [Parameter]
         public string Href { get; set; }
 
+        /// <summary>Text shown by the browser as a tooltip for the button.</summary>
+        [Parameter]
+        public string Title { get; set; }
+
         /// <summary>
         /// The browsing context for the linked URL.
         /// </summary>
@@ -188,10 +183,25 @@ namespace AntDesign
         public IReadOnlyDictionary<string, string> ClassNames { get; set; }
 
         /// <summary>
+        /// Computes semantic class names from the current Button parameters.
+        /// </summary>
+        [Parameter]
+        public Func<Button, IReadOnlyDictionary<string, string>> ClassNamesFunc { get; set; }
+
+        /// <summary>
         /// Semantic inline styles keyed by root, icon, and content.
         /// </summary>
         [Parameter]
         public IReadOnlyDictionary<string, string> Styles { get; set; }
+
+        /// <summary>
+        /// Computes semantic inline styles from the current Button parameters.
+        /// </summary>
+        [Parameter]
+        public Func<Button, IReadOnlyDictionary<string, string>> StylesFunc { get; set; }
+
+        private IReadOnlyDictionary<string, string> _resolvedClassNames;
+        private IReadOnlyDictionary<string, string> _resolvedStyles;
 
         /// <summary>
         /// Show loading indicator. You have to write the loading logic on your own.
@@ -199,6 +209,12 @@ namespace AntDesign
         /// <default value="false" />
         [Parameter]
         public bool Loading { get; set; }
+
+        /// <summary>
+        /// Set a custom icon to display while the button is loading.
+        /// </summary>
+        [Parameter]
+        public RenderFragment LoadingIcon { get; set; }
 
         /// <summary>
         /// Whether to trigger and keep the loading state until the event callback is done.
@@ -230,7 +246,11 @@ namespace AntDesign
         /// </summary>
         /// <default value="ButtonSize.Default" />
         [Parameter]
-        public ButtonSize Size { get; set; } = ButtonSize.Default;
+        public ButtonSize Size
+        {
+            get => _size;
+            set => _size = value;
+        }
 
         /// <summary>
         /// Type of the button.
@@ -295,18 +315,16 @@ namespace AntDesign
 
         private bool _animating = false;
 
-        private const string BtnWave = "--antd-wave-shadow-color: rgb(255, 120, 117);";
-
         internal string SemanticClass(string slot, string baseClass)
         {
-            if (ClassNames == null || !ClassNames.TryGetValue(slot, out var customClass) || string.IsNullOrWhiteSpace(customClass))
+            if (_resolvedClassNames == null || !_resolvedClassNames.TryGetValue(slot, out var customClass) || string.IsNullOrWhiteSpace(customClass))
                 return baseClass;
             return string.IsNullOrWhiteSpace(baseClass) ? customClass : $"{baseClass} {customClass}";
         }
 
         internal string SemanticStyle(string slot, string baseStyle = null)
         {
-            var semanticStyle = Styles != null && Styles.TryGetValue(slot, out var value) ? value : null;
+            var semanticStyle = _resolvedStyles != null && _resolvedStyles.TryGetValue(slot, out var value) ? value : null;
             if (string.IsNullOrWhiteSpace(baseStyle)) return semanticStyle;
             if (string.IsNullOrWhiteSpace(semanticStyle)) return baseStyle;
             return $"{baseStyle.TrimEnd().TrimEnd(';')}; {semanticStyle}";
@@ -320,6 +338,10 @@ namespace AntDesign
                 ? _colorMap[ButtonColor.Value]
                 : Danger ? "dangerous" : buttonType == ButtonType.Link ? "link" : buttonType == ButtonType.Primary ? "primary" : "default";
             var variant = Variant.HasValue ? _buttonVariantMap[Variant.Value] : _variantMap[buttonType];
+            if (Ghost && variant == "solid")
+            {
+                variant = "outlined";
+            }
             var hasColorOrVariant = Type.HasValue || ButtonColor.HasValue || Variant.HasValue;
 
             ClassMapper.Clear()
@@ -328,17 +350,17 @@ namespace AntDesign
                 // classes consumed by antd-v6.css. This is the same class contract as
                 // the React implementation and lets old selectors remain compatible.
                 .GetIf(() => $"{prefixName}-{_typeMap[buttonType]}", () => Type.HasValue)
+                .If($"{prefixName}-dangerous", () => Danger)
                 .GetIf(() => $"{prefixName}-color-{color}", () => hasColorOrVariant)
                 .GetIf(() => $"{prefixName}-variant-{variant}", () => hasColorOrVariant)
-                .If($"{prefixName}-dangerous", () => Danger)
                 .GetIf(() => $"{prefixName}-{Shape.ToString().ToLowerInvariant()}", () => Shape != ButtonShape.Rectangle)
                 .If($"{prefixName}-lg", () => Size == ButtonSize.Large || CompactItemContext?.Size == InputSize.Large)
                 .If($"{prefixName}-sm", () => Size == ButtonSize.Small || CompactItemContext?.Size == InputSize.Small)
                 .Add(CompactItemContext?.ClassFor(prefixName))
-                .If($"{prefixName}-loading", () => Loading)
                 .If($"{prefixName}-icon-only", () => (IconContent != null || !string.IsNullOrEmpty(this.Icon)) && this.ChildContent == null)
+                .If($"{prefixName}-loading", () => Loading)
                 .If($"{prefixName}-icon-end", () => IconPlacement == ButtonIconPlacement.End)
-                .If($"{prefixName}-background-ghost", () => Ghost)
+                .If($"{prefixName}-background-ghost", () => Ghost && variant is not "text" and not "link")
                 .If($"{prefixName}-block", () => this.Block)
                 .If($"{prefixName}-rtl", () => RTL)
                 ;
@@ -354,7 +376,26 @@ namespace AntDesign
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
+
+            if (!_hasExplicitSizeParameter)
+            {
+                Size = FormSize switch
+                {
+                    AntDesign.FormSize.Large => ButtonSize.Large,
+                    AntDesign.FormSize.Small => ButtonSize.Small,
+                    _ => ButtonSize.Default,
+                };
+            }
+
+            _resolvedClassNames = ClassNamesFunc?.Invoke(this) ?? ClassNames;
+            _resolvedStyles = StylesFunc?.Invoke(this) ?? Styles;
             SetClassMap();
+        }
+
+        public override Task SetParametersAsync(ParameterView parameters)
+        {
+            _hasExplicitSizeParameter = parameters.TryGetValue<ButtonSize>(nameof(Size), out _);
+            return base.SetParametersAsync(parameters);
         }
 
         private async Task HandleOnClick(MouseEventArgs args)

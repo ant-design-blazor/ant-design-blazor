@@ -3,6 +3,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { getSemanticCatalogCoverage } from './semantic-catalog-coverage.mjs';
+import { extractExcludedComponentTokenNames } from './component-tokens.mjs';
 
 const repoRoot = process.argv[2] ?? process.cwd();
 const output = process.argv[3] ?? path.join(repoRoot, 'docs/antd-v6/phase1-progress.json');
@@ -31,6 +32,12 @@ const reactTokenValues = JSON.parse(fs.readFileSync(path.join(reactComponentsRoo
 const componentTokenIr = styleIr.tokens.filter(token => token.kind === 'component');
 const normalizeTokenOwner = value => String(value).replace(/[^a-z0-9]/gi, '').toLowerCase();
 const tokenKey = (component, name) => `${normalizeTokenOwner(component)}:${name}`;
+const excludedComponentTokenNames = new Map((inventory.componentCatalog ?? []).map(component => {
+  const tokenFile = path.join(reactComponentsRoot, component.name, 'style/token.ts');
+  const styleFile = path.join(reactComponentsRoot, component.name, 'style/index.ts');
+  const sourcePath = fs.existsSync(tokenFile) ? tokenFile : styleFile;
+  return [normalizeTokenOwner(component.name), extractExcludedComponentTokenNames(fs.readFileSync(sourcePath, 'utf8'))];
+}));
 const componentTokenIrByKey = new Map(componentTokenIr.map(token => [tokenKey(token.component, token.name), token]));
 const generatedTokenDocumentation = new Map(generatedComponentTokens.split('\n').flatMap(line => {
   const match = line.match(/new ComponentTokenDefinition\("([^"]+)", "([^"]+)".*?, (true|false), (true|false), (true|false)\),?$/);
@@ -59,7 +66,7 @@ const tokenDocsComplete = componentTokenDocs.filter(component => component.hasEn
 const componentTokenDocsMissingRows = componentTokenDocs.filter(component => !component.hasGeneratedRows).map(component => component.component);
 const documentedComponentNames = new Set(componentTokenDocs.map(component => normalizeTokenOwner(component.component)));
 const expectedDocumentedTokens = Object.entries(reactTokenMetadata.components ?? {}).flatMap(([component, tokens]) => documentedComponentNames.has(normalizeTokenOwner(component))
-  ? tokens.map(token => ({ component, token }))
+  ? tokens.filter(token => !excludedComponentTokenNames.get(normalizeTokenOwner(component))?.has(token.token)).map(token => ({ component, token }))
   : []);
 const tokenMetadataParity = { missingIrTokens: [], missingDocumentedRows: [], unexpectedDocumentedRows: [], mismatchedDescriptions: [], mismatchedEnglishDescriptions: [], mismatchedDefaults: [], mismatchedCssVariables: [] };
 const globalSectionIsWired = /ComponentTokenCatalog\.GetGlobal\(Component\)/.test(componentTokenRenderer)

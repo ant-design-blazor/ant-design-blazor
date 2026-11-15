@@ -1,1 +1,78 @@
-<TableParityDemo Variant="style-class" />
+@using AntDesign.TableModels
+
+<Flex Vertical Gap="FlexGap.Medium">
+    <Table TItem="StyleRow" DataSource="Rows" RowKey="row => row.Key" Size="TableSize.Small"
+           PageSize="3" PaginationTemplate="RenderSimplePagination" ScrollY="300px" Virtual
+           ClassNames="StaticClassNames" Styles="ObjectStyles" Title="Table Object Styles" Footer="Table Object Footer">
+        <PropertyColumn Property="row => row.Name" Title="Name" />
+        <PropertyColumn Property="row => row.Age" Title="Age" />
+        <PropertyColumn Property="row => row.Address" Title="Address" />
+        <PropertyColumn Property="row => row.Description" Title="Description" />
+    </Table>
+
+    <Table TItem="StyleRow" DataSource="Rows" RowKey="row => row.Key" Size="TableSize.Medium"
+           PageSize="3" PaginationTemplate="RenderStyledSimplePagination"
+           ClassNames="StaticClassNames" StylesFunc="GetFunctionStyles" Title="Table Function Styles" Footer="Table Function Styles">
+        <PropertyColumn Property="row => row.Name" Title="Name" />
+        <PropertyColumn Property="row => row.Age" Title="Age" />
+        <PropertyColumn Property="row => row.Address" Title="Address" />
+        <PropertyColumn Property="row => row.Description" Title="Description" />
+    </Table>
+</Flex>
+
+<style>
+    .table-style-class-static-root {
+        color: #e0e0e0;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+</style>
+
+@code {
+    private static readonly IReadOnlyDictionary<string, string> StaticClassNames = new Dictionary<string, string>
+    {
+        ["root"] = "table-style-class-static-root"
+    };
+
+    private static readonly IReadOnlyDictionary<string, string> ObjectStyles = new Dictionary<string, string>
+    {
+        ["root"] = "padding: 10px; border-radius: 8px;",
+        ["pagination.root"] = "padding: 10px;",
+        ["body.row"] = "outline: rgba(226, 225, 225, 0.1) dashed 1px;",
+        ["body.cell"] = "outline: rgba(226, 225, 225, 0.1) dashed 1px;"
+    };
+
+    private static readonly IReadOnlyDictionary<string, string> MediumStyles = new Dictionary<string, string>
+    {
+        ["root"] = "color: rgb(224, 224, 224); border-radius: 8px; box-shadow: rgba(0, 0, 0, 0.3) 0px 4px 20px;",
+        ["title"] = "background-image: linear-gradient(90deg, rgb(106, 90, 205), rgb(131, 111, 255)); color: rgb(255, 255, 255); font-size: 1.25rem; font-weight: 600; padding: 12px 16px;",
+        ["footer"] = "color: rgb(156, 163, 175);",
+        ["header.cell"] = "font-weight: 600; font-size: 0.95rem; color: rgb(184, 189, 253); padding: 12px 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.08);",
+        ["pagination.item"] = "color: rgb(184, 189, 253);"
+    };
+
+    private static readonly StyleRow[] Rows =
+    [
+        new("1", "John Brown", 32, "New York No. 1 Lake Park", "My name is John Brown, I am 32 years old, living in New York No. 1 Lake Park."),
+        new("2", "Jim Green", 42, "London No. 1 Lake Park", "My name is Jim Green, I am 42 years old, living in London No. 1 Lake Park."),
+        new("3", "Joe Black", 32, "Sydney No. 1 Lake Park", "My name is Joe Black, I am 32 years old, living in Sydney No. 1 Lake Park."),
+        new("4", "Disabled User", 99, "Sydney No. 2 Lake Park", "This user is disabled.")
+    ];
+
+    private static IReadOnlyDictionary<string, string> GetFunctionStyles(Table<StyleRow> table)
+        => table.Size == TableSize.Medium ? MediumStyles : new Dictionary<string, string>();
+
+    private RenderFragment<(int PageSize, int PageIndex, int Total, string PaginationClass, EventCallback<PaginationEventArgs> HandlePageChange)> RenderSimplePagination
+        => pagination => @<Pagination Simple Size="PaginationSize.Small" Total="pagination.Total" Current="pagination.PageIndex"
+                                         PageSize="pagination.PageSize" Class="@($"{pagination.PaginationClass} ant-pagination-mini ant-pagination-small")"
+                                         Style="padding: 10px;"
+                                         OnChange="pagination.HandlePageChange" />;
+
+    private RenderFragment<(int PageSize, int PageIndex, int Total, string PaginationClass, EventCallback<PaginationEventArgs> HandlePageChange)> RenderStyledSimplePagination
+        => pagination => @<Pagination Simple Size="PaginationSize.Small" Total="pagination.Total" Current="pagination.PageIndex"
+                                         PageSize="pagination.PageSize" Class="@($"{pagination.PaginationClass} ant-pagination-mini ant-pagination-small")"
+                                         Style="padding: 10px;" ItemStyle="color: rgb(184, 189, 253);"
+                                         OnChange="pagination.HandlePageChange" />;
+
+    private sealed record StyleRow(string Key, string Name, int Age, string Address, string Description);
+}

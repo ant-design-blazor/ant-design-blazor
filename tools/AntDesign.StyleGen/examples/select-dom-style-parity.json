@@ -16,14 +16,18 @@
     "comparisonPolicy": {
       "normalization": {
         "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_r_[a-zA-Z0-9_-]+)$",
-        "removeAttributes": ["_bl_*"],
+        "removeAttributes": [
+          "_bl_*"
+        ],
         "removeClassPatterns": [
           "^css-dev-only-do-not-override-",
           "^css-var-_r_",
           "^css-var-_R_",
           "^css-[a-z0-9]+$"
         ],
-        "removeCommentMarkers": ["<!--!-->"]
+        "removeCommentMarkers": [
+          "<!--!-->"
+        ]
       }
     }
   },
@@ -45,21 +49,69 @@
         "skeletonSelector": ".ant-skeleton"
       },
       "styleProperties": [
-        "display", "position", "boxSizing", "width", "height", "minHeight", "maxHeight",
-        "paddingBlock", "paddingInline", "marginBlock", "gap", "alignItems", "lineHeight",
-        "fontSize", "fontWeight", "color", "backgroundColor", "borderRadius",
-        "borderTopWidth", "borderRightWidth", "borderBottomWidth", "borderLeftWidth",
-        "--ant-select-height", "--ant-select-multi-item-height", "--ant-select-multi-padding-vertical"
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "minHeight",
+        "maxHeight",
+        "paddingBlock",
+        "paddingInline",
+        "marginBlock",
+        "gap",
+        "alignItems",
+        "lineHeight",
+        "fontSize",
+        "fontWeight",
+        "color",
+        "backgroundColor",
+        "borderRadius",
+        "borderTopWidth",
+        "borderRightWidth",
+        "borderBottomWidth",
+        "borderLeftWidth",
+        "--ant-select-height",
+        "--ant-select-multi-item-height",
+        "--ant-select-multi-padding-vertical"
       ],
       "semanticNodes": [
-        { "path": "root", "reactSelector": "$root", "blazorSelector": "$root", "minimumCount": 3 },
-        { "path": "content", "reactSelector": ".ant-select-content", "blazorSelector": ".ant-select-content", "minimumCount": 3 },
-        { "path": "input", "reactSelector": ".ant-select-input", "blazorSelector": ".ant-select-input", "minimumCount": 3 },
-        { "path": "item", "reactSelector": ".ant-select-selection-item", "blazorSelector": ".ant-select-selection-item", "minimumCount": 4 },
-        { "path": "suffix", "reactSelector": ".ant-select-suffix", "blazorSelector": ".ant-select-suffix", "minimumCount": 3 }
+        {
+          "path": "root",
+          "reactSelector": "$root",
+          "blazorSelector": "$root",
+          "minimumCount": 3
+        },
+        {
+          "path": "content",
+          "reactSelector": ".ant-select-content",
+          "blazorSelector": ".ant-select-content",
+          "minimumCount": 3
+        },
+        {
+          "path": "input",
+          "reactSelector": ".ant-select-input",
+          "blazorSelector": ".ant-select-input",
+          "minimumCount": 3
+        },
+        {
+          "path": "item",
+          "reactSelector": ".ant-select-selection-item",
+          "blazorSelector": ".ant-select-selection-item",
+          "minimumCount": 4
+        },
+        {
+          "path": "suffix",
+          "reactSelector": ".ant-select-suffix",
+          "blazorSelector": ".ant-select-suffix",
+          "minimumCount": 3
+        }
       ],
       "scenarios": [
-        { "id": "default", "minimumRoots": 3 },
+        {
+          "id": "default",
+          "minimumRoots": 3
+        },
         {
           "id": "large",
           "minimumRoots": 3,
@@ -67,11 +119,13 @@
             {
               "id": "select-large",
               "type": "click",
-              "reactSelector": "#select-demo-size input[value=large]",
-              "blazorSelector": "#components-select-demo-size input[value=Large]",
+              "reactSelector": "#select-demo-size .ant-radio-button-wrapper:has(input[value=large])",
+              "blazorSelector": "#components-select-demo-size .ant-radio-button-wrapper:has(input[value=large])",
               "reactCheckedValue": "large",
-              "blazorCheckedValue": "Large",
-              "force": true,
+              "blazorCheckedValue": "large",
+              "reactCheckedSelector": "#select-demo-size input[value=large]",
+              "blazorCheckedSelector": "#components-select-demo-size input[value=large]",
+              "coordinateClick": true,
               "stableForMs": 1000
             }
           ]
@@ -83,12 +137,154 @@
             {
               "id": "select-small",
               "type": "click",
-              "reactSelector": "#select-demo-size input[value=small]",
-              "blazorSelector": "#components-select-demo-size input[value=Small]",
+              "reactSelector": "#select-demo-size .ant-radio-button-wrapper:has(input[value=small])",
+              "blazorSelector": "#components-select-demo-size .ant-radio-button-wrapper:has(input[value=small])",
               "reactCheckedValue": "small",
-              "blazorCheckedValue": "Small",
-              "force": true,
+              "blazorCheckedValue": "small",
+              "reactCheckedSelector": "#select-demo-size input[value=small]",
+              "blazorCheckedSelector": "#components-select-demo-size input[value=small]",
+              "coordinateClick": true,
               "stableForMs": 1000
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "select-variant-demo",
+      "component": "Select",
+      "matchScopeWidth": "react",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/select?theme=light",
+        "scopeSelector": "#select-demo-variant .code-box-demo",
+        "rootSelector": ".ant-select",
+        "skeletonSelector": ".ant-skeleton"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/select?theme=light",
+        "scopeSelector": "#components-select-demo-variant .code-box-demo",
+        "rootSelector": ".ant-select",
+        "skeletonSelector": ".ant-skeleton"
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "minHeight",
+        "maxHeight",
+        "paddingBlock",
+        "paddingInline",
+        "marginBlock",
+        "gap",
+        "alignItems",
+        "lineHeight",
+        "fontSize",
+        "fontWeight",
+        "color",
+        "backgroundColor",
+        "borderRadius",
+        "borderTopWidth",
+        "borderRightWidth",
+        "borderBottomWidth",
+        "borderLeftWidth",
+        "--ant-select-height",
+        "--ant-select-multi-item-height",
+        "--ant-select-multi-padding-vertical"
+      ],
+      "semanticNodes": [
+        {
+          "path": "root",
+          "reactSelector": "$root",
+          "blazorSelector": "$root",
+          "minimumCount": 8
+        },
+        {
+          "path": "content",
+          "reactSelector": ".ant-select-content",
+          "blazorSelector": ".ant-select-content",
+          "minimumCount": 8
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "default",
+          "minimumRoots": 8
+        }
+      ]
+    },
+    {
+      "id": "select-placement-demo",
+      "component": "Select",
+      "matchScopeWidth": "react",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/select?theme=light",
+        "scopeSelector": "#select-demo-placement .code-box-demo",
+        "rootSelector": ".ant-select",
+        "skeletonSelector": ".ant-skeleton"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/select?theme=light",
+        "scopeSelector": "#components-select-demo-placement .code-box-demo",
+        "rootSelector": ".ant-select",
+        "skeletonSelector": ".ant-skeleton"
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "minHeight",
+        "maxHeight",
+        "paddingBlock",
+        "paddingInline",
+        "marginBlock",
+        "gap",
+        "alignItems",
+        "lineHeight",
+        "fontSize",
+        "fontWeight",
+        "color",
+        "backgroundColor",
+        "borderRadius",
+        "borderTopWidth",
+        "borderRightWidth",
+        "borderBottomWidth",
+        "borderLeftWidth",
+        "--ant-select-height",
+        "--ant-select-multi-item-height",
+        "--ant-select-multi-padding-vertical"
+      ],
+      "semanticNodes": [
+        {
+          "path": "root",
+          "reactSelector": "$root",
+          "blazorSelector": "$root",
+          "minimumCount": 1
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "default",
+          "minimumRoots": 1
+        },
+        {
+          "id": "bottom-left",
+          "minimumRoots": 1,
+          "actions": [
+            {
+              "id": "select-bottom-left",
+              "type": "click",
+              "reactSelector": "#select-demo-placement .ant-radio-button-wrapper:has(input[value=bottomLeft])",
+              "blazorSelector": "#components-select-demo-placement .ant-radio-button-wrapper:has(input[value=bottomLeft])",
+              "reactCheckedValue": "bottomLeft",
+              "blazorCheckedValue": "bottomLeft",
+              "reactCheckedSelector": "#select-demo-placement input[value=bottomLeft]",
+              "blazorCheckedSelector": "#components-select-demo-placement input[value=bottomLeft]",
+              "coordinateClick": true,
+              "stableForMs": 500
             }
           ]
         }

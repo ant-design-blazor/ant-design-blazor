@@ -17,11 +17,12 @@
     var canShowUnmatchedValue = !IsOverlayShow || string.IsNullOrEmpty(_inputString);
     var showPlaceholder = !ParentSelect.HasValue && !hasUnmatchedValue;
     var selectedItem = ParentSelect.GetOrderedSelectedItems().FirstOrDefault();
-    var contentTitle = hasUnmatchedValue ? rawValueText : selectedItem?.Label;
+    var contentTitle = hasUnmatchedValue && ParentLabelTemplate == null ? rawValueText : selectedItem?.Label;
+    contentTitle ??= ParentSelect.SelectionTitle;
     var contentClass = $"{Prefix}-content{(ParentSelect.Mode == SelectMode.Default && (ParentSelect.HasValue || hasUnmatchedValue) ? $" {Prefix}-content-has-value" : string.Empty)}{(ParentSelect.Mode == SelectMode.Default && !string.IsNullOrEmpty(_inputString) ? $" {Prefix}-content-has-search-value" : string.Empty)}";
     var placeholderStyle = !string.IsNullOrEmpty(_inputString) ? "visibility: hidden;" : null;
 }
-<div class="@ParentSelect.GetSemanticClass("root", ParentSelect.CurrentClassMapper.Class)"
+<div class="@ParentSelect.GetSemanticClass("root", ParentSelect.GetRootClass(ParentSelect.CurrentClassMapper.Class))"
      style="@ParentSelect.GetSemanticStyle("root", ParentSelect.Style)"
      @ref="@Ref"
      >
@@ -36,7 +37,18 @@
       <div class="@ParentSelect.GetSemanticClass("content", contentClass)" title="@contentTitle" style="@ParentSelect.GetSemanticStyle("content")">
         @if (canShowUnmatchedValue && hasUnmatchedValue)
         {
-          @rawValueText
+          @if (ParentLabelTemplate != null)
+          {
+            <CascadingValue Value="this" Name="SelectContent">
+              <CascadingValue Value="default(SelectOptionItem<TItemValue, TItem>)" Name="SelectOption">
+                @ParentLabelTemplate(default)
+              </CascadingValue>
+            </CascadingValue>
+          }
+          else
+          {
+            @rawValueText
+          }
         }
         @if (showPlaceholder)
         {
@@ -73,6 +85,7 @@
                aria-controls="@(IsOverlayShow ? ParentSelect.ListboxId : null)"
                aria-activedescendant="@(IsOverlayShow ? ParentSelect.ActiveOptionId : null)"
                aria-expanded="@IsOverlayShow.ToString().ToLowerInvariant()"
+               aria-label="@ParentSelect.AriaLabel"
                aria-autocomplete="list"
                aria-haspopup="listbox"
                accesskey="@ParentSelect?.AccessKey"
@@ -82,6 +95,7 @@
         <SelectSuffixIcon 
             TItem="TItem" 
             TItemValue="TItemValue" 
+            SuffixIcon="@ParentSelect.SuffixIcon"
             IsOverlayShow="@IsOverlayShow"
             ShowClearIcon="@(!ParentSelect.Disabled && ParentSelect.AllowClear && ParentSelect.HasValueOrUnmatched)"
             OnClearClick="@OnClearClick" 
@@ -100,7 +114,7 @@
       <div class="@ParentSelect.GetSemanticClass("content", contentClass)" @ref="@_overflow" style="@ParentSelect.GetSemanticStyle("content")">
           @if (showPlaceholder)
           {
-              <div class="@Prefix-content-item @Prefix-content-item-prefix" style="opacity: 1;">
+              <div class="@Prefix-content-item @Prefix-content-item-prefix" style="@PrefixStyle">
               <div class="@ParentSelect.GetSemanticClass("placeholder", $"{Prefix}-placeholder")" style="@ParentSelect.GetSemanticStyle("placeholder")">@Placeholder</div>
             </div>
           }
@@ -112,8 +126,12 @@
               @for (int i = 0; i < Math.Min(ParentSelect.MaxTagCount.AsT0, selectedItems.Count); i++)
               {
                 var selectedOption = selectedItems[i];
-                <div class="@Prefix-content-item" style="@OverflowStyle(i)">
-                  @if (ParentLabelTemplate != null)
+                <div class="@Prefix-content-item" @key="@selectedOption.InternalId" aria-hidden="@(IsOverflowed(i) ? "true" : null)" style="@OverflowStyle(i)">
+                  @if (TagRender != null)
+                  {
+                    <span>@TagRender(CreateTagRenderInfo(selectedOption))</span>
+                  }
+                  else if (ParentLabelTemplate != null)
                   {
                     <CascadingValue Value="this" Name="SelectContent">
                       <CascadingValue Value="@selectedOption" Name="SelectOption">
@@ -152,8 +170,8 @@
                   else
                   {
 
-                    <span class="@ParentSelect.GetSemanticClass("item", $"{Prefix}-selection-item")" style="@ParentSelect.GetSemanticStyle("item")">
-                      <span class="@ParentSelect.GetSemanticClass("itemContent", $"{Prefix}-selection-item-content")" style="@ParentSelect.GetSemanticStyle("itemContent")">+ @(selectedItems.Count - ParentSelect.MaxTagCount.AsT0)@Ellipse</span>
+                    <span class="@ParentSelect.GetSemanticClass("item", $"{Prefix}-selection-item")" title="@($"+ {selectedItems.Count - ParentSelect.MaxTagCount.AsT0} ...")" style="@ParentSelect.GetSemanticStyle("item")">
+                      <span class="@ParentSelect.GetSemanticClass("itemContent", $"{Prefix}-selection-item-content")" style="@ParentSelect.GetSemanticStyle("itemContent")">+ @(selectedItems.Count - ParentSelect.MaxTagCount.AsT0) ...</span>
                     </span>
 
                   }
@@ -165,8 +183,12 @@
               @for (int i = 0; i < selectedItems.Count; i++)
               {
                 var selectedOption = selectedItems[i];
-                <div class="@Prefix-content-item" @key="@selectedOption.InternalId" @ref="@selectedOption.SelectedTagRef" style="@OverflowStyle(i)">
-                  @if (ParentLabelTemplate != null)
+                <div class="@Prefix-content-item" @key="@selectedOption.InternalId" @ref="@selectedOption.SelectedTagRef" aria-hidden="@(IsOverflowed(i) ? "true" : null)" style="@OverflowStyle(i)">
+                  @if (TagRender != null)
+                  {
+                    <span>@TagRender(CreateTagRenderInfo(selectedOption))</span>
+                  }
+                  else if (ParentLabelTemplate != null)
                   {
                     <CascadingValue Value="this" Name="SelectContent">
                       <CascadingValue Value="@selectedOption" Name="SelectOption">
@@ -189,9 +211,11 @@
                   }
                 </div>
               }
-              @if (selectedItems.Count > _calculatedMaxCount)
-              {
-                <div class="@Prefix-content-item @Prefix-content-item-rest" @key="@_internalId" @ref="@_aggregateTag" style="opacity 1; order: @(_calculatedMaxCount-1);">
+              <div class="@Prefix-content-item @Prefix-content-item-rest" @key="@_internalId" @ref="@_aggregateTag"
+                   aria-hidden="@(selectedItems.Count > _calculatedMaxCount ? null : "true")"
+                   style="@(selectedItems.Count > _calculatedMaxCount
+                       ? $"opacity: 1; order: {_calculatedMaxCount - 1};"
+                       : "opacity: 0; height: 0px; overflow-y: hidden; order: 2147483647; pointer-events: none; position: absolute;")">
                   @if (ParentMaxTagPlaceholerTemplate != null)
                   {
                     <span class="@ParentSelect.GetSemanticClass("item", $"{Prefix}-selection-item")" style="@ParentSelect.GetSemanticStyle("item")">
@@ -204,19 +228,22 @@
                   }
                   else
                   {
-                    <span class="@ParentSelect.GetSemanticClass("item", $"{Prefix}-selection-item")" style="@ParentSelect.GetSemanticStyle("item")">
-                      <span class="@ParentSelect.GetSemanticClass("itemContent", $"{Prefix}-selection-item-content")" style="@ParentSelect.GetSemanticStyle("itemContent")">+ @(selectedItems.Count-_calculatedMaxCount)@Ellipse</span>
+                    <span class="@ParentSelect.GetSemanticClass("item", $"{Prefix}-selection-item")" title="@($"+ {Math.Max(0, selectedItems.Count - _calculatedMaxCount)} ...")" style="@ParentSelect.GetSemanticStyle("item")">
+                      <span class="@ParentSelect.GetSemanticClass("itemContent", $"{Prefix}-selection-item-content")" style="@ParentSelect.GetSemanticStyle("itemContent")">@($"+ {Math.Max(0, selectedItems.Count - _calculatedMaxCount)} ...")</span>
                     </span>
                   }
                 </div>
-              }
             }
             else
             {
               @foreach (var selectedOption in selectedItems)
               {
-                <div class="@Prefix-content-item" style="opacity: 1;">
-                  @if (ParentLabelTemplate != null)
+                <div class="@Prefix-content-item" @key="@selectedOption.InternalId" style="opacity: 1;">
+                  @if (TagRender != null)
+                  {
+                    <span>@TagRender(CreateTagRenderInfo(selectedOption))</span>
+                  }
+                  else if (ParentLabelTemplate != null)
                   {
                     <CascadingValue Value="this" Name="SelectContent">
                       <CascadingValue Value="@selectedOption" Name="SelectOption">
@@ -258,6 +285,7 @@
                    aria-controls="@(IsOverlayShow ? ParentSelect.ListboxId : null)"
                    aria-activedescendant="@(IsOverlayShow ? ParentSelect.ActiveOptionId : null)"
                    aria-expanded="@IsOverlayShow.ToString().ToLowerInvariant()"
+                   aria-label="@ParentSelect.AriaLabel"
                    aria-autocomplete="list"
                    aria-haspopup="listbox"
                    style="@ParentSelect.GetSemanticStyle("input", string.IsNullOrEmpty(_inputWidth) ? null : _inputWidth)" />
@@ -267,6 +295,7 @@
         <SelectSuffixIcon 
             TItem="TItem" 
             TItemValue="TItemValue" 
+            SuffixIcon="@ParentSelect.SuffixIcon"
             IsOverlayShow="@IsOverlayShow"
             ShowClearIcon="@(!ParentSelect.Disabled && ParentSelect.AllowClear && ParentSelect.HasValueOrUnmatched)"
             OnClearClick="@OnClearClick" 
@@ -277,9 +306,26 @@
 </div>
 
 @code {
-    string SuffixStyle => ParentSelect.SelectedOptionItems.Count == 0 || (!ParentSelect.IsResponsive && !ParentSelect.HasTagCount)
-        ? "opacity: 1;"
-        : $"opacity: 1; order: {(ParentSelect.IsResponsive ? _calculatedMaxCount - 1 : ParentSelect.SelectedOptionItems.Count)};";
+    string SuffixStyle
+    {
+        get
+        {
+            if (ParentSelect.SelectedOptionItems.Count == 0 || (!ParentSelect.IsResponsive && !ParentSelect.HasTagCount))
+                return ParentSelect.IsResponsive
+                    ? $"opacity: 1; order: {Math.Max(0, _calculatedMaxCount - 1)};"
+                    : "opacity: 1;";
+
+            var style = $"opacity: 1; order: {(ParentSelect.IsResponsive ? _calculatedMaxCount - 1 : ParentSelect.SelectedOptionItems.Count)};";
+            if (ParentSelect.IsResponsive && _suffixFixedStart.HasValue)
+            {
+                style += $" position: absolute; top: 0px; inset-inline-start: {_suffixFixedStart.Value.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture)}px;";
+            }
+
+            return style;
+        }
+    }
+
+    string PrefixStyle => ParentSelect.IsResponsive ? "opacity: 1; order: -1;" : "opacity: 1;";
 
     RenderFragment getLabel(SelectOptionItem<TItemValue, TItem> option)
     {

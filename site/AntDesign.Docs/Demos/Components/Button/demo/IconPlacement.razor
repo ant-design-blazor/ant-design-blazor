@@ -1,32 +1,49 @@
-<RadioGroup @bind-Value="_placement">
-    <Radio RadioButton Value="ButtonIconPlacement.Start">start</Radio>
-    <Radio RadioButton Value="ButtonIconPlacement.End">end</Radio>
-</RadioGroup>
+<Space>
+    <SpaceItem>
+        <RadioGroup TValue="string" @bind-Value="_placement">
+            <Radio TValue="string" RadioButton Value='@("start")'>start</Radio>
+            <Radio TValue="string" RadioButton Value='@("end")'>end</Radio>
+        </RadioGroup>
+    </SpaceItem>
+</Space>
 
 <Divider Orientation="DividerOrientation.Left" Plain>Preview</Divider>
 
-<Flex Gap="FlexGap.Small" Wrap="FlexWrap.Wrap" Vertical>
+<Flex Gap="FlexGap.Small" Vertical>
     <Flex Gap="FlexGap.Small" Wrap="FlexWrap.Wrap">
         <Tooltip Title="search">
-            <Button Type="ButtonType.Primary" Shape="ButtonShape.Circle" Icon="@IconType.Outline.Search" />
+            <Unbound Context="tooltip">
+                <Button Type="ButtonType.Primary" Shape="ButtonShape.Circle" Icon="@IconType.Outline.Search" RefBack="tooltip" />
+            </Unbound>
         </Tooltip>
         <Button Type="ButtonType.Primary" Shape="ButtonShape.Circle">A</Button>
-        <Button Type="ButtonType.Primary" Icon="@IconType.Outline.Search" IconPlacement="_placement">Search</Button>
+        <Button Type="ButtonType.Primary" Icon="@IconType.Outline.Search" IconPlacement="SelectedIconPlacement">Search</Button>
         <Tooltip Title="search">
-            <Button Shape="ButtonShape.Circle" Icon="@IconType.Outline.Search" />
+            <Unbound Context="tooltip">
+                <Button Shape="ButtonShape.Circle" Icon="@IconType.Outline.Search" RefBack="tooltip" />
+            </Unbound>
         </Tooltip>
-        <Button Icon="@IconType.Outline.Search" IconPlacement="_placement">Search</Button>
+        <Button Icon="@IconType.Outline.Search" IconPlacement="SelectedIconPlacement">Search</Button>
     </Flex>
     <Flex Gap="FlexGap.Small" Wrap="FlexWrap.Wrap">
-        <Button Type="ButtonType.Text" Icon="@IconType.Outline.Search" IconPlacement="_placement">Search</Button>
-        <Button Type="ButtonType.Dashed" Icon="@IconType.Outline.Search" IconPlacement="_placement">Search</Button>
         <Tooltip Title="search">
-            <Button Shape="ButtonShape.Circle" Icon="@IconType.Outline.Search" IconPlacement="_placement" />
+            <Unbound Context="tooltip">
+                <Button Shape="ButtonShape.Circle" Icon="@IconType.Outline.Search" RefBack="tooltip" />
+            </Unbound>
         </Tooltip>
-        <Button Type="ButtonType.Primary" Loading IconPlacement="_placement">Loading</Button>
+        <Button Type="ButtonType.Text" Icon="@IconType.Outline.Search" IconPlacement="SelectedIconPlacement">Search</Button>
+        <Tooltip Title="search">
+            <Unbound Context="tooltip">
+                <Button Type="ButtonType.Dashed" Shape="ButtonShape.Circle" Icon="@IconType.Outline.Search" RefBack="tooltip" />
+            </Unbound>
+        </Tooltip>
+        <Button Type="ButtonType.Dashed" Icon="@IconType.Outline.Search" IconPlacement="SelectedIconPlacement">Search</Button>
+        <Button Href="https://www.google.com" Target="_blank" Icon="@IconType.Outline.Search" IconPlacement="SelectedIconPlacement" />
+        <Button Type="ButtonType.Primary" Loading IconPlacement="SelectedIconPlacement">Loading</Button>
     </Flex>
 </Flex>
 
 @code {
-    private ButtonIconPlacement _placement = ButtonIconPlacement.End;
+    private string _placement = "end";
+    private ButtonIconPlacement SelectedIconPlacement => _placement == "start" ? ButtonIconPlacement.Start : ButtonIconPlacement.End;
 }

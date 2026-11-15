@@ -1,29 +1,37 @@
-﻿<div>
-    <RadioGroup @bind-Value="_size">
-        <Radio RadioButton Value="ButtonSize.Large">Large</Radio>
-        <Radio RadioButton Value="ButtonSize.Default">Default</Radio>
-        <Radio RadioButton Value="ButtonSize.Small">Small</Radio>
-    </RadioGroup>
-    
-    <br />
-    
-    <Button Type="ButtonType.Primary" Size="_size">Primary</Button>
-    <Button Size="_size">Default</Button>
-    <Button Type="ButtonType.Dashed" Size="_size">Dashed</Button>
-    
-    <br />
-    
-    <Button Type="ButtonType.Link" Size="_size">Link</Button>
-    
-    <br />
-    
-    <Button Type="ButtonType.Primary" Icon="@IconType.Outline.Download" Size="_size" />
-    <Button Type="ButtonType.Primary" Icon="@IconType.Outline.Download" Size="_size" Shape="ButtonShape.Round" />
-    <Button Type="ButtonType.Primary" Icon="@IconType.Outline.Download" Size="_size" Shape="ButtonShape.Round">Download</Button>
-    <Button Type="ButtonType.Primary" Icon="@IconType.Outline.Download" Size="_size">Download</Button>
-</div>
+<RadioGroup TValue="string" @bind-Value="_sizeValue">
+    <Radio Value='@("large")' RadioButton>Large</Radio>
+    <Radio Value='@("medium")' RadioButton>Medium</Radio>
+    <Radio Value='@("small")' RadioButton>Small</Radio>
+</RadioGroup>
+
+<Divider Text="Preview" Orientation="DividerOrientation.Left" Plain="true" />
+
+    <Flex Gap="FlexGap.Small" Align="FlexAlign.FlexStart" Vertical="true">
+    <Flex Gap="FlexGap.Small" Wrap="FlexWrap.Wrap">
+        <Button Type="ButtonType.Primary" Size="@CurrentSize">Primary</Button>
+        <Button Size="@CurrentSize">Default</Button>
+        <Button Type="ButtonType.Dashed" Size="@CurrentSize">Dashed</Button>
+    </Flex>
+
+    <Button Type="ButtonType.Link" Size="@CurrentSize">Link</Button>
+
+    <Flex Gap="FlexGap.Small" Wrap="FlexWrap.Wrap">
+        <Button Type="ButtonType.Primary" Icon="@IconType.Outline.Download" Size="@CurrentSize" />
+        <Button Type="ButtonType.Primary" Icon="@IconType.Outline.Download" Size="@CurrentSize" Shape="ButtonShape.Circle" />
+        <Button Type="ButtonType.Primary" Icon="@IconType.Outline.Download" Size="@CurrentSize" Shape="ButtonShape.Round" />
+        <Button Type="ButtonType.Primary" Icon="@IconType.Outline.Download" Size="@CurrentSize" Shape="ButtonShape.Round">Download</Button>
+        <Button Type="ButtonType.Primary" Icon="@IconType.Outline.Download" Size="@CurrentSize">Download</Button>
+    </Flex>
+</Flex>
 
 @code
 {
-    ButtonSize _size = ButtonSize.Large;
+    private string _sizeValue = "large";
+
+    private ButtonSize CurrentSize => _sizeValue switch
+    {
+        "large" => ButtonSize.Large,
+        "medium" => ButtonSize.Default,
+        _ => ButtonSize.Small,
+    };
 }

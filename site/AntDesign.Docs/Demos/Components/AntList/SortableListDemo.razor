@@ -1,0 +1,125 @@
+@implements IAsyncDisposable
+@inject IJSRuntime JS
+
+<AntList RefBack="@_listRef" DataSource="@_items" Grid="@(Grid ? _grid : null)">
+    <ChildContent Context="item">
+        <ListItem @key="item.Key" Id="@GetItemId(item)" Style="@GetItemStyle()" NoFlex="@(HandleOnly && !Grid)">
+            @if (Grid)
+            {
+                <Card Bordered TitleTemplate="@GetCardTitle(item)">
+                    <Body>Card content</Body>
+                </Card>
+            }
+            else if (HandleOnly)
+            {
+                <Button Type="ButtonType.Text" Size="ButtonSize.Small" Icon="holder" Style="cursor: move" />
+                @($"{item.Key} {item.Content}")
+            }
+            else
+            {
+                <div>
+                    @($"{item.Key} {item.Content}")
+                </div>
+            }
+        </ListItem>
+    </ChildContent>
+</AntList>
+<div id="@ContextId" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0">To pick up a draggable item, press the space bar. While dragging, use the arrow keys to move the item. Press space again to drop the item, or press escape to cancel.</div>
+
+@code {
+    [Parameter] public bool Grid { get; set; }
+    [Parameter] public bool HandleOnly { get; set; }
+    [Parameter] public string ContextId { get; set; } = "list-drag-sorting";
+
+    private readonly ForwardRef _listRef = new();
+    private readonly ListGridType _grid = new() { Gutter = 16, Column = 4 };
+    private readonly List<SortableItem> _items = [];
+    private IJSObjectReference _module;
+    private DotNetObjectReference<SortableListDemo> _dotNetReference;
+    private bool _sortableInitialized;
+
+    protected override void OnInitialized()
+    {
+        if (Grid)
+        {
+            _items.AddRange(Enumerable.Range(1, 6).Select(index => new SortableItem(index, $"Title {index}")));
+        }
+        else
+        {
+            _items.AddRange(new SortableItem[]
+            {
+                new(1, "Racing car sprays burning fuel into crowd."),
+                new(2, "Japanese princess to wed commoner."),
+                new(3, "Australian walks 100km after outback crash."),
+                new(4, "Man charged over missing wedding girl."),
+                new(5, "Los Angeles battles huge wildfires.")
+            });
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _module = await JS.InvokeAsync<IJSObjectReference>("import", "./_content/AntDesign.Docs/js/list-sortable.js?v=20261115.10");
+            _dotNetReference = DotNetObjectReference.Create(this);
+            await _module.InvokeVoidAsync("initializeSortableList", _listRef.Current, _dotNetReference, HandleOnly, Grid, ContextId);
+            _sortableInitialized = true;
+        }
+    }
+
+    private string GetItemId(SortableItem item) => $"list-sortable-item-{ContextId}-{item.Key}";
+
+    private string GetItemStyle() => HandleOnly ? null : "cursor: move";
+
+    private RenderFragment GetCardTitle(SortableItem item) => builder =>
+    {
+        if (HandleOnly)
+        {
+            builder.OpenComponent<Button>(0);
+            builder.AddAttribute(1, nameof(Button.Type), ButtonType.Text);
+            builder.AddAttribute(2, nameof(Button.Size), ButtonSize.Small);
+            builder.AddAttribute(3, nameof(Button.Icon), "holder");
+            builder.AddAttribute(5, nameof(Button.Style), "cursor: move");
+            builder.CloseComponent();
+        }
+        builder.AddContent(6, item.Content);
+    };
+
+    [JSInvokable]
+    public Task OnSortableDrop(int activeKey, int overKey)
+    {
+        var from = _items.FindIndex(item => item.Key == activeKey);
+        var to = _items.FindIndex(item => item.Key == overKey);
+        if (from >= 0 && to >= 0 && from != to)
+        {
+            var item = _items[from];
+            _items.RemoveAt(from);
+            _items.Insert(to, item);
+            return InvokeAsync(StateHasChanged);
+        }
+
+        return Task.CompletedTask;
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_module is not null)
+        {
+            try
+            {
+                if (_sortableInitialized)
+                    await _module.InvokeVoidAsync("disposeSortableList", _listRef.Current);
+                await _module.DisposeAsync();
+            }
+            catch (JSDisconnectedException)
+            {
+                // The browser has already disposed the Blazor circuit.
+            }
+        }
+
+        _dotNetReference?.Dispose();
+    }
+
+    private sealed record SortableItem(int Key, string Content);
+}

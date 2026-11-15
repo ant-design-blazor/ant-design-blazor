@@ -21,7 +21,7 @@
     {
       "id": "select-basic",
       "component": "Select",
-      "captureReactBeforeBlazor": true,
+      "captureBlazorBeforeReact": true,
       "react": { "url": "http://127.0.0.1:8000/components/select?theme=light", "scopeSelector": "#select-demo-basic .code-box-demo", "rootSelector": ".ant-select" },
       "blazor": { "url": "http://127.0.0.1:5000/en-US/components/select?theme=light", "scopeSelector": "#components-select-demo-basic .code-box-demo", "rootSelector": ".ant-select" },
       "styleProperties": ["display", "position", "boxSizing", "width", "height", "paddingBlock", "paddingInline", "fontSize", "lineHeight", "fontWeight", "color", "backgroundColor", "borderRadius", "boxShadow", "zIndex"],
@@ -37,11 +37,10 @@
           "id": "escape-closed",
           "minimumRoots": 4,
           "actions": [
-            { "type": "click", "reactSelector": "#select-demo-basic .ant-space-item:first-child .ant-select", "blazorSelector": "#components-select-demo-basic .ant-space-item:first-child .ant-select" },
-            { "type": "waitForSelector", "reactSelector": "#select-demo-basic input[aria-expanded='true']", "blazorSelector": "#components-select-demo-basic input[aria-expanded='true']" },
-            { "type": "wait", "milliseconds": 300 },
+            { "id": "open-popup-visible", "type": "measureClickVisible", "portalMatch": "aria-controls", "reactSelector": "#select-demo-basic .ant-space-item:first-child input", "blazorSelector": "#components-select-demo-basic .ant-space-item:first-child input", "reactVisibleSelector": ".ant-select-dropdown:not(.ant-select-dropdown-hidden):not([style*='display: none'])", "blazorVisibleSelector": ".ant-select-dropdown:not(.ant-select-dropdown-hidden):not([style*='display: none'])" },
+            { "type": "waitForSelector", "reactSelector": "#select-demo-basic .ant-space-item:first-child input[aria-expanded='true']", "blazorSelector": "#components-select-demo-basic .ant-space-item:first-child input[aria-expanded='true']" },
+            { "type": "focus", "reactSelector": "#select-demo-basic .ant-space-item:first-child input", "blazorSelector": "#components-select-demo-basic .ant-space-item:first-child input" },
             { "type": "press", "key": "Escape", "reactSelector": "#select-demo-basic .ant-space-item:first-child input", "blazorSelector": "#components-select-demo-basic .ant-space-item:first-child input" },
-            { "type": "wait", "milliseconds": 300 },
             { "type": "wait", "milliseconds": 300 }
           ]
         }
@@ -50,6 +49,7 @@
     {
       "id": "select-basic-popup",
       "component": "Select",
+      "captureBlazorBeforeReact": true,
       "comparisonPolicy": {
         "normalization": {
           "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_[rR]_[a-zA-Z0-9_-]+)$",
@@ -65,7 +65,7 @@
       "blazor": { "url": "http://127.0.0.1:5000/en-US/components/select?theme=light", "scopeSelector": "body", "rootSelector": "#components-select-demo-basic .ant-space-item:first-child .ant-select", "skeletonSelector": "" },
       "styleProperties": ["display", "position", "boxSizing", "width", "height", "paddingBlock", "paddingInline", "fontSize", "lineHeight", "fontWeight", "color", "backgroundColor", "borderRadius", "boxShadow", "zIndex"],
       "semanticNodes": [
-        { "path": "popup.root", "selector": ".ant-select-dropdown:not(.ant-select-dropdown-hidden):not([style*='display: none'])", "portal": true, "portalMatch": "nearest-trigger", "geometryAnchor": { "mode": "pixel-snap-to-trigger", "verticalOffset": 4 }, "portalVisible": true, "minimumCount": 1 },
+        { "path": "popup.root", "selector": ".ant-select-dropdown:not(.ant-select-dropdown-hidden):not([style*='display: none'])", "portal": true, "portalMatch": "aria-controls", "reactTriggerSelector": "#select-demo-basic .ant-space-item:first-child .ant-select", "blazorTriggerSelector": "#components-select-demo-basic .ant-space-item:first-child .ant-select", "geometryAnchor": { "mode": "pixel-snap-to-trigger", "verticalOffset": 4 }, "portalVisible": true, "minimumCount": 1 },
         { "path": "popup.list", "selector": ".ant-select-dropdown-list", "portal": true, "portalParentPath": "popup.root", "geometryParentSelector": ".ant-select-dropdown", "minimumCount": 1 },
         { "path": "popup.option", "selector": ".ant-select-item-option", "portal": true, "portalParentPath": "popup.root", "geometryParentSelector": ".ant-select-dropdown", "minimumCount": 4 },
         { "path": "popup.content", "selector": ".ant-select-item-option-content", "portal": true, "portalParentPath": "popup.root", "geometryParentSelector": ".ant-select-dropdown", "minimumCount": 4 },
@@ -75,8 +75,9 @@
         "id": "open",
         "minimumRoots": 1,
         "actions": [
-          { "type": "click", "reactSelector": "#select-demo-basic .ant-space-item:first-child .ant-select", "blazorSelector": "#components-select-demo-basic .ant-space-item:first-child .ant-select" },
-          { "type": "waitForSelector", "reactSelector": "#select-demo-basic .ant-space-item:first-child .ant-select-open", "blazorSelector": "#components-select-demo-basic .ant-space-item:first-child .ant-select-open" },
+          { "id": "open-popup-visible", "type": "measureClickVisible", "portalMatch": "aria-controls", "reactSelector": "#select-demo-basic .ant-space-item:first-child input", "blazorSelector": "#components-select-demo-basic .ant-space-item:first-child input", "reactVisibleSelector": ".ant-select-dropdown:not(.ant-select-dropdown-hidden):not([style*='display: none'])", "blazorVisibleSelector": ".ant-select-dropdown:not(.ant-select-dropdown-hidden):not([style*='display: none'])" },
+          { "type": "waitForSelector", "reactSelector": "#select-demo-basic .ant-space-item:first-child input[aria-expanded='true']", "blazorSelector": "#components-select-demo-basic .ant-space-item:first-child input[aria-expanded='true']" },
+          { "type": "focus", "reactSelector": "#select-demo-basic .ant-space-item:first-child input", "blazorSelector": "#components-select-demo-basic .ant-space-item:first-child input" },
           { "type": "wait", "milliseconds": 1200 }
         ]
       }]

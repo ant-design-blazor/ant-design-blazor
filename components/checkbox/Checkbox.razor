@@ -2,7 +2,7 @@
 @inherits AntInputBoolComponentBase
 
 <label class="@SemanticClass("root", ClassMapperLabel.Class)" style="@SemanticStyle("root", Style)" @ref="Ref" @onclick:stopPropagation>
-    <span class="@ClassMapper.Class">
+    <span class="@SemanticClass("icon", ClassMapper.Class)" style="@SemanticStyle("icon")">
         <input id="@Id"
                value="@(CheckboxGroup == null ? null : ItemValue?.ToString() ?? Label)"
                checked="@Checked"
@@ -12,7 +12,6 @@
                type="checkbox"
                class="ant-checkbox-input"
                @attributes="_attributes" />
-        <span class="@SemanticClass("icon", "ant-checkbox-inner")" style="@SemanticStyle("icon")"></span>
     </span>
 
     @if (ChildContent != null)

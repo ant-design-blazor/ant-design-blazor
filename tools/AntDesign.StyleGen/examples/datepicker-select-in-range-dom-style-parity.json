@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "upstream": { "repository": "ant-design/ant-design", "component": "DatePicker" },
+  "config": {
+    "timeoutMs": 30000,
+    "navigationTimeoutMs": 120000,
+    "viewport": { "width": 1280, "height": 900, "deviceScaleFactor": 1 },
+    "colorScheme": "light",
+    "comparisonPolicy": {
+      "normalization": {
+        "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_[rR]_[a-zA-Z0-9_-]+|__runtime-id-\\d+)$",
+        "removeUnreferencedRuntimeIds": true,
+        "removeAttributes": ["_bl_*"],
+        "removeClassPatterns": ["^css-dev-only-do-not-override-", "^css-var-_[rR]_", "^css-[a-zA-Z0-9]+$"],
+        "removeCommentMarkers": ["<!--!-->"],
+        "sortClassTokens": true
+      }
+    }
+  },
+  "groups": [
+    {
+      "id": "datepicker-select-in-range-seven-days",
+      "component": "DatePicker",
+      "alignRootViewportY": 199.5,
+      "react": {
+        "url": "http://127.0.0.1:8000/components/date-picker?theme=light",
+        "scopeSelector": "body",
+        "rootSelector": "#date-picker-demo-select-in-range .ant-picker-range",
+        "skeletonSelector": ""
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/datepicker?theme=light",
+        "scopeSelector": "body",
+        "rootSelector": "#components-datepicker-demo-select-in-range .ant-picker-range",
+        "skeletonSelector": ""
+      },
+      "styleProperties": ["display", "position", "boxSizing", "width", "height", "paddingInline", "fontSize", "lineHeight", "color", "backgroundColor", "borderRadius", "borderWidth"],
+      "semanticNodes": [
+        { "path": "trigger", "selector": "$root", "minimumCount": 1 },
+        { "path": "popup", "selector": ".ant-picker-dropdown:not(.ant-picker-dropdown-hidden)", "portal": true, "portalVisible": true, "portalMatch": "nearest-trigger", "minimumCount": 1 },
+        { "path": "popup.disabledCell", "selector": ".ant-picker-cell-disabled", "portal": true, "portalParentPath": "popup", "minimumCount": 0 },
+        { "path": "popup.enabledCell", "selector": ".ant-picker-cell-in-view:not(.ant-picker-cell-disabled)", "portal": true, "portalParentPath": "popup", "minimumCount": 1 }
+      ],
+      "scenarios": [
+        {
+          "id": "open-before-range-start",
+          "actions": [
+            { "type": "click", "coordinateClick": true, "preserveViewport": true, "reactSelector": "#date-picker-demo-select-in-range .ant-picker-range input", "blazorSelector": "#components-datepicker-demo-select-in-range .ant-picker-range input" },
+            { "type": "waitForPortal", "reactTriggerSelector": "#date-picker-demo-select-in-range .ant-picker:first-of-type", "blazorTriggerSelector": "#components-datepicker-demo-select-in-range .ant-picker:first-of-type", "portalSelector": ".ant-picker-dropdown:not(.ant-picker-dropdown-hidden)", "maxDistance": 100 },
+            { "type": "wait", "milliseconds": 300 }
+          ]
+        },
+        {
+          "id": "choose-start-and-check-range-limits",
+          "actions": [
+            { "type": "click", "coordinateClick": true, "preserveViewport": true, "reactSelector": "#date-picker-demo-select-in-range .ant-picker-range input", "blazorSelector": "#components-datepicker-demo-select-in-range .ant-picker-range input" },
+            { "type": "waitForPortal", "reactTriggerSelector": "#date-picker-demo-select-in-range .ant-picker:first-of-type", "blazorTriggerSelector": "#components-datepicker-demo-select-in-range .ant-picker:first-of-type", "portalSelector": ".ant-picker-dropdown:not(.ant-picker-dropdown-hidden)", "maxDistance": 100 },
+            { "type": "click", "reactSelector": ".ant-picker-dropdown:not(.ant-picker-dropdown-hidden) .ant-picker-cell-in-view:not(.ant-picker-cell-disabled) .ant-picker-cell-inner", "blazorSelector": ".ant-picker-dropdown:not(.ant-picker-dropdown-hidden) .ant-picker-cell-in-view:not(.ant-picker-cell-disabled) .ant-picker-cell-inner" },
+            { "type": "wait", "milliseconds": 300 }
+          ]
+        }
+      ],
+      "geometryTolerancePx": 0.05,
+      "computedStylePixelToleranceByProperty": { "width": 0.05, "height": 0.05 }
+    }
+  ]
+}

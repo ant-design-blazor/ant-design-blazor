@@ -1,4 +1,5 @@
-﻿<Table DataSource="data" Bordered HidePagination>
+﻿<Flex Vertical Gap="FlexGap.Small">
+  <Table DataSource="data" RowKey="item => item.key" Bordered HidePagination>
   <PropertyColumn Title="Name" Property="c=>c.name"></PropertyColumn>
   <PropertyColumn Title="Borrow" Property="c=>c.borrow"></PropertyColumn>
   <PropertyColumn Title="Repayment" Property="c=>c.repayment"></PropertyColumn>
@@ -12,7 +13,7 @@
       <Text Type="TextElementType.Danger">@totalBorrow</Text>
     </SummaryCell>
     <SummaryCell>
-      <Text Type="TextElementType.Danger">@totalRepayment</Text>
+      <Text>@totalRepayment</Text>
     </SummaryCell>
   </SummaryRow>
   <SummaryRow>
@@ -23,16 +24,26 @@
     </SummaryRow>
   </Table>
 
-  <br />
-
-  <Table DataSource="fixedData" ScrollX="2000" Bordered HidePagination>
+  <Table DataSource="fixedData" RowKey="item => item.key" ScrollX="2000" ScrollY="500" Bordered HidePagination>
     <PropertyColumn Title="Name" Property="c=>c.name" Fixed="ColumnFixPlacement.Left" Width="100" />
     <PropertyColumn Title="Description" Property="c=>c.description" />
-    <SummaryRow>
+    <SummaryRow Fixed>
       <SummaryCell Fixed="ColumnFixPlacement.Left">Summary</SummaryCell>
       <SummaryCell>This is a summary content</SummaryCell>
     </SummaryRow>
   </Table>
+  </Flex>
+
+  <style>
+    #components-table-demo-summary tfoot th,
+    #components-table-demo-summary tfoot td:not(.ant-table-cell-fix) {
+      background: transparent !important;
+    }
+
+    #components-table-demo-summary tfoot td.ant-table-cell-fix {
+      background: var(--ant-color-bg-container) !important;
+    }
+  </style>
 
   @code {
 
@@ -48,10 +59,10 @@
 
   record FixedData(int key, string name, string description);
 
-  FixedData[] fixedData = Enumerable.Range(0, 6)
+  FixedData[] fixedData = Enumerable.Range(0, 20)
       .Select(i => new FixedData(
              key: i,
-             name: (i % 2) > 0 ? "Light" : "Bamboo",
+             name: new[] { "Light", "Bamboo", "Little" }[i % 3],
              description: "Everything that has a beginning, has an end.")
       ).ToArray();
 }

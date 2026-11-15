@@ -2,6 +2,158 @@
 
 export class tableHelper {
 
+  static scrollToVirtualIndex(holderRef, index) {
+    if (!holderRef || !Number.isInteger(index) || index < 0) {
+      return;
+    }
+
+    const rows = Array.prototype.slice.call(holderRef.querySelectorAll('.ant-table-tbody-virtual-holder-inner .ant-table-row:not(.ant-table-row-extra)')) as HTMLElement[];
+    const rowHeight = rows.length
+      ? rows.reduce((total: number, row: HTMLElement) => total + row.getBoundingClientRect().height, 0) / rows.length
+      : 54;
+    const targetTop = Math.max(0, (index + 1) * rowHeight - holderRef.clientHeight);
+    holderRef.scrollTo({ top: targetTop, behavior: 'auto' });
+  }
+
+  static syncVirtualRowSpanOverlays(bodyRef) {
+    const inner = bodyRef?.querySelector('.ant-table-tbody-virtual-holder-inner') as HTMLElement;
+    if (!inner) {
+      return;
+    }
+
+    const rows = Array.from(inner.querySelectorAll(':scope > .ant-table-row:not(.ant-table-row-extra)[data-row-key]')) as HTMLElement[];
+    const innerTop = inner.getBoundingClientRect().top;
+    const rowItems = rows.map(row => {
+      const cells = Array.from(row.querySelectorAll(':scope > .ant-table-cell')) as HTMLElement[];
+      const spanCells = cells.map((cell, cellIndex) => {
+        const marker = Number.parseInt(cell.getAttribute('data-virtual-rowspan') || '0', 10);
+        if (marker > 1) {
+          bodyRef.virtualRowSpanCells = bodyRef.virtualRowSpanCells || new WeakMap();
+          bodyRef.virtualRowSpanCells.set(cell, marker);
+          cell.removeAttribute('data-virtual-rowspan');
+        }
+        return {
+          cell,
+          cellIndex,
+          rowSpan: marker > 1
+            ? marker
+            : (bodyRef.virtualRowSpanCells?.get(cell) || Number.parseInt(cell.getAttribute('rowspan') || '1', 10) || 1)
+        };
+      }).filter(item => item.rowSpan > 1);
+
+      return {
+        row,
+        key: row.getAttribute('data-row-key'),
+        top: Math.round((row.getBoundingClientRect().top - innerTop) * 100) / 100,
+        spanCells
+      };
+    });
+    const signature = JSON.stringify(rowItems.map(item => [item.key, item.top, item.spanCells.map(cell => [cell.cellIndex, cell.rowSpan])]));
+    const existingRows = Array.from(inner.querySelectorAll(':scope > .ant-table-row-extra')) as HTMLElement[];
+
+    if (bodyRef.virtualRowSpanSignature === signature) {
+      // Blazor may reconcile a source span cell after the overlay was created.
+      // Move its content back into the existing overlay without rebuilding rows.
+      rowItems.forEach(item => item.spanCells.forEach(span => {
+        const clone = existingRows.find(row => row.getAttribute('data-row-key') === item.key);
+        const cloneCell = clone?.querySelectorAll(':scope > .ant-table-cell')[span.cellIndex] as HTMLElement;
+        if (cloneCell && span.cell.textContent?.trim() && cloneCell.innerHTML !== span.cell.innerHTML) {
+          cloneCell.innerHTML = span.cell.innerHTML;
+          span.cell.innerHTML = '';
+        }
+      }));
+      return;
+    }
+
+    existingRows.forEach(row => row.remove());
+    bodyRef.virtualRowSpanSignature = signature;
+
+    const rowHeights = rows.map(row => row.getBoundingClientRect().height).filter(height => height > 0);
+    const estimatedRowHeight = rowHeights.length
+      ? rowHeights.reduce((total, height) => total + height, 0) / rowHeights.length
+      : 55;
+
+    rowItems.forEach((item, rowIndex) => {
+      if (!item.spanCells.length) {
+        return;
+      }
+
+      const overlay = item.row.cloneNode(true) as HTMLElement;
+      overlay.classList.add('ant-table-row-extra');
+      overlay.style.cssText = `top: ${item.top}px; width: ${item.row.getBoundingClientRect().width}px; position: absolute; pointer-events: none;`;
+      [overlay, ...Array.from(overlay.querySelectorAll('*'))].forEach(element => {
+        Array.from(element.attributes).forEach(attribute => {
+          if (attribute.name.startsWith('_bl_') || attribute.name === 'id') {
+            element.removeAttribute(attribute.name);
+          }
+        });
+      });
+
+      const overlayCells = Array.from(overlay.querySelectorAll(':scope > .ant-table-cell')) as HTMLElement[];
+      const spans = new Map(item.spanCells.map(span => [span.cellIndex, span]));
+      overlayCells.forEach((cell, cellIndex) => {
+        const span = spans.get(cellIndex);
+        if (!span) {
+          cell.style.visibility = 'hidden';
+          cell.innerHTML = '';
+          return;
+        }
+
+        cell.removeAttribute('data-virtual-rowspan');
+        cell.setAttribute('rowspan', String(span.rowSpan));
+        let height = 0;
+        for (let offset = 0; offset < span.rowSpan; offset += 1) {
+          height += rows[rowIndex + offset]?.getBoundingClientRect().height || estimatedRowHeight;
+        }
+        cell.style.removeProperty('visibility');
+        cell.style.height = `${Math.round(height * 1000) / 1000}px`;
+      });
+
+      inner.appendChild(overlay);
+      item.spanCells.forEach(span => span.cell.innerHTML = '');
+    });
+  }
+
+  static bindTableRowHover(wrapperRef) {
+    if (!wrapperRef || wrapperRef.tableRowHoverCleanup) {
+      return;
+    }
+
+    let hoveredRow = null;
+    const getOwnedRow = (target) => {
+      const row = target instanceof Element ? target.closest('.ant-table-tbody > tr.ant-table-row') : null;
+      return row?.closest('.ant-table-wrapper') === wrapperRef ? row : null;
+    };
+    const setHoveredRow = (row) => {
+      if (hoveredRow === row) {
+        return;
+      }
+      hoveredRow?.querySelectorAll(':scope > td').forEach(cell => cell.classList.remove('ant-table-cell-row-hover'));
+      hoveredRow = row;
+      hoveredRow?.querySelectorAll(':scope > td').forEach(cell => cell.classList.add('ant-table-cell-row-hover'));
+    };
+    const onPointerOver = event => setHoveredRow(getOwnedRow(event.target));
+    const onPointerOut = event => {
+      const nextRow = getOwnedRow(event.relatedTarget);
+      if (!nextRow) {
+        setHoveredRow(null);
+      }
+    };
+
+    wrapperRef.addEventListener('pointerover', onPointerOver);
+    wrapperRef.addEventListener('pointerout', onPointerOut);
+    wrapperRef.tableRowHoverCleanup = () => {
+      wrapperRef.removeEventListener('pointerover', onPointerOver);
+      wrapperRef.removeEventListener('pointerout', onPointerOut);
+      setHoveredRow(null);
+      delete wrapperRef.tableRowHoverCleanup;
+    };
+  }
+
+  static unbindTableRowHover(wrapperRef) {
+    wrapperRef?.tableRowHoverCleanup?.();
+  }
+
   static isHidden(element) {
     if (element) {
       const computedStyle = getComputedStyle(element);
@@ -174,26 +326,277 @@ export class tableHelper {
 
   }
   static bindTableScroll(wrapperRef, bodyRef, tableRef, headerRef, scrollX, scrollY, resizable, autoHeight) {
+    const syncHeaderColumnWidths = () => {
+      if (!scrollY || !bodyRef || !headerRef) {
+        return;
+      }
+
+      const bodyColumns = bodyRef.querySelectorAll('colgroup col');
+      const headerColumns = headerRef.querySelectorAll('colgroup col');
+      const summaryColumns = wrapperRef.querySelectorAll('.ant-table-container > .ant-table-summary colgroup col');
+      if (bodyRef.classList.contains('ant-table-tbody-virtual')
+        || bodyRef.classList.contains('ant-table-tbody-virtual-holder')) {
+        const headerTable = headerRef.querySelector('table');
+        const headerCells = headerRef.querySelectorAll('.ant-table-thead th:not(.ant-table-cell-scrollbar)');
+        const virtualRows = bodyRef.querySelectorAll('.ant-table-row');
+        const innerHolder = bodyRef.querySelector('.ant-table-tbody-virtual-holder-inner');
+        if (!headerTable || !headerColumns.length) {
+          return;
+        }
+
+        const virtualContent = innerHolder?.parentElement;
+        if (innerHolder && virtualContent) {
+          const contentHeight = Math.ceil(innerHolder.scrollHeight);
+          const contentHeightValue = `${contentHeight}px`;
+          if (contentHeight > 0 && virtualContent.style.height !== contentHeightValue) {
+            virtualContent.style.height = contentHeightValue;
+          }
+        }
+
+        const tableWidth = headerTable.getBoundingClientRect().width;
+        if (!tableWidth) return;
+        const widthValue = `${Math.round(tableWidth * 1000) / 1000}px`;
+        const columnCount = Math.min(headerColumns.length, headerCells.length);
+        const columnWidths = Array.from({ length: columnCount }, (_, index) => headerColumns[index].getBoundingClientRect().width);
+        const contentWidth = columnWidths.reduce((total, width) => total + width, 0);
+
+        columnWidths.forEach((width, index) => {
+          const columnWidth = `${Math.round(width * 1000) / 1000}px`;
+          if (headerColumns[index].style.width !== columnWidth) {
+            headerColumns[index].style.width = columnWidth;
+          }
+        });
+
+        const virtualTable = wrapperRef.matches('.ant-table') ? wrapperRef : wrapperRef.querySelector('.ant-table');
+        if (virtualTable) {
+          const hasHorizontalOverflow = contentWidth > bodyRef.clientWidth + 1;
+          virtualTable.classList.toggle('ant-table-fix-start-shadow-show', hasHorizontalOverflow && bodyRef.scrollLeft > 0);
+          virtualTable.classList.toggle('ant-table-fix-end-shadow-show', hasHorizontalOverflow && bodyRef.scrollLeft + bodyRef.clientWidth < contentWidth - 1);
+          virtualTable.querySelectorAll('.ant-table-cell-fix-start-shadow').forEach(cell => {
+            cell.classList.toggle('ant-table-cell-fix-start-shadow-show', hasHorizontalOverflow && bodyRef.scrollLeft > 0);
+          });
+          virtualTable.querySelectorAll('.ant-table-cell-fix-end-shadow').forEach(cell => {
+            cell.classList.toggle('ant-table-cell-fix-end-shadow-show', hasHorizontalOverflow && bodyRef.scrollLeft + bodyRef.clientWidth < contentWidth - 1);
+          });
+        }
+
+        const syncFixedOffset = (cell, index, span = 1) => {
+          if (cell.classList.contains('ant-table-cell-fix-start')) {
+            const offset = columnWidths.slice(0, index).reduce((total, width) => total + width, 0);
+            cell.style.insetInlineStart = `${Math.round(offset * 1000) / 1000}px`;
+          }
+          if (cell.classList.contains('ant-table-cell-fix-end')) {
+            const offset = columnWidths.slice(index + span).reduce((total, width) => total + width, 0);
+            cell.style.insetInlineEnd = `${Math.round(offset * 1000) / 1000}px`;
+          }
+        };
+
+        headerCells.forEach((cell, index) => syncFixedOffset(cell, index));
+
+        virtualRows.forEach(row => {
+          if (row.style.width !== widthValue) {
+            row.style.width = widthValue;
+          }
+          row.querySelectorAll('.ant-table-cell[data-virtual-column]').forEach(cell => {
+            const index = Number.parseInt(cell.getAttribute('data-virtual-column'), 10);
+            const span = Math.max(1, Number.parseInt(cell.getAttribute('colspan') || '1', 10) || 1);
+            const width = columnWidths.slice(index, index + span).reduce((total, value) => total + value, 0);
+            if (!width) return;
+            const columnWidth = `${Math.round(width * 1000) / 1000}px`;
+            const cellFlex = `0 0 ${columnWidth}`;
+            const mergedWidth = columnWidths.slice(index + 1, index + span).reduce((total, value) => total + value, 0);
+            const marginRight = `${Math.round(mergedWidth * -1000) / 1000}px`;
+            if (cell.style.flex !== cellFlex) cell.style.flex = cellFlex;
+            if (cell.style.width !== columnWidth) cell.style.width = columnWidth;
+            if (cell.style.marginRight !== marginRight) cell.style.marginRight = marginRight;
+            if (cell.style.pointerEvents !== 'auto') cell.style.pointerEvents = 'auto';
+            syncFixedOffset(cell, index, span);
+            cell.removeAttribute('data-virtual-column');
+          });
+        });
+        tableHelper.syncVirtualRowSpanOverlays(bodyRef);
+        if (!bodyRef.virtualHeaderClassObserver && typeof MutationObserver !== 'undefined') {
+          bodyRef.virtualHeaderClassObserver = new MutationObserver(() => syncHeaderColumnWidths());
+          bodyRef.virtualHeaderClassObserver.observe(headerRef, {
+            attributes: true,
+            attributeFilter: ['class'],
+            subtree: true
+          });
+        }
+        if (innerHolder && !bodyRef.virtualRowObserver && typeof MutationObserver !== 'undefined') {
+          let updateScheduled = false;
+          bodyRef.virtualRowObserver = new MutationObserver(() => {
+            if (updateScheduled) return;
+            updateScheduled = true;
+            requestAnimationFrame(() => {
+              updateScheduled = false;
+              syncHeaderColumnWidths();
+            });
+          });
+          bodyRef.virtualRowObserver.observe(innerHolder, { attributes: true, attributeFilter: ['style'], childList: true, subtree: true });
+        }
+        return;
+      }
+
+      if (scrollX && bodyColumns.length >= headerColumns.length) {
+        for (let index = 0; index < headerColumns.length; index++) {
+          const bodyColumn = bodyColumns[index];
+          if (!bodyColumn) {
+            continue;
+          }
+
+          // The body table's auto layout has already resolved fluid columns
+          // from their cell content. Measure those columns directly instead
+          // of deriving widths from the header table's current (possibly stale)
+          // width; the latter causes a feedback loop that progressively
+          // shrinks fluid header columns.
+          const width = bodyColumn.getBoundingClientRect().width;
+          if (width <= 0) {
+            continue;
+          }
+          const widthValue = `${Math.round(width * 1000) / 1000}px`;
+          if (headerColumns[index].style.width !== widthValue) {
+            headerColumns[index].style.width = widthValue;
+          }
+          if (summaryColumns[index] && summaryColumns[index].style.width !== widthValue) {
+            summaryColumns[index].style.width = widthValue;
+          }
+        }
+        return;
+      }
+
+      if (scrollX) {
+        const headerTable = headerRef.querySelector('table');
+        if (!headerTable) return;
+
+        const fluidColumns = [];
+        let explicitWidth = 0;
+        for (let index = 0; index < headerColumns.length; index++) {
+          const bodyColumn = bodyColumns[index];
+          const width = bodyColumn?.style.width
+            ? bodyColumn.getBoundingClientRect().width
+            : 0;
+          if (width > 0) {
+            explicitWidth += width;
+            const widthValue = `${Math.round(width * 1000) / 1000}px`;
+            if (headerColumns[index].style.width !== widthValue) {
+              headerColumns[index].style.width = widthValue;
+            }
+            if (summaryColumns[index] && summaryColumns[index].style.width !== widthValue) {
+              summaryColumns[index].style.width = widthValue;
+            }
+            continue;
+          }
+
+          const naturalWidth = headerColumns[index].getBoundingClientRect().width;
+          fluidColumns.push([index, naturalWidth]);
+        }
+
+        const availableWidth = Math.max(headerTable.getBoundingClientRect().width - explicitWidth, 0);
+        const naturalWidthTotal = fluidColumns.reduce((total, [, width]) => total + width, 0);
+        fluidColumns.forEach(([index, naturalWidth]) => {
+          const width = naturalWidthTotal > 0
+            ? availableWidth * naturalWidth / naturalWidthTotal
+            : availableWidth / fluidColumns.length;
+          const widthValue = `${Math.round(width * 1000) / 1000}px`;
+          if (headerColumns[index].style.width !== widthValue) {
+            headerColumns[index].style.width = widthValue;
+          }
+          if (summaryColumns[index] && summaryColumns[index].style.width !== widthValue) {
+            summaryColumns[index].style.width = widthValue;
+          }
+        });
+
+        return;
+      }
+
+      // With a fixed header and no horizontal scrolling, the body viewport is
+      // narrower than the header by the vertical scrollbar width. Size fluid
+      // header columns from the full header table width while preserving the
+      // explicit column widths.
+      const headerCells = headerRef.querySelectorAll('.ant-table-thead th:not(.ant-table-cell-scrollbar)');
+      const headerTable = headerRef.querySelector('table');
+      if (!headerTable) {
+        return;
+      }
+
+      const fluidColumns = [];
+      let explicitWidth = 0;
+      const count = Math.min(headerColumns.length, headerCells.length);
+      for (let index = 0; index < headerColumns.length; index++) {
+        const column = headerColumns[index];
+        // The header's fluid column can retain a width assigned during its
+        // initial render. Determine which columns are explicitly sized from
+        // the body colgroup, where React leaves fluid columns widthless.
+        const bodyColumnWidth = bodyColumns[index]?.style.width;
+        if (bodyColumnWidth) {
+          explicitWidth += Number.parseFloat(bodyColumnWidth) || 0;
+          continue;
+        }
+
+        if (index < count) {
+          const naturalWidth = headerCells[index].getBoundingClientRect().width;
+          if (naturalWidth > 0) {
+            fluidColumns.push([column, naturalWidth, index]);
+          }
+        }
+      }
+
+      const tableContainerWidth = headerRef.parentElement?.getBoundingClientRect().width ?? headerRef.getBoundingClientRect().width;
+      const availableWidth = Math.max(tableContainerWidth - explicitWidth, 0);
+      const naturalWidthTotal = fluidColumns.reduce((total, [, width]) => total + width, 0);
+      fluidColumns.forEach(([column, naturalWidth, columnIndex]) => {
+        const width = naturalWidthTotal > 0 ? availableWidth * naturalWidth / naturalWidthTotal : availableWidth / fluidColumns.length;
+        const widthValue = `${Math.round(width * 1000) / 1000}px`;
+        if (column.style.width !== widthValue) {
+          column.style.width = widthValue;
+        }
+        if (summaryColumns[columnIndex] && summaryColumns[columnIndex].style.width !== widthValue) {
+          summaryColumns[columnIndex].style.width = widthValue;
+        }
+      });
+    };
+
     bodyRef.bindScroll = () => {
       if (scrollX) {
         tableHelper.SetScrollPositionClassName(bodyRef, wrapperRef);
       }
       if (scrollY) {
         headerRef.scrollLeft = bodyRef.scrollLeft;
+        const summaryRef = wrapperRef.querySelector('.ant-table-container > .ant-table-summary');
+        if (summaryRef) {
+          summaryRef.scrollLeft = bodyRef.scrollLeft;
+        }
       }
+      syncHeaderColumnWidths();
       if (autoHeight) {
         tableHelper.setBodyHeight(bodyRef);
       }
 
     }
 
-    // direct setting classlist will not work, so delay 500ms for workaround
-    setTimeout(() => {
-      bodyRef && bodyRef.bindScroll();
-    }, 500);
+    if (scrollY && typeof ResizeObserver !== 'undefined') {
+      bodyRef.columnWidthObserver = new ResizeObserver(() => syncHeaderColumnWidths());
+      const bodyTable = bodyRef.querySelector('.ant-table-body table');
+      if (bodyTable) {
+        bodyRef.columnWidthObserver.observe(bodyTable);
+        bodyTable.querySelectorAll('colgroup col').forEach(column => bodyRef.columnWidthObserver.observe(column));
+      }
+      const headerTable = headerRef.querySelector('table');
+      if (headerTable) {
+        bodyRef.columnWidthObserver.observe(headerTable);
+        headerTable.querySelectorAll('.ant-table-thead th').forEach(cell => bodyRef.columnWidthObserver.observe(cell));
+      }
+      requestAnimationFrame(syncHeaderColumnWidths);
+    }
 
     bodyRef.addEventListener && bodyRef.addEventListener('scroll', bodyRef.bindScroll);
     window.addEventListener('resize', bodyRef.bindScroll);
+    // Initialize fixed-column shadows and synchronized widths as soon as the
+    // table has been rendered. A delayed update leaves the initial DOM without
+    // the same scroll-position classes React renders on first paint.
+    bodyRef.bindScroll();
+    requestAnimationFrame(() => bodyRef.bindScroll());
 
     if (resizable) {
       tableHelper.enableColumnResizing(headerRef, tableRef, scrollY);
@@ -225,6 +628,13 @@ export class tableHelper {
       window.removeEventListener('resize', bodyRef.bindScroll);
       if (bodyRef.observer) {
         bodyRef.observer.disconnect();
+      }
+      if (bodyRef.columnWidthObserver) {
+        bodyRef.columnWidthObserver.disconnect();
+      }
+      if (bodyRef.virtualHeaderClassObserver) {
+        bodyRef.virtualHeaderClassObserver.disconnect();
+        bodyRef.virtualHeaderClassObserver = null;
       }
 
       const wrapperRef = bodyRef.closest('.ant-table-wrapper');
@@ -263,8 +673,13 @@ export class tableHelper {
       pingRight = true;
     }
 
-    pingLeft ? wrapperRef.classList.add("ant-table-ping-left") : wrapperRef.classList.remove("ant-table-ping-left");
-    pingRight ? wrapperRef.classList.add("ant-table-ping-right") : wrapperRef.classList.remove("ant-table-ping-right");
+    wrapperRef.classList.remove("ant-table-ping-left", "ant-table-ping-right");
+    wrapperRef.classList.toggle("ant-table-fix-start-shadow-show", pingLeft);
+    wrapperRef.classList.toggle("ant-table-fix-end-shadow-show", pingRight);
+    wrapperRef.querySelectorAll(".ant-table-cell-fix-start-shadow").forEach(cell =>
+      cell.classList.toggle("ant-table-cell-fix-start-shadow-show", pingLeft));
+    wrapperRef.querySelectorAll(".ant-table-cell-fix-end-shadow").forEach(cell =>
+      cell.classList.toggle("ant-table-cell-fix-end-shadow-show", pingRight));
   }
 
   static enableColumnResizing(headerElement, tableElement, scrollY) {

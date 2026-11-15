@@ -381,6 +381,7 @@ namespace AntDesign
             this.ClassMapper.Clear()
                 .Add(_prefixCls)
                 .Get(() => $"{_prefixCls}-{Layout.ToString().ToLowerInvariant()}")
+                .Add($"{_prefixCls}-css-var")
                 .If($"{_prefixCls}-rtl", () => RTL)
                ;
         }

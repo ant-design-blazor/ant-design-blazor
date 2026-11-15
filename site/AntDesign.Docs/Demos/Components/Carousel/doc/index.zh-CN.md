@@ -22,11 +22,16 @@ cover: https://gw.alipayobjects.com/zos/antfincdn/%24C9tmj978R/Carousel.svg
 | ---------------- | -------------------------------------------- | ------------- | --------- |
 | AfterChange | (ToDo)切换面板的回调 | function(current)        | -         |
 | ChildContent | 子内容 | RenderFragment        | -         |
-| Autoplay   | 是否自动切换 | TimeSpan         |
+| Autoplay   | 是否自动切换；可通过 `CarouselAutoplayOptions` 配置指示点进度。为兼容早期版本，也可传入 `TimeSpan` | bool 或 CarouselAutoplayOptions 或 TimeSpan | false |
+| AutoplaySpeed | 自动切换间隔，单位为毫秒 | int | 3000 |
+| Arrows | 是否显示切换箭头 | bool | false |
 | BeforeChange    | (ToDo)切换面板的回调 | function(from, to)         |-       |
-| DotPosition |	面板指示点位置，可选 `top` `bottom` `left` `right` | string  | -  |
-| Dots | 是否显示面板指示点    | bool | -  |
+| DotPlacement | 面板指示点位置，可选 `top`、`bottom`、`start`、`end` | CarouselDotPosition | bottom |
+| DotPosition | `DotPlacement` 的旧名称 | CarouselDotPosition | bottom |
+| DotDuration | `Autoplay.DotDuration` 的旧式便捷参数 | bool | false |
+| Dots | 是否显示面板指示点 | bool | true |
 | DotsClass | 面板指示点样式类名 | string        | -         |
 | Easing | (ToDo)动画效果   | string        | -         |
 | Effect | 动画效果函数，可取 scrollx, fade | string        | -         |
+| Infinite | 是否在首尾循环切换 | bool | true |
 

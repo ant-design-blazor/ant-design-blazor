@@ -10,6 +10,17 @@ test('compares React and Blazor markup as the same ordered DOM tree', () => {
   assert.equal(result.equal, true);
 });
 
+test('parses isolated table row fragments in a table context', () => {
+  const result = compareMarkup(
+    '<tr><td>32</td><td>New York No. 1 Lake Park</td></tr>',
+    '<tr><td>32        </td><td>\n    New York No. 1 Lake Park    </td></tr>',
+  );
+
+  assert.equal(result.equal, true);
+  assert.deepEqual(result.expected[0].children.map(({ tag }) => tag), ['td', 'td']);
+  assert.deepEqual(result.actual[0].children.map(({ tag }) => tag), ['td', 'td']);
+});
+
 test('reports the exact path and field for a structural mismatch', () => {
   const result = compareMarkup(
     '<button class="ant-btn"><span class="ant-btn-content">Save</span></button>',

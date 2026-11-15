@@ -1,35 +1,32 @@
-<AutoComplete @bind-Value="@value" OnInput="OnSearch" Options="@options" OnSelectionChange="OnChange" OnActiveChange="OnSelect " Placeholder="input here" />
-<Divider></Divider>
-<span>bind-Value:@value</span>
+<AutoComplete TOption="string" Style="width: 200px" Placeholder="input here" Options="@options" OnInput="OnUncontrolledSearch" />
 <br />
-<span>SelectedValue:@selectItem?.Value</span>
 <br />
-<span>ActiveValue:@activeItem?.Value</span>
+<AutoComplete TOption="string" @bind-Value="value" Style="width: 200px" Placeholder="control mode" Options="@anotherOptions" OnInput="OnControlledSearch" OnSelectionChange="OnSelect" />
 
-@code
-{
-    static string mockVal(string str, int repeat) => new int[repeat].Aggregate("", (a, _) => a + str);
+@code {
+    private string value = string.Empty;
+    private List<string> options = [];
+    private List<string> anotherOptions = [];
 
-    private string value;
+    private static string MockValue(string text, int repeat) => string.Concat(Enumerable.Repeat(text, repeat));
 
-    List<string> options = [];
-
-    private AutoCompleteOption selectItem;
-    private AutoCompleteOption activeItem;
-
-    void OnSearch(ChangeEventArgs e)
+    private void OnUncontrolledSearch(ChangeEventArgs args)
     {
-        var searchText = e.Value.ToString();
-        options = string.IsNullOrEmpty(searchText) ? [] : [mockVal(searchText, 1), mockVal(searchText, 2), mockVal(searchText, 3)];
+        options = GetPanelValue(args.Value?.ToString());
     }
 
-    void OnChange(AutoCompleteOption item)
+    private void OnControlledSearch(ChangeEventArgs args)
     {
-        selectItem = item;
+        anotherOptions = GetPanelValue(args.Value?.ToString());
     }
 
-    void OnSelect(AutoCompleteOption item)
+    private static List<string> GetPanelValue(string searchText) => string.IsNullOrEmpty(searchText)
+        ? []
+        : [MockValue(searchText, 1), MockValue(searchText, 2), MockValue(searchText, 3)];
+
+    private void OnSelect(AutoCompleteOption item)
     {
-        activeItem = item;
+        // The React example logs the selected option; the controlled value is
+        // updated through @bind-Value, while this callback preserves onSelect.
     }
 }

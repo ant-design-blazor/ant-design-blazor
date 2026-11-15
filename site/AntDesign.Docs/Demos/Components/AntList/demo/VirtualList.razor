@@ -1,0 +1,25 @@
+@using Microsoft.AspNetCore.Components.Web.Virtualization
+
+<AntList Class="list-virtual-demo" DataSource="@_shell" ItemLayout="ListItemLayout.Horizontal">
+    <ChildContent Context="_">
+        <Virtualize Items="@_items" Context="item" ItemSize="47" OverscanCount="5">
+            <ListItem>
+                <ListItemMeta Avatar="@item.Avatar" Title="@item.Name" Description="@item.Email" />
+                <div>Content</div>
+            </ListItem>
+        </Virtualize>
+    </ChildContent>
+</AntList>
+
+<style>
+    .list-virtual-demo { height: 400px; overflow-y: auto; }
+</style>
+
+@code {
+    private readonly bool[] _shell = { true };
+    private readonly List<UserItem> _items = Enumerable.Range(1, 300)
+        .Select(i => new UserItem($"User {i}", $"user{i}@example.com", $"https://api.dicebear.com/10.x/lorelei/svg?seed={i}"))
+        .ToList();
+
+    private sealed record UserItem(string Name, string Email, string Avatar);
+}

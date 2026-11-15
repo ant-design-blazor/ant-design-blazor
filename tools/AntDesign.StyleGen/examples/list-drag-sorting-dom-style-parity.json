@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "ant-design/ant-design",
+    "revision": "599b251da933709d7b25fc9e9018ed7f4c093b96",
+    "component": "List"
+  },
+  "config": {
+    "timeoutMs": 45000,
+    "viewport": { "width": 1280, "height": 900, "deviceScaleFactor": 1 },
+    "colorScheme": "light",
+    "comparisonPolicy": {
+      "normalization": {
+        "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_r_[a-zA-Z0-9_-]+)$",
+        "removeAttributes": ["_bl_*", "id"],
+        "removeClassPatterns": ["^acss-[a-zA-Z0-9_-]+$", "^css-dev-only-do-not-override-", "^css-var-_[rR]_", "^css-var-root$", "^css-[a-zA-Z0-9]+$"],
+        "removeCommentMarkers": ["<!--!-->"],
+        "sortAttributes": true,
+        "sortClassTokens": true,
+        "removeInterTagWhitespace": true
+      },
+      "geometryTolerancePx": 0.04,
+      "computedStylePixelToleranceByProperty": { "width": 0.04 }
+    }
+  },
+  "groups": [
+    {
+      "id": "list-drag-sorting",
+      "component": "List",
+      "react": { "url": "http://127.0.0.1:8000/components/list", "scopeSelector": "#list-demo-drag-sorting", "rootSelector": ".ant-list" },
+      "blazor": { "url": "http://127.0.0.1:5000/en-US/components/List", "scopeSelector": "#components-list-demo-drag-sorting", "rootSelector": ".ant-list" },
+      "styleProperties": ["display", "position", "boxSizing", "width", "height", "padding", "margin", "gap", "alignItems", "fontSize", "fontWeight", "lineHeight", "color", "backgroundColor", "borderBottomWidth", "borderBottomStyle", "borderBottomColor", "cursor", "transform", "transition", "opacity", "zIndex"],
+      "semanticNodes": [
+        { "path": "root", "selector": "$root", "minimumCount": 1 },
+        { "path": "item", "selector": ".ant-list-item", "minimumCount": 5 },
+        { "path": "item.content", "selector": ".ant-list-item > div", "minimumCount": 5 }
+      ],
+      "scenarios": [{ "id": "initial" }]
+    },
+    {
+      "id": "list-drag-sorting-handler",
+      "component": "List",
+      "react": { "url": "http://127.0.0.1:8000/components/list", "scopeSelector": "#list-demo-drag-sorting-handler", "rootSelector": ".ant-list" },
+      "blazor": { "url": "http://127.0.0.1:5000/en-US/components/List", "scopeSelector": "#components-list-demo-drag-sorting-handler", "rootSelector": ".ant-list" },
+      "styleProperties": ["display", "position", "boxSizing", "width", "height", "padding", "margin", "gap", "alignItems", "fontSize", "fontWeight", "lineHeight", "color", "backgroundColor", "borderBottomWidth", "borderBottomStyle", "borderBottomColor", "cursor", "transform", "transition", "opacity", "zIndex"],
+      "semanticNodes": [
+        { "path": "root", "selector": "$root", "minimumCount": 1 },
+        { "path": "item", "selector": ".ant-list-item", "minimumCount": 5 },
+        { "path": "item.handle", "selector": ".ant-list-item > .ant-btn", "minimumCount": 5 }
+      ],
+      "scenarios": [{ "id": "initial" }]
+    },
+    {
+      "id": "list-grid-drag-sorting",
+      "component": "List",
+      "react": { "url": "http://127.0.0.1:8000/components/list", "scopeSelector": "#list-demo-grid-drag-sorting", "rootSelector": ".ant-list" },
+      "blazor": { "url": "http://127.0.0.1:5000/en-US/components/List", "scopeSelector": "#components-list-demo-grid-drag-sorting", "rootSelector": ".ant-list" },
+      "styleProperties": ["display", "position", "boxSizing", "width", "height", "padding", "margin", "gap", "alignItems", "fontSize", "fontWeight", "lineHeight", "color", "backgroundColor", "borderRadius", "borderWidth", "borderStyle", "borderColor", "cursor", "transform", "transition", "opacity", "zIndex"],
+      "semanticNodes": [
+        { "path": "root", "selector": "$root", "minimumCount": 1 },
+        { "path": "grid.item", "selector": ".ant-list-item", "minimumCount": 6 },
+        { "path": "grid.card", "selector": ".ant-card", "minimumCount": 6 },
+        { "path": "grid.card.head", "selector": ".ant-card-head", "minimumCount": 6 },
+        { "path": "grid.card.body", "selector": ".ant-card-body", "minimumCount": 6 }
+      ],
+      "scenarios": [{ "id": "initial" }]
+    },
+    {
+      "id": "list-grid-drag-sorting-handler",
+      "component": "List",
+      "react": { "url": "http://127.0.0.1:8000/components/list", "scopeSelector": "#list-demo-grid-drag-sorting-handler", "rootSelector": ".ant-list" },
+      "blazor": { "url": "http://127.0.0.1:5000/en-US/components/List", "scopeSelector": "#components-list-demo-grid-drag-sorting-handler", "rootSelector": ".ant-list" },
+      "styleProperties": ["display", "position", "boxSizing", "width", "height", "padding", "margin", "gap", "alignItems", "fontSize", "fontWeight", "lineHeight", "color", "backgroundColor", "borderRadius", "borderWidth", "borderStyle", "borderColor", "cursor", "transform", "transition", "opacity", "zIndex"],
+      "semanticNodes": [
+        { "path": "root", "selector": "$root", "minimumCount": 1 },
+        { "path": "grid.item", "selector": ".ant-list-item", "minimumCount": 6 },
+        { "path": "grid.card", "selector": ".ant-card", "minimumCount": 6 },
+        { "path": "grid.card.head", "selector": ".ant-card-head", "minimumCount": 6 },
+        { "path": "grid.card.handle", "selector": ".ant-card-head .ant-btn", "minimumCount": 6 }
+      ],
+      "scenarios": [{ "id": "initial" }]
+    }
+  ]
+}

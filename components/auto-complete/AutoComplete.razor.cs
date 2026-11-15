@@ -46,6 +46,10 @@ namespace AntDesign
         [Parameter]
         public bool AllowClear { get; set; }
 
+        /// <summary>Custom content for the clear control.</summary>
+        [Parameter]
+        public RenderFragment ClearIconTemplate { get; set; }
+
         /// <summary>Controls the dropdown visibility when specified; otherwise visibility is managed internally.</summary>
         [Parameter]
         public bool? Open { get; set; }
@@ -170,6 +174,10 @@ namespace AntDesign
         [Parameter]
         public EventCallback<bool> OnPanelVisibleChange { get; set; }
 
+        /// <summary>Callback invoked when the popup open state changes.</summary>
+        [Parameter]
+        public EventCallback<bool> OnOpenChange { get; set; }
+
         /// <summary>
         /// Content for dropdown
         /// </summary>
@@ -275,6 +283,7 @@ namespace AntDesign
         private bool _parPanelVisible = false;
 
         private OverlayTrigger _overlayTrigger;
+        private ElementReference _rootReference;
 
         private object _selectedValue;
         private object _activeValue;
@@ -288,18 +297,64 @@ namespace AntDesign
             {
                 var variant = string.IsNullOrWhiteSpace(Variant) ? "outlined" : Variant.ToLowerInvariant();
                 var status = Status != FormValidateStatus.Default ? Status : FormItem?.ValidateStatus ?? FormValidateStatus.Default;
-                var classes = $"ant-select ant-select-auto-complete ant-select-{variant}";
+                var classes = $"ant-select ant-select-{variant} ant-select-auto-complete ant-select-css-var";
+                if (!string.IsNullOrWhiteSpace(Class)) classes += $" {Class}";
                 if (Disabled) classes += " ant-select-disabled";
                 if (status != FormValidateStatus.Default) classes += $" ant-select-status-{status.ToString().ToLowerInvariant()}";
+                if (_isFocused) classes += " ant-select-focused";
+                classes += " ant-select-single";
+                if (_isOpened) classes += " ant-select-open";
+                classes += " ant-select-show-search";
                 return SemanticClass("root", classes);
             }
         }
 
         internal string RootStyle => SemanticStyle("root", Style);
+        internal string ContentClass => SemanticClass("content", $"ant-select-content{(string.IsNullOrEmpty(CurrentValue) ? "" : " ant-select-content-has-value")}{(_isFocused && !string.IsNullOrEmpty(CurrentValue) ? " ant-select-content-has-search-value" : "")}");
+        internal string ContentTitle => string.IsNullOrEmpty(CurrentValue) ? null : CurrentValue;
+        internal string ContentStyle => SemanticStyle("content");
+        internal string ListboxId => $"{Id}_list";
+        internal string GetOptionId(int index) => $"{ListboxId}_{index}";
+        internal IEnumerable<int> GetAccessibilityOptionIndexes()
+        {
+            if (_filteredOptions == null) yield break;
+            var activeIndex = _filteredOptions.ToList().FindIndex(option => CompareWith(option.Value, _activeValue));
+            var first = Math.Max(0, activeIndex - 1);
+            var last = Math.Min(_filteredOptions.Count - 1, activeIndex + 1);
+            for (var index = first; index <= last; index++) yield return index;
+        }
+        internal int ActiveOptionIndex => _filteredOptions?.ToList().FindIndex(option => CompareWith(option.Value, _activeValue)) ?? -1;
+        internal bool IsActive(int index)
+        {
+            var activeIndex = ActiveOptionIndex;
+            return activeIndex <= 0 && DefaultActiveFirstOption ? index == 0 : index == activeIndex;
+        }
+        internal string ActiveOptionId
+        {
+            get
+            {
+                var index = ActiveOptionIndex;
+                return _isOpened && index >= 0 ? GetOptionId(index) : null;
+            }
+        }
+        internal string PlaceholderClass => SemanticClass("placeholder", "ant-select-placeholder");
+        internal string PlaceholderStyle => SemanticStyle("placeholder");
+        internal string InputClass => SemanticClass("input", "ant-select-input");
+        internal IReadOnlyDictionary<string, object> InputAttributes => new Dictionary<string, object>
+        {
+            ["autocomplete"] = "new-password",
+            ["role"] = "combobox",
+            ["aria-expanded"] = _isOpened ? "true" : "false",
+            ["aria-haspopup"] = "listbox",
+            ["aria-autocomplete"] = "list",
+            ["aria-controls"] = _isOpened ? ListboxId : null,
+            ["aria-owns"] = _isOpened ? ListboxId : null,
+            ["aria-activedescendant"] = ActiveOptionId
+        };
         internal string PopupClass => SemanticClass("popup.root", SemanticClass("popup", OverlayClassName));
         internal string PopupStyle => SemanticStyle("popup.root", SemanticStyle("popup", OverlayStyle));
-        internal string PopupListClass => SemanticClass("popup.list", null);
-        internal string PopupListStyle => SemanticStyle("popup.list", $"max-height:256px; overflow-y:auto; overflow-anchor:none; {_minWidth}");
+        internal string PopupListClass => SemanticClass("popup.list", "ant-select-dropdown-list");
+        internal string PopupListStyle => SemanticStyle("popup.list", $"position:relative; max-height:256px; overflow-y:auto; overflow-anchor:none; {_minWidth}");
 
         internal string InputStatusClass
         {
@@ -315,6 +370,14 @@ namespace AntDesign
 
         internal bool InputBordered => !string.Equals(Variant, "borderless", StringComparison.OrdinalIgnoreCase)
             && !string.Equals(Variant, "underlined", StringComparison.OrdinalIgnoreCase);
+
+        internal InputVariant InputStyleVariant => Variant?.ToLowerInvariant() switch
+        {
+            "filled" => InputVariant.Filled,
+            "borderless" => InputVariant.Borderless,
+            "underlined" => InputVariant.Underlined,
+            _ => InputVariant.Outlined
+        };
 
         internal string SemanticClass(string slot, string baseClass)
         {
@@ -364,7 +427,6 @@ namespace AntDesign
 
         async Task IAutoCompleteRef.InputValueChange(string value)
         {
-            _selectedValue = value;
             UpdateFilteredOptions();
             await ResetActiveItem();
         }
@@ -621,10 +683,11 @@ namespace AntDesign
 
         private async Task OnOverlayTriggerVisibleChange(bool visible)
         {
-            if (OnPanelVisibleChange.HasDelegate && _parPanelVisible != visible)
+            if (_parPanelVisible != visible)
             {
                 _parPanelVisible = visible;
-                await OnPanelVisibleChange.InvokeAsync(visible);
+                if (OnPanelVisibleChange.HasDelegate) await OnPanelVisibleChange.InvokeAsync(visible);
+                if (OnOpenChange.HasDelegate) await OnOpenChange.InvokeAsync(visible);
             }
 
             if (this._isOpened != visible)
@@ -641,13 +704,16 @@ namespace AntDesign
 
         private async Task SetOverlayWidth()
         {
+            if (_overlayTrigger?.RefBack?.Current == null) return;
             HtmlElement element = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _overlayTrigger.RefBack.Current);
+            if (element == null) return;
             _minWidth = $"min-width:{element.ClientWidth}px";
         }
 
         protected override void Dispose(bool disposing)
         {
-            DomEventListener.RemoveResizeObserver(_overlayTrigger.RefBack.Current, UpdateWidth);
+            if (_overlayTrigger?.RefBack?.Current != null)
+                DomEventListener.RemoveResizeObserver(_overlayTrigger.RefBack.Current, UpdateWidth);
             base.Dispose(disposing);
         }
 

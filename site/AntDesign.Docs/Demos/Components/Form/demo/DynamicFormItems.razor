@@ -1,58 +1,60 @@
-@using System.ComponentModel.DataAnnotations
 @using System.Text.Json
 
-<Form Model="@model" OnFinish="OnFinish" OnFinishFailed="OnFinishFailed" Style="max-width: 600px;">
+<Form Model="@model" OnFinish="OnFinish" Style="max-width: 600px;" Autocomplete="off">
     @for (var i = 0; i < model.Users.Count; i++)
     {
         var index = i;
-        <div @key="model.Users[index].Id" style="display:flex; align-items:baseline; gap:8px;">
-            <FormItem NoStyle>
-                <Input @bind-Value="model.Users[index].FirstName" Placeholder="First Name" />
-            </FormItem>
-            <FormItem NoStyle>
-                <Input @bind-Value="model.Users[index].LastName" Placeholder="Last Name" />
-            </FormItem>
-            <Button Type="ButtonType.Text" OnClick="@(() => Remove(index))" AriaLabel="Remove user">−</Button>
-        </div>
+        var user = model.Users[index];
+        <Space @key="user.Id" Align="SpaceAlign.Baseline" Style="display: flex; margin-bottom: 8px;">
+            <SpaceItem>
+                <FormItem Required="true">
+                    <Input name="@((string)null)" @bind-Value="user.First" Placeholder="First Name" />
+                </FormItem>
+            </SpaceItem>
+            <SpaceItem>
+                <FormItem Required="true">
+                    <Input name="@((string)null)" @bind-Value="user.Last" Placeholder="Last Name" />
+                </FormItem>
+            </SpaceItem>
+            <SpaceItem>
+                <Icon Type="@IconType.Outline.MinusCircle" @onclick="@(() => Remove(index))" />
+            </SpaceItem>
+        </Space>
     }
     <FormItem>
-        <Button Type="ButtonType.Dashed" OnClick="@(() => Add())" Block>＋ Add field</Button>
+        <Button Type="ButtonType.Dashed" OnClick="Add" Block Icon="@IconType.Outline.Plus">Add field</Button>
     </FormItem>
     <FormItem>
         <Button Type="ButtonType.Primary" HtmlType="submit">Submit</Button>
-        @if (!string.IsNullOrEmpty(result))
-        {
-            <span style="margin-left:12px;">@result</span>
-        }
     </FormItem>
 </Form>
 
 @code {
     private readonly UsersForm model = new();
-    private string result;
 
-    private void Add() => model.Users.Add(new User { Id = Guid.NewGuid() });
+    private void Add() => model.Users.Add(new User());
 
     private void Remove(int index) => model.Users.RemoveAt(index);
 
     private void OnFinish(EditContext editContext)
     {
-        result = $"Received values: {JsonSerializer.Serialize(model.Users.Select(x => new { x.FirstName, x.LastName }))}";
-    }
+        if (model.Users.Any(user => string.IsNullOrWhiteSpace(user.First) || string.IsNullOrWhiteSpace(user.Last)))
+        {
+            return;
+        }
 
-    private void OnFinishFailed(EditContext editContext) => result = "Please enter both first and last names.";
+        Console.WriteLine($"Received values of form: {JsonSerializer.Serialize(model.Users.Select(user => new { first = user.First, last = user.Last }))}");
+    }
 
     private sealed class UsersForm
     {
-        public List<User> Users { get; } = [new User()];
+        public List<User> Users { get; } = [];
     }
 
     private sealed class User
     {
-        public Guid Id { get; init; } = Guid.NewGuid();
-        [Required]
-        public string FirstName { get; set; }
-        [Required]
-        public string LastName { get; set; }
+        public Guid Id { get; } = Guid.NewGuid();
+        public string First { get; set; }
+        public string Last { get; set; }
     }
 }

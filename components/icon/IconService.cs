@@ -63,7 +63,9 @@ namespace AntDesign
                 ["aria-hidden"] = "true"
             };
             if (!icon.Type.EndsWith("</svg>", StringComparison.OrdinalIgnoreCase))
+            {
                 svgAttributes["data-icon"] = icon.Type.ToLowerInvariant();
+            }
             if (!string.IsNullOrEmpty(svgStyle))
                 svgAttributes["style"] = svgStyle;
             var iconSvg = SetSvgRootAttributes(svg, svgAttributes);
@@ -114,6 +116,13 @@ namespace AntDesign
         {
             if (scriptUrls == null || scriptUrls.Length == 0) return;
             await _js.InvokeVoidAsync(JSInteropConstants.CreateIconFromfontCN, (object)scriptUrls);
+        }
+
+        /// <summary>Associates resources with their demo element so duplicate sprite precedence matches React.</summary>
+        public async ValueTask CreateFromIconfontCN(string[] scriptUrls, Microsoft.AspNetCore.Components.ElementReference element)
+        {
+            if (scriptUrls == null || scriptUrls.Length == 0) return;
+            await _js.InvokeVoidAsync(JSInteropConstants.CreateIconFromfontCN, (object)scriptUrls, element);
         }
 
         public static IDictionary<IconThemeType, string[]> GetAllIcons()

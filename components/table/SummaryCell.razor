@@ -2,7 +2,7 @@
 @using AntDesign.TableModels
 @inherits ColumnBase
 
-<td class="@ClassMapper.Class" style="@FixedStyle @Style" colspan="@ColSpan">
+<td class="@ClassMapper.Class" style="@CellStyle" colspan="@(ColSpan == 1 ? null : ColSpan)">
     @if (CellRender != null)
     {
         var cellData = new CellData(RowData);
@@ -15,6 +15,15 @@
 </td>
 
 @code {
+
+    private string CellStyle
+    {
+        get
+        {
+            var style = string.Join(" ", new[] { FixedStyle, Style }.Where(value => !string.IsNullOrWhiteSpace(value)));
+            return string.IsNullOrWhiteSpace(style) ? null : style;
+        }
+    }
 
     /// <summary>
     /// Set the content of the cell.

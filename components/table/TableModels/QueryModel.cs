@@ -108,7 +108,9 @@ namespace AntDesign.TableModels
 
         public IQueryable<TItem> ExecuteQuery(IQueryable<TItem> query)
         {
-            foreach (var sort in SortModel.OrderBy(x => x.Priority))
+            // A higher SorterMultiple value has higher precedence. Apply it first so
+            // subsequent sorters become stable secondary keys (ThenBy).
+            foreach (var sort in SortModel.OrderByDescending(x => x.Priority))
             {
                 query = sort.SortList(query);
             }

@@ -1,5 +1,6 @@
 ---
 order: 94
+debug: true
 title:
   zh-CN: 翻转与偏移
   en-US: Flip and shift

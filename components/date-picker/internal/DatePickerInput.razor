@@ -4,7 +4,7 @@
 
 @if (!IsRange)
 {
-    <div class="@SemanticClass("input", $"{PrefixCls}-input")" style="@SemanticStyle("input")">
+    <div class="@SemanticClass("input", $"{PrefixCls}-input {(PreviewValue is not null ? $"{PrefixCls}-input-placeholder" : string.Empty)}")" style="@SemanticStyle("input")">
         <input @ref="Ref"
                @onclick="OnClick"
                @onkeyup="OnKeyUp"
@@ -19,7 +19,7 @@
                disabled="@Disabled"
                placeholder="@Placeholder"
                readonly="@ReadOnly"
-               value="@(Value ?? string.Empty)">
+               value="@(PreviewValue ?? Value ?? string.Empty)">
         @if (ShowSuffixIcon || FeedbackIcon != null)
         {
             <span class="@SemanticClass("suffix", $"{PrefixCls}-suffix")" style="@SemanticStyle("suffix")" onclick="@OnSuffixIconClick">
@@ -53,7 +53,7 @@
 }
 else
 {
-    <div class="@SemanticClass("input", $"{PrefixCls}-input {(Active ? $"{PrefixCls}-input-active" : "")}")" style="@SemanticStyle("input")">
+    <div class="@SemanticClass("input", $"{PrefixCls}-input {(Active ? $"{PrefixCls}-input-active" : "")} {(PreviewValue is not null ? $"{PrefixCls}-input-placeholder" : string.Empty)}")" style="@SemanticStyle("input")">
         <input @ref="Ref"
                @onclick="OnClick"
                @onkeyup="OnKeyUp"
@@ -68,7 +68,7 @@ else
                disabled="@Disabled"
                placeholder="@Placeholder"
                readonly="@ReadOnly"
-               value="@(Value ?? string.Empty)">
+               value="@(PreviewValue ?? Value ?? string.Empty)">
     </div>
 }
 
@@ -94,6 +94,9 @@ else
 
     [Parameter]
     public string Placeholder { get; set; }
+
+    [Parameter]
+    public string PreviewValue { get; set; }
 
     [Parameter]
     public bool ReadOnly { get; set; }

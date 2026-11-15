@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "ant-design/ant-design",
+    "component": "Dropdown"
+  },
+  "config": {
+    "timeoutMs": 30000,
+    "viewport": { "width": 1280, "height": 900, "deviceScaleFactor": 1 },
+    "colorScheme": "light",
+    "comparisonPolicy": {
+      "normalization": {
+        "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_[rR]_[a-zA-Z0-9_-]+|rc-menu-uuid-(?:_[rR]_[a-zA-Z0-9_-]+|ant-blazor-[a-zA-Z0-9_-]+)-\\d+|__runtime-id-\\d+)$",
+        "runtimeIdAttributes": ["data-menu-id"],
+        "removeUnreferencedRuntimeIds": true,
+        "removeAttributes": ["_bl_*"],
+        "removeEmptyAttributes": ["style"],
+        "removeClassPatterns": ["^css-dev-only-do-not-override-", "^css-var-_[rR]_", "^css-[a-zA-Z0-9]+$"],
+        "removeCommentMarkers": ["<!--!-->"],
+        "sortClassTokens": true
+      },
+      "ignoredSemanticAttributes": { "popup.root": ["style"] }
+    }
+  },
+  "groups": [
+    {
+      "id": "dropdown-basic-default",
+      "component": "Dropdown",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/dropdown?theme=light",
+        "scopeSelector": "#dropdown-demo-basic .code-box-demo",
+        "rootSelector": "#dropdown-demo-basic .code-box-demo .ant-dropdown-trigger",
+        "skeletonSelector": ".ant-skeleton"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/dropdown?theme=light",
+        "scopeSelector": "#components-dropdown-demo-basic .code-box-demo",
+        "rootSelector": "#components-dropdown-demo-basic .code-box-demo .ant-dropdown-trigger",
+        "skeletonSelector": ".ant-skeleton"
+      },
+      "styleProperties": ["display", "position", "boxSizing", "width", "height", "paddingBlock", "paddingInline", "fontSize", "lineHeight", "fontWeight", "color", "backgroundColor", "borderRadius", "borderWidth", "borderColor", "boxShadow"],
+      "semanticNodes": [
+        { "path": "trigger", "selector": "$root", "minimumCount": 1 }
+      ],
+      "scenarios": [
+        { "id": "closed", "minimumRoots": 1 },
+        {
+          "id": "hover-open",
+          "minimumRoots": 1,
+          "actions": [
+            { "type": "hover", "reactSelector": "#dropdown-demo-basic .code-box-demo .ant-dropdown-trigger", "blazorSelector": "#components-dropdown-demo-basic .code-box-demo .ant-dropdown-trigger" },
+            { "type": "waitForSelector", "selector": ".ant-dropdown:not(.ant-dropdown-hidden):not(.semantic-mark-root):not(.docs-theme-switch-popup)" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dropdown-basic-popup",
+      "component": "Dropdown",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/dropdown?theme=light",
+        "scopeSelector": "#dropdown-demo-basic .code-box-demo",
+        "rootSelector": "#dropdown-demo-basic .code-box-demo .ant-dropdown-trigger",
+        "skeletonSelector": ".ant-skeleton"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/dropdown?theme=light",
+        "scopeSelector": "#components-dropdown-demo-basic .code-box-demo",
+        "rootSelector": "#components-dropdown-demo-basic .code-box-demo .ant-dropdown-trigger",
+        "skeletonSelector": ".ant-skeleton"
+      },
+      "styleProperties": ["display", "position", "boxSizing", "width", "height", "paddingBlock", "paddingInline", "fontSize", "lineHeight", "fontWeight", "color", "backgroundColor", "borderRadius", "borderWidth", "borderColor", "boxShadow"],
+      "semanticNodes": [
+        { "path": "trigger", "selector": "$root", "minimumCount": 1 },
+        { "path": "popup.root", "selector": ".ant-dropdown:not(.ant-dropdown-hidden):not(.semantic-mark-root):not(.docs-theme-switch-popup)", "portal": true, "portalMatch": "nearest-trigger", "reactTriggerSelector": "#dropdown-demo-basic .code-box-demo .ant-dropdown-trigger", "blazorTriggerSelector": "#components-dropdown-demo-basic .code-box-demo .ant-dropdown-trigger", "geometryAnchor": { "mode": "pixel-snap-to-trigger" }, "minimumCount": 1 },
+        { "path": "popup.menu", "selector": ".ant-dropdown:not(.ant-dropdown-hidden):not(.semantic-mark-root):not(.docs-theme-switch-popup) .ant-dropdown-menu", "portal": true, "portalParentPath": "popup.root", "geometryParentSelector": ".ant-dropdown:not(.ant-dropdown-hidden):not(.semantic-mark-root):not(.docs-theme-switch-popup)", "minimumCount": 1 },
+        { "path": "popup.item", "selector": ".ant-dropdown:not(.ant-dropdown-hidden):not(.semantic-mark-root):not(.docs-theme-switch-popup) .ant-dropdown-menu-item", "portal": true, "portalParentPath": "popup.root", "geometryParentSelector": ".ant-dropdown:not(.ant-dropdown-hidden):not(.semantic-mark-root):not(.docs-theme-switch-popup)", "minimumCount": 4 }
+      ],
+      "scenarios": [
+        {
+          "id": "hover-open-popup",
+          "minimumRoots": 1,
+          "actions": [
+            { "type": "hover", "reactSelector": "#dropdown-demo-basic .code-box-demo .ant-dropdown-trigger", "blazorSelector": "#components-dropdown-demo-basic .code-box-demo .ant-dropdown-trigger" },
+            { "type": "waitForSelector", "selector": ".ant-dropdown:not(.ant-dropdown-hidden):not(.semantic-mark-root):not(.docs-theme-switch-popup)" }
+          ]
+        }
+      ]
+    }
+  ]
+}

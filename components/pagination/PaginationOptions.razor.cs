@@ -51,6 +51,24 @@ namespace AntDesign
         public int PageSize { get; set; }
 
         /// <summary>
+        /// Whether list pagination is displayed above, below, or in both positions.
+        /// </summary>
+        [Parameter]
+        public string Position { get; set; } = "bottom";
+
+        /// <summary>
+        /// Alignment of list pagination items.
+        /// </summary>
+        [Parameter]
+        public string Align { get; set; } = "end";
+
+        /// <summary>
+        /// Callback executed when the list page or page size changes.
+        /// </summary>
+        [Parameter]
+        public EventCallback<PaginationEventArgs> OnChange { get; set; }
+
+        /// <summary>
         /// Options for page size selection
         /// </summary>
         /// <default value="{ 10, 20, 50, 100 }"/>
@@ -88,6 +106,8 @@ namespace AntDesign
         }
 
         private string BuildOptionText(int value) => $"{value} {Locale.ItemsPerPage}";
+
+        private RenderFragment<int> PageSizeLabelTemplate => _ => builder => builder.AddContent(0, BuildOptionText(PageSize));
 
         private async Task ChangePaginationSize(int value)
         {

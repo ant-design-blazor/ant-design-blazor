@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "ant-design/ant-design",
+    "revision": "599b251da933709d7b25fc9e9018ed7f4c093b96",
+    "component": "Select"
+  },
+  "config": {
+    "timeoutMs": 20000,
+    "viewport": {
+      "width": 1280,
+      "height": 900,
+      "deviceScaleFactor": 1
+    },
+    "colorScheme": "light",
+    "comparisonPolicy": {
+      "normalization": {
+        "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_r_[a-zA-Z0-9_-]+)$",
+        "removeAttributes": [
+          "_bl_*"
+        ],
+        "removeClassPatterns": [
+          "^css-dev-only-do-not-override-",
+          "^css-var-_r_",
+          "^css-var-_R_",
+          "^css-[a-z0-9]+$"
+        ],
+        "removeCommentMarkers": [
+          "<!--!-->"
+        ]
+      }
+    }
+  },
+  "groups": [
+    {
+      "component": "Select",
+      "matchScopeWidth": "react",
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "minHeight",
+        "maxHeight",
+        "paddingBlock",
+        "paddingInline",
+        "marginBlock",
+        "gap",
+        "alignItems",
+        "lineHeight",
+        "fontSize",
+        "fontWeight",
+        "color",
+        "backgroundColor",
+        "borderRadius",
+        "borderTopWidth",
+        "borderRightWidth",
+        "borderBottomWidth",
+        "borderLeftWidth",
+        "--ant-select-height",
+        "--ant-select-multi-item-height",
+        "--ant-select-multi-padding-vertical",
+        "fontFamily",
+        "letterSpacing",
+        "textRendering",
+        "direction"
+      ],
+      "id": "select-responsive-current",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/select?theme=light",
+        "scopeSelector": "#select-demo-responsive .code-box-demo",
+        "rootSelector": ".ant-select",
+        "skeletonSelector": ".ant-skeleton"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/select?theme=light",
+        "scopeSelector": "#components-select-demo-responsive .code-box-demo",
+        "rootSelector": ".ant-select",
+        "skeletonSelector": ".ant-skeleton"
+      },
+      "semanticNodes": [
+        {
+          "path": "root",
+          "reactSelector": "$root",
+          "blazorSelector": "$root",
+          "minimumCount": 3
+        },
+        {
+          "path": "content",
+          "reactSelector": ".ant-select-content",
+          "blazorSelector": ".ant-select-content",
+          "minimumCount": 3
+        },
+        {
+          "path": "overflowItem",
+          "blazorSelector": ".ant-select-content-item",
+          "minimumCount": 3,
+          "reactSelector": ".ant-select-content-item"
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "default",
+          "minimumRoots": 3
+        }
+      ]
+    }
+  ]
+}

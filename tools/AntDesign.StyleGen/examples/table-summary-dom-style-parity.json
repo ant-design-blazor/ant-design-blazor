@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "ant-design/ant-design",
+    "revision": "599b251da933709d7b25fc9e9018ed7f4c093b96",
+    "component": "Table"
+  },
+  "config": {
+    "timeoutMs": 90000,
+    "viewport": { "width": 1280, "height": 900, "deviceScaleFactor": 1 },
+    "colorScheme": "light",
+    "comparisonPolicy": {
+      "normalization": {
+        "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_r_[a-zA-Z0-9_-]+)$",
+        "removeAttributes": ["_bl_*", "id"],
+        "removeClassPatterns": ["^acss-[a-zA-Z0-9_-]+$", "^css-dev-only-do-not-override-", "^css-var-_[rR]_", "^css-[a-zA-Z0-9]+$"],
+        "removeCommentMarkers": ["<!--!-->"],
+        "sortClassTokens": true,
+        "removeInterTagWhitespace": true
+      }
+    }
+  },
+  "groups": [
+    {
+      "id": "table-summary",
+      "component": "Table",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/table",
+        "scopeSelector": "#table-demo-summary",
+        "rootSelector": ".ant-table-wrapper"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/table",
+        "scopeSelector": "#components-table-demo-summary",
+        "rootSelector": ".ant-table-wrapper"
+      },
+      "styleProperties": ["display", "position", "boxSizing", "width", "height", "paddingInline", "gap", "alignItems", "fontSize", "fontWeight", "color", "backgroundColor", "borderRadius"],
+      "semanticNodes": [
+        { "path": "root", "selector": "$root", "minimumCount": 1 },
+        { "path": "table.wrapper", "selector": ".ant-table", "minimumCount": 2 },
+        { "path": "summary.row", "selector": ".ant-table-summary tr", "minimumCount": 3 },
+        { "path": "summary.cell", "selector": ".ant-table-summary td", "minimumCount": 7 }
+      ],
+      "scenarios": [{ "id": "default" }],
+      "singleBrowserContext": true
+    }
+  ]
+}

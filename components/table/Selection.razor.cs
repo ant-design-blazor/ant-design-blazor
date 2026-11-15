@@ -12,6 +12,8 @@ namespace AntDesign
 {
     public partial class Selection : ColumnBase, ISelectionColumn
     {
+        internal override bool RequiresColGroup => true;
+
         /// <summary>
         /// The type of input to use for the selection column (checkbox or radio)
         /// </summary>
@@ -38,6 +40,12 @@ namespace AntDesign
         [Parameter] public bool CheckStrictly { get; set; }
 
         /// <summary>
+        /// Returns additional attributes for a row selection checkbox, based on its source record.
+        /// </summary>
+        [Parameter]
+        public Func<object, IDictionary<string, object>> GetCheckboxProps { get; set; }
+
+        /// <summary>
         /// Customize the content of the cell.
         /// </summary>
         [Parameter]
@@ -58,6 +66,21 @@ namespace AntDesign
         IList<ISelectionColumn> ISelectionColumn.RowSelections => _rowSelections;
 
         private bool? _selected;
+
+        private IDictionary<string, object> CheckboxProps
+        {
+            get
+            {
+                if (!IsBody || RowData == null)
+                {
+                    return null;
+                }
+
+                var properties = GetCheckboxProps?.Invoke(RowData.Record)?.ToDictionary(x => x.Key, x => x.Value)
+                    ?? new Dictionary<string, object>();
+                return properties;
+            }
+        }
 
         private void OnCheckedChange(bool selected)
         {
@@ -113,6 +136,18 @@ namespace AntDesign
             if (IsBody && DataItem != null)
             {
                 DataItem.Disabled = Disabled;
+            }
+
+            // Ant Design fixes the selection column to the left when a
+            // following data column is fixed to the left. Keep the selection
+            // column in the fixed-column offset chain as well.
+            if (!Fixed.HasValue && Context?.Columns.Any(column =>
+                    !ReferenceEquals(column, this)
+                    && column.ColIndex > ColIndex
+                    && column.Fixed == ColumnFixPlacement.Left) == true)
+            {
+                Fixed = ColumnFixPlacement.Left;
+                ((IColumn)this).UpdateFixedStyle();
             }
         }
 

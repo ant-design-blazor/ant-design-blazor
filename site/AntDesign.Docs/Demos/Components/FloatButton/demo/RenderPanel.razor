@@ -1,4 +1,24 @@
-<div style="display:flex;column-gap:16px;align-items:center">
-    <FloatButton Icon="customer-service" />
-    <FloatButton Icon="question-circle" Content="HELP" Shape="FloatButtonShape.Square" Type="FloatButtonType.Primary" />
+<div class="float-button-render-panel" style="display:flex;column-gap:16px;align-items:center">
+    <FloatButtonBackTop VisibilityHeight="0" Class="ant-float-btn-pure" />
+    <FloatButton Icon="customer-service" Class="ant-float-btn-pure" />
+    <FloatButton Icon="question-circle" Content="HELP" Shape="FloatButtonShape.Square"
+                 Type="FloatButtonType.Primary" Class="ant-float-btn-pure" />
+    <FloatButtonGroup Shape="FloatButtonShape.Square" Class="ant-float-btn-pure">
+        <FloatButton Icon="question-circle" />
+        <FloatButton Icon="customer-service" />
+        <FloatButton Icon="sync" />
+    </FloatButtonGroup>
+    <FloatButtonGroup Shape="FloatButtonShape.Square" Trigger="FloatButtonGroupTrigger.Click"
+                      Open Icon="customer-service" Class="ant-float-btn-pure">
+        <FloatButton Icon="question-circle" />
+        <FloatButton Icon="customer-service" />
+        <FloatButton Icon="sync" />
+    </FloatButtonGroup>
 </div>
+
+<style>
+    .float-button-render-panel .ant-float-btn-pure {
+        position: relative;
+        inset: auto;
+    }
+</style>

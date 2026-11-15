@@ -1,7 +1,54 @@
-﻿<h3>Nest</h3>
+﻿<div class="tabs-nest-controls">
+    <Select TItemValue="string" TItem="string" DataSource="@_placements" @bind-Value="_parentPlacement" Style="width: 200px" />
+    <Select TItemValue="string" TItem="string" DataSource="@_placements" @bind-Value="_childPlacement" Style="width: 200px" />
+    <Select TItemValue="string" TItem="string" DataSource="@_types" @bind-Value="_parentType" Style="width: 200px" />
+    <Select TItemValue="string" TItem="string" DataSource="@_types" @bind-Value="_childType" Style="width: 200px" />
+</div>
 
-Waitting for implementing Select.
+<Tabs DefaultActiveKey="1" TabPlacement="@ParsePlacement(_parentPlacement)" Type="@ParseType(_parentType)">
+    <TabPane Key="1" Tab="Tab 1">
+        <Tabs DefaultActiveKey="1" TabPlacement="@ParsePlacement(_childPlacement)" Type="@ParseType(_childType)" Style="height: 300px">
+            @for (var index = 0; index < 20; index++)
+            {
+                var key = index.ToString();
+                <TabPane @key="key" Key="@key" Tab="@($"Tab {key}")">TTTT @key</TabPane>
+            }
+        </Tabs>
+    </TabPane>
+    <TabPane Key="2" Tab="Tab 2">Content of Tab Pane 2</TabPane>
+</Tabs>
+
+<style>
+    .tabs-nest-controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 16px;
+    }
+</style>
 
 @code {
+    private readonly string[] _placements = ["start", "end", "top", "bottom"];
+    private readonly string[] _types = ["line", "card", "editable-card"];
 
+    private string _parentPlacement;
+    private string _childPlacement;
+    private string _parentType;
+    private string _childType;
+
+    private static TabPlacement? ParsePlacement(string value) => value switch
+    {
+        "start" => AntDesign.TabPlacement.Start,
+        "end" => AntDesign.TabPlacement.End,
+        "top" => AntDesign.TabPlacement.Top,
+        "bottom" => AntDesign.TabPlacement.Bottom,
+        _ => null
+    };
+
+    private static TabType ParseType(string value) => value switch
+    {
+        "card" => TabType.Card,
+        "editable-card" => TabType.EditableCard,
+        _ => TabType.Line
+    };
 }

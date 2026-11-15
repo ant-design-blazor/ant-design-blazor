@@ -22,3 +22,8 @@ cover: https://gw.alipayobjects.com/zos/alicdn/qtJm4yt45/AutoComplete.svg
 
 `ClassNames` 和 `Styles` 支持 `root`、`input`、`popup`/`popup.root`、
 `popup.list` 和 `popup.listItem` 槽位，可分别定制下拉弹层、选项列表和列表项。
+
+## API 名称对齐
+
+`OnOpenChange` 与 React 的回调名称对应，用于监听弹层开合；旧参数
+`OnPanelVisibleChange` 仍可继续使用。

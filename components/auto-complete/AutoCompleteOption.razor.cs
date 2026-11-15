@@ -43,6 +43,9 @@ namespace AntDesign
         [Parameter]
         public bool Disabled { get; set; } = false;
 
+        [Parameter]
+        public bool Active { get; set; }
+
         [CascadingParameter]
         internal IAutoCompleteRef AutoComplete { get; set; }
 
@@ -53,6 +56,12 @@ namespace AntDesign
             SetClassMap();
             AutoComplete?.AddOption(this);
             base.OnInitialized();
+        }
+
+        protected override void OnParametersSet()
+        {
+            SetClassMap();
+            base.OnParametersSet();
         }
 
         protected override void Dispose(bool disposing)
@@ -66,7 +75,7 @@ namespace AntDesign
             ClassMapper.Clear().Add("ant-select-item").Add("ant-select-item-option")
                 //.If("ant-select-item-option-grouped", () => this.AutocompleteOptgroup)
                 .If("ant-select-item-option-selected", () => CalcSelected())
-                .If("ant-select-item-option-active", () => CalcActive())
+                .If("ant-select-item-option-active", () => Active || CalcActive())
                 .If("ant-select-item-option-disabled", () => this.Disabled);
         }
 

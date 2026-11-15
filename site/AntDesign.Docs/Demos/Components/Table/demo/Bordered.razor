@@ -1,11 +1,11 @@
 @using System.ComponentModel
 
-<Table DataSource="@data" Bordered=@true Title="@title" Footer="@footer" HidePagination="@true">
-  <PropertyColumn Property="c=>c.Name">
+<Table DataSource="@data" RowKey="item => item.Key" Bordered="true" Title="@title" Footer="@footer">
+  <PropertyColumn Property="c=>c.Name" Title="Name">
     <a>@context.Name</a>
   </PropertyColumn>
-  <PropertyColumn Property="c=>c.Money" Style="text-align: right"></PropertyColumn>
-  <PropertyColumn Property="c=>c.Address"></PropertyColumn>
+  <PropertyColumn Property="c=>c.Money" Title="Cash Assets" ClassName="column-money" Align="ColumnAlign.Right" />
+  <PropertyColumn Property="c=>c.Address" Title="Address" />
 </Table>
 
 @code {
@@ -34,7 +34,7 @@
             Key = "3",
             Name = "Joe Black",
             Money = "￥120,000.00",
-            Address = "Sidney No. 1 Lake Park",
+            Address = "Sydney No. 1 Lake Park",
         }
   };
 

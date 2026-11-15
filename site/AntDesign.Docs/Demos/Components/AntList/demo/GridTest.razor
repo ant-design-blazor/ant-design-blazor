@@ -1,0 +1,23 @@
+@{
+    var data = Enumerable.Range(1, 6).Select(i => new GridItem($"Title {i}")).ToList();
+    var grid = new ListGridType { Gutter = 16, Column = 4 };
+}
+
+<AntList Grid="@grid" DataSource="@data">
+    <ListItem><Card Title="@context.Title"><Body>Card content</Body></Card></ListItem>
+</AntList>
+
+<AntList Grid="@grid" DataSource="@data">
+    <ListItem><Card Title="@context.Title"><Body>Card content</Body></Card></ListItem>
+</AntList>
+
+<AntList Grid="@grid" DataSource="@data">
+    <ChildContent Context="item">
+        <ListItem><Card Title="@item.Title"><Body>Card content</Body></Card></ListItem>
+        <div></div>
+    </ChildContent>
+</AntList>
+
+@code {
+    private sealed record GridItem(string Title);
+}

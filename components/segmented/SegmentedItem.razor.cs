@@ -52,6 +52,7 @@ namespace AntDesign
 
             ClassMapper.Add(PrefixCls)
                 .If($"{PrefixCls}-selected", () => _selected)
+                .If($"{PrefixCls}-selected-text", () => _selected)
                 .If($"{PrefixCls}-disabled", () => Disabled || Parent?.Disabled == true)
                 ;
 

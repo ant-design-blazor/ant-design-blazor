@@ -1,11 +1,13 @@
 @using AntDesign.TableModels
 
-<Table TItem="Row" DataSource="_visibleRows" OnChange="OnChange">
+<Table TItem="Row" DataSource="_visibleRows" RowKey="row => row.Key" OnChange="OnChange"
+       ShowSorterTooltip="@(new TableSorterTooltipOptions { Target = "sorter-icon" })">
     <ColumnDefinitions>
         <PropertyColumn Property="row => row.Name"
                         Sortable
                         SorterCompare="@((left, right) => left.Length - right.Length)"
                         SortDirections="new[] { SortDirection.Descending }"
+                        ShowSorterTooltip="@(new TableSorterTooltipOptions { Target = "full-header" })"
                         Filters="_nameFilters"
                         OnFilter="@((value, name) => name.StartsWith(value, StringComparison.Ordinal))" />
         <PropertyColumn Property="row => row.Age"
@@ -34,8 +36,11 @@
     [
         new() { Text = "Joe", Value = "Joe" },
         new() { Text = "Jim", Value = "Jim" },
-        new() { Text = "Green", Value = "Green" },
-        new() { Text = "Black", Value = "Black" }
+        new() { Text = "Submenu", Value = "Submenu", Children = new[]
+        {
+            new TableFilter<string> { Text = "Green", Value = "Green" },
+            new TableFilter<string> { Text = "Black", Value = "Black" }
+        } }
     ];
 
     private readonly TableFilter<string>[] _addressFilters =

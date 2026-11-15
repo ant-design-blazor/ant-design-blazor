@@ -2,7 +2,7 @@ const pendingScrolls = new WeakMap<HTMLElement, () => void>();
 const virtualLists = new WeakMap<HTMLElement, VirtualListState>();
 
 type DotNetReference = {
-  invokeMethodAsync(method: string, ...args: number[]): Promise<unknown>;
+  invokeMethodAsync(method: string, ...args: (string | number)[]): Promise<unknown>;
 };
 
 type VirtualListState = {
@@ -15,12 +15,17 @@ type VirtualListState = {
   hideThumbTimeout: number;
   scrollbarObserver?: ResizeObserver;
   popupObserver?: MutationObserver;
+  optionObserver?: MutationObserver;
+  optionIds: WeakMap<HTMLElement, string>;
   scrollbarFrame: number;
   pending: boolean;
   queued: boolean;
   detached: boolean;
   onScroll: () => void;
   onWheel: (event: WheelEvent) => void;
+  onMouseMove: (event: MouseEvent) => void;
+  lastActiveOptionId?: string;
+  flashScrollbar: () => void;
 };
 
 export class selectHelper {
@@ -38,6 +43,8 @@ export class selectHelper {
       frame: 0,
       hideThumbTimeout: 0,
       scrollbarFrame: 0,
+      optionIds: new WeakMap<HTMLElement, string>(),
+      flashScrollbar: () => {},
       pending: false,
       queued: false,
       detached: false,
@@ -57,11 +64,27 @@ export class selectHelper {
         holder.scrollTop = next;
         updateScrollbar();
       },
+      onMouseMove: event => {
+        const target = event.target instanceof Element ? event.target : null;
+        const option = target?.closest<HTMLElement>('.ant-select-item-option');
+        if (!option || !holder.contains(option)) return;
+
+        const optionId = state.optionIds.get(option);
+        if (!optionId || optionId === state.lastActiveOptionId) return;
+        state.lastActiveOptionId = optionId;
+        dotNet.invokeMethodAsync('SetActiveVirtualOption', optionId).catch(() => { state.detached = true; });
+      },
     };
     virtualLists.set(holder, state);
 
     const dropdown = holder.closest<HTMLElement>('.ant-select-dropdown');
-    const scrollbar = holder.parentElement?.querySelector<HTMLElement>('.ant-select-dropdown-list-scrollbar');
+    const isDropdownVisible = () => {
+      if (!dropdown || !dropdown.isConnected || dropdown.getClientRects().length === 0
+        || dropdown.classList.contains('ant-select-dropdown-hidden')) return false;
+      const style = getComputedStyle(dropdown);
+      return style.display !== 'none' && style.visibility !== 'hidden';
+    };
+    const scrollbar = dropdown?.querySelector<HTMLElement>('.ant-select-dropdown-list-scrollbar');
     const thumb = scrollbar?.querySelector<HTMLElement>('.ant-select-dropdown-list-scrollbar-thumb');
     updateScrollbar = () => {
       if (!scrollbar || !thumb) return;
@@ -81,6 +104,7 @@ export class selectHelper {
         scrollbar.style.visibility = 'hidden';
       }, 3000);
     };
+    state.flashScrollbar = updateScrollbar;
     const updateRange = () => {
       if (state.detached || !holder.isConnected) return;
       const viewportHeight = holder.clientHeight || parseFloat(getComputedStyle(holder).maxHeight) || visibleRows * itemHeight;
@@ -112,6 +136,25 @@ export class selectHelper {
     }
     holder.addEventListener('scroll', state.onScroll, { passive: true });
     holder.addEventListener('wheel', state.onWheel, { passive: false });
+    holder.addEventListener('mousemove', state.onMouseMove);
+    const indexOption = (element: Element) => {
+      if (!(element instanceof HTMLElement)) return;
+      const optionId = element.getAttribute('data-select-option-id');
+      if (!optionId) return;
+      state.optionIds.set(element, optionId);
+      element.removeAttribute('data-select-option-id');
+    };
+    Array.from(holder.querySelectorAll('[data-select-option-id]')).forEach(indexOption);
+    state.optionObserver = new MutationObserver(records => {
+      for (const record of records) {
+        for (const node of Array.from(record.addedNodes)) {
+          if (!(node instanceof Element)) continue;
+          indexOption(node);
+          Array.from(node.querySelectorAll('[data-select-option-id]')).forEach(indexOption);
+        }
+      }
+    });
+    state.optionObserver.observe(holder, { childList: true, subtree: true });
     // Overlays may attach the virtual list before their entry transition makes
     // the holder measurable. Recompute once it receives its visible dimensions
     // so the thumb does not stay at the 20px fallback until the first scroll.
@@ -123,18 +166,18 @@ export class selectHelper {
     // popup and its ancestor wrappers so opening it starts the same transient
     // scrollbar visibility window as React's virtual list.
     if (typeof MutationObserver !== 'undefined' && dropdown) {
-      let dropdownWasVisible = dropdown.getClientRects().length > 0;
+      let dropdownWasVisible = isDropdownVisible();
       state.popupObserver = new MutationObserver(() => {
         if (state.detached || !dropdown.isConnected) return;
-        const dropdownIsVisible = dropdown.getClientRects().length > 0;
+        const dropdownIsVisible = isDropdownVisible();
         if (!dropdownIsVisible) {
           dropdownWasVisible = false;
           return;
         }
         // Overlay position updates can mutate style/class while the popup stays
-        // open. Only treat a hidden-to-visible transition as a popup opening;
-        // otherwise selection and focus updates keep the scrollbar flashing.
-        if (dropdownWasVisible) return;
+        // open. Flash only when it has just opened or its transient scrollbar
+        // has already hidden, so unrelated updates do not restart the timer.
+        if (dropdownWasVisible && scrollbar?.classList.contains('ant-select-dropdown-list-scrollbar-visible')) return;
         dropdownWasVisible = true;
         scheduleUpdate();
         if (state.scrollbarFrame) window.cancelAnimationFrame(state.scrollbarFrame);
@@ -159,12 +202,39 @@ export class selectHelper {
     state.detached = true;
     holder.removeEventListener('scroll', state.onScroll);
     holder.removeEventListener('wheel', state.onWheel);
+    holder.removeEventListener('mousemove', state.onMouseMove);
     state.scrollbarObserver?.disconnect();
     state.popupObserver?.disconnect();
+    state.optionObserver?.disconnect();
     if (state.frame) window.cancelAnimationFrame(state.frame);
     if (state.scrollbarFrame) window.cancelAnimationFrame(state.scrollbarFrame);
     window.clearTimeout(state.hideThumbTimeout);
     virtualLists.delete(holder);
+  }
+
+  static showScrollbar(holder: HTMLElement) {
+    const state = virtualLists.get(holder);
+    if (!holder) return;
+
+    const show = () => {
+      const scrollbar = holder.closest<HTMLElement>('.ant-select-dropdown')
+        ?.querySelector<HTMLElement>('.ant-select-dropdown-list-scrollbar');
+      if (!scrollbar) return;
+      state?.flashScrollbar();
+      scrollbar.classList.add('ant-select-dropdown-list-scrollbar-visible');
+      scrollbar.style.visibility = 'visible';
+      if (state) {
+        window.clearTimeout(state.hideThumbTimeout);
+        state.hideThumbTimeout = window.setTimeout(() => {
+          scrollbar.classList.remove('ant-select-dropdown-list-scrollbar-visible');
+          scrollbar.style.visibility = 'hidden';
+        }, 3000);
+      }
+    };
+
+    // Match rc-virtual-list's open effect after the popup has completed its
+    // first layout frame, when the holder and scrollbar have real dimensions.
+    window.requestAnimationFrame(() => window.requestAnimationFrame(show));
   }
 
   static cancelScroll(holder: HTMLElement) {

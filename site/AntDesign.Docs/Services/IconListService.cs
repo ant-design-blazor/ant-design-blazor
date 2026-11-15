@@ -25,6 +25,7 @@ namespace AntDesign.Docs.Services
                     IconNames = IconCatalog.Items
                         .Where(icon => IconSearchCategories.GetCategory(icon.ComponentType.Name) == category)
                         .OrderBy(icon => IconSearchCategories.GetOrder(icon.ComponentType.Name))
+                        .ThenBy(icon => IconSearchCategories.GetThemeOrder(icon.ComponentType.Name))
                         .ThenBy(icon => icon.Name, StringComparer.Ordinal)
                         .Select(icon => icon.ComponentType.Name)
                         .Distinct(StringComparer.Ordinal)

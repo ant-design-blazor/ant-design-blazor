@@ -16,3 +16,4 @@ export { borderBeamHelper } from './borderBeamHelper';
 export { menuOverflowHelper } from './menuOverflowHelper';
 export { selectHelper } from './selectHelper';
 export { collapseHelper } from './collapseHelper';
+export { floatButtonHelper } from './floatButtonHelper';

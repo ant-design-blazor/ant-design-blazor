@@ -25,6 +25,7 @@ using Microsoft.Extensions.Logging;
 
 #if NET6_0_OR_GREATER
 using Microsoft.JSInterop;
+using OneOf;
 #endif
 
 #if NET5_0_OR_GREATER
@@ -233,6 +234,10 @@ namespace AntDesign
         [Parameter]
         public TableSize Size { get; set; } = TableSize.Default;
 
+        /// <summary>Shared default properties for child columns, matching React Table's <c>column</c> prop.</summary>
+        [Parameter]
+        public TableColumnDefaults Column { get; set; }
+
         /// <summary>
         /// Default copywriting settings, currently including sorting, filtering, and empty data copywriting
         /// </summary>
@@ -319,6 +324,10 @@ namespace AntDesign
         [Parameter]
         public SortDirection[] SortDirections { get; set; } = [SortDirection.Ascending, SortDirection.Descending, SortDirection.None];
 
+        /// <summary>Whether sort direction tooltips are shown and which part of the header triggers them.</summary>
+        [Parameter]
+        public OneOf<bool, TableSorterTooltipOptions> ShowSorterTooltip { get; set; } = new TableSorterTooltipOptions();
+
         /// <summary>
         /// The table-layout attribute of the table element, set to fixed means that the content will not affect the layout of the column
         /// </summary>
@@ -381,10 +390,23 @@ namespace AntDesign
 
 #if NET5_0_OR_GREATER
         /// <summary>
-        /// Whether to enable virtualization feature or not, only works for .NET 5 and higher
+        /// Enable virtual rendering for large data sets. Use with <see cref="ScrollY"/>.
         /// </summary>
+        /// <default value="false"/>
         [Parameter]
-        public bool EnableVirtualization { get; set; }
+        public bool Virtual { get; set; }
+
+        /// <summary>
+        /// Compatibility alias for <see cref="Virtual"/>. Prefer <see cref="Virtual"/> for new code.
+        /// </summary>
+        /// <default value="false"/>
+        [Parameter]
+        [Obsolete("Use Virtual instead.")]
+        public bool EnableVirtualization
+        {
+            get => Virtual;
+            set => Virtual = value;
+        }
 
 #endif
         [Parameter]
@@ -410,11 +432,17 @@ namespace AntDesign
 
         private IList<SummaryRow> _summaryRows;
 
+        private bool HasFixedSummary => _summaryRows?.Any(row => row.Fixed) == true;
+
         private bool _hasInitialized;
         private bool _waitingDataSourceReload;
         private bool _waitingReloadAndInvokeChange;
         private bool _treeMode;
         private string _scrollBarWidth;
+
+        private bool IsVirtualEnabled => Virtual;
+
+        private bool HasScrollbarPlaceholder => ScrollY != null && !IsVirtualEnabled && !string.Equals(_scrollBarWidth, "0px", StringComparison.OrdinalIgnoreCase);
         private bool _hasFixLeft;
         private bool _hasFixRight;
         private int _treeExpandIconColumnIndex;
@@ -423,7 +451,89 @@ namespace AntDesign
         private readonly ClassMapper _wrapperClassMapper = new();
         private List<GroupResult<TItem>> _groups = [];
 
-        private string TableLayoutStyle => TableLayout == null ? "" : $"table-layout: {TableLayout};";
+        /// <summary>Semantic classes keyed by Table semantic slot names such as <c>root</c> and <c>body.cell</c>.</summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> ClassNames { get; set; }
+
+        /// <summary>
+        /// Computes semantic class names from the current Table parameters.
+        /// </summary>
+        [Parameter]
+        public Func<Table<TItem>, IReadOnlyDictionary<string, string>> ClassNamesFunc { get; set; }
+
+        /// <summary>Semantic inline styles keyed by Table semantic slot names such as <c>root</c> and <c>body.cell</c>.</summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> Styles { get; set; }
+
+        /// <summary>
+        /// Computes semantic inline styles from the current Table parameters.
+        /// </summary>
+        [Parameter]
+        public Func<Table<TItem>, IReadOnlyDictionary<string, string>> StylesFunc { get; set; }
+
+        private IReadOnlyDictionary<string, string> _resolvedClassNames;
+        private IReadOnlyDictionary<string, string> _resolvedStyles;
+
+        public string GetSemanticClass(string slot, string baseClass = null)
+        {
+            var semanticClass = _resolvedClassNames != null && _resolvedClassNames.TryGetValue(slot, out var value) ? value : null;
+            if (string.IsNullOrWhiteSpace(semanticClass)) return baseClass;
+            return string.IsNullOrWhiteSpace(baseClass) ? semanticClass : $"{baseClass} {semanticClass}";
+        }
+
+        public string GetSemanticStyle(string slot, string baseStyle = null)
+        {
+            var semanticStyle = _resolvedStyles != null && _resolvedStyles.TryGetValue(slot, out var value) ? value : null;
+            if (string.IsNullOrWhiteSpace(baseStyle)) return semanticStyle;
+            if (string.IsNullOrWhiteSpace(semanticStyle)) return baseStyle;
+            return $"{baseStyle.Trim().TrimEnd(';')}; {semanticStyle}";
+        }
+
+        private string TableLayoutStyle => $"table-layout: {(IsVirtualEnabled ? "fixed" : TableLayout ?? "auto")};";
+
+        private string VirtualViewportHeight
+        {
+            get
+            {
+                const double headerAndBorderHeight = 29;
+                if (ScrollY != null && ScrollY.EndsWith("px", StringComparison.OrdinalIgnoreCase)
+                    && double.TryParse(ScrollY[..^2], out var height))
+                {
+                    return $"{Math.Max(0, height - headerAndBorderHeight):0.###}px";
+                }
+
+                return "100%";
+            }
+        }
+
+        private bool ShouldWindowVirtualItems(IEnumerable<TItem> items)
+        {
+            if (UseItemsProvider)
+            {
+                return true;
+            }
+
+            var count = items?.Count() ?? 0;
+            if (count < 1)
+            {
+                return false;
+            }
+
+            if (ScrollY != null && ScrollY.EndsWith("px", StringComparison.OrdinalIgnoreCase)
+                && double.TryParse(ScrollY[..^2], out var height))
+            {
+                return count * 54 > Math.Max(0, height - 29);
+            }
+
+            return true;
+        }
+
+        private string TableLayoutWithScrollbar => ScrollBarWidth == null
+            ? TableLayoutStyle
+            : $"{TableLayoutStyle} --scrollbar-width: {(CssSizeLength)_scrollBarWidth};";
+
+        private bool ShouldRenderColGroup => ScrollX != null || ScrollY != null
+            || ColumnContext?.Columns.Any(column => column is not ColumnBase baseColumn || baseColumn.RequiresColGroup) == true;
 
         private string StickyHolderStyle => StickyOffsetHeader.HasValue ? $"top: {StickyOffsetHeader.Value}px;" : "";
 
@@ -449,7 +559,7 @@ namespace AntDesign
             get
             {
 #if NET5_0_OR_GREATER
-                return EnableVirtualization && (ServerSide || IsEntityFrameworkCore);
+                return IsVirtualEnabled && (ServerSide || IsEntityFrameworkCore);
 #else
                 return false;
 #endif
@@ -457,17 +567,23 @@ namespace AntDesign
         }
 
         bool ITable.TreeMode => _treeMode;
+
+        bool ITable.Responsive => Responsive;
         int ITable.IndentSize => IndentSize;
         string ITable.ScrollX => ScrollX;
         string ITable.ScrollY => ScrollY;
         string ITable.ScrollBarWidth => _scrollBarWidth ?? "15px";
-        int ITable.ExpandIconColumnIndex => ExpandIconColumnIndex + (_selection != null && _selection.ColIndex <= ExpandIconColumnIndex ? 1 : 0);
+        int ITable.ExpandIconColumnIndex => ExpandIconColumnIndex;
         int ITable.TreeExpandIconColumnIndex => _treeExpandIconColumnIndex;
         bool ITable.HasExpandTemplate => ExpandTemplate != null;
         bool ITable.HasHeaderTemplate => HeaderTemplate != null;
         bool ITable.HasRowTemplate => RowTemplate != null;
         bool ITable.ServerSide => ServerSide;
         bool ITable.IsSticky => IsSticky;
+        bool ITable.IsVirtual => IsVirtualEnabled;
+        string ITable.VirtualWidth => ScrollX != null
+            ? (CssSizeLength)ScrollX
+            : _tableWidth > 0 ? $"{_tableWidth}px" : "100%";
 
         void ITable.AddGroupColumn(IFieldColumn column) => AddGroupColumn(column);
 
@@ -622,6 +738,22 @@ namespace AntDesign
         /// </summary>
         /// <returns></returns>
         public QueryModel GetQueryModel() => BuildQueryModel().Clone() as QueryModel;
+
+        /// <summary>
+        /// Scrolls a virtual table to the row at the specified zero-based data index.
+        /// </summary>
+        /// <param name="index">Zero-based index of the row.</param>
+        public Task ScrollTo(int index)
+        {
+            if (index < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
+
+            return IsVirtualEnabled
+                ? JsInvokeAsync(JSInteropConstants.TableComponentHelper.ScrollToVirtualIndex, _tableBodyRef, index)
+                : Task.CompletedTask;
+        }
 
         private QueryModel<TItem> BuildQueryModel()
         {
@@ -847,15 +979,20 @@ namespace AntDesign
         private void SetClass()
         {
             string prefixCls = "ant-table";
-            ClassMapper.Add(prefixCls)
+            ClassMapper.Add($"{prefixCls} {prefixCls}-css-var")
+                .If($"{prefixCls}-empty", () => _showItems?.Any() != true)
                 .If($"{prefixCls}-fixed-header", () => ScrollY != null)
+                .If($"{prefixCls}-virtual", () => IsVirtualEnabled)
                 .If($"{prefixCls}-bordered", () => Bordered)
                 .If($"{prefixCls}-striped", () => Striped)
                 .If($"{prefixCls}-small", () => Size == TableSize.Small)
-                .If($"{prefixCls}-middle", () => Size == TableSize.Middle)
-                .If($"{prefixCls}-fixed-column {prefixCls}-scroll-horizontal", () => ScrollX != null)
-                .If($"{prefixCls}-has-fix-left", () => _hasFixLeft)
-                .If($"{prefixCls}-has-fix-right", () => _hasFixRight)
+                .If($"{prefixCls}-medium", () => Size == TableSize.Medium)
+                .If($"{prefixCls}-fixed-column", () => ScrollX != null)
+                .If($"{prefixCls}-scroll-horizontal", () => ScrollX != null || IsVirtualEnabled)
+                .If($"{prefixCls}-has-fix-start", () => _hasFixLeft)
+                .If($"{prefixCls}-has-fix-end", () => _hasFixRight)
+                .If($"{prefixCls}-fix-start-shadow {prefixCls}-fix-end-shadow", () => ScrollX != null || IsVirtualEnabled)
+                .If($"{prefixCls}-fix-end-shadow-show", () => ScrollX != null)
                 .If($"{prefixCls}-has-scrollbar-width", () => ScrollBarWidth != null)
                 //.If($"{prefixCls}-ping-left", () => _pingLeft)
                 //.If($"{prefixCls}-ping-right", () => _pingRight)
@@ -864,7 +1001,7 @@ namespace AntDesign
                 ;
 
             _wrapperClassMapper
-                .Add($"{prefixCls}-wrapper {prefixCls}-css-var")
+                .Add($"{prefixCls}-css-var {prefixCls}-wrapper")
                 .If($"{prefixCls}-responsive", () => Responsive) // Not implemented in ant design
                 .If($"{prefixCls}-wrapper-rtl", () => RTL);
         }
@@ -889,7 +1026,6 @@ namespace AntDesign
                 HidePagination = true;
             }
 #endif
-            InitializePagination();
 
             FieldFilterTypeResolver ??= InjectedFieldFilterTypeResolver;
         }
@@ -913,6 +1049,8 @@ namespace AntDesign
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
+            _resolvedClassNames = ClassNamesFunc?.Invoke(this) ?? ClassNames;
+            _resolvedStyles = StylesFunc?.Invoke(this) ?? Styles;
             if (_preventRender)
             {
                 _shouldRender = false;
@@ -966,6 +1104,7 @@ namespace AntDesign
             {
                 _afterFirstRender = true;
                 DomEventListener.AddShared<JsonElement>("window", "beforeunload", Reloading);
+                await JsInvokeAsync(JSInteropConstants.TableComponentHelper.BindTableRowHover, Ref);
 
                 if (ScrollY != null || ScrollX != null || Resizable || AutoHeight)
                 {
@@ -1059,6 +1198,8 @@ namespace AntDesign
             {
                 if (_afterFirstRender && !_isReloading)
                 {
+                    await JsInvokeAsync(JSInteropConstants.TableComponentHelper.UnbindTableRowHover, Ref);
+
                     if (ScrollY != null || ScrollX != null || Resizable || AutoHeight)
                     {
                         await JsInvokeAsync(JSInteropConstants.UnbindTableScroll, _tableBodyRef);
@@ -1105,7 +1246,7 @@ namespace AntDesign
             }
 
             var query = children.AsQueryable();
-            foreach (var sort in _currentQueryModel.SortModel.OrderBy(x => x.Priority))
+            foreach (var sort in _currentQueryModel.SortModel.OrderByDescending(x => x.Priority))
             {
                 query = sort.SortList(query);
             }

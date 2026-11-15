@@ -51,29 +51,6 @@ namespace AntDesign
                 builder.AddContent(1, Title);
         };
 
-        private string GetTooltipArrowStyle()
-        {
-            var placement = GetPlacementType().Name;
-            if (placement.StartsWith("top", System.StringComparison.Ordinal))
-            {
-                var left = placement == "topLeft" ? "33%" : placement == "topRight" ? "66%" : "50%";
-                return GetSemanticStyle("arrow", $"position: absolute; bottom: 0px; left: {left};");
-            }
-            if (placement.StartsWith("bottom", System.StringComparison.Ordinal))
-            {
-                var left = placement == "bottomLeft" ? "33%" : placement == "bottomRight" ? "66%" : "50%";
-                return GetSemanticStyle("arrow", $"position: absolute; top: 0px; left: {left};");
-            }
-            if (placement.StartsWith("left", System.StringComparison.Ordinal))
-            {
-                var top = placement == "leftTop" ? "33%" : placement == "leftBottom" ? "66%" : "50%";
-                return GetSemanticStyle("arrow", $"position: absolute; right: 0px; top: {top};");
-            }
-
-            var rightTop = placement == "rightTop" ? "33%" : placement == "rightBottom" ? "66%" : "50%";
-            return GetSemanticStyle("arrow", $"position: absolute; left: 0px; top: {rightTop};");
-        }
-
         private bool IsPresetColor => Color is "pink" or "magenta" or "red" or "volcano" or "orange" or "yellow" or "gold" or "cyan" or "lime" or "green" or "blue" or "geekblue" or "purple";
 
         internal override string GetOverlayAdditionalClass() => string.Join(" ", new[]
@@ -115,6 +92,27 @@ namespace AntDesign
         private string GetTooltipContainerStyle() => string.IsNullOrWhiteSpace(Color) || IsPresetColor ? null : $"background-color: {Color}; color: {GetColorText()};";
 
         private string GetTooltipArrowContentStyle() => string.IsNullOrWhiteSpace(Color) || IsPresetColor ? null : $"--ant-tooltip-arrow-background-color: {Color};";
+
+        private TriggerBoundaryAdjustMode? _boundaryAdjustModeBeforeAutoAdjust;
+
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+
+            if (AutoAdjustOverflow.HasValue)
+            {
+                _boundaryAdjustModeBeforeAutoAdjust ??= BoundaryAdjustMode;
+                BoundaryAdjustMode = AutoAdjustOverflow.Value
+                    ? TriggerBoundaryAdjustMode.InView
+                    : TriggerBoundaryAdjustMode.None;
+            }
+            else if (_boundaryAdjustModeBeforeAutoAdjust.HasValue)
+            {
+                BoundaryAdjustMode = _boundaryAdjustModeBeforeAutoAdjust.Value;
+                _boundaryAdjustModeBeforeAutoAdjust = null;
+            }
+
+        }
 
         private string GetColorText()
         {
@@ -170,18 +168,12 @@ namespace AntDesign
         public string Color { get; set; }
 
         /// <summary>
-        /// Delay in seconds, before tooltip is shown on mouse enter
+        /// Whether to adjust the tooltip placement automatically when it is
+        /// outside the viewport. Defaults to the shared Overlay in-view behavior.
         /// </summary>
-        /// <default value="0.1" />
+        /// <default value="true" />
         [Parameter]
-        public double MouseEnterDelay { get; set; } = 0.1;
-
-        /// <summary>
-        /// Delay in seconds, before tooltip is hidden on mouse leave
-        /// </summary>
-        /// <default value="0.1" />
-        [Parameter]
-        public double MouseLeaveDelay { get; set; } = 0.1;
+        public bool? AutoAdjustOverflow { get; set; }
 
         /// <summary>
         /// Tab index of the tooltip
@@ -194,6 +186,8 @@ namespace AntDesign
         {
             PrefixCls = "ant-tooltip";
             Placement = Placement.Top;
+            MouseEnterDelay = 0.1;
+            MouseLeaveDelay = 0.1;
         }
 
         internal override string GetOverlayEnterClass()
@@ -211,6 +205,13 @@ namespace AntDesign
 
         internal override async Task Show(int? overlayLeft = null, int? overlayTop = null)
         {
+            // Tooltip's v6 popup sizes to its content; the generic overlay
+            // trigger-width default makes short tooltip text fill the trigger.
+            if (PopupWidthMode == "match-trigger")
+            {
+                PopupWidthMode = "content-only";
+            }
+
             if (Trigger.Contains(AntDesign.Trigger.Hover))
             {
                 await Task.Delay((int)(MouseEnterDelay * 1000));

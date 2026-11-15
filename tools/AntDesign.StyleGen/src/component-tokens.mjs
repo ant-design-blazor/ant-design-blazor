@@ -13,21 +13,19 @@ export function csharpTokenType(type) {
 }
 
 export function extractComponentTokenDefinitions(source) {
-  const interfaces = new Map();
-  for (const match of source.matchAll(/interface\s+([A-Za-z_$][\w$]*)(?:\s+extends\s+([^\{]+))?\s*\{([\s\S]*?)\}/g)) {
-    interfaces.set(match[1], {
-      parents: (match[2] ?? '').split(',').map((name) => name.trim().split(/[<\s]/)[0]).filter(Boolean),
-      body: match[3],
-    });
-  }
+  const interfaces = parseInterfaces(source);
 
-  const definitions = new Map();
-  const visit = (name, visited = new Set()) => {
-    if (visited.has(name)) return;
-    visited.add(name);
+  const visit = (name, visiting = new Set()) => {
+    if (visiting.has(name)) return new Map();
+    const nextVisiting = new Set(visiting).add(name);
     const definition = interfaces.get(name);
-    if (!definition) return;
-    for (const parent of definition.parents) visit(parent, visited);
+    if (!definition) return new Map();
+    const definitions = new Map();
+    for (const { name: parent, excluded } of definition.parents) {
+      const inherited = visit(parent, nextVisiting);
+      for (const excludedName of excluded) inherited.delete(excludedName);
+      for (const [propertyName, token] of inherited) definitions.set(propertyName, token);
+    }
     const propertyPattern = /(?:\/\*\*([\s\S]*?)\*\/\s*)?^\s*([A-Za-z_$][\w$]*)\??\s*:\s*([^;\n]+);?/gm;
     for (const property of definition.body.matchAll(propertyPattern)) {
       const [, comment = '', propertyName, type] = property;
@@ -41,7 +39,64 @@ export function extractComponentTokenDefinitions(source) {
       const previous = definitions.get(propertyName);
       definitions.set(propertyName, { ...previous, ...token });
     }
+    return definitions;
+  };
+  return [...visit('ComponentToken')].sort(([left], [right]) => left.localeCompare(right)).map(([, token]) => token);
+}
+
+export function extractExcludedComponentTokenNames(source) {
+  const interfaces = parseInterfaces(source);
+  const excluded = new Set();
+  const visit = (name, visiting = new Set()) => {
+    if (visiting.has(name)) return;
+    const definition = interfaces.get(name);
+    if (!definition) return;
+    const nextVisiting = new Set(visiting).add(name);
+    for (const parent of definition.parents) {
+      parent.excluded.forEach(token => excluded.add(token));
+      visit(parent.name, nextVisiting);
+    }
   };
   visit('ComponentToken');
-  return [...definitions].sort(([left], [right]) => left.localeCompare(right)).map(([, token]) => token);
+  return excluded;
+}
+
+function parseInterfaces(source) {
+  const interfaces = new Map();
+  for (const match of source.matchAll(/interface\s+([A-Za-z_$][\w$]*)(?:\s+extends\s+([^\{]+))?\s*\{([\s\S]*?)\}/g)) {
+    interfaces.set(match[1], {
+      parents: splitTopLevel(match[2] ?? '').map(parseParentType).filter(Boolean),
+      body: match[3],
+    });
+  }
+  return interfaces;
+}
+
+function splitTopLevel(value) {
+  const parts = [];
+  let depth = 0;
+  let start = 0;
+  for (let index = 0; index < value.length; index += 1) {
+    if (value[index] === '<') depth += 1;
+    else if (value[index] === '>') depth = Math.max(0, depth - 1);
+    else if (value[index] === ',' && depth === 0) {
+      parts.push(value.slice(start, index).trim());
+      start = index + 1;
+    }
+  }
+  parts.push(value.slice(start).trim());
+  return parts.filter(Boolean);
+}
+
+function parseParentType(expression) {
+  const source = expression.trim();
+  const utility = source.match(/^(?:Exclude|Omit)\s*<([\s\S]*)>$/);
+  if (utility) {
+    const [base, ...excludedParts] = splitTopLevel(utility[1]);
+    const name = base?.match(/^([A-Za-z_$][\w$]*)/)?.[1];
+    const excluded = excludedParts.flatMap(part => [...part.matchAll(/['"]([^'"]+)['"]/g)].map(match => match[1]));
+    return name ? { name, excluded } : null;
+  }
+  const name = source.match(/^([A-Za-z_$][\w$]*)/)?.[1];
+  return name ? { name, excluded: [] } : null;
 }

@@ -19,6 +19,8 @@ namespace AntDesign.Internal
 
         public string Name { get; }
 
+        public string AriaDescribedBy { get; }
+
         internal IForm Form { get; }
 
         internal bool IsRequired { get; }
