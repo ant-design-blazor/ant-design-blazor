@@ -1,30 +1,27 @@
-<Upload Action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-        Name="files"
-        OnSingleCompleted="OnSingleCompleted">
-    <Button Icon="upload">
-        <span>Click to Upload</span>
-    </Button>
+@inject IMessageService Message
+
+<Upload Action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+        Name="file"
+        Headers="UploadHeaders"
+        OnChange="HandleChange">
+    <Button Icon="upload">Click to Upload</Button>
 </Upload>
 
 @code {
-    void OnSingleCompleted(UploadInfo fileinfo)
+    private static readonly Dictionary<string, string> UploadHeaders = new()
     {
-        if (fileinfo.File.State == UploadState.Success)
+        ["authorization"] = "authorization-text"
+    };
+
+    private void HandleChange(UploadInfo info)
+    {
+        if (info.File.State == UploadState.Success)
         {
-            var result = fileinfo.File.GetResponse<ResponseModel>();
-            fileinfo.File.Url = result.url;
+            Message.Success($"{info.File.FileName} file uploaded successfully");
+        }
+        else if (info.File.State == UploadState.Fail)
+        {
+            Message.Error($"{info.File.FileName} file upload failed.");
         }
     }
-
-    public class ResponseModel
-    {
-        public string name { get; set; }
-
-        public string status { get; set; }
-
-        public string url { get; set; }
-
-        public string thumbUrl { get; set; }
-    }
-
 }

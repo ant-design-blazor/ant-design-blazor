@@ -77,11 +77,19 @@ export class uploadHelper {
   static addFileClickEventListener(btn: HTMLElement) {
     if (btn.addEventListener) {
       btn.addEventListener("click", uploadHelper.fileClickEvent);
+      btn.addEventListener("keydown", uploadHelper.fileKeyDownEvent);
+      if (btn.parentElement?.classList.contains("ant-upload-drag")) {
+        btn.addEventListener("dragover", uploadHelper.fileDragOverEvent);
+        btn.addEventListener("drop", uploadHelper.fileDropEvent);
+      }
     }
   }
 
   static removeFileClickEventListener(btn: HTMLElement) {
     btn.removeEventListener("click", uploadHelper.fileClickEvent);
+    btn.removeEventListener("keydown", uploadHelper.fileKeyDownEvent);
+    btn.removeEventListener("dragover", uploadHelper.fileDragOverEvent);
+    btn.removeEventListener("drop", uploadHelper.fileDropEvent);
   }
 
   static addPasteEventListener(element: HTMLElement, input: HTMLInputElement, instance: any) {
@@ -115,9 +123,34 @@ export class uploadHelper {
       return;
     }
     e.stopPropagation();
-    const fileId = (e.currentTarget as HTMLSpanElement).attributes["data-fileid"].nodeValue;
-    const element = document.getElementById(fileId) as HTMLInputElement;
-    element.click();
+    uploadHelper.openFileDialog(e.currentTarget as HTMLSpanElement);
+  }
+
+  private static fileKeyDownEvent(e: KeyboardEvent) {
+    if (e.key !== "Enter") {
+      return;
+    }
+    e.preventDefault();
+    uploadHelper.openFileDialog(e.currentTarget as HTMLSpanElement);
+  }
+
+  private static fileDragOverEvent(e: DragEvent) {
+    e.preventDefault();
+  }
+
+  private static fileDropEvent(e: DragEvent) {
+    e.preventDefault();
+    const input = (e.currentTarget as HTMLSpanElement).querySelector(':scope > input[type="file"]') as HTMLInputElement;
+    if (!input || !e.dataTransfer?.files.length) {
+      return;
+    }
+    input.files = e.dataTransfer.files;
+    input.dispatchEvent(new Event("change", { bubbles: true }));
+  }
+
+  private static openFileDialog(trigger: HTMLSpanElement) {
+    const element = trigger.querySelector(':scope > input[type="file"]') as HTMLInputElement;
+    element?.click();
   }
 
   private static async handlePaste(e: ClipboardEvent, input: HTMLInputElement, instance: any) {

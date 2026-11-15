@@ -1,37 +1,30 @@
-﻿<Upload Action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-        Name="files"
-        Drag
+@inject IMessageService Message
+
+<Upload Action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+        Name="file"
         Multiple
-        OnSingleCompleted="OnSingleCompleted">        
+        Drag
+        OnChange="HandleChange">
     <p class="ant-upload-drag-icon">
         <Icon Type="@IconType.Outline.Inbox" />
     </p>
     <p class="ant-upload-text">Click or drag file to this area to upload</p>
     <p class="ant-upload-hint">
-        Support for a single or bulk upload. Strictly prohibit from uploading company data or other
-        band files
+        Support for a single or bulk upload. Strictly prohibited from uploading company data or
+        other banned files.
     </p>
 </Upload>
 
 @code {
-
-    void OnSingleCompleted(UploadInfo fileinfo)
+    private void HandleChange(UploadInfo info)
     {
-        if (fileinfo.File.State == UploadState.Success)
+        if (info.File.State == UploadState.Success)
         {
-            var result = fileinfo.File.GetResponse<ResponseModel>();
-            fileinfo.File.Url = result.url;
+            Message.Success($"{info.File.FileName} file uploaded successfully.");
         }
-    }
-
-    public class ResponseModel
-    {
-        public string name { get; set; }
-
-        public string status { get; set; }
-
-        public string url { get; set; }
-
-        public string thumbUrl { get; set; }
+        else if (info.File.State == UploadState.Fail)
+        {
+            Message.Error($"{info.File.FileName} file upload failed.");
+        }
     }
 }

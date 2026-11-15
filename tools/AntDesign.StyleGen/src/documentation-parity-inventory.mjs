@@ -152,7 +152,26 @@ export async function scrollToLoadAllDemos(page) {
       await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
       await pause(80);
 
-      const nextHeight = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+      let nextHeight = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+      // Blazor CodeBox mounts the real demo only after a visibility callback
+      // crosses the .NET circuit. Waiting only for the scroll animation can
+      // capture its temporary direct-child Skeleton as if that were the demo's
+      // rendered markup. Let every skeleton in the current viewport finish
+      // mounting before advancing to the next batch of examples.
+      if (location.pathname.startsWith('/en-US/components/')) {
+        for (let mountPass = 0; mountPass < 50; mountPass += 1) {
+          const hasVisiblePlaceholder = [...document.querySelectorAll('.code-box-demo')].some((demo) => {
+            const rect = demo.getBoundingClientRect();
+            const visible = rect.width > 0 && rect.height > 0
+              && rect.bottom > 0 && rect.top < window.innerHeight;
+            return visible && demo.querySelector(':scope > .ant-skeleton');
+          });
+          if (!hasVisiblePlaceholder) break;
+          await pause(100);
+        }
+        nextHeight = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+      }
+
       const atBottom = window.scrollY + window.innerHeight >= nextHeight - 2;
       if (atBottom && nextHeight === previousHeight) stableBottomPasses += 1;
       else stableBottomPasses = 0;

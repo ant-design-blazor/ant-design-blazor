@@ -85,6 +85,12 @@ scroll-container behavior, body-cell sample counts, and some fixed-edge states
 do not. Keep this fixture open as an unresolved Table virtualization issue; do
 not count the earlier partial report as a passing result.
 
+A 2026-11-15 rerun with the installed Chrome executable reduces the normalized
+DOM-tree difference count to 211. Computed styles and visual styles pass, but
+the fixture remains different because the virtual-window markup and row/cell
+counts do not match. Latest report:
+`/tmp/table-virtual-list-current-followup.json`.
+
 ## Table Virtual List scrollbar follow-up — 2026-11-14
 
 Tried switching the Blazor holder to `overflow: hidden` to match React's
@@ -99,6 +105,25 @@ it still reports 235 DOM differences and visual semantic differences because
 the virtual-window markup/cell sample counts differ. Latest report:
 `/tmp/table-virtual-list-scrollbar-hidden-final-20261114.json`.
 
+## Table Virtual List .NET 11 range-boundary probe — 2026-11-15
+
+Used the live Docs.Server page and headless Chrome to probe the virtual holder
+after clicking `Scroll To index 999`. At `scrollTop=54600`, Blazor renders row
+keys 991–1000, with row 992 at `-40px` relative to the holder and the leading
+reserved spacer at `54505px`. React renders row keys 992–1001 at that same
+visible position, with the virtual content translated by `54560px`.
+
+Setting the Blazor scroll position to `54610px` causes .NET Virtualize to
+advance the rendered range to rows 992–1001 and update the spacer to `54560px`,
+but row 992 moves to `-50px`. At `54654px` and `54655px`, the same range remains
+and row 992 moves to `-94px` and `-95px`, respectively. A separate probe that
+changed `scrollTop` without dispatching the scroll event did not update the
+virtual range. This confirms that a fixed scroll offset alone cannot correct
+the window without changing visible geometry. No source workaround was
+applied; keep the Table virtualization mismatch open until the virtual window
+and its spacer are controlled together and revalidated during subsequent
+scrolling, including row-span overlays.
+
 ## Table Fixed Gapped Columns browser recheck — 2026-11-14
 
 Rechecked the fixed-edge shadow mismatch recorded on 2026-11-13 in the open
@@ -112,6 +137,25 @@ worktree. Puppeteer's pinned Chrome 153 was absent from its cache; supplying the
 installed Chrome executable through `--chrome` allowed the automated fixture
 to complete. Both user-facing React and Blazor pages remain open for manual
 review.
+
+## Upload Basic and Drag DOM/style alignment — 2026-11-15
+
+The Upload Basic and Drag examples now share React v6's trigger DOM structure.
+The Drag trigger has the expected `role="button"`/`tabindex="0"`, its file input
+uses `display:none`, and click-to-select is wired for both Basic and Drag modes.
+The Drag demo now uses the current React endpoint, `name="file"`, and matching
+success/error feedback and hint text. Focused comparison of both examples passes
+2/2 scenarios with equal normalized DOM trees, computed styles, geometry, and
+visual styles; report: `/tmp/upload-demo-pair-parity-fixed.json`. The unnormalized
+HTML still differs on framework comments/whitespace, and the React page reports
+its existing hydration/contributors fetch errors; Blazor page navigation has no
+errors. Docs Server `net11.0` builds with zero errors.
+
+The Drag trigger also matches React's Enter-key activation and native file-drop
+path. Headless browser interaction verified Enter invokes the file picker once,
+and dropping a `probe.txt` file sets the hidden input and dispatches one change
+event. The fixture was rerun after rebuilding the local interop bundle and
+restarting Docs.Server; `/tmp/upload-demo-pair-parity-final.json` passes 2/2.
 
 ## List drag sensor robustness follow-up — 2026-11-15
 
@@ -128,6 +172,24 @@ visible handle.
 The static DOM/CSS/geometry fixture passes 4/4 with no differences at 0.04px
 width tolerance (`.tmp/list-drag-sorting-after-fix.json`). Docs.Server
 `net11.0` builds with zero errors. The helper cache version is `20261115.10`.
+
+## Upload Basic DOM and trigger alignment — 2026-11-15
+
+Aligned the Blazor Basic demo with React's action endpoint, multipart field
+name, authorization header, and success/error messages. Updated the shared
+Upload trigger markup to match React's `div.ant-upload-select >
+span.ant-upload > input[type=file] + button` order, removed the obsolete
+list-type trigger class and extra trigger attributes, and exposed the input's
+`name` attribute. The click helper now locates the input inside the trigger
+instead of relying on a generated `data-fileid` and document lookup. The demo
+button content no longer adds an extra nested span.
+
+Docs.Server `net11.0` builds with zero errors. Rebuilt the local ignored JS
+interop bundle from the TypeScript source and verified that clicking the demo
+button invokes the nested file input without selecting or uploading a file.
+The focused Upload Basic fixture passes 1/1 with zero normalized DOM, computed
+CSS, geometry, or visual-style differences; React's page still logs its known
+hydration error #418. Report: `/tmp/upload-basic-parity-final-bundle.json`.
 
 ## Current continuation checkpoint — 2026-11-15
 
@@ -3964,8 +4026,9 @@ Aligned the four List sorting demos with the React dnd-kit behavior: pointer
 movement is restricted to the Y axis for vertical lists and remains free on both
 axes for grids. Like React, the active item follows the pointer with a raised
 stacking order while sibling items animate to the prospective insertion slots;
-the transition uses dnd-kit's default `transform 200ms ease`. No extra opacity
-or cursor state is added to the active row. Temporary transforms and stacking
+the transition is `transform 200ms`, matching the inline transition emitted by
+`@dnd-kit/sortable`. No extra opacity or cursor state is added to the active row.
+Temporary transforms and stacking
 styles are cleared after drop or cancel, and the client module URL is versioned
 to prevent stale browser module cache from hiding the fix.
 
@@ -3975,8 +4038,37 @@ transform and sibling preview before drop, reordered the Blazor data on pointer
 release, and cleared temporary inline styles afterward. The vertical drag
 continued to move 0px horizontally even when the pointer moved sideways. React and Blazor
 vertical List item geometry/computed styles match at 422x47px with 12px vertical
-padding and `cursor: move`. This pass corrected the easing curve from the custom
-value to React dnd-kit's `ease` default. The live Blazor page was reloaded with
+padding and `cursor: move`. The helper omits an extra `ease` token and
+`will-change` that are absent from React. The live Blazor page was reloaded with
 the new module; synthetic pointer movement produced the active translation and
 three sibling slot previews. React and Blazor List docs are open for manual
 review.
+
+## Upload Default Files and File List follow-up — 2026-11-15
+
+Updated the Upload `Default Files` demo to use React's three `xxx.png`/`yyy.png`/
+`zzz.png` records with uploading/done/error states. Text-list items now follow
+React's item-container and sibling icon/name/actions structure, and status
+classes are emitted on the item. Progress omits an empty rail-color declaration
+when no custom trail color is set. The File List demo now uses React's `xxx.png`
+record, URL, field name, and direct button text. The expanded Basic/Default
+Files/File List/Drag fixture passes 4/4 with zero normalized DOM, computed CSS,
+geometry, or visual-style differences: `/tmp/upload-four-demos-final.json`.
+The only geometry allowance is a 0.02px tolerance for 1/64px computed width
+serialization. Docs.Server `net11.0` builds with zero errors; other Upload demos
+remain in the page-level audit.
+
+The `_semantic` Upload demo is now registered in generated docs metadata and
+passes through the same Semantic DOM preview used by other components. Added
+the root/trigger/list/item marker classes from React's preview. The focused
+five-demo fixture (Basic, Default Files, File List, Semantic DOM, Drag) passes
+5/5 with zero normalized DOM/CSS/geometry/visual-style differences:
+`/tmp/upload-five-demos-final-20261115.json`. Remaining Upload demos and the
+full page inventory are still outstanding.
+
+The refreshed Upload route inventory reports 22 React demos, 25 Blazor demos,
+22 matched names, no missing React names, and three Blazor-only demos. Broad
+initial-state H/C/G candidates remain in 19/17/17 matched demos; one page was
+blocked by a React runtime error. This whole-page scan is a triage signal, not
+an acceptance gate, because the five scoped Upload examples pass the dedicated
+fixture. Report: `/tmp/upload-inventory-latest-20261115.json`.

@@ -60,7 +60,7 @@ Across the inventory: React 912 demos; Blazor 1106; 762 matched names; 150 React
 | TimePicker | 16 | 14 | 13 | 12hours, change-on-scroll, _semantic | 13 | 7 | 7 |
 | Transfer | 12 | 13 | 11 | _semantic | 11 | 11 | 10 |
 | TreeSelect | 13 | 18 | 12 | _semantic | 11 | 9 | 9 |
-| Upload | 22 | 24 | 21 | _semantic | 21 | 21 | 21 |
+| Upload | 22 | 25 | 22 | — | 19 | 17 | 17 |
 | Avatar | 7 | 10 | 7 | — | 7 | 6 | 6 |
 | Badge | 14 | 13 | 11 | style-class, _semantic, _semantic_ribbon | 11 | 11 | 11 |
 | Calendar | 10 | 5 | 5 | event-range, lunar, week, style-class, _semantic | 5 | 5 | 5 |
@@ -96,6 +96,10 @@ Across the inventory: React 912 demos; Blazor 1106; 762 matched names; 150 React
 | Affix | 3 | 6 | 3 | — | 1 | 0 | 1 |
 | App | 2 | 0 | 0 | basic, config | 0 | 0 | 0 |
 | ConfigProvider | 7 | 6 | 4 | locale, wave, holderrender | 4 | 3 | 3 |
+
+The Upload row is refreshed from the 2026-11-15 one-component route scan; the
+other rows remain the original broad-scan snapshot and must be rechecked before
+they are treated as current status.
 
 ## Focused rechecks completed this round
 
@@ -318,6 +322,16 @@ browser for manual review.
 | List — Drag sorting (4 demos) | Removed the private handle marker/class, aligned handle text and `NoFlex`, omitted empty inline style attributes, and added the React `.ant-list-container` grid class. | Docs.Server `net11.0` build succeeds with 0 errors. All 4 DOM/CSS/geometry scenarios pass (0.04px subpixel width tolerance). Pointer verification passes 4/4: active transform and stacking preview appear, reorder commits after release, and drag styles clear; no page errors. Latest report: `.tmp/list-drag-sorting-current.json`; full notes: `dom-style-parity.md`. |
 | Next | Return to the broad Select/Icon route differences, then Table virtual-window structure and proceed through the remaining component/demo mismatches. | The 71-component inventory and global/component Design Token coverage remain incomplete; this focused update does not claim full v6 parity. |
 
+## Focused continuation — 2026-11-15 (List transition and Upload Semantic DOM)
+
+| Component | Current result | Remaining / next |
+|---|---|---|
+| List — four drag demos | Matched React dnd-kit sibling transition exactly (`transform 200ms`; removed the extra `ease` token and non-React `will-change`). | Rebuilt and restarted Docs.Server `net11.0`; headless browser verified live active/sibling preview and committed reorder in all four demos (4/4). Fixture remains 4/4 with zero normalized differences: `.tmp/list-drag-sorting-current.json`. |
+| Upload — Basic, Default Files, File List, Drag, Semantic DOM | Registered the `_semantic` demo in generated metadata, added React's semantic marker classes, and aligned the four fixture demo structures and data. | Focused fixture passes 5/5 DOM/CSS/geometry/visual-style scenarios; report `/tmp/upload-five-demos-final-20261115.json`. This covers 5 of 22 React Upload demos; the remaining route is not yet audited. |
+| Upload — refreshed full-route inventory | React 22 demos, Blazor 25, 22 names matched, no React-only demos, 3 Blazor-only (`input-file`, `file-type`, `component-token`). | Broad initial-state scan: H/C/G differences in 19/17/17 matched demos, with one blocked page. The scanner is a candidate map; focused five-demo fixture passes, and the remaining demos need scoped checks. Report: `/tmp/upload-inventory-latest-20261115.json`. |
+| All 71 components | The full matrix at the top remains the dated broad scan; current focused changes are logged in this section and below. | Select/Icon focused differences, Table virtual-window DOM, full component APIs/tokens/docs, Theme Preview, and Semantic DOM audits remain incomplete. |
+| Next | Triage Upload's highest remaining scoped differences, then resume the Select/Icon documentation-page checks and broad component mismatch queue. | Do not treat the dated H/C/G matrix as current post-change runtime evidence. |
+
 ## Focused continuation — 2026-11-15 (fresh Table virtual-list capture)
 
 | Component | Current progress | Next verification |
@@ -332,3 +346,19 @@ browser for manual review.
 |---|---|---|
 | List — four drag demos | Pointerdown now uses capture; standard rows also start dragging from the full row area; text selection is suppressed only during an active drag. | Headless browser pointer checks show live active/sibling previews and committed reorder in all four demos (4/4). DOM/CSS/geometry fixture: 4/4, no differences. Docs.Server net11 build: 0 errors. Latest report: `.tmp/list-drag-sorting-after-fix.json`. |
 | Next | Continue the current high-difference Table and remaining component/demo work. | The 71-component runtime inventory and full design-token/documentation sync remain incomplete. |
+
+## Focused continuation — 2026-11-15 (Upload Basic and Drag)
+
+| Component | Current progress | Verification / next |
+|---|---|---|
+| Upload — Basic and Drag | Aligned trigger semantics, hidden input structure, demo text, endpoint/name and status feedback; restored Enter-key activation and file-drop handling for Drag. | React/Blazor fixture passes 2/2 with zero normalized DOM, computed CSS, geometry, or visual-style differences. Keyboard and drop interactions both pass. `/tmp/upload-demo-pair-parity-final.json`; Docs.Server `net11.0` build has 0 errors. The other Upload demos/tokens/API details still need full-page coverage. |
+| All 71 components | The complete component/demo mismatch inventory remains the baseline above; current focused updates are recorded below it. Select and Icon retain their focused wins plus unresolved broader route/token audits; Table still has virtual-list structural differences. | Treat zeroes in the old inventory as scan results only; global/component token docs, Theme Preview, Semantic DOM, and full demo coverage remain incomplete. |
+| Next | Continue Upload's remaining high-difference demos and component-token/Semantic DOM coverage, then return to the broader Table and component inventory. | The current Upload fixture covers only Basic and Drag, not the full 22-demo React page. |
+
+## Focused continuation — 2026-11-15 (Upload text list)
+
+| Component | Current progress | Verification / next |
+|---|---|---|
+| Upload — Basic, Default Files, File List, Drag | Synced the Basic/Drag trigger, implemented React-shaped file-list items and states, fixed the progress rail's empty color serialization, and aligned File List sample content. | Focused four-demo fixture passes 4/4 with zero normalized DOM/CSS/visual differences; 0.02px allows only 1/64px width serialization. Docs.Server `net11.0` build: 0 errors. Keyboard/drag-drop interaction verified. Full route still has many uncovered DOM/style gaps and React hydration #418. |
+| All 71 components | Full component/demo inventory remains the baseline table at the beginning of this document; this focused update changes Upload only. | Select/Icon focused checks remain green but whole-page/token audits are incomplete. Table Virtual List still differs structurally. Global/component tokens, Theme Preview, docs and Semantic DOM remain in scope. |
+| Next | Continue Upload's remaining mismatched demos, then broaden to the next highest component mismatch. | Re-run page inventory after the current Upload edits and prioritize its largest remaining runtime gaps. |

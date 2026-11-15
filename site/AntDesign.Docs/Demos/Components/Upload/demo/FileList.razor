@@ -4,7 +4,7 @@
         FileList="fileList"
         OnChange="HandleChange">
     <Button Icon="upload">
-        <span>Upload</span>
+        Upload
     </Button>
 </Upload>
 
@@ -17,17 +17,17 @@
             {
                 new UploadFileItem
                 {
-                    Id = "1",
-                    FileName = "1.jpg",
-                    Url = "https://www.baidu.com/1.jpg",
+                    Id = "-1",
+                    FileName = "xxx.png",
+                    Url = "http://www.baidu.com/xxx.png",
                     State = UploadState.Success
                 }
             };
 
     Dictionary<string, object> attrs = new Dictionary<string, object>
     {
-        {"Action", "https://www.mocky.io/v2/5cc8019d300000980a055e76" },
-        {"Name", "files" },
+        {"Action", "https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload" },
+        {"Name", "file" },
         {"Multiple", true }
     };
 

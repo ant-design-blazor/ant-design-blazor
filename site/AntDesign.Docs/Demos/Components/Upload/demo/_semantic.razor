@@ -1,0 +1,43 @@
+<Upload Action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+        Name="file"
+        DefaultFileList="_files"
+        ClassNames="_semanticClasses">
+    <Button Icon="upload">Upload</Button>
+</Upload>
+
+@code {
+    private static readonly IReadOnlyDictionary<string, string> _semanticClasses = new Dictionary<string, string>
+    {
+        ["root"] = "semantic-mark-root",
+        ["trigger"] = "semantic-mark-trigger",
+        ["list"] = "semantic-mark-list",
+        ["item"] = "semantic-mark-item"
+    };
+
+    private static readonly List<UploadFileItem> _files = new()
+    {
+        new()
+        {
+            Id = "1",
+            FileName = "xxx.png",
+            State = UploadState.Uploading,
+            Url = "http://www.baidu.com/xxx.png",
+            Percent = 33
+        },
+        new()
+        {
+            Id = "2",
+            FileName = "yyy.png",
+            State = UploadState.Success,
+            Url = "http://www.baidu.com/yyy.png"
+        },
+        new()
+        {
+            Id = "3",
+            FileName = "zzz.png",
+            State = UploadState.Fail,
+            Response = "Server Error 500",
+            Url = "http://www.baidu.com/zzz.png"
+        }
+    };
+}

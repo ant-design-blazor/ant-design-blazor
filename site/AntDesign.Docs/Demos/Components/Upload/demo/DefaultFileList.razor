@@ -1,59 +1,34 @@
-﻿@inject IMessageService _message
-
-<Upload @attributes="attrs"
-        OnSingleCompleted="OnSingleCompleted">
-    <Button Icon="upload">
-        <span>Upload</span>
-    </Button>
+<Upload Action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+        Name="file"
+        DefaultFileList="_defaultFileList">
+    <Button Icon="upload">Upload</Button>
 </Upload>
 
-@code
-{
-
-    Upload upload;
-
-    Dictionary<string, object> attrs = new Dictionary<string, object>
-{
-        {"Action", "https://www.mocky.io/v2/5cc8019d300000980a055e76" },
-        {"Name", "files" },
-        {"DefaultFileList", new List<UploadFileItem>
-            {
-                new UploadFileItem
-                {
-                    Id = "1",
-                    FileName = "1.jpg",
-                    Url = "https://www.baidu.com/1.jpg",
-                    State = UploadState.Success
-                },
-                new UploadFileItem
-                {
-                    Id = "2",
-                    FileName = "2.jpg",
-                    Response = "网络错误",
-                    State = UploadState.Fail
-                }
-            }
+@code {
+    private readonly List<UploadFileItem> _defaultFileList = new()
+    {
+        new()
+        {
+            Id = "1",
+            FileName = "xxx.png",
+            State = UploadState.Uploading,
+            Url = "http://www.baidu.com/xxx.png",
+            Percent = 33
+        },
+        new()
+        {
+            Id = "2",
+            FileName = "yyy.png",
+            State = UploadState.Success,
+            Url = "http://www.baidu.com/yyy.png"
+        },
+        new()
+        {
+            Id = "3",
+            FileName = "zzz.png",
+            State = UploadState.Fail,
+            Response = "Server Error 500",
+            Url = "http://www.baidu.com/zzz.png"
         }
     };
-
-    void OnSingleCompleted(UploadInfo fileinfo)
-    {
-        if (fileinfo.File.State == UploadState.Success)
-        {
-            var result = fileinfo.File.GetResponse<ResponseModel>();
-            fileinfo.File.Url = result.url;
-        }
-    }
-
-    public class ResponseModel
-    {
-        public string name { get; set; }
-
-        public string status { get; set; }
-
-        public string url { get; set; }
-
-        public string thumbUrl { get; set; }
-    }
-
 }

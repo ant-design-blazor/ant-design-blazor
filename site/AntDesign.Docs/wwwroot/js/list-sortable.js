@@ -1,7 +1,7 @@
 const ITEM_SELECTOR = '.ant-list-item[id^="list-sortable-item-"]';
 const HANDLE_SELECTOR = 'button.ant-btn';
-// Matches @dnd-kit/sortable's default transition used by the React demos.
-const TRANSITION = 'transform 200ms ease';
+// Match the inline transition emitted by @dnd-kit/sortable in the React demos.
+const TRANSITION = 'transform 200ms';
 
 export function initializeSortableList(root, dotNet, handleOnly, grid, contextId) {
   if (!root) return;
@@ -32,7 +32,6 @@ export function initializeSortableList(root, dotNet, handleOnly, grid, contextId
         transition: item.style.transition,
         position: item.style.position,
         zIndex: item.style.zIndex,
-        willChange: item.style.willChange,
       });
     }
   };
@@ -53,7 +52,6 @@ export function initializeSortableList(root, dotNet, handleOnly, grid, contextId
       const original = current.rects[index];
       const slot = current.rects[slotIndex.get(item)];
       item.style.transition = item === active && pointerMode ? 'none' : TRANSITION;
-      item.style.willChange = 'transform';
       if (item === active) {
         item.style.position = 'relative';
         item.style.zIndex = '9999';
@@ -117,7 +115,6 @@ export function initializeSortableList(root, dotNet, handleOnly, grid, contextId
       item.style.transition = saved.transition;
       item.style.position = saved.position;
       item.style.zIndex = saved.zIndex;
-      item.style.willChange = saved.willChange;
       item.classList.remove('ant-list-item-dragging');
     }
     drag = null;

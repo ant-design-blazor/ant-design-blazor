@@ -61,7 +61,7 @@
     {
         if (firstRender)
         {
-            _module = await JS.InvokeAsync<IJSObjectReference>("import", "./_content/AntDesign.Docs/js/list-sortable.js?v=20261115.10");
+            _module = await JS.InvokeAsync<IJSObjectReference>("import", "./_content/AntDesign.Docs/js/list-sortable.js?v=20261115.11");
             _dotNetReference = DotNetObjectReference.Create(this);
             await _module.InvokeVoidAsync("initializeSortableList", _listRef.Current, _dotNetReference, HandleOnly, Grid, ContextId);
             _sortableInitialized = true;

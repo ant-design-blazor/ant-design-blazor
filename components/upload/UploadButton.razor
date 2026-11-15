@@ -1,35 +1,32 @@
 ﻿@namespace AntDesign.Internal
 @inherits AntDomComponentBase
 
-<div class="@Upload?.SemanticClass("trigger", ClassMapper.Class)" style="@(Upload?.SemanticStyle("trigger", !ShowButton ? "display:none;" : string.Empty) ?? string.Empty)">
-    <span tabindex="0" class="ant-upload" style="display: grid;" @ref="_btn" data-fileid="@_fileId" role="button">
-        @if (Upload?.Trigger == UploadTrigger.Click)
-        {
-            @if (Upload?.Drag == true)
-            {
-                <div class="ant-upload-drag-container">
-                    @ChildContent
-                </div>
-            }
-            else
-            {
-                @ChildContent
-            }
-        }
-        else
-        {
-            @ChildContent
-        }
+<div class="@Upload?.SemanticClass("trigger", ClassMapper.Class)" style="@(Upload?.SemanticStyle("trigger", !ShowButton ? "display:none;" : null))">
+    <span class="@(Upload?.Drag == true ? "ant-upload ant-upload-btn" : "ant-upload")"
+          role="@(Upload?.Drag == true ? "button" : null)"
+          tabindex="@(Upload?.Drag == true ? "0" : null)"
+          @ref="_btn">
         @if (!string.IsNullOrEmpty(Upload?.Action))
         {
             <input type="file"
+                   name="@Name"
                    webkitdirectory="@Directory"
                    multiple="@(Multiple || Directory)"
                    @ref="_file"
                    @onchange="FileNameChanged"
-                   accept="@Accept"
-                   style="@(Upload?.Drag == true ? "position: absolute;width: 100%;height: 100%;opacity: 0;top: 0;left: 0;z-index:2;" : "display:none;")"
-                   id="@_fileId" title="" />
+                   accept="@(Accept ?? string.Empty)"
+                   style="display:none;"
+                   />
+        }
+        @if (Upload?.Trigger == UploadTrigger.Click && Upload?.Drag == true)
+        {
+            <div class="ant-upload-drag-container">
+                @ChildContent
+            </div>
+        }
+        else
+        {
+            @ChildContent
         }
     </span>
 </div>

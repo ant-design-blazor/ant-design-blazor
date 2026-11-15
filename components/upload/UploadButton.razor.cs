@@ -22,9 +22,6 @@ namespace AntDesign.Internal
         public RenderFragment ChildContent { get; set; }
 
         [Parameter]
-        public UploadListType ListType { get; set; }
-
-        [Parameter]
         public bool ShowButton { get; set; }
 
         [Parameter]
@@ -76,8 +73,6 @@ namespace AntDesign.Internal
 
         private DotNetObjectReference<UploadButton> _currentInstance;
 
-        private string _fileId = Guid.NewGuid().ToString();
-
         private bool _disabled;
 
         private UploadInfo _uploadInfo = new();
@@ -86,14 +81,6 @@ namespace AntDesign.Internal
 
         private string MethodString => Method.IsT0 ? Method.AsT0.ToString().ToLowerInvariant() : Method.AsT1.ToLowerInvariant();
 
-        private static readonly Dictionary<UploadListType, string> _typeMap = new()
-        {
-            [UploadListType.Text] = "text",
-            [UploadListType.Picture] = "picture",
-            [UploadListType.PictureCard] = "picture-card",
-            [UploadListType.PictureCircle] = "picture-circle",
-        };
-
         protected override void OnInitialized()
         {
             _currentInstance = DotNetObjectReference.Create(this);
@@ -101,10 +88,9 @@ namespace AntDesign.Internal
 
             ClassMapper
                 .Add(prefixCls)
-                .Get(() => $"{prefixCls}-select-{_typeMap[ListType]}")
                 .If($"{prefixCls}-drag", () => Upload?.Drag == true)
                 .If($"{prefixCls}-drag-hover", () => Upload?._dragHover == true)
-                .Add($"{prefixCls}-select")
+                .If($"{prefixCls}-select", () => Upload?.Drag != true)
                 .If($"{prefixCls}-rtl", () => RTL);
         }
 
@@ -112,7 +98,7 @@ namespace AntDesign.Internal
         {
             if (firstRender && !Disabled)
             {
-                if (Upload?.Drag == false && !string.IsNullOrWhiteSpace(Action))
+                if (!string.IsNullOrWhiteSpace(Action))
                 {
                     await AddEventListener();
                 }
@@ -135,6 +121,9 @@ namespace AntDesign.Internal
 
         private async Task AddEventListener()
         {
+            if (string.IsNullOrWhiteSpace(Action))
+                return;
+
             if (Upload?.Trigger == UploadTrigger.Click)
                 await JSRuntime.InvokeVoidAsync(JSInteropConstants.AddFileClickEventListener, _btn);
             else
@@ -143,6 +132,9 @@ namespace AntDesign.Internal
 
         private async Task RemoveEventListener()
         {
+            if (string.IsNullOrWhiteSpace(Action))
+                return;
+
             if (Upload?.Trigger == UploadTrigger.Click)
                 await JSRuntime.InvokeVoidAsync(JSInteropConstants.RemoveFileClickEventListener, _btn);
             else

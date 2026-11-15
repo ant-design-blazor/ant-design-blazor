@@ -7,7 +7,7 @@
         @if (Steps == 0)
         {
             <div class="ant-progress-body" style="width:100%">
-                <div class="ant-progress-rail" style="height:@(StrokeWidth)px; background-color:@TrailColor">
+                <div class="ant-progress-rail" style="@($"height:{StrokeWidth}px{(string.IsNullOrWhiteSpace(TrailColor) ? string.Empty : $";background-color:{TrailColor}")}")">
                     <div class="ant-progress-track" style="@_bgStyle">
                     </div>
                     @if (SuccessPercent != 0)

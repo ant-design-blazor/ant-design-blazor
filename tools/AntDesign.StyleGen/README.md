@@ -326,6 +326,13 @@ Basic 选项的 selector，不能混入页面底部常开的 Semantic DOM 示例
 门禁保留默认零几何容差和完整结构比较：声明 CSS 一致不代表虚拟列表的 DOM、
 ARIA 辅助树或定位已经对齐。当前报告明确保留这些差异，不忽略 role/ARIA/style 来过关。
 
+## Upload Basic 与 Drag 示例
+
+`examples/upload-basic-dom-style-parity.json` 比较 Basic、Default Files、File List、Semantic DOM 和 Drag
+五个示例的 Semantic DOM、规范化结构、计算样式、几何及视觉样式。文件名保留既有
+Basic 命名；Default Files 覆盖 uploading/done/error 状态，Drag 覆盖文件输入和触发器。
+File List 的宽度门禁只容许 0.02px 的次像素序列化误差。
+
 ## Table 基础示例与长文档懒加载
 
 `examples/table-basic-dom-style-parity.json` 对比 Table Basic Usage 的 DOM、计算样式、
