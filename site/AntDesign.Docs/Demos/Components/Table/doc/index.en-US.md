@@ -44,20 +44,20 @@ Regular column `ChildContent` remains supported. To preserve the existing `@cont
 
 #### Benchmark
 
-The benchmark uses Blazor's `HtmlRenderer` to compare `Quick=true/false`; all columns use `CellRender`. Non-virtualized cases cover 100 and 1,000 rows; virtualized cases cover 100, 1,000, and 10,000 rows. Each table has 8 or 16 columns. Virtualized cases simulate a 400px viewport and render 28 rows including overscan. Each case has one warmup, then takes the median of 7 runs (100 rows), 5 runs (1,000 rows), or 3 runs (10,000 rows). Results were collected on an Apple M4 Pro running macOS 27.0.1, with .NET SDK 11.0.100 and .NET runtime 11.0.0:
+The benchmark uses Blazor's `HtmlRenderer` to compare `Quick=true/false`; all columns use `CellRender`. Non-virtualized cases cover 100 and 1,000 rows; virtualized cases cover 100, 1,000, and 10,000 rows. Each table has 8 or 16 columns. Virtualized cases simulate a 400px viewport and render 28 rows including overscan. Each benchmark invocation has one warmup, then takes the median of 7 runs (100 rows), 5 runs (1,000 rows), or 3 runs (10,000 rows). The table reports the median across three Release invocations. Results were collected on an Apple M4 Pro running macOS 27.0.1, with .NET SDK 11.0.100 and .NET runtime 11.0.0:
 
 | Rows | Columns | Virtualized | Rows rendered | Quick=true time / allocations | Quick=false time / allocations | Time / allocation reduction |
 | ---: | ---: | :---: | ---: | ---: | ---: | ---: |
-| 100 | 8 | No | 100 | 37.18 ms / 4,565,736 B | 148.79 ms / 19,705,032 B | 75.0% / 76.8% |
-| 100 | 16 | No | 100 | 46.89 ms / 6,242,832 B | 203.03 ms / 36,101,416 B | 76.9% / 82.7% |
-| 100 | 8 | Yes | 28 | 3.03 ms / 910,896 B | 9.99 ms / 4,039,600 B | 69.7% / 77.5% |
-| 100 | 16 | Yes | 28 | 6.15 ms / 1,422,864 B | 27.24 ms / 7,991,544 B | 77.4% / 82.2% |
-| 1,000 | 8 | No | 1,000 | 106.97 ms / 48,807,024 B | 792.15 ms / 197,761,976 B | 86.5% / 75.3% |
-| 1,000 | 16 | No | 1,000 | 257.59 ms / 70,313,512 B | 1,245.56 ms / 371,748,968 B | 79.3% / 81.1% |
-| 1,000 | 8 | Yes | 28 | 3.05 ms / 1,273,104 B | 13.95 ms / 4,417,632 B | 78.1% / 71.2% |
-| 1,000 | 16 | Yes | 28 | 4.52 ms / 1,782,304 B | 22.75 ms / 8,356,112 B | 80.1% / 78.7% |
-| 10,000 | 8 | Yes | 28 | 11.85 ms / 5,349,240 B | 20.92 ms / 8,492,952 B | 43.4% / 37.0% |
-| 10,000 | 16 | Yes | 28 | 21.74 ms / 5,857,672 B | 38.19 ms / 12,428,176 B | 43.1% / 52.9% |
+| 100 | 8 | No | 100 | 21.59 ms / 4,394,640 B | 84.88 ms / 19,761,656 B | 74.6% / 77.8% |
+| 100 | 16 | No | 100 | 40.62 ms / 6,244,304 B | 179.26 ms / 36,721,344 B | 77.3% / 83.0% |
+| 100 | 8 | Yes | 28 | 3.65 ms / 738,376 B | 16.50 ms / 4,066,952 B | 77.9% / 81.8% |
+| 100 | 16 | Yes | 28 | 4.04 ms / 1,084,848 B | 28.83 ms / 8,035,736 B | 86.0% / 86.5% |
+| 1,000 | 8 | No | 1,000 | 183.21 ms / 48,614,608 B | 797.77 ms / 198,916,672 B | 77.0% / 75.6% |
+| 1,000 | 16 | No | 1,000 | 130.88 ms / 69,913,560 B | 1,364.42 ms / 374,045,992 B | 90.4% / 81.3% |
+| 1,000 | 8 | Yes | 28 | 2.83 ms / 1,086,104 B | 14.44 ms / 4,431,784 B | 80.4% / 75.5% |
+| 1,000 | 16 | Yes | 28 | 3.63 ms / 1,415,680 B | 23.18 ms / 8,385,944 B | 84.3% / 83.1% |
+| 10,000 | 8 | Yes | 28 | 12.91 ms / 5,162,768 B | 27.36 ms / 8,503,520 B | 52.8% / 39.3% |
+| 10,000 | 16 | Yes | 28 | 14.11 ms / 5,490,792 B | 37.40 ms / 12,450,536 B | 62.3% / 55.9% |
 
 These are component-rendering microbenchmark results; they exclude browser layout, painting, and network time. Virtualization simulates a 400px viewport by invoking the framework's viewport-fill callback, so browser JavaScript and scrolling performance are not measured. The 10,000-row cases only use virtualization to avoid the cost of rendering every cell. Virtualization renders only 28 rows here, but the table still processes the full data source, so allocations increase with 10,000 rows. Timings are sensitive to machine load; compare the Quick modes within the same scenario. Rerun with:
 
@@ -73,16 +73,16 @@ Results were collected on an Apple M4 Pro running macOS 27.0.0, Chromium 159.0.8
 
 | Rows | Columns | Virtualized | Rows rendered | Quick=true | Quick=false | Time reduction |
 | ---: | ---: | :---: | ---: | ---: | ---: | ---: |
-| 100 | 8 | No | 100 | 265.60 ms | 931.30 ms | 71.5% |
-| 100 | 16 | No | 100 | 415.60 ms | 1,565.80 ms | 73.5% |
-| 100 | 8 | Yes | 30 | 82.20 ms | 199.00 ms | 58.7% |
-| 100 | 16 | Yes | 30 | 132.30 ms | 349.20 ms | 62.1% |
-| 1,000 | 8 | No | 1,000 | 2,335.30 ms | 8,250.60 ms | 71.7% |
-| 1,000 | 16 | No | 1,000 | 3,643.30 ms | 15,997.80 ms | 77.2% |
-| 1,000 | 8 | Yes | 30 | 82.00 ms | 215.00 ms | 61.9% |
-| 1,000 | 16 | Yes | 30 | 148.70 ms | 365.60 ms | 59.3% |
-| 10,000 | 8 | Yes | 30 | 164.40 ms | 282.30 ms | 41.8% |
-| 10,000 | 16 | Yes | 30 | 215.40 ms | 482.40 ms | 55.3% |
+| 100 | 8 | No | 100 | 264.40 ms | 864.80 ms | 69.4% |
+| 100 | 16 | No | 100 | 396.40 ms | 1,600.90 ms | 75.2% |
+| 100 | 8 | Yes | 30 | 66.10 ms | 215.20 ms | 69.3% |
+| 100 | 16 | Yes | 30 | 114.10 ms | 349.00 ms | 67.3% |
+| 1,000 | 8 | No | 1,000 | 2,434.10 ms | 8,598.80 ms | 71.7% |
+| 1,000 | 16 | No | 1,000 | 3,841.50 ms | 15,834.50 ms | 75.7% |
+| 1,000 | 8 | Yes | 30 | 131.80 ms | 294.80 ms | 55.3% |
+| 1,000 | 16 | Yes | 30 | 181.40 ms | 514.10 ms | 64.7% |
+| 10,000 | 8 | Yes | 30 | 241.60 ms | 378.90 ms | 36.2% |
+| 10,000 | 16 | Yes | 30 | 199.50 ms | 514.70 ms | 61.2% |
 
 Timings vary with the device, browser version, and system load. Use these numbers to compare Quick modes within the same environment, rather than as fixed performance figures for every device. Rerun with:
 

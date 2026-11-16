@@ -201,6 +201,7 @@ namespace AntDesign.Tests.Table
             Assert.Single(cut.FindComponents<ActionColumn>());
             Assert.Collection(cut.FindAll("colgroup col"), _ => { }, _ => { }, _ => { });
             Assert.Equal(new[] { "", "Name", "Action" }, cut.FindAll("thead th").Select(header => header.TextContent.Trim()));
+            Assert.Empty(cut.FindAll("thead .ant-table-column-sorters"));
             Assert.Contains("Alice", cut.Markup);
             Assert.Contains("Edit", cut.Markup);
             Assert.Equal(3, cut.FindAll(".ant-checkbox-input").Count);
@@ -208,6 +209,27 @@ namespace AntDesign.Tests.Table
             cut.Find("thead .ant-checkbox-input").Change(true);
 
             Assert.Equal(2, cut.FindAll("tbody tr.ant-table-row-selected").Count);
+        }
+
+        [Fact]
+        public void Quick_mode_does_not_create_body_cascading_components_per_cell()
+        {
+            var cut = Context.RenderComponent<Table<Person>>(parameters => parameters
+                .Add(table => table.DataSource, People)
+                .Add(table => table.HidePagination, true)
+                .Add(table => table.Quick, true)
+                .Add(table => table.ChildContent, _ => builder =>
+                {
+                    builder.OpenComponent<Column<string>>(0);
+                    builder.AddAttribute(1, nameof(Column<string>.Title), "Name");
+                    builder.AddAttribute(2, nameof(Column<string>.CellRender), (RenderFragment<CellData<string>>)(cell => contentBuilder =>
+                        contentBuilder.AddContent(0, ((RowData<Person>)cell.RowData).Data.Name)));
+                    builder.CloseComponent();
+                }));
+
+            Assert.DoesNotContain(cut.FindComponents<CascadingValue<bool>>(), component =>
+                component.Instance.Name == "IsBody" && !component.Instance.Value);
+            Assert.Equal(2, cut.FindAll("tbody tr.ant-table-row").Count);
         }
 
         [Fact]

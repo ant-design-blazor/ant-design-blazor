@@ -268,7 +268,6 @@ namespace AntDesign
             IsHeader = true;
             Context?.AddHeaderColumn(this);
             _fixedStyle = CalcFixedStyle();
-            SetClass();
         }
 
         protected void RenderQuickColGroup(RenderTreeBuilder builder)

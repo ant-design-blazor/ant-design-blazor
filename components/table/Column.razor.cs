@@ -298,7 +298,16 @@ namespace AntDesign
 
         void IQuickRenderColumn.RenderQuickBody(RenderTreeBuilder __builder, RowData rowData)
         {
-            RenderBody(__builder, rowData, quick: true);
+            if (Hidden || RowSpan == 0 || ColSpan == 0 || (rowData.IsGrouping && ColIndex != Table.TreeExpandIconColumnIndex))
+            {
+                return;
+            }
+
+            var value = rowData.IsGrouping || GetFieldExpression == null ? default : GetQuickValue(GetQuickItem(rowData));
+            var cellData = new CellData<TData>(rowData, value, Format);
+            var cellAttributes = rowData.IsGrouping ? null : OnCell?.Invoke(cellData);
+            var title = Context?.HeaderColumns.LastOrDefault(x => x.ColIndex <= ColIndex && x.ColIndex + x.HeaderColSpan > ColIndex)?.Title;
+            QuickBody(__builder, cellData, cellAttributes, title);
         }
 
         void IQuickRenderColumn.RenderQuickHeader(RenderTreeBuilder builder)
@@ -360,8 +369,6 @@ namespace AntDesign
             }
 
             _quickHeaderStateInitialized = true;
-            Sortable = Sortable || SorterMultiple != default || SorterCompare != default || DefaultSortOrder != default || SortDirections?.Any() == true;
-
             if (FieldExpression != null)
             {
                 if (FieldExpression.Body is not MemberExpression memberExp)
@@ -466,10 +473,6 @@ namespace AntDesign
                 ? new FilterModel<TData>(this, GetFieldExpression, FieldName, OnFilter,
                     _filters.Where(filter => filter.Selected).ToList(), _columnFilterType, _fieldFilterType)
                 : null;
-
-            ClassMapper
-                .If("ant-table-column-has-sorters", () => Sortable)
-                .If("ant-table-column-sort", () => Sortable && SortModel != null && SortModel.SortDirection.IsIn(SortDirection.Ascending, SortDirection.Descending));
         }
 
         private object GetQuickItem(RowData rowData)

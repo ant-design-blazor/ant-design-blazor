@@ -71,7 +71,7 @@ else if (IsHeader && HeaderColSpan != 0)
 }
 else if (IsBody && RowSpan != 0 && ColSpan != 0)
 {
-    RenderBody(__builder, RowData, quick: false);
+    RenderBody(__builder, RowData);
 }
 
 @code
@@ -112,38 +112,31 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
         }
     }
 
-    void RenderBody(RenderTreeBuilder __builder, RowData rowData, bool quick)
+    void RenderBody(RenderTreeBuilder __builder, RowData rowData)
     {
-        if (Hidden || RowSpan == 0 || ColSpan == 0 || (quick && rowData.IsGrouping && ColIndex != Table.TreeExpandIconColumnIndex))
+        if (Hidden || RowSpan == 0 || ColSpan == 0)
         {
             return;
         }
 
         var cellData = new CellData<TData>(rowData, default, Format);
-        var cellAttributes = quick && rowData.IsGrouping ? null : new Dictionary<string, object>();
+        var cellAttributes = new Dictionary<string, object>();
         var title = Context?.HeaderColumns.LastOrDefault(x => x.ColIndex <= ColIndex && x.ColIndex + x.HeaderColSpan > ColIndex)?.Title;
         var fieldText = string.Empty;
 
         if (!rowData.IsGrouping)
         {
-            var fieldValue = quick
-                ? GetFieldExpression == null ? default : GetQuickValue(GetQuickItem(rowData))
-                : Field;
-            cellData = new CellData<TData>(rowData, fieldValue, Format);
+            cellData = new CellData<TData>(rowData, Field, Format);
             cellAttributes = OnCell?.Invoke(cellData);
-
-            if (!quick)
-            {
-                fieldText = !string.IsNullOrWhiteSpace(Format)
-                    ? Formatter<TData>.Format(fieldValue, Format)
-                    : fieldValue is string text ? text : string.Empty;
-            }
+            fieldText = !string.IsNullOrWhiteSpace(Format)
+                ? Formatter<TData>.Format(Field, Format)
+                : Field is string text ? text : string.Empty;
         }
 
         @if (AppendExpandColumn)
         {
             <td class="ant-table-cell ant-table-row-expand-icon-cell">
-                @if ((quick ? Table.RowExpandable(rowData) : RowExpandable) && !Table.TreeMode)
+                @if (RowExpandable && !Table.TreeMode)
                 {
                     <button type="button" @onclick="() => ToggleTreeNode(rowData)" @onclick:stopPropagation
                             class="ant-table-row-expand-icon @(rowData.Expanded ? "ant-table-row-expand-icon-expanded" : "ant-table-row-expand-icon-collapsed")"
@@ -152,15 +145,14 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
             </td>
         }
 
-        <td @attributes="GetAdditionalAttributes(cellAttributes)" class="@ClassMapper.Class" style="@($"{(quick ? QuickFixedStyle : FixedStyle)} {Style}")"
-            rowspan="@(quick ? (RowSpan > 1 ? RowSpan : false) : RowSpan)"
-            colspan="@(quick ? (rowData.IsGrouping ? Context.Columns.Count + 1 : (ColSpan > 1 ? ColSpan : false)) : ColSpan)"
-            title="@(quick ? (ShouldShowEllipsis ? cellData.FormattedValue : false) : ((Ellipsis || EllipsisShowTitle == true) && EllipsisShowTitle != false ? fieldText : false))" data-label="@title">
+        <td @attributes="GetAdditionalAttributes(cellAttributes)" class="@ClassMapper.Class" style="@($"{FixedStyle} {Style}")"
+            rowspan="@RowSpan" colspan="@ColSpan"
+            title="@(((Ellipsis || EllipsisShowTitle == true) && EllipsisShowTitle != false) ? fieldText : false)" data-label="@title">
             <CascadingValue Name="IsBody" Value="false" IsFixed>
                 @if (ColIndex == Table.TreeExpandIconColumnIndex && (Table.TreeMode || rowData.IsGrouping))
                 {
                     <span class="ant-table-row-indent indent-level-@rowData.Level" style="padding-left: @((CssSizeLength)(rowData.Level * Table.IndentSize));"></span>
-                    @if (rowData.TableDataItem.HasChildren || rowData.IsGrouping || (!quick && RowExpandable))
+                    @if (rowData.TableDataItem.HasChildren || rowData.IsGrouping || RowExpandable)
                     {
                         <button type="button" @onclick="() => ToggleTreeNode(rowData)" @onclick:stopPropagation
                                 class="ant-table-row-expand-icon @(rowData.Expanded ? "ant-table-row-expand-icon-expanded" : "ant-table-row-expand-icon-collapsed")"
@@ -175,29 +167,67 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
                 {
                     @Table.GroupTitleTemplate(rowData)
                 }
-                else if (!quick && IsFixedEllipsis)
+                else if (IsFixedEllipsis)
                 {
                     <span class="ant-table-cell-content">
                         @CellContent(cellData)
                     </span>
                 }
-                else if (!quick)
+                else
                 {
                     @CellContent(cellData)
                 }
-                else if (CellRender != null)
+            </CascadingValue>
+        </td>
+    }
+
+    void QuickBody(RenderTreeBuilder __builder, CellData<TData> cellData, Dictionary<string, object> cellAttributes, string title)
+    {
+        @if (AppendExpandColumn)
+        {
+            <td class="ant-table-cell ant-table-row-expand-icon-cell">
+                @if (Table.RowExpandable(cellData.RowData) && !Table.TreeMode)
                 {
-                    @CellRender(cellData)
+                    <button type="button" @onclick="() => ToggleTreeNode(cellData.RowData)" @onclick:stopPropagation
+                            class="ant-table-row-expand-icon @(cellData.RowData.Expanded ? "ant-table-row-expand-icon-expanded" : "ant-table-row-expand-icon-collapsed")"
+                            aria-label="@(cellData.RowData.Expanded ? Table.Locale.Collapse : Table.Locale.Expand)"></button>
                 }
-                else if (ChildContent != null)
+            </td>
+        }
+
+        <td @attributes="GetAdditionalAttributes(cellAttributes)" class="@ClassMapper.Class" style="@($"{QuickFixedStyle} {Style}")"
+            rowspan="@(RowSpan > 1 ? RowSpan : false)" colspan="@(cellData.RowData.IsGrouping ? Context.Columns.Count + 1 : (ColSpan > 1 ? ColSpan : false))"
+            title="@(ShouldShowEllipsis ? cellData.FormattedValue : false)" data-label="@title">
+            @if (ColIndex == Table.TreeExpandIconColumnIndex && (Table.TreeMode || cellData.RowData.IsGrouping))
+            {
+                <span class="ant-table-row-indent indent-level-@cellData.RowData.Level" style="padding-left: @((CssSizeLength)(cellData.RowData.Level * Table.IndentSize));"></span>
+                @if (cellData.RowData.TableDataItem.HasChildren || cellData.RowData.IsGrouping)
                 {
-                    @ChildContent
+                    <button type="button" @onclick="() => ToggleTreeNode(cellData.RowData)" @onclick:stopPropagation
+                            class="ant-table-row-expand-icon @(cellData.RowData.Expanded ? "ant-table-row-expand-icon-expanded" : "ant-table-row-expand-icon-collapsed")"
+                            aria-label="@(cellData.RowData.Expanded ? Table.Locale.Collapse : Table.Locale.Expand)"></button>
                 }
                 else
                 {
-                    @cellData.FormattedValue
+                    <button type="button" class="ant-table-row-expand-icon ant-table-row-expand-icon-spaced" aria-label="@Table.Locale.Expand"></button>
                 }
-            </CascadingValue>
+            }
+            @if (cellData.RowData.IsGrouping)
+            {
+                @Table.GroupTitleTemplate(cellData.RowData)
+            }
+            else if (CellRender != null)
+            {
+                @CellRender(cellData)
+            }
+            else if (ChildContent != null)
+            {
+                @ChildContent
+            }
+            else
+            {
+                @cellData.FormattedValue
+            }
         </td>
     }
 
