@@ -1,4 +1,7 @@
-# Table Quick Rendering Benchmarks
+---
+order: 10
+title: Table Quick Rendering Benchmarks
+---
 
 #### Benchmark
 
