@@ -11,7 +11,8 @@
         <div id="benchmark-case" data-quick="@_quick.ToString().ToLowerInvariant()" data-rows="@_rowCount" data-columns="@_columnCount" data-virtualized="@_virtualized.ToString().ToLowerInvariant()">
             <Table @key="_caseId" TItem="BenchmarkRow" DataSource="_rows" Quick="_quick"
                    EnableVirtualization="_virtualized" ScrollY="@(_virtualized ? "400px" : null)"
-                   HidePagination PageSize="_rowCount" Responsive="false">
+                   HidePagination="_hidePagination" PageSize="_pageSize" RowKey="row => row.Id"
+                   TreeChildren="_treeChildren" @bind-SelectedRows="_selectedRows" Responsive="false">
                 @_columns
             </Table>
         </div>
@@ -49,9 +50,13 @@
     private bool _renderPending;
     private bool _quick = true;
     private bool _virtualized;
+    private bool _hidePagination = true;
     private int _rowCount = 100;
     private int _columnCount = 8;
+    private int _pageSize = 100;
     private int _caseId;
+    private IEnumerable<BenchmarkRow> _selectedRows = Array.Empty<BenchmarkRow>();
+    private Func<BenchmarkRow, IEnumerable<BenchmarkRow>> _treeChildren;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -79,8 +84,34 @@
         _rowCount = rowCount;
         _columnCount = columnCount;
         _virtualized = virtualized;
+        _hidePagination = true;
+        _pageSize = rowCount;
+        _treeChildren = null;
+        _selectedRows = Array.Empty<BenchmarkRow>();
         _rows = GetRows(rowCount);
-        _columns = BuildColumns(columnCount);
+        _columns = BuildColumns(columnCount, includeSelection: false);
+        _caseId++;
+        _renderPending = true;
+        return InvokeAsync(StateHasChanged);
+    }
+
+    [JSInvokable]
+    public Task SetInteractionCase(bool quick, string interaction, int rowCount, int columnCount)
+    {
+        _quick = quick;
+        _rowCount = rowCount;
+        _columnCount = columnCount;
+        _virtualized = false;
+        _hidePagination = interaction != "pagination";
+        _pageSize = interaction == "pagination" ? Math.Max(1, rowCount / 2) : rowCount;
+        _selectedRows = Array.Empty<BenchmarkRow>();
+        _treeChildren = interaction.StartsWith("tree-", StringComparison.Ordinal)
+            ? static item => item.Children
+            : null;
+        _rows = interaction.StartsWith("tree-", StringComparison.Ordinal)
+            ? CreateTreeRows(rowCount)
+            : GetRows(rowCount);
+        _columns = BuildColumns(columnCount, interaction.StartsWith("selection-", StringComparison.Ordinal));
         _caseId++;
         _renderPending = true;
         return InvokeAsync(StateHasChanged);
@@ -120,10 +151,26 @@
         return rows;
     }
 
-    private static RenderFragment BuildColumns(int columnCount) => builder =>
+    private static BenchmarkRow[] CreateTreeRows(int childCount)
+    {
+        var root = new BenchmarkRow
+        {
+            Id = -1,
+            Name = "Tree root",
+            Children = GetRows(childCount)
+        };
+        return [root];
+    }
+
+    private static RenderFragment BuildColumns(int columnCount, bool includeSelection) => builder =>
     {
         var sequence = 0;
         var columnIndex = 0;
+        if (includeSelection)
+        {
+            builder.OpenComponent<Selection>(sequence++);
+            builder.CloseComponent();
+        }
         foreach (var selector in Selectors.Take(columnCount))
         {
             builder.OpenComponent<PropertyColumn<BenchmarkRow, string>>(sequence++);
@@ -162,5 +209,6 @@
         public string Team { get; init; } = string.Empty;
         public string Notes { get; init; } = string.Empty;
         public string Updated { get; init; } = string.Empty;
+        public IEnumerable<BenchmarkRow> Children { get; init; } = Array.Empty<BenchmarkRow>();
     }
 }

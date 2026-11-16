@@ -94,6 +94,33 @@ npx playwright install chromium
 npm run benchmark -- --url=http://localhost:8183/en-US/table-benchmark
 ```
 
+#### WASM interaction benchmark
+
+The browser benchmark also measures interactions that trigger table updates. It tests moving to the next page, selecting one row, selecting all rows on the current page, and expanding or collapsing a tree node. The 100-row cases use 8 columns; the 1,000-row cases use 16 columns. Pagination uses half the data as the page size. Selection cases render all rows. Tree cases use one root with the configured number of children, so expand renders 101 or 1,001 rows and collapse removes the children.
+
+The timer starts immediately before the browser action and stops after the expected page, selection state, or row count is stable for two frames. It includes event dispatch, WebAssembly component rendering, DOM updates, and two browser frames. It excludes WASM startup and table setup; each case is prepared before measurement. Each Quick mode has one warmup and three measured interactions, with the mode order alternated. The median is reported. Large cases reload both browser pages between scenarios to avoid retaining their table state.
+
+Results were collected on an Apple M4 Pro running macOS 27.0.0, Chromium 159.0.8154.6, and Node.js 24.14.0, using .NET SDK 11.0.100 / runtime 11.0.0 and Release WASM with AOT disabled:
+
+| Interaction | Data rows | Columns | Rows rendered after action | Quick=true | Quick=false | Time reduction |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Next page | 100 | 8 | 50 | 154.40 ms | 557.10 ms | 72.3% |
+| Next page | 1,000 | 16 | 500 | 2,404.10 ms | 10,814.20 ms | 77.8% |
+| Select one row | 100 | 8 | 100 | 375.10 ms | 924.30 ms | 59.4% |
+| Select one row | 1,000 | 16 | 1,000 | 7,102.10 ms | 20,000.60 ms | 64.5% |
+| Select all rows | 100 | 8 | 100 | 519.00 ms | 1,217.60 ms | 57.4% |
+| Select all rows | 1,000 | 16 | 1,000 | 8,035.20 ms | 22,694.50 ms | 64.6% |
+| Expand tree | 100 | 8 | 101 | 133.80 ms | 529.10 ms | 74.7% |
+| Expand tree | 1,000 | 16 | 1,001 | 2,028.90 ms | 9,985.00 ms | 79.7% |
+| Collapse tree | 100 | 8 | 1 | 31.90 ms | 44.30 ms | 28.0% |
+| Collapse tree | 1,000 | 16 | 1 | 104.70 ms | 362.00 ms | 71.1% |
+
+To run only the interaction cases, start the Release WASM app as above, then run:
+
+```bash
+npm run benchmark -- --url=http://localhost:8183/en-US/table-benchmark --interaction-only
+```
+
 ## API
 
 ### The TItem Generic type parameter
