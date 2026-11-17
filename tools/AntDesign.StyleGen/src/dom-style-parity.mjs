@@ -105,10 +105,22 @@ export function normalizeRuntimeHtml(html, policy = {}) {
     }
 
     if (name === 'style' && policy.normalizeStyleAttributes) {
+      const roundPixelValues = Number.isInteger(policy.roundPixelValues) && policy.roundPixelValues >= 0
+        ? policy.roundPixelValues
+        : null;
       const normalized = value.split(';').map((declaration) => {
         const separator = declaration.indexOf(':');
         if (separator < 0) return declaration.trim();
-        return `${declaration.slice(0, separator).trim()}:${declaration.slice(separator + 1).trim()}`;
+        const property = declaration.slice(0, separator).trim();
+        let propertyValue = declaration.slice(separator + 1).trim();
+        if (roundPixelValues !== null) {
+          const factor = 10 ** roundPixelValues;
+          propertyValue = propertyValue.replace(/(-?\d+(?:\.\d+)?)px\b/g, (_, rawValue) => {
+            const rounded = Math.round(Number(rawValue) * factor) / factor;
+            return `${Number(rounded.toFixed(roundPixelValues))}px`;
+          });
+        }
+        return `${property}:${propertyValue}`;
       }).filter(Boolean).join(';');
       return ` ${name}=${quote}${normalized}${quote}`;
     }

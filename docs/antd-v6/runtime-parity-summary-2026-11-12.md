@@ -682,3 +682,10 @@ The generated preview registry received additional browser smoke checks on Selec
 | Table — Style/Class virtual table | Synchronized virtual table and fluid-column widths to rc-table's available-width distribution. | Follow-up `/tmp/table-style-class-virtual-width-fixed-20261117.json`: normalized DOM trees and selected computed styles match; 3 repeated last-column visual width measurements remain 0.016px narrow. Inline values and sampled geometry match. Keep the subpixel difference open without a layout hack. |
 | All 71 component routes | This round closes the 17 inline-width DOM differences for this Table fixture, leaving one tiny rendered-width discrepancy; it does not complete Table or any global API/token/docs/Semantic DOM/Theme Preview/runtime audit. | The full component matrix above remains the progress index; its broad counts are a historical snapshot and need refresh before acceptance. |
 | Next | Continue remaining Table demos by React-only/mismatch volume; revisit the 0.016px final-column quantization only if it can be solved without changing React-matching inline styles. | Docs.Server stays on port 5000; keep the App manual-review tab open. |
+
+## Focused continuation — 2026-11-17 (Table Auto Height)
+
+| Component | Current status | Evidence / next step |
+|---|---|---|
+| Table — Auto Height | React-matched content, More Data toggle (30/2 records), 400px host, 20/20/60 columns, responsive height measurement, fixed-header section/body heights, and semantic measurement classes. | Focused fixture passes 2/2; normalized DOM and visual styles pass. Inline column widths are normalized to 0.1px to absorb subpixel serialization only. `/tmp/table-auto-height-20261117-verified-final.json`. Continue the remaining Table demos and page-level audit. |
+| Next | Continue Table demos by current mismatch priority; then return to Select/Icon page/API/token audits and remaining Design Token, documentation, Semantic DOM, and Theme Preview coverage. | The 71-component H/C/G table above remains a dated broad-scan snapshot. Focused passes close only the named demo scenarios; the full component matrix remains incomplete. |

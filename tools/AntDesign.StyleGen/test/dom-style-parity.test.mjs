@@ -412,6 +412,16 @@ test('normalizes only CSS declaration separator whitespace when explicitly reque
   assert.equal(normalizeRuntimeHtml(html), html);
 });
 
+test('can normalize only subpixel CSS width noise when requested', () => {
+  const html = '<div style="width: 143.859px; height: 249px;"></div>';
+  assert.equal(normalizeRuntimeHtml(html, { normalizeStyleAttributes: true, roundPixelValues: 1 }),
+    '<div style="width:143.9px;height:249px"></div>');
+  assert.notEqual(normalizeRuntimeHtml('<div style="width: 143.7px"></div>', {
+    normalizeStyleAttributes: true,
+    roundPixelValues: 1,
+  }), '<div style="width:143.9px"></div>');
+});
+
 test('can ignore empty attributes that have the same DOM state as missing attributes', () => {
   const html = '<input value="" style=" "><div style=""></div>';
   assert.equal(normalizeRuntimeHtml(html, { removeEmptyAttributes: ['value', 'style'] }),

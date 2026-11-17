@@ -1,5 +1,25 @@
 # React/Blazor DOM and style parity runner
 
+## Table Auto Height — 2026-11-17
+
+Replaced the legacy page-layout sample with React's compact demo: the `More
+Data` switch toggles between 30 and 2 records, the table sits in the same
+400px padded container, and the three columns use 20/20/60 percent widths.
+The Blazor version measures the wrapper, header, and pagination with
+`ResizeObserver`, sets the fixed-header section and scroll height, and resolves
+header column widths to pixel values as React does. Added the same measurement
+classes to the header and pagination, and restored the React description in
+both languages. The markdown now includes the required bilingual title
+frontmatter so the Dim Sum demo index generator can consume it.
+
+The focused fixture passes both states (2/2), with no normalized DOM or
+visual-style differences. It rounds CSS pixel values to 0.1px because React and
+Blazor serialize the measured column widths a few thousandths of a pixel apart;
+computed root styles, section/body heights, semantic classes, and content are
+otherwise aligned. Report: `/tmp/table-auto-height-20261117-verified-final.json`.
+Docs.Server `net11.0` builds with 0 errors (existing warnings remain). The
+Blazor page remains open at the Auto Height demo for manual review.
+
 ## Upload Avatar — 2026-11-15
 
 Recreated React's two upload controls side by side: one `picture-card` and one
