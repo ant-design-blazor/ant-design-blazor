@@ -56,6 +56,20 @@ namespace AntDesign
         public RenderFragment<TableFilterDropdownContext> FilterDropdown { get; set; }
 
         /// <summary>
+        /// Controls whether the filter dropdown is open. Leave unset to use the
+        /// default click-to-toggle behavior.
+        /// </summary>
+        [Parameter]
+        public bool? FilterDropdownOpen { get; set; }
+
+        /// <summary>
+        /// Custom filter trigger content. The value indicates whether the
+        /// column currently has an active filter.
+        /// </summary>
+        [Parameter]
+        public RenderFragment<bool> FilterIcon { get; set; }
+
+        /// <summary>
         /// Whether the filter dropdown closes automatically when clicking outside of it.
         /// </summary>
         /// <default value="true" />
@@ -517,6 +531,11 @@ namespace AntDesign
         {
             base.OnParametersSet();
 
+            if (FilterDropdownOpen.HasValue)
+            {
+                _filterOpened = FilterDropdownOpen.Value;
+            }
+
             if (IsHeader)
             {
                 if (_columnFilterType == TableFilterType.FieldType && _fieldFilterType == null && Filterable)
@@ -586,6 +605,13 @@ namespace AntDesign
 
         private bool IsSorterIconTooltipTarget => EffectiveSorterTooltip.IsT1
             && string.Equals(EffectiveSorterTooltip.AsT1?.Target, "sorter-icon", StringComparison.Ordinal);
+
+        private IReadOnlyDictionary<string, object> SorterTooltipAttributes =>
+            EffectiveSorterTooltip.IsT1 && EffectiveSorterTooltip.AsT1?.Open == true
+                ? new Dictionary<string, object> { ["Visible"] = true }
+                : EmptySorterTooltipAttributes;
+
+        private static readonly IReadOnlyDictionary<string, object> EmptySorterTooltipAttributes = new Dictionary<string, object>();
 
         private SortDirection NextSortDirection()
         {

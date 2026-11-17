@@ -4,4 +4,10 @@ title:
   zh-CN: 测量行渲染
 ---
 
-Displays the data and rendered-row counts alongside a representative table.
+## zh-CN
+
+用 `measureRowRender` 修复 https://github.com/ant-design/ant-design/issues/54906。
+
+## en-US
+
+Use `measureRowRender` to fix https://github.com/ant-design/ant-design/issues/54906.

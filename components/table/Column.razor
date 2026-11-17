@@ -408,7 +408,7 @@ else if (IsBody && (Table.IsVirtual || (RowSpan != 0 && ColSpan != 0 && IsCellVi
         {
             return@<div class="ant-table-column-sorters ant-table-column-sorters-tooltip-target-sorter" @onclick="HandleSort">
                 @ColumnTitleWithClass()
-                <Tooltip Title="@SorterTooltip">
+                <Tooltip Title="@SorterTooltip" @attributes="SorterTooltipAttributes">
                     <Unbound>
                         @SorterIcon()
                     </Unbound>
@@ -416,7 +416,7 @@ else if (IsBody && (Table.IsVirtual || (RowSpan != 0 && ColSpan != 0 && IsCellVi
             </div>;
         }
 
-        return@<Tooltip Title="@SorterTooltip">
+        return@<Tooltip Title="@SorterTooltip" @attributes="SorterTooltipAttributes">
             <Unbound>
                 <div class="ant-table-column-sorters" @ref="context.Current" @onclick="HandleSort">
                     @SortHeader()
@@ -445,7 +445,14 @@ else if (IsBody && (Table.IsVirtual || (RowSpan != 0 && ColSpan != 0 && IsCellVi
             <Unbound>
                 <span @ref="context.Current" role="button" tabindex="-1" class="ant-dropdown-trigger ant-table-filter-trigger@((_filterOpened ? " ant-dropdown-open" : "") + (IsFiltered ? " active" : ""))"
                       @onclick="() => { if (_filterOpened) FilterConfirm(); else _filterOpened = true; }">
-                    <Icon Type="@IconType.Fill.Filter" Theme="@IconThemeType.Fill" />
+                    @if (FilterIcon is not null)
+                    {
+                        @FilterIcon(IsFiltered)
+                    }
+                    else
+                    {
+                        <Icon Type="@IconType.Fill.Filter" Theme="@IconThemeType.Fill" />
+                    }
                 </span>
             </Unbound>
             <Overlay>

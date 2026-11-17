@@ -1,1 +1,121 @@
-<TableParityDemo Variant="measure-row-render" />
+@using AntDesign.Filters
+@using AntDesign.TableModels
+@using Microsoft.AspNetCore.Components.Web
+@using System.Net
+@using System.Text.RegularExpressions
+
+<Table TItem="MeasureRow" DataSource="VisibleRows" RowKey="row => row.Key" StickyOffsetHeader="0">
+    <ColumnDefinitions>
+        <PropertyColumn Property="row => row.Name" Title="Name" Width="30%"
+                        FilterDropdownOpen="true" FilterIcon="SearchFilterIcon" FilterDropdown="NameFilter">
+            <CellRender Context="cell">@Highlight(cell.FormattedValue, _nameQuery)</CellRender>
+        </PropertyColumn>
+        <PropertyColumn Property="row => row.Age" Title="Age" Width="20%" Filters="_ageFilters" FilterDropdownOpen="true" />
+        <PropertyColumn Property="row => row.Address" Title="Address" SorterCompare="(left, right) => left.Length - right.Length"
+                        SortDirections="_addressSortDirections" FilterDropdownOpen="true"
+                        ShowSorterTooltip="_sorterTooltip" FilterIcon="SearchFilterIcon" FilterDropdown="AddressFilter">
+            <CellRender Context="cell">@Highlight(cell.FormattedValue, _addressQuery)</CellRender>
+        </PropertyColumn>
+    </ColumnDefinitions>
+</Table>
+
+@code {
+    private readonly MeasureRow[] _data =
+    [
+        new("1", "John Brown", 32, "New York No. 1 Lake Park"),
+        new("2", "Joe Black", 42, "London No. 1 Lake Park"),
+        new("3", "Jim Green", 32, "Sydney No. 1 Lake Park"),
+        new("4", "Jim Red", 32, "London No. 2 Lake Park")
+    ];
+
+    private readonly TableFilter<int>[] _ageFilters =
+    [
+        new() { Text = "Joe", Value = 0 },
+        new() { Text = "Category 1", Value = 1 },
+        new() { Text = "Category 2", Value = 2 }
+    ];
+
+    private readonly SortDirection[] _addressSortDirections = [SortDirection.Descending, SortDirection.Ascending];
+    private readonly TableSorterTooltipOptions _sorterTooltip = new() { Open = true };
+    private string _nameDraft = "";
+    private string _nameQuery = "";
+    private string _addressDraft = "";
+    private string _addressQuery = "";
+
+    private IEnumerable<MeasureRow> VisibleRows => _data.Where(row =>
+        (string.IsNullOrWhiteSpace(_nameQuery) || row.Name.Contains(_nameQuery, StringComparison.OrdinalIgnoreCase)) &&
+        (string.IsNullOrWhiteSpace(_addressQuery) || row.Address.Contains(_addressQuery, StringComparison.OrdinalIgnoreCase)));
+
+    private RenderFragment<bool> SearchFilterIcon => filtered => @<Icon Type="@IconType.Outline.Search" Style="@(filtered ? "color: #1677ff;" : null)" />;
+
+    private RenderFragment<TableFilterDropdownContext> NameFilter => dropdown => @<div style="padding: 8px;" @onkeydown="args => OnSearchKeyDown(args, dropdown, true)" @onkeydown:stopPropagation="true">
+        <Input TValue="string" Placeholder="Search name" @bind-Value="_nameDraft" Style="margin-bottom: 8px; display: block;" />
+        <Space Size="SpaceSize.Small">
+            <Button Type="ButtonType.Primary" Size="ButtonSize.Small" Icon="search" Style="width: 90px;" OnClick="() => ApplySearch(dropdown, true, true)">Search</Button>
+            <Button Size="ButtonSize.Small" Style="width: 90px;" OnClick="() => ResetSearch(dropdown, true)">Reset</Button>
+            <Button Type="ButtonType.Link" Size="ButtonSize.Small" OnClick="() => ApplySearch(dropdown, true, false)">Filter</Button>
+            <Button Type="ButtonType.Link" Size="ButtonSize.Small" OnClick="dropdown.FilterClose">close</Button>
+        </Space>
+    </div>;
+
+    private RenderFragment<TableFilterDropdownContext> AddressFilter => dropdown => @<div style="padding: 8px;" @onkeydown="args => OnSearchKeyDown(args, dropdown, false)" @onkeydown:stopPropagation="true">
+        <Input TValue="string" Placeholder="Search address" @bind-Value="_addressDraft" Style="margin-bottom: 8px; display: block;" />
+        <Space Size="SpaceSize.Small">
+            <Button Type="ButtonType.Primary" Size="ButtonSize.Small" Icon="search" Style="width: 90px;" OnClick="() => ApplySearch(dropdown, false, true)">Search</Button>
+            <Button Size="ButtonSize.Small" Style="width: 90px;" OnClick="() => ResetSearch(dropdown, false)">Reset</Button>
+            <Button Type="ButtonType.Link" Size="ButtonSize.Small" OnClick="() => ApplySearch(dropdown, false, false)">Filter</Button>
+            <Button Type="ButtonType.Link" Size="ButtonSize.Small" OnClick="dropdown.FilterClose">close</Button>
+        </Space>
+    </div>;
+
+    private void ApplySearch(TableFilterDropdownContext dropdown, bool nameColumn, bool closeDropdown)
+    {
+        if (nameColumn)
+            _nameQuery = _nameDraft;
+        else
+            _addressQuery = _addressDraft;
+
+        if (closeDropdown)
+            dropdown.FilterClose();
+        else
+            dropdown.PreventClose();
+    }
+
+    private void ResetSearch(TableFilterDropdownContext dropdown, bool nameColumn)
+    {
+        if (nameColumn)
+        {
+            _nameDraft = "";
+            _nameQuery = "";
+        }
+        else
+        {
+            _addressDraft = "";
+            _addressQuery = "";
+        }
+
+        dropdown.FilterClose();
+    }
+
+    private void OnSearchKeyDown(KeyboardEventArgs args, TableFilterDropdownContext dropdown, bool nameColumn)
+    {
+        if (args.Key == "Enter")
+            ApplySearch(dropdown, nameColumn, true);
+    }
+
+    private static MarkupString Highlight(string text, string query)
+    {
+        if (string.IsNullOrEmpty(text))
+            return new MarkupString("");
+
+        var encodedText = WebUtility.HtmlEncode(text);
+        if (string.IsNullOrWhiteSpace(query))
+            return new MarkupString(encodedText);
+
+        var encodedQuery = WebUtility.HtmlEncode(query);
+        var html = Regex.Replace(encodedText, Regex.Escape(encodedQuery), match => $"<span style=\"background-color: #ffc069; padding: 0;\">{match.Value}</span>", RegexOptions.IgnoreCase);
+        return new MarkupString(html);
+    }
+
+    private sealed record MeasureRow(string Key, string Name, int Age, string Address);
+}
