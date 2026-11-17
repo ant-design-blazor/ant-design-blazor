@@ -506,7 +506,9 @@ namespace AntDesign
 
         private string TableLayoutStyle => $"table-layout: {(IsVirtualEnabled ? "fixed" : TableLayout ?? "auto")};";
 
-        private string TableColumnCountStyle => $"--columns-count: {ColumnContext?.Columns.Count ?? 0};";
+        private string TableColumnCountStyle => IsSticky || ColumnContext?.Columns.Any(column => column.Fixed.HasValue) == true
+            ? $"--columns-count: {ColumnContext?.Columns.Count ?? 0};"
+            : null;
 
         private string GetSplitBodyStyle()
         {

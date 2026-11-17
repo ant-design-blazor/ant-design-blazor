@@ -4852,3 +4852,32 @@ open at `http://127.0.0.1:5000/en-US/components/table#components-table-demo-drag
 for manual review. This closes only Table Drag Column Sorting; the remaining
 Table demos and 71-component API/token/docs/Semantic DOM/Theme Preview/runtime
 audit remain open.
+
+## Table Measure Row Render — 2026-11-18
+
+Completed the React-style measurement row and sticky-header structure for the
+`Measure Row Render` demo, including initial Name/Age filter dropdowns and the
+open Address sorter tooltip. The `net11.0` Docs.Server build completed with 0
+errors (4194 existing warnings). The first cold parity run hit a 60-second
+Blazor navigation timeout while the server was rendering the large docs page;
+a warm rerun completed successfully: 1/1 scenario passed, with equal
+normalized DOM, selected computed styles, geometry, and visual styles and no
+semantic-count differences. Report: `/tmp/table-measure-row-render-20261118-warm.json`.
+The Blazor and React Table demo tabs remain open for manual review. This closes
+only this demo; remaining Table demos and the full 71-component API, Design
+Token, docs, Semantic DOM, Theme Preview, and runtime audit remain open.
+
+## Table Narrow — 2026-11-18
+
+Aligned the small Table's page-13 pagination window with React: when both jump
+controls are present, the normal page window trims one page from each side.
+Also limit the internal `--columns-count` value to sticky tables or tables with
+fixed columns, where the fixed-column shadow stack uses it. The initial fixture
+exposed both differences while selected computed styles and visual styles
+already matched. After the fix, Narrow passes 1/1 with equal normalized DOM,
+selected computed styles, geometry, and visual styles. Measure Row Render was
+rerun as a regression and also passes 1/1 with no differences. Reports:
+`/tmp/table-narrow-dom-style-parity-20261118-fixed-rerun.json` and
+`/tmp/table-measure-row-render-20261118-final.json`. Docs.Server `net11.0`
+build: 0 errors (3623 existing warnings). This closes only these two focused
+demo states; remaining Table demos and the 71-component audit remain open.

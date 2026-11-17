@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "ant-design/ant-design",
+    "revision": "599b251da933709d7b25fc9e9018ed7f4c093b96",
+    "component": "Table"
+  },
+  "config": {
+    "timeoutMs": 90000,
+    "navigationTimeoutMs": 120000,
+    "viewport": { "width": 1280, "height": 1000, "deviceScaleFactor": 1 },
+    "colorScheme": "light",
+    "comparisonPolicy": {
+      "normalization": {
+        "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_r_[a-zA-Z0-9_-]+)$",
+        "removeAttributes": ["_bl_*", "id", "name", "aria-describedby"],
+        "removeClassPatterns": ["^acss-[a-zA-Z0-9_-]+$", "^css-dev-only-do-not-override-", "^css-var-_[rR]_", "^css-var-root$", "^css-[a-zA-Z0-9]+$"],
+        "removeCommentMarkers": ["<!--!-->"],
+        "normalizeStyleAttributes": true,
+        "sortAttributes": true,
+        "sortClassTokens": true,
+        "removeInterTagWhitespace": true
+      }
+    }
+  },
+  "groups": [
+    {
+      "id": "table-order-column",
+      "component": "Table",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/table#table-demo-order-column",
+        "scopeSelector": "#table-demo-order-column",
+        "rootSelector": ".ant-table-wrapper"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/table#components-table-demo-order-column",
+        "scopeSelector": "#components-table-demo-order-column",
+        "rootSelector": ".ant-table-wrapper"
+      },
+      "styleProperties": ["display", "position", "boxSizing", "width", "height", "padding", "margin", "gap", "alignItems", "fontSize", "fontWeight", "lineHeight", "color", "backgroundColor", "borderRadius", "borderBottomWidth", "borderBottomStyle", "borderBottomColor", "boxShadow"],
+      "semanticNodes": [
+        { "path": "root", "selector": "$root", "minimumCount": 1 },
+        { "path": "header.cell", "selector": ".ant-table-thead th", "minimumCount": 4 },
+        { "path": "body.row", "selector": ".ant-table-tbody tr", "minimumCount": 4 },
+        { "path": "body.cell", "selector": ".ant-table-tbody td", "minimumCount": 20 },
+        { "path": "expand.button", "selector": ".ant-table-row-expand-icon", "minimumCount": 4 },
+        { "path": "selection.checkbox", "selector": ".ant-table-selection-column input[type=checkbox]", "minimumCount": 5 }
+      ],
+      "scenarios": [{ "id": "initial-order" }]
+    }
+  ]
+}

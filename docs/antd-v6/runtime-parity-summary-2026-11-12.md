@@ -689,3 +689,20 @@ The generated preview registry received additional browser smoke checks on Selec
 |---|---|---|
 | Table — Auto Height | React-matched content, More Data toggle (30/2 records), 400px host, 20/20/60 columns, responsive height measurement, fixed-header section/body heights, and semantic measurement classes. | Focused fixture passes 2/2; normalized DOM and visual styles pass. Inline column widths are normalized to 0.1px to absorb subpixel serialization only. `/tmp/table-auto-height-20261117-verified-final.json`. Continue the remaining Table demos and page-level audit. |
 | Next | Continue Table demos by current mismatch priority; then return to Select/Icon page/API/token audits and remaining Design Token, documentation, Semantic DOM, and Theme Preview coverage. | The 71-component H/C/G table above remains a dated broad-scan snapshot. Focused passes close only the named demo scenarios; the full component matrix remains incomplete. |
+
+## Focused continuation — 2026-11-18 (Table Measure Row Render)
+
+| Component / area | Current progress | Verification / remaining |
+|---|---|---|
+| Table — Measure Row Render | Synced the fixed-header split, percentage column measurement, measurement-row filter/sorter controls, and initial Address sorter tooltip state to React. | Docs.Server `net11.0` build: 0 errors (4194 existing warnings). Focused fixture 1/1 passed with equal normalized DOM, selected computed styles, geometry, and visual styles. First cold navigation timed out; the warm retry passed. Report: `/tmp/table-measure-row-render-20261118-warm.json`. |
+| Table / all 71 components | This closes one Table demo only; Table's remaining demos and component API, tokens, docs, Semantic DOM, Theme Preview, and runtime audits remain open. | Full 71-component matrix above remains a historical inventory and is not a completion claim. |
+| Next | Continue Table demos by remaining React/Blazor difference volume, then resume Select/Icon and global/component token and docs audits. | React and Blazor Table pages remain open for manual review. |
+
+## Focused continuation — 2026-11-18 (Table Narrow and regression)
+
+| Component / area | Current progress | Verification / remaining |
+|---|---|---|
+| Table — Narrow | Fixed React's normal pagination page-window behavior when both jump controls are present, and stopped emitting the internal column-count CSS variable for tables that have neither sticky nor fixed columns. | Focused Narrow fixture passes 1/1 with equal normalized DOM, selected computed styles, geometry, and visual styles. Report: `/tmp/table-narrow-dom-style-parity-20261118-fixed-rerun.json`. |
+| Table — Measure Row Render | Sticky-table behavior still emits the internal column-count variable as required; the prior demo remains aligned. | Regression fixture passes 1/1 with 0 DOM/CSS/geometry/visual-style differences. Report: `/tmp/table-measure-row-render-20261118-final.json`. |
+| All 71 component routes | This closes two focused Table demo states only. The rest of Table and the full API, token, docs, Semantic DOM, Theme Preview, and runtime audit remain open. | See the 71-row matrix above; it is a historical broad-scan snapshot, not a current acceptance result. |
+| Next | Continue remaining Table demos in descending React/Blazor mismatch volume, then resume Select/Icon route and API/token/docs audits. | React and Blazor Narrow demo pages remain open in the browser for manual review. |
