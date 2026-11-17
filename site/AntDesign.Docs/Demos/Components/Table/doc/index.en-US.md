@@ -45,6 +45,7 @@ Since 0.16.0, Table has supported ordinary classes, record, interface, and abstr
 | ExpandTemplate | Expand content template | RenderFragment<RowData<TItem>> | - |
 | DataSource | Data Sources | IEnumerable<TItem> | - |
 | DefaultExpandAllRows | Initially, whether to expand all rows | bool | false |
+| DefaultExpandedRowKeys | Initially expanded row keys, matched against `RowKey` | string[] | [] |
 | RowExpandable | Set whether to allow row expansion | bool | false | - |
 | TreeChildren | Used to select child nodes when displaying tree data | Func<TItem, IEnumerable<TItem>> | - |
 | OnChange | Triggered when paging, sorting, and filtering changes | EventCallback<QueryModel<TItem>> | - |

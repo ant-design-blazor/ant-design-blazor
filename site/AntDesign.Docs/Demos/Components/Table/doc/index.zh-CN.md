@@ -45,6 +45,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg
 | ExpandTemplate | 展开内容模板 | RenderFragment<RowData<TItem>> | - |
 | DataSource | 数据来源 | IEnumerable<TItem> | - |
 | DefaultExpandAllRows | 初始时，是否展开所有行 | bool | false |
+| DefaultExpandedRowKeys | 初始展开的行 key，与 `RowKey` 返回值匹配 | string[] | [] |
 | RowExpandable | 设置是否允许行展开 | bool | false | - |
 | TreeChildren | 用于树形数据展示时选择子节点 | Func<TItem, IEnumerable<TItem>> | - |
 | OnChange | 分页、排序、筛选变化时触发 | EventCallback<QueryModel<TItem>> | - |

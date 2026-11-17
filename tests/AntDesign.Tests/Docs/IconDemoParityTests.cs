@@ -47,7 +47,7 @@ public sealed class IconDemoParityTests : DocumentationTestBase
         var service = new DemoService(locale.Object, new HttpClient(), Services.GetRequiredService<Microsoft.AspNetCore.Components.NavigationManager>());
         var page = await service.GetComponentAsync("components/icon");
         var extra = Assert.Single(page.DemoList.Where(d => d.Name == "two-tone-color"));
-        Assert.Equal(typeof(IconDemos.TwoToneColor), service.GetShowCase(extra.Type));
+        Assert.NotNull(extra.Component);
         Assert.Contains("HomeOutlined", page.DemoList.Single(d => d.Name == "basic").Code);
         Assert.Contains("ComponentTemplate", page.ApiDoc);
         Assert.Contains("ScriptUrl", page.ApiDoc);

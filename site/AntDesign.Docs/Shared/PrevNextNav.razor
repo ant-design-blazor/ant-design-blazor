@@ -1,7 +1,9 @@
-﻿<section class="@_styles["root"]">
+﻿@inject AntDesign.Docs.Services.DemoService DemoService
+
+<section class="@_styles["root"]">
     @if (prev != null)
     {
-        <NavLink class="prev-page" href="@($"{MainLayout?.CurrentLanguage}/{prev.Url}")">
+        <NavLink class="prev-page" href="@DemoService.GetLocalizedUrl(MainLayout?.CurrentLanguage, prev.Url)">
             <Icon Type="@IconType.Outline.Left" Class="footer-nav-icon-before"/>
             <span>
                 @prev.Title
@@ -15,7 +17,7 @@
     }
     @if (next != null)
     {
-        <NavLink class="next-page" href="@($"{MainLayout?.CurrentLanguage}/{next.Url}")">
+        <NavLink class="next-page" href="@DemoService.GetLocalizedUrl(MainLayout?.CurrentLanguage, next.Url)">
             <Icon Type="@IconType.Outline.Left" Class="footer-nav-icon-before"/>
             <span>@next.Title</span>
             @if (next.SubTitle != null)

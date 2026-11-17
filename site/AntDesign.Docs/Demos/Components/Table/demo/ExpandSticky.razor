@@ -1,0 +1,39 @@
+@using AntDesign.TableModels
+
+<Table TItem="Contact" DataSource="data" RowKey="record => record.Key" ExpandedRowOffset="3" ExpandIconColumnIndex="1" Bordered>
+    <ColumnDefinitions>
+        <PropertyColumn Property="record => record.Team" Title="Team" OnCell="TeamCell" Width="100" />
+        <PropertyColumn Property="record => record.Name" Title="Name" Width="150" />
+        <PropertyColumn Property="record => record.Age" Title="Age" />
+        <PropertyColumn Property="record => record.Address" Title="Address" />
+        <ActionColumn Title="Action">
+            <a>Delete</a>
+        </ActionColumn>
+    </ColumnDefinitions>
+    <ExpandTemplate>
+        <div>@context.Data.Description</div>
+    </ExpandTemplate>
+</Table>
+
+@code {
+    private readonly Contact[] data =
+    [
+        new() { Key = "1", Team = "Team A", Name = "John Brown", Age = 32, Address = "New York No. 1 Lake Park", Description = "My name is John Brown, I am 32 years old, living in New York No. 1 Lake Park." },
+        new() { Key = "2", Team = "Team A", Name = "Jim Green", Age = 42, Address = "London No. 1 Lake Park", Description = "My name is Jim Green, I am 42 years old, living in London No. 1 Lake Park." },
+        new() { Key = "3", Team = "Team B", Name = "Not Expandable", Age = 29, Address = "Jiangsu No. 1 Lake Park", Description = "This not expandable" },
+        new() { Key = "4", Team = "Team B", Name = "Joe Black", Age = 32, Address = "Sydney No. 1 Lake Park", Description = "My name is Joe Black, I am 32 years old, living in Sydney No. 1 Lake Park." }
+    ];
+
+    private static Dictionary<string, object> TeamCell(CellData cell) =>
+        cell.RowData.DataKey is "1" or "3" ? new() { ["rowspan"] = 2 } : new() { ["rowspan"] = 0 };
+
+    private sealed class Contact
+    {
+        public string Key { get; set; } = string.Empty;
+        public string Team { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+        public int Age { get; set; }
+        public string Address { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+    }
+}

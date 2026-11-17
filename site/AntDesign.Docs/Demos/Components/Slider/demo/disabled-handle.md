@@ -7,8 +7,8 @@ title:
 
 ## zh-CN
 
-通过 `DisabledHandles` 可单独禁用范围中的指定手柄；当有手柄禁用时，整段范围不会被拖动。
+通过 `DisabledHandles` 可单独禁用范围中的指定手柄。示例同时启用轨道拖动并将手柄数量限制在 2–5 个，与 React 示例一致。
 
 ## en-US
 
-Use `DisabledHandles` to disable individual range handles. The whole range cannot be dragged while any handle is disabled.
+Use `DisabledHandles` to disable individual range handles. This example also enables track dragging and limits the handle count to 2–5, matching the React example.

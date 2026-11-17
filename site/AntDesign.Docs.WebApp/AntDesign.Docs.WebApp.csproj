@@ -15,7 +15,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AntDesign.Docs.Wasm\AntDesign.Docs.Wasm.csproj" />
+    <ProjectReference Include="..\AntDesign.Docs.Wasm\AntDesign.Docs.Wasm.csproj"
+                      AdditionalProperties="HostedDocsClient=true" />
   </ItemGroup>
 
 </Project>

@@ -221,6 +221,18 @@ namespace AntDesign
         public bool AutoClearSearchValue { get; set; } = true;
 
         /// <summary>
+        /// The controlled search text displayed by the Select.
+        /// </summary>
+        [Parameter]
+        public string SearchValue { get; set; }
+
+        /// <summary>
+        /// Callback invoked when the search text changes. Supports two-way binding with <c>@bind-SearchValue</c>.
+        /// </summary>
+        [Parameter]
+        public EventCallback<string> SearchValueChanged { get; set; }
+
+        /// <summary>
         /// Whether the Select component is disabled.
         /// </summary>
         [Parameter]
@@ -259,6 +271,12 @@ namespace AntDesign
         public bool Loading { get; set; }
 
         /// <summary>
+        /// Whether the dropdown is open on the first render. Use <see cref="Open"/> to control it.
+        /// </summary>
+        [Parameter]
+        public bool DefaultOpen { get; set; }
+
+        /// <summary>
         /// Controlled open state of dropdown.
         /// </summary>
         [Parameter]
@@ -291,6 +309,18 @@ namespace AntDesign
         public EventCallback OnFocus { get; set; }
 
         /// <summary>
+        /// Callback invoked when a key is pressed while the Select input is focused.
+        /// </summary>
+        [Parameter]
+        public EventCallback<KeyboardEventArgs> OnInputKeyDown { get; set; }
+
+        /// <summary>
+        /// Callback invoked when the option popup is scrolled.
+        /// </summary>
+        [Parameter]
+        public EventCallback<EventArgs> OnPopupScroll { get; set; }
+
+        /// <summary>
         /// Auto focus.
         /// </summary>
         [Parameter] public bool AutoFocus { get; set; }
@@ -308,6 +338,12 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public SortDirection SortByLabel { get; set; } = SortDirection.None;
+
+        /// <summary>
+        /// Sorts filtered options. The third argument is the current search text.
+        /// </summary>
+        [Parameter]
+        public Func<SelectOptionItem<TItemValue, TItem>, SelectOptionItem<TItemValue, TItem>, string, int> FilterSort { get; set; }
 
         /// <summary>
         /// Hides the selected items when they are selected.
@@ -338,6 +374,28 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public RenderFragment PrefixIcon { get; set; }
+
+        /// <summary>
+        /// The custom prefix content. React-compatible name for <see cref="PrefixIcon"/>.
+        /// </summary>
+        [Parameter]
+        public RenderFragment Prefix
+        {
+            get => PrefixIcon;
+            set => PrefixIcon = value;
+        }
+
+        /// <summary>
+        /// The custom icon used to remove a selected tag.
+        /// </summary>
+        [Parameter]
+        public RenderFragment RemoveIcon { get; set; }
+
+        /// <summary>
+        /// The custom icon shown for selected options in multiple or tags mode.
+        /// </summary>
+        [Parameter]
+        public RenderFragment MenuItemSelectedIcon { get; set; }
 
         /// <summary>
         /// The accesskey global attribute.
@@ -384,6 +442,12 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public EventCallback OnClearSelected { get; set; }
+
+        /// <summary>
+        /// React-compatible callback invoked when the user clears the selection.
+        /// </summary>
+        [Parameter]
+        public EventCallback OnClear { get; set; }
 
         protected virtual RenderFragment TriggerContent { get; }
 
@@ -445,6 +509,18 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public EventCallback<IEnumerable<TItem>> OnSelectedItemsChanged { get; set; }
+
+        /// <summary>
+        /// React-compatible callback invoked when an option is selected.
+        /// </summary>
+        [Parameter]
+        public EventCallback<SelectOptionItem<TItemValue, TItem>> OnSelect { get; set; }
+
+        /// <summary>
+        /// React-compatible callback invoked when an option is deselected in multiple or tags mode.
+        /// </summary>
+        [Parameter]
+        public EventCallback<SelectOptionItem<TItemValue, TItem>> OnDeselect { get; set; }
 
         /// <summary>
         ///     Currently active (highlighted) option.
@@ -575,6 +651,12 @@ namespace AntDesign
             get
             {
                 var selectOption = SelectOptionItems;
+
+                if (FilterSort != null && !string.IsNullOrEmpty(_searchValue))
+                {
+                    return selectOption.OrderBy(option => option, Comparer<SelectOptionItem<TItemValue, TItem>>.Create(
+                        (left, right) => FilterSort(left, right, _searchValue)));
+                }
 
                 if (SortByGroup == SortDirection.Ascending && SortByLabel == SortDirection.None)
                 {
@@ -978,6 +1060,11 @@ namespace AntDesign
         {
             SetClassMap();
 
+            if (!OpenChanged.HasDelegate)
+            {
+                _isDropdownVisible = DefaultOpen;
+            }
+
             if (string.IsNullOrWhiteSpace(Style))
             {
                 Style = DefaultWidth;
@@ -1009,7 +1096,7 @@ namespace AntDesign
             }
         }
 
-        protected void OnOverlayHide()
+        protected async Task OnOverlayHide()
         {
             if (!IsSearchEnabled)
             {
@@ -1027,6 +1114,7 @@ namespace AntDesign
             {
                 _searchValue = string.Empty;
                 _prevSearchValue = string.Empty;
+                await SearchValueChanged.InvokeAsync(_searchValue);
             }
 
             if (Mode != SelectMode.Default && HideSelected)
@@ -1162,12 +1250,21 @@ namespace AntDesign
                 {
                     if (AutoClearSearchValue && !string.IsNullOrWhiteSpace(_searchValue))
                     {
-                        ClearSearch();
+                        await ClearSearch();
                     }
                 }
 
                 InvokeValuesChanged(selectOption);
                 await UpdateOverlayPositionAsync();
+            }
+
+            if (selectOption.IsSelected)
+            {
+                await OnSelect.InvokeAsync(selectOption);
+            }
+            else if (Mode != SelectMode.Default)
+            {
+                await OnDeselect.InvokeAsync(selectOption);
             }
 
             // The virtual accessibility proxy is rendered by Select rather than by
@@ -1210,7 +1307,7 @@ namespace AntDesign
             Values = newSelectedValues;
         }
 
-        protected void ClearSearch()
+        protected async Task ClearSearch()
         {
             if (Mode != SelectMode.Default)
             {
@@ -1240,6 +1337,7 @@ namespace AntDesign
             _searchValue = string.Empty;
             _prevSearchValue = string.Empty;
             _selectContent?.ClearInput();
+            await SearchValueChanged.InvokeAsync(_searchValue);
         }
 
         /// <summary>
@@ -1258,6 +1356,7 @@ namespace AntDesign
                 await ClearMultipleMode();
             }
             await OnClearSelected.InvokeAsync(_);
+            await OnClear.InvokeAsync();
             await SetInputFocusAsync();
         }
 
@@ -1533,6 +1632,17 @@ namespace AntDesign
         /// Is used to customize the label style.
         /// </summary>
         [Parameter] public RenderFragment<TItem> LabelTemplate { get; set; }
+
+        /// <summary>
+        /// Customize the currently selected label. React-compatible name for <see cref="LabelTemplate"/>.
+        /// The template receives the selected source item.
+        /// </summary>
+        [Parameter]
+        public RenderFragment<TItem> LabelRender
+        {
+            get => LabelTemplate;
+            set => LabelTemplate = value;
+        }
 
         /// <summary>
         /// Customizes the rendered tag for a selected option in multiple or tags mode.

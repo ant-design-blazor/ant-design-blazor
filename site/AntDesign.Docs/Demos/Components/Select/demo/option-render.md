@@ -7,8 +7,8 @@ title:
 
 ## zh-CN
 
-使用 `ItemTemplate` 自定义下拉选项的内容。
+使用 `OptionRender` 自定义下拉选项的内容。模板接收选项对应的源数据项。
 
 ## en-US
 
-Use `ItemTemplate` to customize the content of dropdown options.
+Use `OptionRender` to customize dropdown option content. The template receives the option's source data item.

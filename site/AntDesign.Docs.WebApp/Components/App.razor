@@ -16,14 +16,14 @@
     <link rel="stylesheet" href="app.css" />
     <link rel="stylesheet" href="AntDesign.Docs.WebApp.styles.css" />
 
-    <HeadOutlet @rendermode="InteractiveServer" />
+    <HeadOutlet @rendermode="InteractiveWebAssembly" />
 </head>
 
 <body class="ant-theme" data-theme="default">
     <app>
-        @* Keep the docs in a single interactive server boundary. The standalone WASM entry point
-           also targets <app>, so InteractiveAuto here mounts a second copy of the routed page. *@
-        <Routes @rendermode="InteractiveServer" />
+        @* WebAssembly render mode prerenders the initial HTML on the server, then activates
+           the generated documentation routes in the browser. *@
+        <Routes @rendermode="InteractiveWebAssembly" />
     </app>
 
     <script src="_content/AntDesign.Charts/g2plot.min.js"></script>

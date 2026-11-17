@@ -1,104 +1,104 @@
-﻿<Table DataSource="@data" TItem="Data" OnExpand="OnRowExpand">
-  <ColumnDefinitions>
-    <PropertyColumn Property="c=>c.Name" />
-    <PropertyColumn Property="c=>c.Platform" />
-    <PropertyColumn Property="c=>c.Version" />
-    <PropertyColumn Property="c=>c.UpgradeNum" />
-    <PropertyColumn Property="c=>c.Creator" />
-    <PropertyColumn Property="c=>c.CreatedAt" />
-    <ActionColumn Title="Action"> <a>Publish</a> </ActionColumn>
-  </ColumnDefinitions>
-  <ExpandTemplate Context="rowData">
-    <Table DataSource="rowData.Data.NestedData" Loading="rowData.Data.NestedData==null" HidePagination>
-      <PropertyColumn Property="c=>c.Date" />
-      <PropertyColumn Property="c=>c.Name" />
-      <Column TData="string" Title="Status">
-        <span>
-          <Badge Status="BadgeStatus.Success" />
-          Finished
-        </span>
-      </Column>
-      <PropertyColumn Property="c=>c.UpgradeNum" />
-      <ActionColumn Title="Action">
-        <Space Size="SpaceSize.Middle">
-          <SpaceItem><a>Pause</a></SpaceItem>
-          <SpaceItem><a>Stop</a></SpaceItem>
-          <SpaceItem>
-            <Dropdown Overlay="menu">
-              <a>More <Icon Type="@IconType.Outline.Down" /></a>
-            </Dropdown>
-          </SpaceItem>
-        </Space>
-      </ActionColumn>
-    </Table>
-  </ExpandTemplate>
+@using AntDesign.TableModels
+
+<Table TItem="Data" DataSource="_data" RowKey="row => row.Key" DefaultExpandedRowKeys="_defaultExpandedRowKeys" ExpandTemplate="@ExpandedTable">
+    <ColumnDefinitions>
+        <PropertyColumn Property="row => row.Name" Title="Name" />
+        <PropertyColumn Property="row => row.Platform" Title="Platform" />
+        <PropertyColumn Property="row => row.Version" Title="Version" />
+        <PropertyColumn Property="row => row.UpgradeNum" Title="Upgraded" />
+        <PropertyColumn Property="row => row.Creator" Title="Creator" />
+        <PropertyColumn Property="row => row.CreatedAt" Title="Date" />
+        <ActionColumn Title="Action"><a>Publish</a></ActionColumn>
+    </ColumnDefinitions>
 </Table>
 
-@using AntDesign.TableModels
-@using System.ComponentModel
+<Table TItem="Data" DataSource="_data" RowKey="row => row.Key" DefaultExpandedRowKeys="_defaultExpandedRowKeys" ExpandTemplate="@ExpandedTable" Size="TableSize.Medium">
+    <ColumnDefinitions>
+        <PropertyColumn Property="row => row.Name" Title="Name" />
+        <PropertyColumn Property="row => row.Platform" Title="Platform" />
+        <PropertyColumn Property="row => row.Version" Title="Version" />
+        <PropertyColumn Property="row => row.UpgradeNum" Title="Upgraded" />
+        <PropertyColumn Property="row => row.Creator" Title="Creator" />
+        <PropertyColumn Property="row => row.CreatedAt" Title="Date" />
+        <ActionColumn Title="Action"><a>Publish</a></ActionColumn>
+    </ColumnDefinitions>
+</Table>
+
+<Table TItem="Data" DataSource="_data" RowKey="row => row.Key" DefaultExpandedRowKeys="_defaultExpandedRowKeys" ExpandTemplate="@ExpandedTable" Size="TableSize.Small">
+    <ColumnDefinitions>
+        <PropertyColumn Property="row => row.Name" Title="Name" />
+        <PropertyColumn Property="row => row.Platform" Title="Platform" />
+        <PropertyColumn Property="row => row.Version" Title="Version" />
+        <PropertyColumn Property="row => row.UpgradeNum" Title="Upgraded" />
+        <PropertyColumn Property="row => row.Creator" Title="Creator" />
+        <PropertyColumn Property="row => row.CreatedAt" Title="Date" />
+        <ActionColumn Title="Action"><a>Publish</a></ActionColumn>
+    </ColumnDefinitions>
+</Table>
+
 @code {
+    private readonly string[] _defaultExpandedRowKeys = ["0"];
 
-  RenderFragment menu =
-    @<Menu>
-      <MenuItem>Action 1</MenuItem>
-      <MenuItem>Action 2</MenuItem>
-    </Menu>;
-
-  Data[] data;
-
-  protected override void OnInitialized()
-  {
-    base.OnInitialized();
-
-    data = Enumerable.Range(0, 3).Select(x => new Data
-      {
-        Name = "Screem",
+    private readonly Data[] _data = Enumerable.Range(0, 3).Select(i => new Data
+    {
+        Key = i.ToString(),
+        Name = "Screen",
         Platform = "iOS",
         Version = "10.3.4.5654",
         UpgradeNum = 500,
         Creator = "Jack",
-        CreatedAt = DateTime.Parse("2014-12-24 23:12:00")
-      }).ToArray();
-  }
+        CreatedAt = "2014-12-24 23:12:00",
+        NestedData = Enumerable.Range(0, 3).Select(j => new NestedData
+        {
+            Key = j.ToString(),
+            Date = "2014-12-24 23:12:00",
+            Name = "This is production name",
+            UpgradeNum = "Upgraded: 56"
+        }).ToArray()
+    }).ToArray();
 
-  async Task OnRowExpand(RowData<Data> rowData)
-  {
-    if (rowData.Data.NestedData != null)
+    private RenderFragment<RowData<Data>> ExpandedTable => rowData => @<Table TItem="NestedData" DataSource="rowData.Data.NestedData" RowKey="row => row.Key" HidePagination>
+        <ColumnDefinitions>
+            <PropertyColumn Property="row => row.Date" Title="Date" />
+            <PropertyColumn Property="row => row.Name" Title="Name" />
+            <Column TData="string" Title="Status"><Badge Status="BadgeStatus.Success" Text="Finished" /></Column>
+            <PropertyColumn Property="row => row.UpgradeNum" Title="Upgrade Status" />
+            <ActionColumn Title="Action">
+                <Space Size="SpaceSize.Middle">
+                    <SpaceItem><a>Pause</a></SpaceItem>
+                    <SpaceItem><a>Stop</a></SpaceItem>
+                    <SpaceItem>
+                        <Dropdown Overlay="ActionMenu">
+                            <Unbound Context="trigger"><a @ref="trigger.Current">More <Icon Type="@IconType.Outline.Down" /></a></Unbound>
+                        </Dropdown>
+                    </SpaceItem>
+                </Space>
+            </ActionColumn>
+        </ColumnDefinitions>
+    </Table>;
+
+    private RenderFragment ActionMenu => @<Menu>
+        <MenuItem Key="1">Action 1</MenuItem>
+        <MenuItem Key="2">Action 2</MenuItem>
+    </Menu>;
+
+    private sealed class Data
     {
-      return;
+        public string Key { get; set; }
+        public string Name { get; set; }
+        public string Platform { get; set; }
+        public string Version { get; set; }
+        public int UpgradeNum { get; set; }
+        public string Creator { get; set; }
+        public string CreatedAt { get; set; }
+        public NestedData[] NestedData { get; set; }
     }
 
-    await Task.Delay(1000);
-    rowData.Data.NestedData = Enumerable.Range(0, 3).Select(i => new NestedData()
-      {
-        Key = i,
-        Date = DateTime.Parse("2014-12-24 23:12:00"),
-        Name = "This is production name",
-        UpgradeNum = "Upgraded: 56"
-      }).ToArray();
-
-    StateHasChanged();
-  }
-
-  public class Data
-  {
-    public string Name { get; set; }
-    public string Platform { get; set; }
-    public string Version { get; set; }
-    [DisplayName("Upgraded")]
-    public int UpgradeNum { get; set; }
-    public string Creator { get; set; }
-    public DateTime CreatedAt { get; set; }
-
-    public NestedData[] NestedData { get; set; }
-  }
-
-  public class NestedData
-  {
-    public int Key { get; set; }
-    public DateTime Date { get; set; }
-    public string Name { get; set; }
-    [DisplayName("Upgrade Status")]
-    public string UpgradeNum { get; set; }
-  }
+    private sealed class NestedData
+    {
+        public string Key { get; set; }
+        public string Date { get; set; }
+        public string Name { get; set; }
+        public string UpgradeNum { get; set; }
+    }
 }

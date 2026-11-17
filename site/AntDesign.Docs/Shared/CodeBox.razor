@@ -11,16 +11,21 @@
         {
             if (Demo.Iframe > 0)
             {
-                <MockBrowser Height="@Demo.Iframe.Value" WithUrl="@(Demo.Link??$"/mock?demoId={DemoId}&type={Demo.Type}")" />
+                <MockBrowser Height="@Demo.Iframe.Value" WithUrl="@(Demo.Link ?? MockUrl)" />
             }
             else
             {
-                @if (_demoType != null)
-                {
-                    <div class="demo">
+                <div class="demo">
                      <ErrorBoundary @ref="_errorBoundary">
                         <ChildContent>
-                              <DynamicComponent Type="_demoType" />
+                            @if (_compiledDemoType is not null)
+                            {
+                                <DynamicComponent Type="_compiledDemoType" />
+                            }
+                            else
+                            {
+                                @Demo.Component
+                            }
                         </ChildContent>
                         <ErrorContent Context="ex">
                             <Alert Type="AlertType.Error"
@@ -29,8 +34,7 @@
                             </Alert>
                         </ErrorContent>
                     </ErrorBoundary>
-                    </div>
-                }
+                </div>
             }
         }
         else
@@ -229,7 +233,7 @@
         }
     }
 
-    private Type _demoType;
+    private Type _compiledDemoType;
 
     RenderFragment _debugIcon;
 
@@ -250,7 +254,9 @@
 
     protected string DemoId => GetDemoId(ComponentName, Demo.Name);
 
-    private string EditUrl => $"https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/{Demo.Type.Replace(".", "/")}.razor";
+    private string MockUrl => $"/{lang.CurrentCulture.Name}/mock?demoId={Uri.EscapeDataString(DemoId)}";
+
+    private string EditUrl => $"https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/{Demo.SourcePath}";
 
     protected override async Task OnInitializedAsync()
     {
@@ -262,7 +268,7 @@
         
 #if DEBUG
         _debugIcon =
-    @<a href="@(Demo.Link??$"mock?type={Demo.Type}")" class="code-box-code-action" target="_blank">
+    @<a href="@(Demo.Link ?? MockUrl)" class="code-box-code-action" target="_blank">
             <Icon Type="@IconType.Outline.Bug" />
     </a>
     ;
@@ -324,13 +330,6 @@
             return;
         }
 
-        if (_rendered && _demoType == null)
-        {
-            // Resolve demos through the shared service so the lookup works for
-            // both the prerendered WebApp and the WebAssembly client assembly.
-            _demoType = demoService.GetShowCase(Demo.Type);
-            StateHasChanged();
-        }
     }
 
     private async Task InitializeVisibilityAsync()
@@ -343,14 +342,14 @@
 
     void OnCompiled(Type type)
     {
-        _demoType = type;
+        _compiledDemoType = type;
         _errorBoundary.Recover();
         StateHasChanged();
     }
 
     private void OnLangeChanged(object sender, CultureInfo e)
     {
-        _demoType = null;
+        _compiledDemoType = null;
         StateHasChanged();
     }
 }

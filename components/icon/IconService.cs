@@ -40,7 +40,28 @@ namespace AntDesign
             if (!string.IsNullOrEmpty(icon.IconFont))
             {
                 var rotation = icon.Rotate == 0 ? string.Empty : $" style=\"transform: rotate({icon.Rotate}deg);\"";
-                return $"<svg width=\"{WebUtility.HtmlEncode(icon.Width)}\" height=\"{WebUtility.HtmlEncode(icon.Height)}\" fill=\"{WebUtility.HtmlEncode(icon.Fill)}\" aria-hidden=\"true\" focusable=\"false\" class=\"{(icon.Spin ? "anticon-spin" : string.Empty)}\"{rotation}><use xlink:href=\"#{WebUtility.HtmlEncode(icon.IconFont)}\"></use></svg>";
+                var symbolSvg = $"<svg width=\"{WebUtility.HtmlEncode(icon.Width)}\" height=\"{WebUtility.HtmlEncode(icon.Height)}\" fill=\"{WebUtility.HtmlEncode(icon.Fill)}\" aria-hidden=\"true\" focusable=\"false\" class=\"{(icon.Spin ? "anticon-spin" : string.Empty)}\"{rotation}><use xlink:href=\"#{WebUtility.HtmlEncode(icon.IconFont)}\"></use></svg>";
+                if (icon is IconFont iconFont && iconFont.ExtraCommonProps is { Count: > 0 })
+                {
+                    var extraAttributes = new Dictionary<string, string>();
+                    foreach (var (name, value) in iconFont.ExtraCommonProps)
+                    {
+                        if (string.IsNullOrWhiteSpace(name) || value == null || !Regex.IsMatch(name, "^[a-zA-Z_:][a-zA-Z0-9_.:-]*$", RegexOptions.CultureInvariant))
+                        {
+                            continue;
+                        }
+
+                        var attributeName = string.Equals(name, "className", StringComparison.Ordinal) ? "class" : name;
+                        var attributeValue = value is IFormattable formattable
+                            ? formattable.ToString(null, System.Globalization.CultureInfo.InvariantCulture)
+                            : value.ToString();
+                        extraAttributes[attributeName] = attributeValue;
+                    }
+
+                    symbolSvg = SetSvgRootAttributes(symbolSvg, extraAttributes);
+                }
+
+                return symbolSvg;
             }
 
             if (string.IsNullOrEmpty(icon.Type)) return null;

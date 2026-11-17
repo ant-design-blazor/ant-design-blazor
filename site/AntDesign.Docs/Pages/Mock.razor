@@ -3,11 +3,13 @@
 @page "/zh-CN/mock"
 @page "/en-US/mock"
 
-@using System.Reflection
 @using AntDesign.Docs.Services
 
 <div id="@DemoId">
-    <DynamicComponent Type="_demoType"></DynamicComponent>
+    @if (_demo?.Component is { } component)
+    {
+        @component
+    }
 </div>
 
 @inject DemoService demoService
@@ -17,14 +19,11 @@
     [SupplyParameterFromQuery]
     public string DemoId { get; set; }
 
-    [SupplyParameterFromQuery]
-    public string Type { get; set; }
-
-    private Type _demoType;
+    private DemoItem _demo;
 
     protected override void OnInitialized()
     {
-        _demoType = demoService.GetShowCase(Type);
+        _demo = demoService.GetDemo(DemoId);
         base.OnInitialized();
     }
 }

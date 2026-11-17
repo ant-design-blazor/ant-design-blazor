@@ -77,6 +77,17 @@ app.MapGet("/{language}/docs/{document}.md", (string language, string document) 
     var markdown = ComponentMarkdown.GetDoc(document, language);
     return markdown == null ? Results.NotFound() : Results.Text(markdown, "text/plain; charset=utf-8");
 });
+app.MapGet("/{language}/llms.txt", (string language) =>
+{
+    if (language is not ("en-US" or "zh-CN")) return Results.NotFound();
+    var index = new System.Text.StringBuilder("# Ant Design Blazor\n\n## ").Append(language).AppendLine().AppendLine();
+    foreach (var name in ComponentMarkdown.Components(language))
+        index.Append("- [").Append(name).Append("](/").Append(language).Append("/components/").Append(name.ToLowerInvariant()).AppendLine(".md)");
+    index.AppendLine();
+    foreach (var name in ComponentMarkdown.Docs(language))
+        index.Append("- [").Append(name).Append("](/").Append(language).Append("/docs/").Append(name).AppendLine(".md)");
+    return Results.Text(index.ToString(), "text/plain; charset=utf-8");
+});
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");

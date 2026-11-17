@@ -127,11 +127,12 @@ namespace AntDesign
 
             if (!rowCache.TryGetValue(dataHashCode, out var currentRowData) || currentRowData == null)
             {
+                var dataKey = RowKey?.Invoke(data)?.ToString() ?? dataHashCode.ToString();
                 currentRowData = new RowData<TItem>(currentDataItem)
                 {
                     Key = dataHashCode.ToString(),
-                    DataKey = RowKey?.Invoke(data)?.ToString() ?? dataHashCode.ToString(),
-                    Expanded = DefaultExpandAllRows && level < DefaultExpandMaxLevel
+                    DataKey = dataKey,
+                    Expanded = (DefaultExpandAllRows && level < DefaultExpandMaxLevel) || DefaultExpandedRowKeys?.Contains(dataKey) == true
                 };
                 rowCache.Add(dataHashCode, currentRowData);
             }

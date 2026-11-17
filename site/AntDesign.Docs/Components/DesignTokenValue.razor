@@ -1,0 +1,60 @@
+@using System.Globalization
+
+@if (IsColor && !string.IsNullOrWhiteSpace(Value))
+{
+    <span class="design-token-color-value">
+        <span class="design-token-color-swatch" style="background-color:@Value" aria-hidden="true"></span>
+        <code>@Value</code>
+    </span>
+}
+else if (TryGetBezier(out var x1, out var y1, out var x2, out var y2))
+{
+    <span class="design-token-motion-value">
+        <svg class="design-token-motion-curve" viewBox="0 0 100 100" role="img" aria-label="Cubic bezier motion curve @Value">
+            <path class="design-token-motion-grid" d="M25 0V100 M50 0V100 M75 0V100 M0 25H100 M0 50H100 M0 75H100" />
+            <path class="design-token-motion-control" d="@ControlPath(x1, y1, x2, y2)" />
+            <path class="design-token-motion-path" d="@CurvePath(x1, y1, x2, y2)" />
+            <circle class="design-token-motion-point-end" cx="@SvgNumber(x1 * 100)" cy="@SvgNumber(100 - y1 * 100)" r="3" />
+            <circle class="design-token-motion-point-start" cx="@SvgNumber(x2 * 100)" cy="@SvgNumber(100 - y2 * 100)" r="3" />
+        </svg>
+        <code>@Value</code>
+    </span>
+}
+else
+{
+    <code>@Value</code>
+}
+
+@code {
+    [Parameter] public string TokenName { get; set; } = string.Empty;
+    [Parameter] public string Value { get; set; } = string.Empty;
+    [Parameter] public bool IsColor { get; set; }
+
+    private static string ControlPath(double x1, double y1, double x2, double y2) =>
+        $"M0 100L{SvgNumber(x1 * 100)} {SvgNumber(100 - y1 * 100)} M100 0L{SvgNumber(x2 * 100)} {SvgNumber(100 - y2 * 100)}";
+
+    private static string CurvePath(double x1, double y1, double x2, double y2) =>
+        $"M0 100 C{SvgNumber(x1 * 100)} {SvgNumber(100 - y1 * 100)}, {SvgNumber(x2 * 100)} {SvgNumber(100 - y2 * 100)}, 100 0";
+
+    private static string SvgNumber(double value) => value.ToString("0.###", CultureInfo.InvariantCulture);
+
+    private bool TryGetBezier(out double x1, out double y1, out double x2, out double y2)
+    {
+        x1 = y1 = x2 = y2 = 0;
+        if (!TokenName.StartsWith("motionEase", StringComparison.OrdinalIgnoreCase)) return false;
+
+        var match = System.Text.RegularExpressions.Regex.Match(Value ?? string.Empty,
+            @"cubic-bezier\(\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)\s*\)",
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+        if (!match.Success || !double.TryParse(match.Groups[1].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out x1)
+            || !double.TryParse(match.Groups[2].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out y1)
+            || !double.TryParse(match.Groups[3].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out x2)
+            || !double.TryParse(match.Groups[4].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out y2)) return false;
+
+        x1 = Math.Clamp(x1, 0, 1);
+        y1 = Math.Clamp(y1, 0, 1);
+        x2 = Math.Clamp(x2, 0, 1);
+        y2 = Math.Clamp(y2, 0, 1);
+        return true;
+    }
+}

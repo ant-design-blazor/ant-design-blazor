@@ -1,5 +1,5 @@
 <div>
-    <Slider TValue="double[]" Value="_value" OnChange="OnValueChange" DraggableTrack DisabledHandles="_disabled" />
+    <Slider TValue="double[]" Value="_value" OnChange="OnValueChange" DraggableTrack MinCount="2" MaxCount="5" DisabledHandles="_disabled" />
     <div style="display:flex;gap:16px;margin-top:16px;flex-wrap:wrap">
         <Checkbox Checked="_disabled[0]" CheckedChanged="@(value => SetDisabled(0, value))">Disabled Handle 1</Checkbox>
         <Checkbox Checked="_disabled[1]" CheckedChanged="@(value => SetDisabled(1, value))">Disabled Handle 2</Checkbox>

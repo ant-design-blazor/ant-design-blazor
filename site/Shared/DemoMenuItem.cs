@@ -6,7 +6,7 @@ namespace AntDesign.Docs
 {
     public class DemoMenuItem
     {
-        public float Order { get; set; }
+        public double Order { get; set; }
 
         public string Title { get; set; }
 

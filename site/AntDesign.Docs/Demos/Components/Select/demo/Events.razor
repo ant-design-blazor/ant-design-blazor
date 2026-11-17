@@ -1,0 +1,44 @@
+@using AntDesign.Select.Internal
+@using Microsoft.AspNetCore.Components.Web
+
+<Select TItemValue="string" TItem="string"
+        DataSource="@_options"
+        @bind-Values="_value"
+        Mode="SelectMode.Multiple"
+        AllowClear
+        ShowSearch
+        Placeholder="Select options"
+        OnSelect="OnSelect"
+        OnDeselect="OnDeselect"
+        OnClear="OnClear"
+        OnInputKeyDown="OnInputKeyDown"
+        OnPopupScroll="OnPopupScroll" />
+
+<ul aria-label="Select event log" style="margin-top: 12px; padding-left: 20px;">
+    @foreach (var entry in _events)
+    {
+        <li>@entry</li>
+    }
+</ul>
+
+@code {
+    private static readonly string[] _options = Enumerable.Range(1, 20).Select(i => $"Option {i}").ToArray();
+    private readonly List<string> _events = new();
+    private IEnumerable<string> _value = Array.Empty<string>();
+
+    private void OnSelect(SelectOptionItem<string, string> option) => AddEvent($"Selected: {option.Label}");
+
+    private void OnDeselect(SelectOptionItem<string, string> option) => AddEvent($"Deselected: {option.Label}");
+
+    private void OnClear() => AddEvent("Cleared selection");
+
+    private void OnInputKeyDown(KeyboardEventArgs args) => AddEvent($"Key: {args.Key}");
+
+    private void OnPopupScroll(EventArgs _) => AddEvent("Popup scrolled");
+
+    private void AddEvent(string entry)
+    {
+        _events.Insert(0, entry);
+        if (_events.Count > 8) _events.RemoveAt(_events.Count - 1);
+    }
+}

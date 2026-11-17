@@ -48,6 +48,8 @@ namespace AntDesign
 
         internal bool Responsive { get; }
 
+        internal bool IsResponsiveColumnHidden(IColumn column);
+
         internal int IndentSize { get; }
 
         internal string ScrollX { get; }
@@ -57,6 +59,8 @@ namespace AntDesign
         internal string ScrollBarWidth { get; }
 
         internal int ExpandIconColumnIndex { get; }
+
+        internal int? ExpandedRowOffset { get; }
 
         internal int TreeExpandIconColumnIndex { get; }
 

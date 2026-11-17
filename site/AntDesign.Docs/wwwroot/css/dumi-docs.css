@@ -23,6 +23,13 @@ html {
   }
 }
 
+/* Keep virtual table rows at least as wide as their body viewport. The same
+ * minimum-width constraint is used by React's virtual table row layout. */
+.ant-table-wrapper .ant-table-tbody-virtual-holder-inner > .ant-table-row,
+.ant-table-wrapper .ant-table-tbody-virtual-holder-inner > div:not(.ant-table-row) > .ant-table-row {
+  min-width: 100%;
+}
+
 /* Transfer style-class demo: mirror React's classNames-generated styles. */
 .transfer-custom-header {
   color: var(--ant-color-primary);

@@ -75,13 +75,17 @@ cols: 2
 
 ### FloatButton.BackTop
 
+使用 `<FloatButtonBackTop />` 实现 React v6 `FloatButton.BackTop` 的行为。独立的 `<BackTop>` 已弃用，其文档和示例统一收录在 FloatButton 页面。
+
 | 参数 | 说明 | 类型 | 默认值 | 版本 |
 | --- | --- | --- | --- | --- |
-| duration | 回到顶部所需时间（ms）；开启“减弱动态效果”（`prefers-reduced-motion: reduce`）时不生效 | number | 450 |  |
-| showProgress | 在 BackTop 按钮边缘展示当前滚动进度环 | boolean | false | 6.6.0 |
-| target | 设置需要监听其滚动事件的元素 | () => HTMLElement | () => window |  |
-| visibilityHeight | 滚动高度达到此参数值才出现 BackTop | number | 400 |  |
-| onClick | 点击按钮的回调函数 | () => void | - |  |
+| Duration | 回到顶部所需时间（ms）；开启减弱动态效果时不生效 | int | 450 |  |
+| ShowProgress | 在按钮边缘展示当前滚动进度环 | bool | false | 6.6.0 |
+| TargetSelector | 可滚动区域的 CSS 选择器 | string | `window` |  |
+| VisibilityHeight | 滚动高度达到此值后显示按钮 | double | 400 |  |
+| OnClick | 点击按钮时调用的回调 | EventCallback&lt;MouseEventArgs&gt; | - |  |
+| Icon | 图标类型名称 | string | `vertical-align-top` |  |
+| Tooltip | 提示文本 | string | - |  |
 
 ## Semantic DOM
 

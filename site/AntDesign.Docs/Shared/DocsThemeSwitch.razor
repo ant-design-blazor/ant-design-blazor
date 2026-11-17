@@ -1,12 +1,40 @@
 @using AntDesign.Docs.Services
 
-<CascadingValue Value="@PopupContainerSelector" Name="PopupContainerSelector">
-    <Dropdown @ref="_dropdown" Class="docs-theme-switch-trigger" OverlayClassName="docs-theme-switch-popup" Trigger="new[] { Trigger.Click }" Placement="Placement.BottomRight" AutoAdjustOverflow="false" BoundaryAdjustMode="TriggerBoundaryAdjustMode.None" Arrow HiddenMode>
-        <ChildContent>
-            <Button Class="header-theme-button" Type="ButtonType.Text" Icon="bg-colors" AriaLabel="Theme settings" />
-        </ChildContent>
-        <Overlay>
-            <Menu Selectable="false" AutoCloseDropdown="false">
+@if (Inline)
+{
+    <text>
+        <MenuItem Key="auto" Icon="sync" Class="header-additional-item" Extra="@ActiveIndicator(_themeMode == "auto")" OnClick="@(()=>ChangeAppearance("auto"))">
+            @Localizer["app.theme.switch.auto"]
+        </MenuItem>
+        <MenuItem Key="light" Icon="bulb" Class="header-additional-item" Extra="@ActiveIndicator(_themeMode == "light")" OnClick="@(()=>ChangeAppearance("light"))">
+            @Localizer["app.theme.switch.light"]
+        </MenuItem>
+        <MenuItem Key="dark" Icon="poweroff" Class="header-additional-item" Extra="@ActiveIndicator(_themeMode == "dark")" OnClick="@(()=>ChangeAppearance("dark"))">
+            @Localizer["app.theme.switch.dark"]
+        </MenuItem>
+        <MenuItem Key="compact" Icon="compress" Class="header-additional-item" Extra="@ActiveIndicator(_compact)" OnClick="@ToggleCompact">
+            @Localizer["app.theme.switch.compact"]
+        </MenuItem>
+        <MenuItem Key="happy-work" Icon="smile" Class="header-additional-item" Extra="@ActiveIndicator(_happyWorkEnabled)" OnClick="@ToggleHappyWork">
+            @Localizer["app.theme.switch.happy-work"]
+        </MenuItem>
+        <MenuItem Key="market" Icon="shop" Class="header-additional-item" OnClick="OpenThemeGenerator">
+            @Localizer["app.theme.switch.market"]
+        </MenuItem>
+        <MenuItem Key="theme-editor" Icon="edit" Class="header-additional-item" OnClick="OpenThemeEditor">
+            @Localizer["app.theme.switch.editor"]
+        </MenuItem>
+    </text>
+}
+else
+{
+    <CascadingValue Value="@PopupContainerSelector" Name="PopupContainerSelector">
+        <Dropdown @ref="_dropdown" @bind-Visible="_dropdownVisible" ComplexAutoCloseAndVisible Class="docs-theme-switch-trigger" OverlayClassName="docs-theme-switch-popup" Trigger="new[] { Trigger.Hover }" Placement="Placement.BottomRight" AutoAdjustOverflow="false" BoundaryAdjustMode="TriggerBoundaryAdjustMode.None" Arrow HiddenMode>
+            <ChildContent>
+                <Button Class="header-theme-button" Type="ButtonType.Text" Icon="bg-colors" Title="Theme icon" AriaLabel="Theme settings" />
+            </ChildContent>
+            <Overlay>
+                <Menu Selectable="false" AutoCloseDropdown="false">
                 <MenuItem Key="auto" Icon="sync" Extra="@ActiveIndicator(_themeMode == "auto")" OnClick="@(()=>ChangeAppearance("auto"))">
                     @Localizer["app.theme.switch.auto"]
                 </MenuItem>
@@ -31,10 +59,11 @@
                 <MenuItem Key="theme-editor" Icon="edit" OnClick="OpenThemeEditor">
                     @Localizer["app.theme.switch.editor"]
                 </MenuItem>
-            </Menu>
-        </Overlay>
-    </Dropdown>
-</CascadingValue>
+                </Menu>
+            </Overlay>
+        </Dropdown>
+    </CascadingValue>
+}
 
 <style>
     .docs-theme-switch-popup.ant-dropdown { max-width: calc(100vw - 16px); }
@@ -44,6 +73,7 @@
 </style>
 
 @code {
+    [Parameter] public bool Inline { get; set; }
     [Parameter] public string PopupContainerSelector { get; set; } = ".header-desktop-utilities";
 
     private async Task OpenThemeGenerator()

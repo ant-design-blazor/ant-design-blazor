@@ -1,23 +1,30 @@
-﻿<Table TItem="ResponsiveTableRow" DataSource="@_rows" HidePagination="true">
-    <PropertyColumn Property="x => x.Name" Title="Name (all screens)" />
-    <PropertyColumn Property="x => x.Age" Title="Age (medium screen or bigger)" Class="responsive-medium-column" />
-    <PropertyColumn Property="x => x.Address" Title="Address (large screen or bigger)" Class="responsive-large-column" />
+@using AntDesign.TableModels
+
+<Table TItem="ResponsiveTableRow" DataSource="@_rows" RowKey="@(row => row.Key)">
+    <PropertyColumn Property="row => row.Name" Title="Name (all screens)" CellRender="RenderName" />
+    <PropertyColumn Property="row => row.Age" Title="Age (medium screen or bigger)" Responsive="@_mediumBreakpoints" />
+    <PropertyColumn Property="row => row.Address" Title="Address (large screen or bigger)" Responsive="@_largeBreakpoints" />
 </Table>
 
-<style>
-@@media (max-width: 767px) { .ant-table-cell.responsive-medium-column { display:none; } }
-@@media (max-width: 991px) { .ant-table-cell.responsive-large-column { display:none; } }
-</style>
-
 @code {
+    private static readonly string[] _mediumBreakpoints = ["md"];
+    private static readonly string[] _largeBreakpoints = ["lg"];
+
+    private static RenderFragment<CellData<string>> RenderName => cell => builder =>
+    {
+        builder.OpenElement(0, "a");
+        builder.AddContent(1, cell.FieldValue);
+        builder.CloseElement();
+    };
+
     private readonly ResponsiveTableRow[] _rows =
     [
-        new() { Name = "John Brown", Age = 32, Address = "New York No. 1 Lake Park" },
-        new() { Name = "Jim Green", Age = 42, Address = "London No. 1 Lake Park" }
+        new() { Key = "1", Name = "John Brown", Age = 32, Address = "New York No. 1 Lake Park" }
     ];
 
     private sealed class ResponsiveTableRow
     {
+        public string Key { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
         public int Age { get; set; }
         public string Address { get; set; } = string.Empty;

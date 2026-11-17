@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using AntDesign.Core.Documentation;
 using AntDesign.TableModels;
@@ -14,6 +15,11 @@ namespace AntDesign
     {
         [CascadingParameter]
         public ITable Table { get; set; }
+
+        // A changing cascading value notifies columns when viewport breakpoints
+        // change even though the table instance itself is cascaded as IsFixed.
+        [CascadingParameter(Name = "ResponsiveViewportWidth")]
+        internal decimal? ResponsiveViewportWidth { get; set; }
 
         [CascadingParameter(Name = "IsInitialize")]
         public bool IsInitialize { get; set; }
@@ -149,6 +155,14 @@ namespace AntDesign
         public bool Hidden { get; set; }
 
         /// <summary>
+        /// Breakpoints at which this column is displayed. Supported values are
+        /// <c>xs</c>, <c>sm</c>, <c>md</c>, <c>lg</c>, <c>xl</c>, <c>xxl</c>, and <c>xxxl</c>.
+        /// The column is hidden when none of the configured breakpoints matches the viewport.
+        /// </summary>
+        [Parameter]
+        public string[] Responsive { get; set; }
+
+        /// <summary>
         /// Alignment for column contents
         /// </summary>
         [Parameter]
@@ -175,6 +189,75 @@ namespace AntDesign
 
         protected bool AppendExpandColumn => Table.HasExpandTemplate && ColIndex == (Table.TreeMode ? Table.TreeExpandIconColumnIndex : Table.ExpandIconColumnIndex);
 
+        protected bool ShouldExtendExpandedRowSpan
+        {
+            get
+            {
+                if (!Table.ExpandedRowOffset.HasValue || Table.TreeMode || RowData?.Expanded != true || RowData.IsGrouping)
+                {
+                    return false;
+                }
+
+                var logicalIndex = ColIndex + (ColIndex >= Table.ExpandIconColumnIndex ? 1 : 0);
+                return logicalIndex < Table.ExpandedRowOffset.Value;
+            }
+        }
+
+        protected bool ShouldExtendExpandIconRowSpan => Table.ExpandedRowOffset.HasValue
+            && !Table.TreeMode
+            && RowData?.Expanded == true
+            && Table.ExpandIconColumnIndex < Table.ExpandedRowOffset.Value;
+
+        protected bool IsExpandIconFixedLeft => Table.ExpandedRowOffset.HasValue
+            ? Table.ExpandIconColumnIndex < Table.ExpandedRowOffset.Value
+            : Context?.Columns.Any(column => GetEffectiveFixed(column) == ColumnFixPlacement.Left && column.ColIndex < Table.ExpandIconColumnIndex) == true
+                && Context.Columns.Any(column => GetEffectiveFixed(column) == ColumnFixPlacement.Left && column.ColIndex >= Table.ExpandIconColumnIndex);
+
+        protected string ExpandIconCellClass
+        {
+            get
+            {
+                var expandIndex = Table.ExpandIconColumnIndex;
+                var isFixedLeft = IsExpandIconFixedLeft;
+                var hasFixedColumnAfter = Context?.Columns.Any(column => GetEffectiveFixed(column) == ColumnFixPlacement.Left && column.ColIndex == expandIndex) == true;
+                var classes = new List<string> { "ant-table-cell", "ant-table-row-expand-icon-cell" };
+                if (isFixedLeft)
+                {
+                    classes.Add("ant-table-cell-fix");
+                    classes.Add("ant-table-cell-fix-start");
+                    if (!hasFixedColumnAfter)
+                    {
+                        classes.Add("ant-table-cell-fix-start-shadow");
+                    }
+                    if (Table.IsSticky)
+                    {
+                        classes.Add("ant-table-cell-fix-sticky");
+                    }
+                }
+                return string.Join(" ", classes);
+            }
+        }
+
+        protected string ExpandIconCellStyle
+        {
+            get
+            {
+                var expandIndex = Table.ExpandIconColumnIndex;
+                var isFixedLeft = IsExpandIconFixedLeft;
+                if (!isFixedLeft)
+                {
+                    return null;
+                }
+
+                var columnCount = (Context?.Columns.Count ?? 0) + 1;
+                var styles = new CssStyleBuilder();
+                styles.AddStyle("inset-inline-start", "0px");
+                styles.AddStyle("--z-offset", (2 * columnCount - expandIndex).ToString());
+                styles.AddStyle("--z-offset-reverse", (columnCount + expandIndex).ToString());
+                return styles.Build().TrimEnd();
+            }
+        }
+
         protected int VirtualColumnIndex
         {
             get
@@ -184,7 +267,7 @@ namespace AntDesign
             }
         }
 
-        internal virtual bool RequiresColGroup => Width != null || Fixed != null || AppendExpandColumn;
+        internal virtual bool RequiresColGroup => Width != null || GetEffectiveFixed(this) != null || AppendExpandColumn;
 
         protected bool RowExpandable => Table.RowExpandable(RowData);
 
@@ -204,22 +287,33 @@ namespace AntDesign
 
         protected bool ShouldShowEllipsis => Ellipsis || EllipsisShowTitle.HasValue;
 
-        private bool IsFixRight => Context.Columns.Any(x => x.Fixed == ColumnFixPlacement.Right && x.ColIndex >= ColIndex && x.ColIndex < ColEndIndex);
+        private ColumnFixPlacement? GetEffectiveFixed(IColumn column)
+        {
+            if (column.Fixed.HasValue) return column.Fixed;
+            if (Table.ExpandedRowOffset.HasValue && Table.HasExpandTemplate && !Table.TreeMode)
+            {
+                var logicalIndex = column.ColIndex + (column.ColIndex >= Table.ExpandIconColumnIndex ? 1 : 0);
+                if (logicalIndex < Table.ExpandedRowOffset.Value) return ColumnFixPlacement.Left;
+            }
+            return null;
+        }
 
-        private bool IsFixLeft => Context.Columns.Any(x => x.Fixed == ColumnFixPlacement.Left && x.ColIndex >= ColIndex && x.ColIndex < ColEndIndex)
+        private bool IsFixRight => Context.Columns.Any(x => GetEffectiveFixed(x) == ColumnFixPlacement.Right && x.ColIndex >= ColIndex && x.ColIndex < ColEndIndex);
+
+        private bool IsFixLeft => Context.Columns.Any(x => GetEffectiveFixed(x) == ColumnFixPlacement.Left && x.ColIndex >= ColIndex && x.ColIndex < ColEndIndex)
             || IsAutoFixedSelection(this);
 
         private bool IsAutoFixedSelection(IColumn column) => column is ISelectionColumn
             && Context?.Columns.Any(x => !ReferenceEquals(x, column)
                 && x.ColIndex > column.ColIndex
-                && x.Fixed == ColumnFixPlacement.Left) == true;
+                && GetEffectiveFixed(x) == ColumnFixPlacement.Left) == true;
 
         private void SetClass()
         {
             var isFixedLeftShadow = IsFixLeft && !Context.Columns.Any(x =>
-                x.Fixed == ColumnFixPlacement.Left && x.ColIndex == ColEndIndex);
+                GetEffectiveFixed(x) == ColumnFixPlacement.Left && x.ColIndex == ColEndIndex);
             var isFixedRightShadow = IsFixRight && !Context.Columns.Any(x =>
-                x.Fixed == ColumnFixPlacement.Right && x.ColIndex + Math.Max(x.ColSpan, 1) == ColIndex);
+                GetEffectiveFixed(x) == ColumnFixPlacement.Right && x.ColIndex + Math.Max(x.ColSpan, 1) == ColIndex);
 
             ClassMapper
                 .Clear()
@@ -251,11 +345,11 @@ namespace AntDesign
 
                 Context?.AddColumn(this);
 
-                if (Fixed == ColumnFixPlacement.Left)
+                if (GetEffectiveFixed(this) == ColumnFixPlacement.Left)
                 {
                     Table?.HasFixLeft();
                 }
-                else if (Fixed == ColumnFixPlacement.Right)
+                else if (GetEffectiveFixed(this) == ColumnFixPlacement.Right)
                 {
                     Table?.HasFixRight();
                 }
@@ -340,14 +434,18 @@ namespace AntDesign
                 return cssStyleBuilder.Build();
             }
 
-            var fixedPlacement = Fixed;
+            var hasExpandColumn = Table.HasExpandTemplate && !Table.TreeMode;
+            var logicalColumnIndex = hasExpandColumn && ColIndex >= Table.ExpandIconColumnIndex ? ColIndex + 1 : ColIndex;
+            var fixedPlacement = GetEffectiveFixed(this);
             if (this is ISelectionColumn && !fixedPlacement.HasValue && IsAutoFixedSelection(this))
             {
                 fixedPlacement = ColumnFixPlacement.Left;
             }
             else
             {
-                fixedPlacement ??= Context.Columns.FirstOrDefault(x => x.Fixed != null && x.ColIndex >= ColIndex && x.ColIndex < ColEndIndex)?.Fixed;
+                fixedPlacement ??= Context.Columns.FirstOrDefault(x => GetEffectiveFixed(x) != null && x.ColIndex >= ColIndex && x.ColIndex < ColEndIndex) is { } fixedColumn
+                    ? GetEffectiveFixed(fixedColumn)
+                    : null;
             }
 
             if (!fixedPlacement.HasValue)
@@ -361,20 +459,30 @@ namespace AntDesign
             {
                 for (int i = 0; i < ColIndex; i++)
                 {
+                    if (hasExpandColumn && i == Table.ExpandIconColumnIndex && IsExpandIconFixedLeft)
+                    {
+                        fixedWidths = fixedWidths.Append("50px");
+                    }
+
                     var column = Context?.Columns[i];
-                    if (column?.Fixed != null || (column is ISelectionColumn && IsAutoFixedSelection(column)))
+                    if (column != null && (GetEffectiveFixed(column) != null || (column is ISelectionColumn && IsAutoFixedSelection(column))))
                     {
                         var width = column.Width ?? (column is ISelectionColumn ? "32px" : null);
                         if (width != null)
                             fixedWidths = fixedWidths.Append($"{(CssSizeLength)width}");
                     }
                 }
+
+                if (hasExpandColumn && Table.ExpandIconColumnIndex == ColIndex && IsExpandIconFixedLeft)
+                {
+                    fixedWidths = fixedWidths.Append("50px");
+                }
             }
             else if (fixedPlacement == ColumnFixPlacement.Right)
             {
                 for (int i = (Context?.Columns.Count ?? 1) - 1; i > ColIndex; i--)
                 {
-                    if (Context?.Columns[i].Fixed != null)
+                    if (Context?.Columns[i] is { } rightColumn && GetEffectiveFixed(rightColumn) != null)
                     {
                         fixedWidths = fixedWidths.Append($"{(CssSizeLength)Context?.Columns[i].Width}");
                     }
@@ -386,20 +494,22 @@ namespace AntDesign
                 fixedWidths = fixedWidths.Append($"{(CssSizeLength)Table.ScrollBarWidth}");
             }
 
-            var fixedWidth = fixedWidths.Length switch
-            {
-                > 1 => $"calc({string.Join(" + ", fixedWidths)})",
-                1 => fixedWidths[0],
-                _ => "0px"
-            };
+            var fixedWidth = Table.ExpandedRowOffset.HasValue
+                ? "0px"
+                : fixedWidths.Length switch
+                {
+                    > 1 => $"calc({string.Join(" + ", fixedWidths)})",
+                    1 => fixedWidths[0],
+                    _ => "0px"
+                };
 
 
-            var columnCount = Context.Columns.Count;
+            var columnCount = Context.Columns.Count + (hasExpandColumn ? 1 : 0);
             if (fixedPlacement == ColumnFixPlacement.Left)
             {
                 cssStyleBuilder.AddStyle("inset-inline-start", fixedWidth);
-                cssStyleBuilder.AddStyle("--z-offset", (2 * columnCount - ColIndex).ToString());
-                cssStyleBuilder.AddStyle("--z-offset-reverse", (columnCount + ColIndex).ToString());
+                cssStyleBuilder.AddStyle("--z-offset", (2 * columnCount - logicalColumnIndex).ToString());
+                cssStyleBuilder.AddStyle("--z-offset-reverse", (columnCount + logicalColumnIndex).ToString());
             }
             else if (fixedPlacement == ColumnFixPlacement.Right)
             {

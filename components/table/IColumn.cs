@@ -28,6 +28,8 @@ namespace AntDesign
 
         public bool Hidden { get; set; }
 
+        public string[] Responsive { get; set; }
+
         public string Width { get; set; }
 
         public RowData RowData { get; set; }

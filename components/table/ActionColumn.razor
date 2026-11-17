@@ -6,7 +6,7 @@
 {
     return;
 }
-else if (Hidden)
+else if (Hidden || Table.IsResponsiveColumnHidden(this))
 {
     return;
 }
@@ -41,7 +41,7 @@ else if (IsHeader && HeaderColSpan != 0)
         <th class="ant-table-cell ant-table-row-expand-icon-cell"></th>
     }
 
-	<th class="@ClassMapper.Class" scope="col" style="@(string.IsNullOrWhiteSpace($"{FixedStyle}{HeaderStyle}") ? null : $"{FixedStyle}{HeaderStyle}")" colspan="@(HeaderColSpan > 1 ? HeaderColSpan : false)" rowspan="@(RowSpan > 1 ? RowSpan : false)"
+	<th class="@ClassMapper.Class" scope="@(string.IsNullOrWhiteSpace(Title) && TitleTemplate is null ? null : "col")" style="@(string.IsNullOrWhiteSpace($"{FixedStyle}{HeaderStyle}") ? null : $"{FixedStyle}{HeaderStyle}")" colspan="@(HeaderColSpan > 1 ? HeaderColSpan : false)" rowspan="@(RowSpan > 1 ? RowSpan : false)"
 		aria-description="@(Sortable ? Table.Locale.Sortable : null)" aria-label="@(Sortable ? Title ?? string.Empty : null)" tabindex="@(Sortable ? "0" : null)" aria-sort="@(Sortable ? AriaSort : null)" @onkeydown="HandleSortKeyDown">
 		@if (Sortable)
 		{

@@ -41,7 +41,14 @@
             if (IsSelected)
             {
                 <span unselectable="on" aria-hidden="true" style="user-select: none;" class="@ClassPrefix-state">
-                    <CheckOutlined />
+                    @if (SelectParent.MenuItemSelectedIcon != null)
+                    {
+                        @SelectParent.MenuItemSelectedIcon
+                    }
+                    else
+                    {
+                        <CheckOutlined />
+                    }
                 </span>
             }
             break;

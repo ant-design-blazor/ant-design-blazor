@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -53,23 +54,47 @@ namespace AntDesign
 
         #region Parameters
 
+        private Func<TItem, object> _getNestedOptions;
+        private Func<TItem, string> _getGroupLabel;
+
         /// <summary>
-        /// Whether Select is searchable. React-compatible name for <c>EnableSearch</c>.
+        /// Maps React-compatible option fields, including nested option groups.
         /// </summary>
         [Parameter]
-        public bool? ShowSearch
+        public SelectFieldNames FieldNames
         {
-            get => _showSearch;
-            set => _showSearch = value;
+            get => _fieldNames;
+            set
+            {
+                _fieldNames = value;
+                if (value == null) return;
+
+                LabelName = value.Label;
+                ValueName = value.Value;
+                _getNestedOptions = string.IsNullOrWhiteSpace(value.Options)
+                    ? null
+                    : PathHelper.GetDelegate<TItem, object>(value.Options);
+                _getGroupLabel = string.IsNullOrWhiteSpace(value.GroupLabel)
+                    ? null
+                    : PathHelper.GetDelegate<TItem, string>(value.GroupLabel);
+            }
         }
 
-        private bool? _showSearch;
-        internal override bool? SearchEnabledOverride => ShowSearch;
+        private SelectFieldNames _fieldNames;
 
         /// <summary>
-        /// Toggle the border style.
+        /// Enables search, or supplies React v6 search settings such as <c>optionFilterProp</c>.
+        /// </summary>
+        [Parameter]
+        public OneOf<bool?, SelectShowSearchOptions> ShowSearch { get; set; }
+
+        internal override bool? SearchEnabledOverride => ShowSearch.IsT0 ? ShowSearch.AsT0 : true;
+
+        /// <summary>
+        /// Legacy border toggle retained for backward compatibility. Use <see cref="Variant"/> to select the selector style.
         /// </summary>
         /// <default value="true"/>
+        [Obsolete("Use Variant instead. This parameter is retained for backward compatibility.", false)]
         [Parameter]
         public bool Bordered { get; set; } = true;
 
@@ -145,6 +170,7 @@ namespace AntDesign
             get => DataSource;
             set => DataSource = value;
         }
+
 
         /// <summary>
         /// Used for rendering select options manually.
@@ -258,6 +284,15 @@ namespace AntDesign
         public RenderFragment<TItem> ItemTemplate { get; set; }
 
         /// <summary>
+        /// Customize how each option is rendered in the dropdown. React-compatible name for <see cref="ItemTemplate"/>.
+        /// The template receives the option's source item.
+        /// </summary>
+        [Parameter]
+        public RenderFragment<TItem> OptionRender { get; set; }
+
+        internal RenderFragment<TItem> EffectiveOptionRender => OptionRender ?? ItemTemplate;
+
+        /// <summary>
         /// Specify content to show when no result matches.
         /// </summary>
         [Parameter]
@@ -296,6 +331,27 @@ namespace AntDesign
         public Action<string> OnSearch { get; set; }
 
         [Parameter] public string PopupContainerMaxHeight { get; set; } = "256px";
+
+        /// <summary>
+        /// Configures the maximum height of the option list. React-compatible alias for <see cref="PopupContainerMaxHeight"/>.
+        /// </summary>
+        /// <default value="256"/>
+        [Parameter]
+        public int? ListHeight
+        {
+            get
+            {
+                var value = PopupContainerMaxHeight?.Trim();
+                if (value != null && value.EndsWith("px", StringComparison.OrdinalIgnoreCase))
+                    value = value.Substring(0, value.Length - 2);
+                return int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var height) ? height : null;
+            }
+            set
+            {
+                if (value.HasValue)
+                    PopupContainerMaxHeight = $"{value.Value.ToString(CultureInfo.InvariantCulture)}px";
+            }
+        }
 
         /// <summary>
         /// Whether to show the drop-down arrow
@@ -425,6 +481,29 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public Func<SelectOptionItem<TItemValue, TItem>, string, bool> FilterExpression { get; set; }
+
+        /// <summary>
+        /// Legacy top-level alias for <see cref="SelectShowSearchOptions.OptionFilterProp"/>.
+        /// </summary>
+        [Obsolete("Set OptionFilterProp inside ShowSearch to match React v6.", false)]
+        [Parameter]
+        public OneOf<string, string[]> OptionFilterProp { get; set; } = "value";
+
+        internal OneOf<string, string[]> EffectiveOptionFilterProp => ShowSearch.IsT1
+            ? ShowSearch.AsT1.OptionFilterProp
+            : OptionFilterProp;
+
+        /// <summary>
+        /// Whether to filter options by the search text. Set to false to keep all options visible;
+        /// use <see cref="FilterExpression"/> to customize the matching rule.
+        /// </summary>
+        /// <default value="true"/>
+        [Parameter]
+        public bool? FilterOption { get; set; } = true;
+
+        internal bool EffectiveFilterOption => ShowSearch.IsT1
+            ? ShowSearch.AsT1.FilterOption ?? FilterOption != false
+            : FilterOption != false;
 
         #endregion Parameters
 
@@ -630,6 +709,16 @@ namespace AntDesign
 
         protected override async Task OnParametersSetAsync()
         {
+            var controlledSearchValue = SearchValueChanged.HasDelegate || SearchValue != null;
+            var searchValueChanged = !_hasSearchValueParameter || !string.Equals(_lastSearchValueParameter, SearchValue, StringComparison.Ordinal);
+            _hasSearchValueParameter = true;
+            _lastSearchValueParameter = SearchValue;
+            if (controlledSearchValue && searchValueChanged)
+            {
+                _prevSearchValue = _searchValue;
+                _searchValue = SearchValue ?? string.Empty;
+            }
+
             var virtualAccessibilityChanged = _lastVirtualAccessibility != UsesVirtualAccessibility;
             _lastVirtualAccessibility = UsesVirtualAccessibility;
             SetClassMap();
@@ -659,6 +748,18 @@ namespace AntDesign
 
                 await OnValueChangeAsync(_selectedValue);
             }
+            if (controlledSearchValue && searchValueChanged && _optionsHasInitialized)
+            {
+                if (!string.IsNullOrEmpty(_searchValue) && EffectiveFilterOption)
+                {
+                    FilterOptionItems(_searchValue);
+                }
+                else
+                {
+                    UnhideSelectOptions();
+                }
+                _dropDown?.GetOverlayComponent()?.RefreshComponentState();
+            }
             await base.OnParametersSetAsync();
             if (virtualAccessibilityChanged)
             {
@@ -667,6 +768,9 @@ namespace AntDesign
                 _dropDown?.GetOverlayComponent()?.RefreshComponentState();
             }
         }
+
+        private string _lastSearchValueParameter;
+        private bool _hasSearchValueParameter;
 
         private void EvaluateDataSourceChange()
         {
@@ -871,6 +975,8 @@ namespace AntDesign
             if (_datasource == null)
                 return;
 
+            var sourceOptions = FlattenDataSource(_datasource).ToArray();
+
             Dictionary<TItem, SelectOptionItem<TItemValue, TItem>> dataStoreToSelectOptionItemsMatch = new();
             // Compare items of SelectOptions and the datastore
             if (SelectOptionItems.Any())
@@ -881,7 +987,7 @@ namespace AntDesign
                     var selectOption = SelectOptionItems[i];
                     if (!selectOption.IsAddedTag)
                     {
-                        var exists = _datasource.FirstOrDefault(x => x.Equals(selectOption.Item));
+                        var exists = sourceOptions.FirstOrDefault(x => EqualityComparer<TItem>.Default.Equals(x.Item, selectOption.Item)).Item;
 
                         if (exists is null)
                         {
@@ -912,8 +1018,9 @@ namespace AntDesign
             else if (Mode != SelectMode.Default && _selectedValues != null)
                 processedSelectedCount = _selectedValues.Count();
 
-            foreach (var item in _datasource)
+            foreach (var sourceOption in sourceOptions)
             {
+                var item = sourceOption.Item;
                 TItemValue value = _getValue == null ? (TItemValue)(object)item : _getValue(item);
 
                 var exists = false;
@@ -932,7 +1039,7 @@ namespace AntDesign
                 }
 
                 var disabled = false;
-                var groupName = string.Empty;
+                var groupName = sourceOption.GroupName;
                 var label = _getLabel == null ? GetLabel(item) : _getLabel(item);
 
                 bool isSelected = false;
@@ -947,7 +1054,7 @@ namespace AntDesign
                 if (_getDisabled != default)
                     disabled = _getDisabled(item);
 
-                if (!string.IsNullOrWhiteSpace(GroupName))
+                if (string.IsNullOrWhiteSpace(groupName) && !string.IsNullOrWhiteSpace(GroupName))
                     groupName = _getGroup(item);
 
                 if (!exists)
@@ -1005,6 +1112,24 @@ namespace AntDesign
                         SelectedOptionItems[tag.Value] = tag;
                     }
                 }
+            }
+        }
+
+        private IEnumerable<(TItem Item, string GroupName)> FlattenDataSource(IEnumerable<TItem> items, string parentGroup = null)
+        {
+            foreach (var item in items ?? Enumerable.Empty<TItem>())
+            {
+                if (_getNestedOptions?.Invoke(item) is IEnumerable nestedOptions && nestedOptions is not string)
+                {
+                    var groupLabel = _getGroupLabel?.Invoke(item);
+                    var childGroup = string.IsNullOrWhiteSpace(groupLabel) ? parentGroup : groupLabel;
+                    var children = nestedOptions.Cast<object>().OfType<TItem>();
+                    foreach (var child in FlattenDataSource(children, childGroup))
+                        yield return child;
+                    continue;
+                }
+
+                yield return (item, parentGroup);
             }
         }
 
@@ -1109,7 +1234,7 @@ namespace AntDesign
             {
                 if (UsesVirtualAccessibility && _scrollableSelectDiv.Id != null)
                     await JsInvokeAsync(JSInteropConstants.SelectHelper.CancelScroll, _scrollableSelectDiv);
-                OnOverlayHide();
+                await OnOverlayHide();
             }
         }
 
@@ -1491,7 +1616,15 @@ namespace AntDesign
 
             if (!string.IsNullOrEmpty(_searchValue))
             {
-                FilterOptionItems(_searchValue);
+                if (EffectiveFilterOption)
+                {
+                    FilterOptionItems(_searchValue);
+                }
+                else
+                {
+                    UnhideSelectOptions();
+                    ActiveOption = SortedSelectOptionItems.FirstOrDefault(option => !option.IsHidden && !option.IsDisabled);
+                }
             }
             else
             {
@@ -1503,6 +1636,7 @@ namespace AntDesign
                 }
             }
             OnSearch?.Invoke(_searchValue);
+            await SearchValueChanged.InvokeAsync(_searchValue);
             // The portaled Overlay owns its own render tree. Updating option
             // children alone leaves its list/empty-state fragment stale.
             _dropDown.GetOverlayComponent()?.RefreshComponentState();
@@ -1584,8 +1718,7 @@ namespace AntDesign
                         }
                         else
                         {
-                            // Default filter logic
-                            matches = item.Label?.Contains(searchValue, StringComparison.InvariantCultureIgnoreCase) ?? false;
+                            matches = MatchesOptionFilter(item, searchValue);
                         }
                     }
                     catch
@@ -1622,6 +1755,54 @@ namespace AntDesign
             }
         }
 
+        private bool MatchesOptionFilter(SelectOptionItem<TItemValue, TItem> option, string searchValue)
+        {
+            IEnumerable<string> fields;
+            var optionFilterProp = EffectiveOptionFilterProp;
+            if (optionFilterProp.IsT1)
+            {
+                fields = optionFilterProp.AsT1;
+            }
+            else if (!string.IsNullOrWhiteSpace(optionFilterProp.AsT0))
+            {
+                fields = new[] { optionFilterProp.AsT0 };
+            }
+            else
+            {
+                fields = new[] { "value" };
+            }
+
+            foreach (var field in fields ?? Array.Empty<string>())
+            {
+                if (string.IsNullOrWhiteSpace(field))
+                {
+                    continue;
+                }
+
+                object fieldValue;
+                if (string.Equals(field, "label", StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(field, "children", StringComparison.OrdinalIgnoreCase))
+                {
+                    fieldValue = option.Label;
+                }
+                else if (string.Equals(field, "value", StringComparison.OrdinalIgnoreCase))
+                {
+                    fieldValue = option.Value;
+                }
+                else
+                {
+                    fieldValue = PathHelper.GetDelegate<TItem, object>(field)(option.Item);
+                }
+
+                if (fieldValue?.ToString()?.Contains(searchValue, StringComparison.InvariantCultureIgnoreCase) == true)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         private void FilterTagsOptionItems(string searchValue)
         {
             SelectOptionItem<TItemValue, TItem> activeCanditate = null;
@@ -1647,8 +1828,7 @@ namespace AntDesign
                         }
                         else
                         {
-                            // Default filter logic
-                            matches = item.Label?.Contains(searchValue, StringComparison.InvariantCultureIgnoreCase) ?? false;
+                            matches = MatchesOptionFilter(item, searchValue);
                         }
                     }
                     catch
@@ -1747,7 +1927,7 @@ namespace AntDesign
                     await SetValueAsync(firstActive);
                 }
 
-                ClearSearch();
+                await ClearSearch();
 
                 return;
             }
@@ -2090,6 +2270,8 @@ namespace AntDesign
                 return;
             }
 
+            await OnInputKeyDown.InvokeAsync(e);
+
             var key = e.Key.ToUpperInvariant();
 
             if (key == "TAB")
@@ -2110,6 +2292,8 @@ namespace AntDesign
                 _isToken = TokenSeparators.Contains(e.Key[0]);
             }
         }
+
+        private Task OnPopupScrollAsync(EventArgs args) => OnPopupScroll.InvokeAsync(args);
 
         /// <summary>
         /// Check if Focused property is true;  Set the Focused property to false, change the

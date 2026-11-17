@@ -74,13 +74,17 @@ Common props ref：[Common props](/docs/react/common-props)
 
 ### FloatButton.BackTop
 
+Use `<FloatButtonBackTop />` for the BackTop behavior exposed as `FloatButton.BackTop` in React v6. The standalone `<BackTop>` component is deprecated; its documentation and demos live here under FloatButton.
+
 | Property | Description | Type | Default | Version |
 | --- | --- | --- | --- | --- |
-| duration | Time to return to top (ms). This property is ignored when enables reduced motion (`prefers-reduced-motion: reduce`) | number | 450 |  |
-| showProgress | Show the current scroll progress ring around the BackTop button edge | boolean | false | 6.6.0 |
-| target | Specifies the scrollable area dom node | () => HTMLElement | () => window |  |
-| visibilityHeight | The BackTop button will not show until the scroll height reaches this value | number | 400 |  |
-| onClick | A callback function, which can be executed when you click the button | () => void | - |  |
+| Duration | Time to return to top (ms); ignored when reduced motion is enabled | int | 450 |  |
+| ShowProgress | Show the current scroll progress ring around the button edge | bool | false | 6.6.0 |
+| TargetSelector | CSS selector for the scrollable area | string | `window` |  |
+| VisibilityHeight | Show the button after scroll reaches this value | double | 400 |  |
+| OnClick | Callback invoked when the button is clicked | EventCallback&lt;MouseEventArgs&gt; | - |  |
+| Icon | Icon type name | string | `vertical-align-top` |  |
+| Tooltip | Tooltip text | string | - |  |
 
 ## Semantic DOM
 

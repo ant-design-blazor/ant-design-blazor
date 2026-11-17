@@ -38,13 +38,20 @@ public sealed class HomeThemePreviewTests : DocumentationTestBase
         Assert.Empty(cut.FindAll(".home-theme-components"));
         Assert.NotEmpty(cut.FindAll(".home-theme-dashboard"));
 
-        var lightCss = cut.Find("#home-theme-preview-style").TextContent;
+        var lightTabsClass = cut.Find(".home-theme-tabs").GetAttribute("class");
+        var lightTabItemClass = cut.Find(".home-theme-tabs .ant-segmented-item").GetAttribute("class");
         cut.Find("button[title='Dark']").Click();
 
-        cut.WaitForAssertion(() => Assert.NotEqual(lightCss, cut.Find("#home-theme-preview-style").TextContent));
+        cut.WaitForAssertion(() => Assert.NotEqual(lightTabsClass, cut.Find(".home-theme-tabs").GetAttribute("class")));
         Assert.Contains("--home-theme-primary:#1668dc", cut.Find("#home-theme-preview-style").TextContent);
         Assert.Equal("true", cut.Find("button[title='Dark']").GetAttribute("aria-selected"));
         Assert.Equal("false", cut.Find("button[title='Ant Design']").GetAttribute("aria-selected"));
+
+        cut.Find("button[title='Geek']").Click();
+        var darkBackgroundCss = cut.Find("#home-theme-preview-style").TextContent;
+        Assert.Contains("rgba(255,255,255,.14)", darkBackgroundCss);
+        Assert.Contains("rgba(255,255,255,.78)", darkBackgroundCss);
+        Assert.NotEqual(lightTabItemClass, cut.Find(".home-theme-tabs .ant-segmented-item").GetAttribute("class"));
     }
 
     [Fact]

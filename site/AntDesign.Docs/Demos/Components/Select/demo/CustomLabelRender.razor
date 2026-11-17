@@ -5,7 +5,7 @@
         LabelName="@nameof(SelectLabelOption.Label)"
         Value="@("1")"
         Style="width: 100%;">
-    <LabelTemplate Context="option">
+    <LabelRender Context="option">
         @if (option is not null && !string.IsNullOrEmpty(option.Label))
         {
             @option.Value
@@ -14,7 +14,7 @@
         {
             <span>No option match</span>
         }
-    </LabelTemplate>
+    </LabelRender>
 </Select>
 
 @code {

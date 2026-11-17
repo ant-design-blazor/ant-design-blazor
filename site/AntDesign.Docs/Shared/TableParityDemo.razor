@@ -6,8 +6,8 @@
 <div class="table-parity-demo" style="@ContainerStyle">
     @if (IsReorder)
     {
-        <div id="@SortableInstructionsId" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0">
-            To pick up a draggable row, press the space bar. While dragging, use the arrow keys to move the row. Press space again to drop it, or press escape to cancel.
+        <div id="@SortableInstructionsId" style="display:none">
+            To pick up a draggable item, press the space bar. While dragging, use the arrow keys to move the item. Press space again to drop the item in its new position, or press escape to cancel.
         </div>
     }
     @if (IsSettings)
@@ -54,6 +54,12 @@
            Size="@(_small ? TableSize.Small : TableSize.Default)" ScrollX="@ScrollWidth" ExpandTemplate="@ExpandContent" RowTemplate="@ReorderRowContent"
            OnRow="GetRowAttributes" @bind-SelectedRows="_selectedRows" TreeChildren="@(IsTree ? TreeChildren : null)" RowExpandable="@(IsExpand ? _ => true : null)">
         <ColumnDefinitions>
+            @if (Variant == "drag-sorting-handler")
+            {
+                <ActionColumn Width="80" Align="ColumnAlign.Center">
+                    <Button Type="ButtonType.Text" Size="ButtonSize.Small" Icon="holder" Style="cursor:move" />
+                </ActionColumn>
+            }
             @if (IsSelection)
             {
                 <Selection Type="@(_radio ? SelectionType.Radio : SelectionType.Checkbox)" CheckStrictly="_checkStrictly" />
@@ -95,13 +101,6 @@
             {
                 <ActionColumn Title="Action"><Button Size="ButtonSize.Small">View @context.Name</Button></ActionColumn>
             }
-            @if (Variant == "drag-sorting-handler")
-            {
-                <ActionColumn Width="80" Align="ColumnAlign.Center">
-                    <Button Type="ButtonType.Text" Size="ButtonSize.Small" Icon="holder"
-                            Class="table-sort-handle" Style="cursor:move" AriaLabel="@GetDragHandleLabel(context)" />
-                </ActionColumn>
-            }
         </ColumnDefinitions>
     </Table>
     @if (IsSelection)
@@ -136,7 +135,6 @@
         builder.CloseElement();
     } : null;
     private string ScrollWidth => Variant is "fixed-gapped-columns" or "narrow" or "expand-sticky" ? "900px" : null;
-    private static string GetDragHandleLabel(Row row) => $"Drag {row.Name}";
     private string ContainerStyle => $"overflow-x:auto;max-width:{(Variant == "narrow" ? "300px" : "100%")};" +
         (Variant == "style-class" ? "border:1px dashed #1677ff;padding:12px;" : "") +
         (Variant == "component-token" ? "--ant-table-header-bg:#e6f4ff;--ant-table-header-color:#0958d9;--ant-table-border-color:#91caff;" : "");
@@ -171,7 +169,7 @@
     {
         if (firstRender && IsReorder)
         {
-            _sortableModule = await JS.InvokeAsync<IJSObjectReference>("import", "./_content/AntDesign.Docs/js/table-sortable.js?v=20261115.3");
+            _sortableModule = await JS.InvokeAsync<IJSObjectReference>("import", "./_content/AntDesign.Docs/js/table-sortable.js?v=20261117.1");
             _dotNetReference = DotNetObjectReference.Create(this);
             await _sortableModule.InvokeVoidAsync("initializeTableSortable", _tableRef.Current, _dotNetReference, Variant == "drag-sorting-handler");
             _sortableInitialized = true;

@@ -59,6 +59,7 @@ namespace AntDesign.TableModels
     public abstract class RowData
     {
         private bool _expanded;
+        private bool _wasExpanded;
 
         public int RowIndex { get; set; }
 
@@ -83,10 +84,13 @@ namespace AntDesign.TableModels
                 if (_expanded != value)
                 {
                     _expanded = value;
+                    _wasExpanded |= value;
                     ExpandedChanged?.Invoke(this, _expanded);
                 }
             }
         }
+
+        internal bool WasExpanded => _wasExpanded;
 
         public int Level { get; set; }
 
@@ -110,6 +114,7 @@ namespace AntDesign.TableModels
             if (_expanded != expanded)
             {
                 _expanded = expanded;
+                _wasExpanded |= expanded;
                 ExpandedChanged?.Invoke(this, _expanded);
             }
         }

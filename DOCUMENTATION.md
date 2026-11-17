@@ -73,72 +73,17 @@ FAQ sections can be added to documentation by placing markdown files in the prop
   - Injected services (using the `[Inject]` attribute) even if they have documentation comments
   - Cascading parameters (using the `[CascadingParameter]` attribute) even if they have documentation comments
   - Special members and constructors, regardless of documentation comments
-  - Methods ignored: (a full list can be seen in the `_methodNamesToIgnore` field in the `GenerateDemoJsonCommand`)
+  - Framework and lifecycle methods are omitted from the generated API reference.
     - Built-in methods such as `Dispose`, `Equals`, etc. 
     - Blazor lifecycle methods such as `OnAfterRender`, regardless of documentation comments
 
 
 
-## Languages/Translations
+## Languages and translations
 
-All code documentation comments and messages are expected to be in English. Text is automatically translated from English to Chinese to generate the Chinese documentation where it makes sense.
-
-<u>Translated</u>:
-
-- Summary tags
-- Obsolete messages
-- Headers on API tables
-
-<u>Not translated</u>:
-
-- Markdown files (ex: for FAQ sections)
-- Member/Class names
-- Data types
-- Default value text
-- Method signatures, any part
-
-### Override Translations
-
-There may be cases when an automatic translation is insufficient or invalid. In these cases, there is the ability to specify the translation for <summary> tags by using a custom attribute on the tag. This is currently only supported for summary tags. If a translation is unable to be determined for any reason then the English will be used.
-
-The example below demonstrates the usage: 
-
-```c#
-/// <summary>
-/// English summary
-/// </summary>
-/// <summary xml:lang="zh-CN">
-/// Chinese summary
-/// </summary>
-public string SomeProperty { get; set; }
-```
-
-This property has English and Chinese summaries provided at once. By using the `xml:lang` attribute you can specify the language the summary is for. If the attribute is not provided then English is assumed.
-
-### Translation Service
-
-Documentation will be translated into Chinese with either Google or Azure.
-
-- Azure: The default service used
-  - Requires providing an API key if you want it to run locally. Provide this key and the region for your key in the `appsettings.private.json` file in the Build.CLI folder. This file is gitignored so it will not be committed and reveal your key.
-  - Azure provides 2 million characters of translation per month for free. See details on [Microsoft's site](https://azure.microsoft.com/en-us/pricing/details/cognitive-services/translator/#pricing).
-- Google: Not used unless a code change makes it used
-  - Available as a fallback option if desired
-  - Does not require an API key
-  - Very limited in number of requests that can be made. A single build of the docs will exceed this limit.
-
-
-
-To avoid making excessive calls to either translation service, we cache the translations as "known translations" for later use (in the `KnownChineseTranslations.json` file)
-
-
-
-<u>How it works</u>:
-
-1. Translation requested
-2. Check known translations - exists? Return the known translation. Doesn't exist? Continue.
-3. Request translation
-4. Add translation to list of known translations
-5. At the end of the build, write known translations to disk
-   - This will exclude any un-used translations so we clean up removed text when we change something.
+English and Chinese documentation are maintained explicitly. Keep XML summaries and
+API descriptions in English, provide Chinese summaries with `xml:lang="zh-CN"`
+where needed, and maintain each language's Markdown demos, FAQ, and generated
+component metadata together. Documentation builds do not call an external
+translation service.
 

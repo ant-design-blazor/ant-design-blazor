@@ -15,17 +15,17 @@ public static class LlmsMarkdownBuilder
     private static string Text(JsonElement value, string name) => Property(value, name).ValueKind == JsonValueKind.String ? Property(value, name).GetString() ?? "" : "";
     private static bool Flag(JsonElement value, string name) => Property(value, name).ValueKind == JsonValueKind.True;
     private static string Cell(string value) => (value ?? "").Replace("|", "\\|").Replace("\r", "").Replace("\n", "<br>");
-    public static string Build(JsonElement doc, string language, JsonElement semantics, JsonElement tokens)
+    public static string Build(LlmsDocInput doc, string language, JsonElement semantics, JsonElement tokens)
     {
-        var title = Text(doc, "Title");
+        var title = doc.Title;
         var cn = language == "zh-CN";
         var key = Regex.Replace(Regex.Replace(title, "([A-Z]+)([A-Z][a-z])", "$1-$2"), "([a-z0-9])([A-Z])", "$1-$2").ToLowerInvariant();
         var output = new StringBuilder().Append("# ").AppendLine(title).AppendLine()
             .AppendLine("> Ant Design Blazor — C# / Razor documentation, not the React API.").AppendLine()
             .AppendLine("```razor").AppendLine(title == "Icon" ? "@using AntDesign.Icons" : "@using AntDesign").AppendLine("```")
-            .AppendLine().AppendLine(FromHtml(Text(doc, "Desc")));
-        output.AppendLine().AppendLine("## API").AppendLine().AppendLine(FromHtml(Text(doc, "ApiDoc")));
-        if (Text(doc, "Faq").Length > 0) output.AppendLine().AppendLine("## FAQ").AppendLine().AppendLine(FromHtml(Text(doc, "Faq")));
+            .AppendLine().AppendLine(FromHtml(doc.Desc));
+        output.AppendLine().AppendLine("## API").AppendLine().AppendLine(FromHtml(doc.ApiDoc));
+        if (!string.IsNullOrWhiteSpace(doc.Faq)) output.AppendLine().AppendLine("## FAQ").AppendLine().AppendLine(FromHtml(doc.Faq));
         output.AppendLine().AppendLine("## Semantic DOM").AppendLine()
             .AppendLine("| Name | Selector | Description | Version |").AppendLine("| --- | --- | --- | --- |");
         var slots = Array(Property(semantics, "components")).FirstOrDefault(c => Text(c, "name") == key);
@@ -44,17 +44,15 @@ public static class LlmsMarkdownBuilder
             output.AppendLine($"| {Cell(name)} | {Cell(Text(token, cn ? "Description" : "DescriptionEn"))} | {Cell(Text(token, "Type"))} | {Cell(Text(Property(tokens, "defaultValues"), name))} |");
         }
         output.AppendLine().AppendLine(cn ? "## 代码演示" : "## Examples");
-        foreach (var demo in Array(Property(doc, "DemoList")).Where(d => !Flag(d, "Debug")))
+        foreach (var demo in doc.DemoList.Where(demo => !demo.Debug))
         {
-            output.AppendLine().Append("### ").AppendLine(Text(demo, "Title")).AppendLine().AppendLine(FromHtml(Text(demo, "Description")));
-            AppendCode(output, Text(demo, "Code"), "razor");
-            var files = Property(demo, "AdditionalFiles");
-            if (files.ValueKind == JsonValueKind.Object)
-                foreach (var file in files.EnumerateObject().OrderBy(f => f.Name, StringComparer.Ordinal))
-                {
-                    output.AppendLine().Append("#### ").AppendLine(file.Name);
-                    AppendCode(output, file.Value.GetString() ?? "", file.Name.EndsWith(".cs", StringComparison.OrdinalIgnoreCase) ? "csharp" : "razor");
-                }
+            output.AppendLine().Append("### ").AppendLine(demo.Title).AppendLine().AppendLine(FromHtml(demo.Description));
+            AppendCode(output, demo.Code, "razor");
+            foreach (var file in demo.AdditionalFiles.OrderBy(file => file.Key, StringComparer.Ordinal))
+            {
+                output.AppendLine().Append("#### ").AppendLine(file.Key);
+                AppendCode(output, file.Value, file.Key.EndsWith(".cs", StringComparison.OrdinalIgnoreCase) ? "csharp" : "razor");
+            }
         }
         return output.ToString().Replace("\r\n", "\n");
     }
@@ -97,4 +95,24 @@ public static class LlmsMarkdownBuilder
         html = Regex.Replace(html, "\uE000(\\d+)\uE001", m => preserved[int.Parse(m.Groups[1].Value)]);
         return Regex.Replace(html.Replace("\r", ""), @"\n[\t ]*\n(?:[\t ]*\n)+", "\n\n").Trim();
     }
+}
+
+public sealed class LlmsDocInput
+{
+    public string Title { get; set; } = string.Empty;
+    public string Desc { get; set; } = string.Empty;
+    public string ApiDoc { get; set; } = string.Empty;
+    public string Faq { get; set; } = string.Empty;
+    public System.Collections.Generic.List<LlmsDemoInput> DemoList { get; set; } = new();
+}
+
+public sealed class LlmsDemoInput
+{
+    public double Order { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string Title { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
+    public string Code { get; set; } = string.Empty;
+    public bool Debug { get; set; }
+    public System.Collections.Generic.Dictionary<string, string> AdditionalFiles { get; set; } = new();
 }

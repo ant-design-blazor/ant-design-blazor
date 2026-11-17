@@ -98,7 +98,18 @@ else
             ["justifyContent"] = "space-between",
             ["transition"] = "all var(--ant-motion-duration-slow, 0.3s)",
             ["& > *:first-child"] = new Dictionary<string, object> { ["flex"] = "0 1 auto", ["height"] = 40 },
-            ["& > *:last-child"] = new Dictionary<string, object> { ["flex"] = "1" },
+            ["& > *:last-child"] = new Dictionary<string, object>
+            {
+                ["flex"] = "1",
+                // Search renders a four-pixel-taller group wrapper than React's
+                // compact Search. Constrain the wrapper while keeping its
+                // children visible, then align the input group to the toolbar.
+                ["height"] = 40,
+                ["minHeight"] = 40,
+                ["boxSizing"] = "border-box",
+                ["overflow"] = "visible",
+                ["& .ant-input-wrapper"] = new Dictionary<string, object> { ["position"] = "relative", ["top"] = -1 }
+            },
             ["@media only screen and (max-width: 992px)"] = new Dictionary<string, object>
             {
                 ["& > *:last-child"] = new Dictionary<string, object>
@@ -186,6 +197,8 @@ else
             ["width"] = "100%",
             ["fontFamily"] = "'Lucida Console', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace",
             ["fontSize"] = 14,
+            // Keep wrapped full names readable within the 100px gallery cells.
+            ["lineHeight"] = 1.25,
             ["whiteSpace"] = "normal",
             ["overflowWrap"] = "anywhere",
             ["transform"] = "scale(0.8)",

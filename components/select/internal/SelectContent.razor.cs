@@ -65,6 +65,21 @@ namespace AntDesign.Select.Internal
         [Parameter] public EventCallback<MouseEventArgs> OnClearClick { get; set; }
         [Parameter] public EventCallback<SelectOptionItem<TItemValue, TItem>> OnRemoveSelected { get; set; }
         [Parameter] public string SearchValue { get; set; }
+
+        private string _previousSearchValue;
+        private bool _hasSearchValue;
+
+        protected override void OnParametersSet()
+        {
+            if (!_hasSearchValue || !string.Equals(_previousSearchValue, SearchValue, StringComparison.Ordinal))
+            {
+                _inputString = SearchValue ?? string.Empty;
+                _previousSearchValue = SearchValue;
+                _hasSearchValue = true;
+            }
+
+            base.OnParametersSet();
+        }
         [Parameter] public int SearchDebounceMilliseconds { get; set; }
         [Inject] private IDomEventListener DomEventListener { get; set; }
 

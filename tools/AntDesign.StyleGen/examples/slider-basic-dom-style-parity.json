@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "ant-design/ant-design",
+    "component": "Slider"
+  },
+  "config": {
+    "timeoutMs": 90000,
+    "viewport": { "width": 1280, "height": 900, "deviceScaleFactor": 1 },
+    "colorScheme": "light",
+    "comparisonPolicy": {
+      "normalization": {
+        "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_r_[a-zA-Z0-9_-]+)$",
+        "removeAttributes": ["_bl_*", "id"],
+        "removeClassPatterns": ["^css-dev-only-do-not-override-", "^css-var-_[rR]_", "^css-[a-zA-Z0-9]+$"],
+        "removeCommentMarkers": ["<!--!-->"],
+        "sortClassTokens": true,
+        "removeInterTagWhitespace": true
+      }
+    }
+  },
+  "groups": [
+    {
+      "id": "slider-basic",
+      "component": "Slider",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/slider?theme=light",
+        "scopeSelector": "#slider-demo-basic",
+        "rootSelector": ".ant-slider"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5011/en-US/components/slider?theme=light",
+        "scopeSelector": "#components-slider-demo-basic",
+        "rootSelector": ".ant-slider"
+      },
+      "styleProperties": [
+        "display", "position", "boxSizing", "width", "height", "paddingInline", "marginBlock",
+        "fontSize", "lineHeight", "color", "backgroundColor", "borderRadius", "borderWidth",
+        "touchAction", "cursor", "transform"
+      ],
+      "semanticNodes": [
+        { "path": "rail", "selector": ".ant-slider-rail", "minimumCount": 2 },
+        { "path": "track", "selector": ".ant-slider-track", "minimumCount": 2 },
+        { "path": "handle", "selector": ".ant-slider-handle", "minimumCount": 3 },
+        { "path": "step", "selector": ".ant-slider-step", "minimumCount": 2 }
+      ],
+      "scenarios": [{ "id": "default" }],
+      "singleBrowserContext": true
+    }
+  ]
+}

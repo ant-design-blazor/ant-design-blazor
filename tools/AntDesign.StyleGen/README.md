@@ -288,22 +288,19 @@ Blazor ColorPicker 交互。默认中性色预览与 React 一样为 10 档，�
 解压并缓存已生成的文本；不在请求时转换 HTML、计算主题、读取文件、反射或请求 JSON。
 组件文档包含 Blazor API、Semantic DOM、Token 和非 debug Razor 示例。原始静态说明地址保留。
 
-Token 定义、使用关系或算法默认值变更后，先刷新生成器的输入：
+Token 定义或使用关系变更后，用 StyleGen 从同步后的 React IR 和元数据刷新生成器输入。算法默认值沿用已审阅的主题默认值基线：
 
 ```sh
-dotnet run --project site/AntDesign.Docs.Build.CLI -- llms-tokens docs/antd-v6/llms-tokens.json
+node tools/AntDesign.StyleGen/src/cli.mjs generate-llms-tokens --ir .vibedev/generated/antd-v6/ir/style-ir.json --antd-path /path/to/ant-design --output docs/antd-v6/llms-tokens.json
 ```
 
-然后重新编译 Docs。静态/WASM 站点使用相同生成结果导出，中英文各 75 个当前已注册组件，
-以及通用文档（含色彩页）：
+然后重新编译 Docs。静态/WASM 站点可以从已编译的 Markdown 路由导出，中英文组件和通用文档（含色彩页）：
 
 ```sh
-dotnet run --project site/AntDesign.Docs.Build.CLI -- llms /path/to/static-site-root
+node tools/AntDesign.StyleGen/src/cli.mjs export-llms --docs-url http://127.0.0.1:5000 --output /path/to/static-site-root
 ```
 
-先生成并重新编译 docs 元数据，再执行此命令；`AntDesign.Docs.Build` 的 RunCli 已按
-`demo2json → menu2json → docs2html → llms-tokens → llms` 顺序接入。生成的静态 Markdown
-不纳入源码；生成器输入 JSON 纳入源码。服务端响应和 CLI 导出的同一文件应逐字节一致。
+导出命令读取 `/{language}/llms.txt` 目录并下载编译期生成的 Markdown；文档页面不依赖旧 JSON 请求或运行时反射。
 
 ## Icon 字体资源门禁细节
 

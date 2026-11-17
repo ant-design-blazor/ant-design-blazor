@@ -23,7 +23,11 @@ namespace AntDesign.Docs.Wasm
             }
 
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
+#if !HOSTED_DOCS_CLIENT
+            // The standalone static site owns the app root. A hosted Blazor Web App
+            // instead hydrates its prerendered Routes and HeadOutlet boundaries.
             builder.RootComponents.Add<App>("app");
+#endif
 
             builder.Services.AddTransient(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 

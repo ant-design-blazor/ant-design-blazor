@@ -35,9 +35,9 @@ namespace AntDesign
         private HtmlElement _rightHandleDom;
         private ElementReference _leftHandle;
         private ElementReference _rightHandle;
-        private string _leftHandleStyle = "left: 0%; right: auto; transform: translateX(-50%);";
-        private string _rightHandleStyle = "left: 0%; right: auto; transform: translateX(-50%);";
-        private string _trackStyle = "left: 0%; width: 0%; right: auto;";
+        private string _leftHandleStyle = "left: 0%; transform: translateX(-50%);";
+        private string _rightHandleStyle = "left: 0%; transform: translateX(-50%);";
+        private string _trackStyle = "left: 0%; width: 0%;";
         private readonly List<double> _multiValues = new();
         private readonly List<string> _multiTrackStyles = new();
         private bool _mouseDown;
@@ -70,7 +70,7 @@ namespace AntDesign
                     }
                     else
                     {
-                        return "right: {0}; left: auto; transform: translateX(50%);";
+                        return "right: {0}; transform: translateX(50%);";
                     }
                 }
                 else
@@ -81,7 +81,7 @@ namespace AntDesign
                     }
                     else
                     {
-                        return "left: {0}; right: auto; transform: translateX(-50%);";
+                        return "left: {0}; transform: translateX(-50%);";
                     }
                 }
             }
@@ -99,7 +99,7 @@ namespace AntDesign
                     }
                     else
                     {
-                        return "right: {0}; left: auto; transform: translateX(50%);";
+                        return "right: {0}; transform: translateX(50%);";
                     }
                 }
                 else
@@ -110,7 +110,7 @@ namespace AntDesign
                     }
                     else
                     {
-                        return "left: {0}; right: auto; transform: translateX(-50%);";
+                        return "left: {0}; transform: translateX(-50%);";
                     }
                 }
             }
@@ -128,7 +128,7 @@ namespace AntDesign
                     }
                     else
                     {
-                        return "right: {0}; width: {1}; left: auto;";
+                        return "right: {0}; width: {1};";
                     }
                 }
                 else
@@ -139,7 +139,7 @@ namespace AntDesign
                     }
                     else
                     {
-                        return "left: {0}; width: {1}; right: auto;";
+                        return "left: {0}; width: {1};";
                     }
                 }
             }
@@ -1065,7 +1065,7 @@ namespace AntDesign
         private void SetStyle()
         {
             var rightHandPercentage = (RightValue - Min) / MinMaxDelta;
-            _rightHandleStyle = string.Format(CultureInfo.CurrentCulture, RightHandleStyleFormat, Formatter.ToPercentWithoutBlank(rightHandPercentage));
+            _rightHandleStyle = string.Format(CultureInfo.InvariantCulture, RightHandleStyleFormat, rightHandPercentage.ToString("0.##%", CultureInfo.InvariantCulture));
             if (Range)
             {
                 if (MultiValue)
@@ -1076,21 +1076,21 @@ namespace AntDesign
                     {
                         var start = (_multiValues[i] - Min) / MinMaxDelta;
                         var width = (_multiValues[i + 1] - _multiValues[i]) / MinMaxDelta;
-                        _multiTrackStyles.Add(string.Format(CultureInfo.CurrentCulture, TrackStyleFormat, Formatter.ToPercentWithoutBlank(start), Formatter.ToPercentWithoutBlank(width)));
+                        _multiTrackStyles.Add(string.Format(CultureInfo.InvariantCulture, TrackStyleFormat, start.ToString("0.##%", CultureInfo.InvariantCulture), width.ToString("0.##%", CultureInfo.InvariantCulture)));
                     }
-                    _leftHandleStyle = string.Format(CultureInfo.CurrentCulture, LeftHandleStyleFormat, Formatter.ToPercentWithoutBlank((_multiValues[0] - Min) / MinMaxDelta));
+                    _leftHandleStyle = string.Format(CultureInfo.InvariantCulture, LeftHandleStyleFormat, ((_multiValues[0] - Min) / MinMaxDelta).ToString("0.##%", CultureInfo.InvariantCulture));
                     var rightPercent = (_multiValues[^1] - Min) / MinMaxDelta;
-                    _rightHandleStyle = string.Format(CultureInfo.CurrentCulture, RightHandleStyleFormat, Formatter.ToPercentWithoutBlank(rightPercent));
+                    _rightHandleStyle = string.Format(CultureInfo.InvariantCulture, RightHandleStyleFormat, rightPercent.ToString("0.##%", CultureInfo.InvariantCulture));
                     StateHasChanged();
                     return;
                 }
                 var leftHandPercentage = (LeftValue - Min) / MinMaxDelta;
-                _trackStyle = string.Format(CultureInfo.CurrentCulture, TrackStyleFormat, Formatter.ToPercentWithoutBlank(leftHandPercentage), Formatter.ToPercentWithoutBlank((RightValue - LeftValue) / MinMaxDelta));
-                _leftHandleStyle = string.Format(CultureInfo.CurrentCulture, LeftHandleStyleFormat, Formatter.ToPercentWithoutBlank(leftHandPercentage));
+                _trackStyle = string.Format(CultureInfo.InvariantCulture, TrackStyleFormat, leftHandPercentage.ToString("0.##%", CultureInfo.InvariantCulture), ((RightValue - LeftValue) / MinMaxDelta).ToString("0.##%", CultureInfo.InvariantCulture));
+                _leftHandleStyle = string.Format(CultureInfo.InvariantCulture, LeftHandleStyleFormat, leftHandPercentage.ToString("0.##%", CultureInfo.InvariantCulture));
             }
             else
             {
-                _trackStyle = string.Format(CultureInfo.CurrentCulture, TrackStyleFormat, "0%", Formatter.ToPercentWithoutBlank(rightHandPercentage));
+                _trackStyle = string.Format(CultureInfo.InvariantCulture, TrackStyleFormat, "0%", rightHandPercentage.ToString("0.##%", CultureInfo.InvariantCulture));
             }
 
             StateHasChanged();

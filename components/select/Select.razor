@@ -13,7 +13,7 @@
 {
         RenderFragment SelectOptionsRender()
         {
-            return @<ForeachLoop Items=@SortedSelectOptionItems.Where(option => !option.IsHidden).ToList() ChildContent="optionRender(ItemTemplate)" />;
+            return @<ForeachLoop Items=@SortedSelectOptionItems.Where(option => !option.IsHidden).ToList() ChildContent="optionRender(EffectiveOptionRender)" />;
         }
 
 
@@ -61,14 +61,14 @@
                 </div>
             }
             <div class="@GetSemanticClass("popup.list", "ant-select-dropdown-list")" style="@GetSemanticStyle("popup.list", empty ? "position: relative;display:none;" : "position: relative;")">
-              <div class="ant-select-dropdown-list-holder" style="max-height: @PopupContainerMaxHeight; overflow-y: @(UsesVirtualAccessibility ? "hidden" : "auto"); overflow-anchor: none;" @ref="_scrollableSelectDiv">
+              <div class="ant-select-dropdown-list-holder" style="max-height: @PopupContainerMaxHeight; overflow-y: @(UsesVirtualAccessibility ? "hidden" : "auto"); overflow-anchor: none;" @onscroll="OnPopupScrollAsync" @ref="_scrollableSelectDiv">
                     @if (UsesVirtualWindow)
                     {
                         <div style="@VirtualListSpacerStyle">
                             <div class="ant-select-dropdown-list-holder-inner" style="@VirtualListInnerStyle">
                                 @foreach (var option in GetVirtualWindowOptions())
                                 {
-                                    @optionRender(ItemTemplate)(option)
+                                    @optionRender(EffectiveOptionRender)(option)
                                 }
                             </div>
                         </div>
@@ -81,7 +81,7 @@
                       {
                         @if (CustomTagSelectOptionItem != null)
                         {
-                            <CascadingValue Value="@ItemTemplate" Name="ItemTemplate">
+                            <CascadingValue Value="@EffectiveOptionRender" Name="ItemTemplate">
                                 <CascadingValue Value="@CustomTagSelectOptionItem" Name="Model">
                                     <SelectOption @key="@CustomTagSelectOptionItem.InternalId"
                                                   TItemValue="TItemValue"
@@ -95,7 +95,7 @@
                         {
                             foreach (var selectOption in AddedTags)
                             {
-                                <CascadingValue Value="@ItemTemplate" Name="ItemTemplate">
+                                <CascadingValue Value="@EffectiveOptionRender" Name="ItemTemplate">
                                     <CascadingValue Value="@selectOption" Name="Model">
                                         <SelectOption @key="@selectOption.InternalId"
                                                       TItemValue="TItemValue"
@@ -112,7 +112,7 @@
                       }
                       else
                       {
-                          <CascadingValue Value="@ItemTemplate" Name="ItemTemplate">
+                          <CascadingValue Value="@EffectiveOptionRender" Name="ItemTemplate">
                               <SelectOptionGroup TItemValue="TItemValue" TItem="TItem" />
                           </CascadingValue>
                       }

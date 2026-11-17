@@ -1,0 +1,23 @@
+<App Message="@MessageDefaults" Notification="@NotificationDefaults">
+    <Space Wrap="true">
+        <Button Type="ButtonType.Primary" OnClick="ShowMessage">Message for only one</Button>
+        <Button Type="ButtonType.Primary" OnClick="ShowNotification">Notification for bottomLeft</Button>
+    </Space>
+</App>
+
+@code {
+    private readonly MessageGlobalConfig MessageDefaults = new() { MaxCount = 1 };
+    private readonly NotificationGlobalConfig NotificationDefaults = new() { Placement = NotificationPlacement.BottomLeft };
+
+    [CascadingParameter] public AntDesignAppContext AppContext { get; set; }
+    [Inject] private IMessageService MessageService { get; set; }
+    [Inject] private INotificationService NotificationService { get; set; }
+
+    private void ShowMessage() => (AppContext?.Message ?? MessageService).Success("Success!");
+
+    private async Task ShowNotification() => await (AppContext?.Notification ?? NotificationService).Info(new NotificationConfig
+    {
+        Message = "Notification",
+        Description = "Hello, Ant Design!!"
+    });
+}

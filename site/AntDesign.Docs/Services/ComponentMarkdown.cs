@@ -1,6 +1,6 @@
 namespace AntDesign.Docs.Services;
 
-/// <summary>Serves Markdown prepared by AntDesign.Docs.Generator at compilation.</summary>
+/// <summary>Serves Markdown prepared from documentation sources at compilation.</summary>
 public static class ComponentMarkdown
 {
     public static string Get(string component, string language) => GeneratedLlmsMarkdown.Get("components", component ?? "", language);

@@ -7,8 +7,8 @@ title:
 
 ## zh-CN
 
-搜索会同时匹配选项标签和 `OtherField`，对应 React 版 `optionFilterProp: ['label', 'otherField']` 的行为。
+通过 `ShowSearch` 配置同时搜索选项标签和 `OtherField`，对应 React 版 `showSearch={{ optionFilterProp: ['label', 'otherField'] }}`。
 
 ## en-US
 
-Search matches both the option label and `OtherField`, equivalent to React's `optionFilterProp: ['label', 'otherField']`.
+Use `ShowSearch` options to search both the option label and `OtherField`, matching React's `showSearch={{ optionFilterProp: ['label', 'otherField'] }}`.

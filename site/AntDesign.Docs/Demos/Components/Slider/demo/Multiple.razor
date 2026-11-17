@@ -1,13 +1,20 @@
-<Slider TValue="double[]" Value="_value" OnChange="OnValueChange" Styles="@_styles" />
+<Slider TValue="double[]" Value="_value" OnChange="OnValueChange" Styles="@Styles" />
 
 @code {
     private double[] _value = { 0, 10, 20 };
 
-    private static readonly IReadOnlyDictionary<string, string> _styles = new Dictionary<string, string>
+    private IReadOnlyDictionary<string, string> Styles => new Dictionary<string, string>
     {
         ["track"] = "background:transparent",
-        ["tracks"] = "background:linear-gradient(to right, #87d068 0%, #ffccc7 100%)"
+        ["tracks"] = $"background:linear-gradient(to right, {GetGradientColor(_value[0] / 100)} 0%, {GetGradientColor(_value[^1] / 100)} 100%)"
     };
 
     private void OnValueChange(double[] value) => _value = value;
+
+    private static string GetGradientColor(double percentage)
+    {
+        var channels = new[] { (135, 255), (208, 204), (104, 199) };
+        var values = channels.Select(channel => (int)Math.Round(channel.Item1 + (channel.Item2 - channel.Item1) * percentage, MidpointRounding.AwayFromZero));
+        return $"rgb({string.Join(",", values)})";
+    }
 }

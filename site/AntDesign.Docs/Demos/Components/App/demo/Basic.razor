@@ -1,0 +1,29 @@
+<App>
+    <Space Wrap="true">
+        <Button Type="ButtonType.Primary" OnClick="ShowMessage">Open message</Button>
+        <Button Type="ButtonType.Primary" OnClick="ShowModal">Open modal</Button>
+        <Button Type="ButtonType.Primary" OnClick="ShowNotification">Open notification</Button>
+    </Space>
+</App>
+
+@code {
+    [CascadingParameter] public AntDesignAppContext AppContext { get; set; }
+    [Inject] private IMessageService MessageService { get; set; }
+    [Inject] private ModalService ModalService { get; set; }
+    [Inject] private INotificationService NotificationService { get; set; }
+
+    private void ShowMessage() => (AppContext?.Message ?? MessageService).Success("Success!");
+
+    private void ShowModal() => (AppContext?.Modal ?? ModalService).Warning(new ConfirmOptions
+    {
+        Title = "This is a warning message",
+        Content = "Some messages...some messages..."
+    });
+
+    private async Task ShowNotification() => await (AppContext?.Notification ?? NotificationService).Info(new NotificationConfig
+    {
+        Message = "Notification topLeft",
+        Description = "Hello, Ant Design!!",
+        Placement = NotificationPlacement.TopLeft
+    });
+}

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -159,6 +160,12 @@ namespace AntDesign
         public bool DefaultExpandAllRows { get; set; }
 
         /// <summary>
+        /// Initially expanded row keys. The keys are compared with the value returned by <see cref="RowKey"/>.
+        /// </summary>
+        [Parameter]
+        public IEnumerable<string> DefaultExpandedRowKeys { get; set; } = Array.Empty<string>();
+
+        /// <summary>
         /// The max expand level when use DefaultExpandAllRows.
         /// This attribute is used to avoid endless loop when the tree records have circular reference.
         /// The default value is 4.
@@ -299,6 +306,14 @@ namespace AntDesign
         /// <default value="0" />
         [Parameter]
         public int ExpandIconColumnIndex { get; set; }
+
+        /// <summary>
+        /// Number of leading columns to keep fixed when rendering an expanded row.
+        /// This is a React-compatible legacy option; prefer fixed columns and
+        /// <see cref="ExpandIconColumnIndex"/> for new code.
+        /// </summary>
+        [Parameter]
+        public int? ExpandedRowOffset { get; set; }
 
         /// <summary>
         /// Function to determine the class name of a specific row
@@ -528,6 +543,37 @@ namespace AntDesign
             return true;
         }
 
+        private const int ClientVirtualItemHeight = 55;
+        private int _clientVirtualWindowTotal = -1;
+        private double ClientVirtualViewportHeight => ScrollY != null
+            && ScrollY.EndsWith("px", StringComparison.OrdinalIgnoreCase)
+            && double.TryParse(ScrollY[..^2], out var height)
+                ? height
+                : 400d;
+
+        private bool UseClientVirtualWindow => _hasInitialized
+            && IsVirtualEnabled
+            && !UseItemsProvider
+            && _groupedColumns.Count == 0
+            && ShouldWindowVirtualItems(_showItems);
+
+        private string ClientVirtualContentHeight => $"{Math.Max(0, _total * ClientVirtualItemHeight)}px";
+
+        private void ResetClientVirtualWindow()
+        {
+            var initialCount = Math.Max(1, (int)Math.Ceiling(ClientVirtualViewportHeight / ClientVirtualItemHeight) + 2);
+            if (_clientVirtualWindowTotal == _total && _virtualEndIndex > _virtualStartIndex)
+            {
+                _virtualStartIndex = Math.Clamp(_virtualStartIndex, 0, Math.Max(0, _total - 1));
+                _virtualEndIndex = Math.Clamp(_virtualEndIndex, _virtualStartIndex + 1, _total);
+                return;
+            }
+
+            _clientVirtualWindowTotal = _total;
+            _virtualStartIndex = 0;
+            _virtualEndIndex = Math.Min(_total, initialCount);
+        }
+
         private string TableLayoutWithScrollbar => ScrollBarWidth == null
             ? TableLayoutStyle
             : $"{TableLayoutStyle} --scrollbar-width: {(CssSizeLength)_scrollBarWidth};";
@@ -543,8 +589,17 @@ namespace AntDesign
         private ElementReference _tableRef;
 
         private decimal _tableWidth;
+        private decimal? _responsiveViewportWidth;
 
         private bool _isVirtualizeEmpty;
+        private int _virtualStartIndex;
+        private int _virtualEndIndex;
+        private bool _virtualWindowRenderRequested;
+#if NET6_0_OR_GREATER
+        private DotNetObjectReference<Table<TItem>> _virtualWindowReference;
+        private bool _virtualWindowBound;
+        private int _virtualWindowRequestSequence;
+#endif
         private bool _afterFirstRender;
         private bool _isRebuilding;
         private RenderFragment<TItem> _childContent;
@@ -569,11 +624,54 @@ namespace AntDesign
         bool ITable.TreeMode => _treeMode;
 
         bool ITable.Responsive => Responsive;
+
+        bool ITable.IsResponsiveColumnHidden(IColumn column)
+        {
+            var breakpoints = column?.Responsive;
+            if (breakpoints == null || breakpoints.Length == 0)
+            {
+                return false;
+            }
+
+            // Keep the initial render stable until the browser viewport is known.
+            // Treating an unknown width as 0 incorrectly hides every non-xs column
+            // during prerender and the first interactive render.
+            if (!_responsiveViewportWidth.HasValue)
+            {
+                return false;
+            }
+
+            var width = (double)_responsiveViewportWidth.Value;
+            var tokens = ConfigProvider?.ThemeConfig?.GetResolvedTokenValues(
+                ConfigProvider.ExplicitThemeTokens,
+                ConfigProvider.ResolvedAlgorithm) ?? new Theming.ThemeConfig().GetResolvedTokenValues();
+            return !breakpoints.Any(breakpoint => breakpoint?.ToLowerInvariant() switch
+            {
+                "xs" => width <= GetResponsiveToken(tokens, "screenXSMax", 575),
+                "sm" => width >= GetResponsiveToken(tokens, "screenSM", 576),
+                "md" => width >= GetResponsiveToken(tokens, "screenMD", 768),
+                "lg" => width >= GetResponsiveToken(tokens, "screenLG", 992),
+                "xl" => width >= GetResponsiveToken(tokens, "screenXL", 1200),
+                "xxl" => width >= GetResponsiveToken(tokens, "screenXXL", 1600),
+                "xxxl" => width >= GetResponsiveToken(tokens, "screenXXXL", 1920),
+                _ => false
+            });
+        }
+
+        private static double GetResponsiveToken(IReadOnlyDictionary<string, string> tokens, string name, double fallback)
+        {
+            return tokens.TryGetValue(name, out var value)
+                && double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out var breakpoint)
+                    ? breakpoint
+                    : fallback;
+        }
+
         int ITable.IndentSize => IndentSize;
         string ITable.ScrollX => ScrollX;
         string ITable.ScrollY => ScrollY;
         string ITable.ScrollBarWidth => _scrollBarWidth ?? "15px";
         int ITable.ExpandIconColumnIndex => ExpandIconColumnIndex;
+        int? ITable.ExpandedRowOffset => ExpandedRowOffset;
         int ITable.TreeExpandIconColumnIndex => _treeExpandIconColumnIndex;
         bool ITable.HasExpandTemplate => ExpandTemplate != null;
         bool ITable.HasHeaderTemplate => HeaderTemplate != null;
@@ -901,6 +999,8 @@ namespace AntDesign
                 _treeExpandIconColumnIndex = ExpandIconColumnIndex + (_selection != null && _selection.ColIndex <= ExpandIconColumnIndex ? 1 : 0);
             }
 
+            ResetClientVirtualWindow();
+
             _ = LoadRelationDataAsync();
 
             return queryModel;
@@ -1099,11 +1199,36 @@ namespace AntDesign
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
+            var responsiveColumnsInitialized = false;
+
+#if NET6_0_OR_GREATER
+            if (UseClientVirtualWindow)
+            {
+                _virtualWindowReference ??= DotNetObjectReference.Create(this);
+                await JsInvokeAsync(JSInteropConstants.TableComponentHelper.BindVirtualWindow, _tableBodyRef, _virtualWindowReference, _total, ClientVirtualItemHeight, _virtualStartIndex, _virtualEndIndex);
+                _virtualWindowBound = true;
+            }
+            else if (_virtualWindowBound)
+            {
+                await JsInvokeAsync(JSInteropConstants.TableComponentHelper.UnbindVirtualWindow, _tableBodyRef);
+                _virtualWindowBound = false;
+            }
+#endif
 
             if (firstRender)
             {
                 _afterFirstRender = true;
                 DomEventListener.AddShared<JsonElement>("window", "beforeunload", Reloading);
+
+                if (ColumnContext.Columns.Any(column => column.Responsive?.Length > 0))
+                {
+                    var dimensions = await JsInvokeAsync<Window>(JSInteropConstants.GetWindow);
+                    _responsiveViewportWidth = dimensions.InnerWidth;
+                    DomEventListener.AddShared<Window>("window", "resize", OnResponsiveWindowResize);
+                    responsiveColumnsInitialized = true;
+                    _shouldRender = true;
+                }
+
                 await JsInvokeAsync(JSInteropConstants.TableComponentHelper.BindTableRowHover, Ref);
 
                 if (ScrollY != null || ScrollX != null || Resizable || AutoHeight)
@@ -1134,6 +1259,12 @@ namespace AntDesign
                 }
             }
 
+            if (responsiveColumnsInitialized)
+            {
+                StateHasChanged();
+                return;
+            }
+
             if (!firstRender)
             {
                 this.FinishLoadPage();
@@ -1157,6 +1288,12 @@ namespace AntDesign
 
         protected override bool ShouldRender()
         {
+            if (_virtualWindowRenderRequested)
+            {
+                _virtualWindowRenderRequested = false;
+                return true;
+            }
+
             // Do not render until initialisation is complete.
             this._shouldRender = this._shouldRender && (_hasInitialized || _isRebuilding);
 
@@ -1185,6 +1322,18 @@ namespace AntDesign
             StateHasChanged();
         }
 
+        private void OnResponsiveWindowResize(Window dimensions)
+        {
+            if (_responsiveViewportWidth == dimensions.InnerWidth)
+            {
+                return;
+            }
+
+            _responsiveViewportWidth = dimensions.InnerWidth;
+            _shouldRender = true;
+            _ = InvokeAsync(StateHasChanged);
+        }
+
         protected override void Dispose(bool disposing)
         {
             DomEventListener?.Dispose();
@@ -1204,6 +1353,14 @@ namespace AntDesign
                     {
                         await JsInvokeAsync(JSInteropConstants.UnbindTableScroll, _tableBodyRef);
                     }
+
+#if NET6_0_OR_GREATER
+                    if (_virtualWindowBound)
+                    {
+                        await JsInvokeAsync(JSInteropConstants.TableComponentHelper.UnbindVirtualWindow, _tableBodyRef);
+                        _virtualWindowBound = false;
+                    }
+#endif
                 }
                 DomEventListener?.Dispose();
             }
@@ -1214,7 +1371,37 @@ namespace AntDesign
             {
                 Logger.LogError(ex, "AntDesign: an exception was thrown at Table `DisposeAsync` method.");
             }
+#if NET6_0_OR_GREATER
+            _virtualWindowReference?.Dispose();
+#endif
         }
+
+#if NET6_0_OR_GREATER
+        [JSInvokable]
+        public Task OnVirtualWindowChanged(int startIndex, int endIndex, int requestSequence)
+        {
+            if (requestSequence <= _virtualWindowRequestSequence || !UseClientVirtualWindow)
+            {
+                return Task.CompletedTask;
+            }
+
+            _virtualWindowRequestSequence = requestSequence;
+            var nextStart = Math.Clamp(startIndex, 0, Math.Max(0, _total - 1));
+            var nextEnd = Math.Clamp(endIndex, nextStart + 1, _total);
+            if (nextStart == _virtualStartIndex && nextEnd == _virtualEndIndex)
+            {
+                return Task.CompletedTask;
+            }
+
+            _virtualStartIndex = nextStart;
+            _virtualEndIndex = nextEnd;
+            return InvokeAsync(() =>
+            {
+                _virtualWindowRenderRequested = true;
+                StateHasChanged();
+            });
+        }
+#endif
 
         bool ITable.RowExpandable(RowData rowData) => InternalRowExpandable(rowData as RowData<TItem>);
 

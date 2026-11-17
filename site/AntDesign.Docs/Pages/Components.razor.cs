@@ -24,6 +24,9 @@ namespace AntDesign.Docs.Pages
         [Parameter]
         public string Name { get; set; }
 
+        [Parameter]
+        public DemoComponent GeneratedComponent { get; set; }
+
         [Inject]
         private DemoService DemoService { get; set; }
 
@@ -62,18 +65,6 @@ namespace AntDesign.Docs.Pages
         private string SemanticComponentKey => ToKebabCase(_demoComponent?.Title);
 
         private bool HasComponentMetadata => _demoComponent?.Category == "Components" && _demoComponent.Title != "Overview";
-
-        private Type? SemanticPreviewType
-        {
-            get
-            {
-                var previewDemo = _demos.FirstOrDefault(demo =>
-                    string.Equals(demo.Name, "_semantic", StringComparison.OrdinalIgnoreCase))
-                    ?? _demos.FirstOrDefault();
-
-                return previewDemo != null ? DemoService.GetShowCase(previewDemo.Type) : null;
-            }
-        }
 
         private List<DemoItem> _demos = [];
 
@@ -176,7 +167,7 @@ namespace AntDesign.Docs.Pages
             {
                 _currentPageName = fullPageName;
                 _currentLocale = Locale;
-                _demoComponent = await DemoService.GetComponentAsync($"{fullPageName}");
+                _demoComponent = GeneratedComponent ?? await DemoService.GetComponentAsync($"{fullPageName}");
                 StateHasChanged();
 
                 _filePath = $"site/AntDesign.Docs/Demos/Components/{_demoComponent?.Title}/doc/index.{CurrentLanguage}.md";
@@ -207,7 +198,7 @@ namespace AntDesign.Docs.Pages
             foreach (var item in showDemos)
             {
                 _filePaths.Add($"site/AntDesign.Docs/Demos/Components/{_demoComponent?.Title}/demo/{item.Name}.md");
-                _filePaths.Add($"site/AntDesign.Docs/{item.Type.Replace(".", "/")}.razor");
+                _filePaths.Add($"site/AntDesign.Docs/{item.SourcePath}");
             }
 
             // Render the lightweight CodeBox shells together. Each demo body is

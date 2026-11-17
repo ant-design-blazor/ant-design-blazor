@@ -52,7 +52,7 @@
                         </td>
                         <td><code>@token.CssVariable</code></td>
                         <td><code>@token.CSharpType</code></td>
-                        <td><code>@token.DefaultValue</code></td>
+                        <td><DesignTokenValue TokenName="@token.Name" Value="@token.DefaultValue" IsColor="@IsColorToken(token.Name, token.Type, token.DefaultValue)" /></td>
                     </tr>
                 }
             </tbody>
@@ -91,12 +91,23 @@
                         <td class="api-description">@(IsChinese ? token.Description : token.DescriptionEn)</td>
                         <td><code>@token.CssVariable</code></td>
                         <td><code>@token.Type</code></td>
-                        <td><code>@(DefaultGlobalTokens.TryGetValue(token.Name, out var value) ? value : "—")</code></td>
+                        <td><DesignTokenValue TokenName="@token.Name" Value="@(DefaultGlobalTokens.TryGetValue(token.Name, out var value) ? value : "—")" IsColor="@IsColorToken(token.Name, token.Type, DefaultGlobalTokens.TryGetValue(token.Name, out var globalValue) ? globalValue : "—")" /></td>
                     </tr>
                 }
             </tbody>
         </table>
     }
+    <style>
+        .design-token-color-value, .design-token-motion-value { display: inline-flex; align-items: center; gap: 8px; max-width: 100%; }
+        .design-token-color-swatch { display: inline-block; flex: 0 0 10px; width: 10px; height: 10px; border-radius: 50%; box-shadow: 0 0 0 1px rgb(0 0 0 / 10%); }
+        .design-token-motion-value { align-items: flex-start; flex-direction: column; }
+        .design-token-motion-curve { display: block; flex: 0 0 160px; width: 160px; height: 160px; overflow: visible; background: var(--ant-color-bg-container, #fff); border: 1px solid var(--ant-color-border-secondary, #f0f0f0); }
+        .design-token-motion-grid { fill: none; stroke: var(--ant-color-border-secondary, #f0f0f0); stroke-width: 1; }
+        .design-token-motion-control { fill: none; stroke: var(--ant-color-primary, #1677ff); stroke-width: 1; stroke-dasharray: 2 2; }
+        .design-token-motion-path { fill: none; stroke: var(--ant-color-primary, #1677ff); stroke-width: 2.5; }
+        .design-token-motion-point-start { fill: var(--ant-color-success, #52c41a); }
+        .design-token-motion-point-end { fill: var(--ant-color-error, #ff4d4f); }
+    </style>
 </section>
 
 @code {
@@ -104,5 +115,31 @@
     [Parameter] public string Language { get; set; } = "en-US";
 
     private bool IsChinese => string.Equals(Language, "zh-CN", StringComparison.OrdinalIgnoreCase);
+    private static bool IsColorToken(string name, string type, string value)
+    {
+        if (name?.Contains("shadow", StringComparison.OrdinalIgnoreCase) == true
+            || name?.Contains("gradient", StringComparison.OrdinalIgnoreCase) == true)
+        {
+            return false;
+        }
+
+        if (string.Equals(type, "color", StringComparison.OrdinalIgnoreCase)
+            || (name?.StartsWith("color", StringComparison.OrdinalIgnoreCase) ?? false)
+            || (name?.EndsWith("color", StringComparison.OrdinalIgnoreCase) ?? false)
+            || (name?.EndsWith("bg", StringComparison.OrdinalIgnoreCase) ?? false)
+            || (name?.EndsWith("border", StringComparison.OrdinalIgnoreCase) ?? false)
+            || (name?.EndsWith("outline", StringComparison.OrdinalIgnoreCase) ?? false))
+        {
+            return true;
+        }
+
+        var cssValue = value?.Trim();
+        return !string.IsNullOrEmpty(cssValue)
+            && (cssValue.StartsWith('#')
+                || cssValue.StartsWith("rgb(", StringComparison.OrdinalIgnoreCase)
+                || cssValue.StartsWith("rgba(", StringComparison.OrdinalIgnoreCase)
+                || cssValue.StartsWith("hsl(", StringComparison.OrdinalIgnoreCase)
+                || cssValue.StartsWith("hsla(", StringComparison.OrdinalIgnoreCase));
+    }
     private static readonly IReadOnlyDictionary<string, string> DefaultGlobalTokens = new ThemeConfig().GetResolvedTokenValues();
 }

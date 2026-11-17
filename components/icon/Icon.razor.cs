@@ -27,7 +27,7 @@ namespace AntDesign
         public string Alt { get; set; }
 
         /// <summary>
-        /// Rotate icon with animation
+        /// The ARIA role of the SVG wrapper. Set to an empty string to hide the icon from assistive technology.
         /// </summary>
         /// <default value="img" />
         [Parameter]
@@ -40,7 +40,7 @@ namespace AntDesign
         public string AriaLabel { get; set; }
 
         /// <summary>
-        /// Rotate icon with animation
+        /// Whether to rotate the icon with animation.
         /// </summary>
         /// <default value="false" />
         [Parameter]

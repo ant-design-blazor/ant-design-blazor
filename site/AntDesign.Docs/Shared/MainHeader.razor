@@ -1,18 +1,18 @@
 ﻿@using AntDesign.Docs.Services
 <header id="header" class="clearfix @(IsHome?"home-header":"") @_styles["root"]">
-    <Row Style="flex-flow: nowrap; height: 64px;" OnBreakpoint="OnBreakpoint">
+    <Row Style="display: flex; flex-flow: nowrap; height: 64px;" OnBreakpoint="OnBreakpoint">
         <GridCol Class="docs-header-logo" Flex="@(IsHome ? "none" : null)" Xs="24" Sm="24" Md="6" Lg="6" Xl="5" Xxl="4">
             <h1>
                 <a id="logo" href="/">
-                    <img alt="logo" src="/docs/assets/logo.svg"><span class="docs-brand-name">Ant Design<sup class="docs-blazor-brand-accent">Blazor</sup></span>
+                    <img alt="logo" src="_content/AntDesign.Docs/docs/assets/logo.svg"><span class="docs-brand-name">Ant Design<sup class="docs-blazor-brand-accent">Blazor</sup></span>
                 </a>
             </h1>
         </GridCol>
         @if (_isMobile)
         {
-            <Popover Class="docs-header-mobile-trigger" Placement="Placement.BottomRight" BoundaryAdjustMode="TriggerBoundaryAdjustMode.InView" ArrowPointAtCenter PopupWidthMode="custom" PopupWidth="min(300px, calc(100vw - 32px))" PopupMaxWidth="calc(100vw - 32px)" Trigger="new[] { Trigger.Click }" OverlayClassName="docs-header-mobile-popup">
+            <Popover @bind-Visible="_mobileNavigationOpen" @bind-Visible:after="ResetMobileMenuAfterClose" Class="docs-header-mobile-trigger" Placement="Placement.BottomRight" BoundaryAdjustMode="TriggerBoundaryAdjustMode.InView" ArrowPointAtCenter PopupWidthMode="custom" PopupWidth="min(300px, calc(100vw - 32px))" PopupMaxWidth="calc(100vw - 32px)" Trigger="new[] { Trigger.Click }" OverlayClassName="docs-header-mobile-popup">
                 <ContentTemplate>
-                    <HeaderMenu IsMobile />
+                    <HeaderMenu @ref="_mobileHeaderMenu" IsMobile />
                 </ContentTemplate>
                 <ChildContent><Button Type="ButtonType.Text" Icon="@IconType.Outline.UnorderedList" Class="nav-phone-icon" AriaLabel="Open navigation" /></ChildContent>
             </Popover>
@@ -20,7 +20,7 @@
         @if (!_isMobile || IsHome)
         {
             <GridCol Class="menu-row" Flex="@(IsHome ? "auto" : null)" Xs="@(IsHome ? 24 : 0)" Sm="@(IsHome ? 24 : 0)" Md="18" Lg="18" Xl="19" Xxl="20">
-                <HeaderMenu IsMobile="_isMobile" ShowSearch="@IsHome" ShowNavigation="@(!_isMobile)" />
+            <HeaderMenu IsMobile="_isMobile" ShowSearch="true" ShowNavigation="@(!_isMobile)" />
             </GridCol>
         }
     </Row>
@@ -28,7 +28,7 @@
 
 <style>@((MarkupString)_styles.CssText)</style>
 <style>
-    #header #logo{gap:12px;flex:none;overflow:visible}
+    #header #logo{gap:12px;flex:none;overflow:visible!important}
     #header #logo img{flex:none;width:32px;height:32px;margin:0}
     #header #logo .docs-brand-name{display:inline-flex;align-items:flex-start;flex:none;white-space:nowrap;font-size:18px;line-height:1;font-weight:700}
     #header #logo .docs-brand-name sup{position:relative;top:-.2em;margin-inline-start:3px;font-size:.55em;line-height:1}
@@ -69,15 +69,16 @@
             ["&#header.home-header .docs-header-logo"] = new System.Collections.Generic.Dictionary<string, object> { ["width"] = "auto", ["maxWidth"] = "none", ["flex"] = "none" },
             ["&#header.home-header .menu-row"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "flex", ["width"] = "auto", ["maxWidth"] = "none", ["minWidth"] = 0, ["flex"] = "1 1 auto" },
             ["&#header .menu-row"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "flex", ["alignItems"] = "center", ["justifyContent"] = "flex-end", ["columnGap"] = 2, ["paddingInlineEnd"] = 16, ["minWidth"] = 0, ["margin"] = 0 },
-            ["&#header .header-navigation"] = new System.Collections.Generic.Dictionary<string, object> { ["position"] = "relative", ["minWidth"] = 0, ["flex"] = "none" },
-            ["&#header #nav.ant-menu-horizontal"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "flex", ["flexWrap"] = "nowrap", ["width"] = "100%", ["minWidth"] = 0, ["borderBottom"] = "none" },
+            // Give the horizontal menu a bounded flex slot so its responsive
+            // overflow observer can move trailing items into the More menu.
+            ["&#header .header-navigation"] = new System.Collections.Generic.Dictionary<string, object> { ["position"] = "relative", ["flex"] = "none", ["width"] = "max-content" },
+            ["&#header #nav.ant-menu-horizontal"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "flex", ["flexWrap"] = "nowrap", ["width"] = "max-content", ["minWidth"] = 0, ["borderBottom"] = "none" },
             ["&#header #nav > li"] = new System.Collections.Generic.Dictionary<string, object> { ["flex"] = "none", ["margin"] = 0 },
             ["&#header .docs-header-mobile-trigger"] = new System.Collections.Generic.Dictionary<string, object> { ["position"] = "absolute", ["insetInlineEnd"] = 16, ["top"] = 16, ["width"] = 32, ["height"] = 32, ["margin"] = 0 },
             ["&#header .nav-phone-icon"] = new System.Collections.Generic.Dictionary<string, object> { ["position"] = "relative", ["top"] = "auto", ["right"] = "auto", ["zIndex"] = "auto", ["display"] = "inline-flex", ["alignItems"] = "center", ["justifyContent"] = "center", ["verticalAlign"] = "top", ["lineHeight"] = 1, ["width"] = 32, ["height"] = 32, ["padding"] = 0 },
             ["&#header .header-desktop-utilities"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "flex", ["alignItems"] = "center", ["gap"] = 2 },
             ["@media (min-width: 768px)"] = new System.Collections.Generic.Dictionary<string, object>
             {
-                ["&#header .docs-header-logo"] = new System.Collections.Generic.Dictionary<string, object> { ["flex"] = "0 0 auto", ["width"] = "auto", ["maxWidth"] = "none" },
                 ["&#header .menu-row"] = new System.Collections.Generic.Dictionary<string, object> { ["minWidth"] = 0, ["flex"] = "1 1 0", ["maxWidth"] = "none" },
                 ["&#header .docs-header-mobile-trigger"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "none" },
             },
@@ -93,15 +94,7 @@
                 ["&#header #logo"] = new System.Collections.Generic.Dictionary<string, object> { ["paddingInline"] = 0 },
                 ["&#header .docs-header-mobile-trigger"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "block" }
             },
-            ["@media (width < 1120px)"] = new System.Collections.Generic.Dictionary<string, object>
-            {
-                ["&#header .header-desktop-utilities"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "none" },
-            },
-            ["@media (width >= 1200px)"] = new System.Collections.Generic.Dictionary<string, object>
-            {
-                ["&#header .header-navigation"] = new System.Collections.Generic.Dictionary<string, object> { ["minWidth"] = 393 },
-            },
-            ["&#header .menu-row > *"] = new System.Collections.Generic.Dictionary<string, object> { ["flex"] = "none", ["margin"] = 0 },
+            ["&#header .menu-row > *"] = new System.Collections.Generic.Dictionary<string, object> { ["margin"] = 0 },
             ["&#header .header-button"] = new System.Collections.Generic.Dictionary<string, object> { ["color"] = "rgba(0, 0, 0, 0.85)", ["borderColor"] = "#d9d9d9" },
             ["&#header #nav"] = new System.Collections.Generic.Dictionary<string, object>
             {
@@ -178,15 +171,32 @@
                 ["&#header.home-header .ant-row .ant-col"] = new System.Collections.Generic.Dictionary<string, object> { ["margin"] = "0 auto" },
                 ["&#header.home-header .ant-row .ant-col a"] = new System.Collections.Generic.Dictionary<string, object> { ["paddingRight"] = 0, ["paddingLeft"] = 0 },
                 ["&#header.home-header .ant-row .ant-col:last-child"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "none" }
+            },
+            // Keep the responsive menu rules after the base rules. The style
+            // generator preserves dictionary order, so earlier media rules
+            // would otherwise lose to declarations emitted below them.
+            ["@media (width < 1120px)"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["&#header .header-navigation"] = new System.Collections.Generic.Dictionary<string, object> { ["width"] = "auto", ["minWidth"] = 0, ["flex"] = "1 1 0" },
+                ["&#header #nav.ant-menu-horizontal"] = new System.Collections.Generic.Dictionary<string, object> { ["width"] = "100%" },
+                ["&#header .header-desktop-utilities"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "none" },
             }
         }
     });
 
     public bool _isMobile;
+    private bool _mobileNavigationOpen;
+    private HeaderMenu _mobileHeaderMenu;
 
     [Parameter] public bool IsHome { get; set; }
 
     [Parameter] public EventCallback<bool> OnMobileModeChanged { get; set; }
+
+    private void ResetMobileMenuAfterClose()
+    {
+        if (!_mobileNavigationOpen)
+            _mobileHeaderMenu?.ResetOpenSubmenus();
+    }
 
     private void OnBreakpoint(BreakpointType breakpoint)
     {

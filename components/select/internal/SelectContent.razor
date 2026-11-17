@@ -8,19 +8,19 @@
 @inherits AntDomComponentBase
 
 @{
-    _inputString = IsOverlayShow ? _inputString : string.Empty; // ensure _inputString is empty and selected item is shown when overlay is closed
+    var renderedInputString = IsOverlayShow ? _inputString : string.Empty;
     var canRenderRawValue = ParentSelect.Value is string || ParentSelect.Value is ValueType;
     var hasMatchingOption = ParentSelect.SelectOptionItems.Any(option =>
         EqualityComparer<TItemValue>.Default.Equals(option.Value, ParentSelect.Value));
     var rawValueText = canRenderRawValue && !hasMatchingOption ? Convert.ToString(ParentSelect.Value) : null;
     var hasUnmatchedValue = !ParentSelect.HasValue && !string.IsNullOrEmpty(rawValueText);
-    var canShowUnmatchedValue = !IsOverlayShow || string.IsNullOrEmpty(_inputString);
+    var canShowUnmatchedValue = !IsOverlayShow || string.IsNullOrEmpty(renderedInputString);
     var showPlaceholder = !ParentSelect.HasValue && !hasUnmatchedValue;
     var selectedItem = ParentSelect.GetOrderedSelectedItems().FirstOrDefault();
     var contentTitle = hasUnmatchedValue && ParentLabelTemplate == null ? rawValueText : selectedItem?.Label;
     contentTitle ??= ParentSelect.SelectionTitle;
-    var contentClass = $"{Prefix}-content{(ParentSelect.Mode == SelectMode.Default && (ParentSelect.HasValue || hasUnmatchedValue) ? $" {Prefix}-content-has-value" : string.Empty)}{(ParentSelect.Mode == SelectMode.Default && !string.IsNullOrEmpty(_inputString) ? $" {Prefix}-content-has-search-value" : string.Empty)}";
-    var placeholderStyle = !string.IsNullOrEmpty(_inputString) ? "visibility: hidden;" : null;
+    var contentClass = $"{Prefix}-content{(ParentSelect.Mode == SelectMode.Default && (ParentSelect.HasValue || hasUnmatchedValue) ? $" {Prefix}-content-has-value" : string.Empty)}{(ParentSelect.Mode == SelectMode.Default && !string.IsNullOrEmpty(renderedInputString) ? $" {Prefix}-content-has-search-value" : string.Empty)}";
+    var placeholderStyle = !string.IsNullOrEmpty(renderedInputString) ? "visibility: hidden;" : null;
 }
 <div class="@ParentSelect.GetSemanticClass("root", ParentSelect.GetRootClass(ParentSelect.CurrentClassMapper.Class))"
      style="@ParentSelect.GetSemanticStyle("root", ParentSelect.Style)"
@@ -74,7 +74,7 @@
                @onkeyup="OnKeyUp"
                @onkeydown="OnKeyDown"
                disabled="@ParentSelect.Disabled"
-               value="@(_inputString ?? string.Empty)"
+               value="@(renderedInputString ?? string.Empty)"
                id="@ParentSelect.Id"
                type="text"
                readonly="@(!ParentSelect.IsSearchEnabled)"
@@ -147,7 +147,14 @@
                       {
                       <span unselectable="on" aria-hidden="true" style="@ParentSelect.GetSemanticStyle("itemRemove", "user-select: none;")" class="@ParentSelect.GetSemanticClass("itemRemove", $"{Prefix}-selection-item-remove")"
                   @onmousedown:preventDefault="true" @onclick="(e)=> RemoveClicked(e, selectedOption)" @onclick:stopPropagation="true">
-                        <CloseOutlined />
+                        @if (ParentSelect.RemoveIcon != null)
+                        {
+                          @ParentSelect.RemoveIcon
+                        }
+                        else
+                        {
+                          <CloseOutlined />
+                        }
                       </span>
                       }
                     </span>
@@ -204,7 +211,14 @@
                       {
                       <span unselectable="on" aria-hidden="true" style="@ParentSelect.GetSemanticStyle("itemRemove", "user-select: none;")" class="@ParentSelect.GetSemanticClass("itemRemove", $"{Prefix}-selection-item-remove")"
                   @onmousedown:preventDefault="true" @onclick="(e)=> RemoveClicked(e, selectedOption)" @onclick:stopPropagation="true">
-                        <CloseOutlined />
+                        @if (ParentSelect.RemoveIcon != null)
+                        {
+                          @ParentSelect.RemoveIcon
+                        }
+                        else
+                        {
+                          <CloseOutlined />
+                        }
                       </span>
                       }
                     </span>
@@ -259,7 +273,14 @@
                       {
                       <span unselectable="on" aria-hidden="true" style="@ParentSelect.GetSemanticStyle("itemRemove", "user-select: none;")" class="@ParentSelect.GetSemanticClass("itemRemove", $"{Prefix}-selection-item-remove")"
                   @onmousedown:preventDefault="true" @onclick="(e)=> RemoveClicked(e, selectedOption)" @onclick:stopPropagation="true">
-                        <CloseOutlined />
+                        @if (ParentSelect.RemoveIcon != null)
+                        {
+                          @ParentSelect.RemoveIcon
+                        }
+                        else
+                        {
+                          <CloseOutlined />
+                        }
                       </span>
                       }
                     </span>
@@ -273,7 +294,7 @@
                    @oninput="OnInputChange"
                    @onkeyup="OnKeyUp"
                    @onkeydown="OnKeyDown"
-                   value="@(_inputString ?? string.Empty)"
+                   value="@(renderedInputString ?? string.Empty)"
                    disabled="@ParentSelect.Disabled"
                    id="@ParentSelect.Id"
                    type="text"

@@ -7,12 +7,12 @@
         DefaultValues="@_selected"
         Placeholder="Select your current mood"
         Style="width: 100%;">
-    <ItemTemplate Context="option">
+    <OptionRender Context="option">
         <Space>
             <span role="img" aria-label="@option.Label">@option.Emoji</span>
             <span>@option.Label (@option.Description)</span>
         </Space>
-    </ItemTemplate>
+    </OptionRender>
 </Select>
 
 @code {

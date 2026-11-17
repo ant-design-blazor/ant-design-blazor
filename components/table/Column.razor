@@ -18,7 +18,7 @@
 
     return;
 }
-else if (Hidden)
+else if (Hidden || Table.IsResponsiveColumnHidden(this))
 {
     return;
 }
@@ -52,7 +52,7 @@ else if (IsHeader && HeaderColSpan != 0)
 {
     @if (AppendExpandColumn)
     {
-        <th class="ant-table-cell ant-table-row-expand-icon-cell"></th>
+        <th class="@Table.GetSemanticClass("header.cell", ExpandIconCellClass)" style="@Table.GetSemanticStyle("header.cell", ExpandIconCellStyle)"></th>
     }
 
     var headerCellAttributes = OnHeaderCell?.Invoke() ?? new Dictionary<string, object>();
@@ -81,6 +81,18 @@ else if (IsBody && (Table.IsVirtual || (RowSpan != 0 && ColSpan != 0 && IsCellVi
 		var virtualRowSpan = GetSpanValue(_currentCellAttributes, "rowspan");
 		var hideVirtualCell = Table.IsVirtual && (!virtualCellVisible || virtualRowSpan > 1);
 		var renderedCellAttributes = _currentCellAttributes;
+		if (ShouldExtendExpandedRowSpan && !HasZeroSpan(renderedCellAttributes, "rowspan"))
+		{
+			var rowSpan = Math.Max(RowSpan, GetSpanValue(renderedCellAttributes, "rowspan"));
+			renderedCellAttributes = renderedCellAttributes == null
+				? new Dictionary<string, object>()
+				: new Dictionary<string, object>(renderedCellAttributes);
+			foreach (var key in renderedCellAttributes.Keys.Where(key => key.Equals("rowspan", StringComparison.OrdinalIgnoreCase)).ToArray())
+			{
+				renderedCellAttributes.Remove(key);
+			}
+			renderedCellAttributes["rowspan"] = rowSpan + 1;
+		}
 		if (Table.IsVirtual && !virtualCellVisible && _currentCellAttributes != null)
 		{
 			renderedCellAttributes = new Dictionary<string, object>(_currentCellAttributes);
@@ -109,7 +121,7 @@ else if (IsBody && (Table.IsVirtual || (RowSpan != 0 && ColSpan != 0 && IsCellVi
         }
         else
         {
-            <td class="ant-table-cell ant-table-row-expand-icon-cell">
+            <td class="@Table.GetSemanticClass("body.cell", ExpandIconCellClass)" style="@Table.GetSemanticStyle("body.cell", ExpandIconCellStyle)" rowspan="@(ShouldExtendExpandIconRowSpan ? 2 : false)">
                 @if (RowExpandable && !Table.TreeMode)
                 {
                     <button type="button" @onclick="ToggleTreeNode" @onclick:stopPropagation
@@ -153,7 +165,7 @@ else if (IsBody && (Table.IsVirtual || (RowSpan != 0 && ColSpan != 0 && IsCellVi
         {
 			@if (hideVirtualCell)
 			{
-				<div class="@Table.GetSemanticClass("body.cell", BodyCellClass)" style="@GetBodyCellStyle(cellStyle, true)" data-virtual-column="@VirtualColumnIndex" data-virtual-rowspan="@(virtualRowSpan > 1 ? virtualRowSpan.ToString() : null)">
+				<div class="@Table.GetSemanticClass("body.cell", BodyCellClass)" style="@GetBodyCellStyle(cellStyle, true)" rowspan="@(virtualRowSpan > 1 ? virtualRowSpan : false)" colspan="@(GetSpanValue(_currentCellAttributes, "colspan") > 1 ? GetSpanValue(_currentCellAttributes, "colspan") : false)" data-virtual-column="@VirtualColumnIndex" data-virtual-rowspan="@(virtualRowSpan > 1 ? virtualRowSpan.ToString() : null)">
 					@if (virtualRowSpan > 1) { @BodyCellContent(cellData) }
 				</div>
 			}
@@ -197,11 +209,19 @@ else if (IsBody && (Table.IsVirtual || (RowSpan != 0 && ColSpan != 0 && IsCellVi
 
     static int GetSpanValue(Dictionary<string, object> attributes, string name)
     {
-        return attributes != null
-            && attributes.TryGetValue(name, out var value)
-            && int.TryParse(value?.ToString(), out var span)
-            ? span
-            : 1;
+        if (attributes != null)
+        {
+            foreach (var attribute in attributes)
+            {
+                if (attribute.Key.Equals(name, StringComparison.OrdinalIgnoreCase)
+                    && int.TryParse(attribute.Value?.ToString(), out var span))
+                {
+                    return span;
+                }
+            }
+        }
+
+        return 1;
     }
 
     bool IsCellVisibleForCurrentRow()
@@ -235,8 +255,8 @@ else if (IsBody && (Table.IsVirtual || (RowSpan != 0 && ColSpan != 0 && IsCellVi
     static bool HasZeroSpan(Dictionary<string, object> attributes, string name)
     {
         return attributes != null
-            && attributes.TryGetValue(name, out var value)
-            && string.Equals(value?.ToString(), "0", StringComparison.Ordinal);
+            && attributes.Any(attribute => attribute.Key.Equals(name, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(attribute.Value?.ToString(), "0", StringComparison.Ordinal));
     }
 
     RenderFragment BodyCellContent(CellData<TData> cellData) => builder =>

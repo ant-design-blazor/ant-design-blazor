@@ -23,13 +23,14 @@ cover: https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg
 | AccessKey | 指定 [accesskey](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/accesskey) 全局属性。  | string | |
 | AllowClear | 支持清除. Has no effect if Value type default is also in the list of options, unless used with `ValueOnClear`. | bool | false |  |
 | AutoClearSearchValue | 是否在选中项后清空搜索框 | bool | true |  |
-| Bordered | 旧版边框开关，新代码建议使用 `Variant`。 | bool | true |  |
+| Bordered | **已弃用：**为兼容旧代码而保留。请使用 `Variant` 设置选择器外观。 | bool | true |  |
 | BoundaryAdjustMode | `Dropdown` 调整策略（例如当浏览器调整大小时）        | TriggerBoundaryAdjustMode    | TriggerBoundaryAdjustMode.InView         |
 | CustomTagLabelToValue | 将自定义标签（字符串）转换为 TItemValue 类型 | Func<string, TItemValue> | (label) => <br/>    (TItemValue)TypeDescriptor<br/>    .GetConverter(typeof(TItemValue))<br/>    .ConvertFromInvariantString(label) |  |
 | DataSource | 此组件的数据源 | IEnumerable&lt;TItem> | - |  |
 | Options | 选择项数据源，与 React 的 `options` 同名对应，为 `DataSource` 的兼容别名。 | IEnumerable&lt;TItem> | - | 6.0.0 |
 | DataSourceEqualityComparer | 将在 DataSource 更改检测期间使用的 EqualityComparer。 如果没有设置比较器，将使用默认比较器，它将仅比较标签和值属性的相等性. | IEqualityComparer&lt;TItem> | - |  |
 | DefaultActiveFirstOption | 是否默认高亮第一个选项  | bool | false |  |
+| DefaultOpen | 首次渲染时是否打开下拉菜单。初始化后可使用 `Open` 控制开合状态。 | bool | false | 6.0.0 |
 | DefaultValue | 当 `Mode = default` - 该值在初始化期间和在 Forms 中按下 Reset 按钮时使用. | TItemValue | - |  |
 | DefaultValues | 当`Mode = multiple` \| `tags` - 在初始化期间和在表单中按下重置按钮时使用这些值. | IEnumerable&lt;TItemValues> | - |  |
 | Disabled | 是否禁用 | bool | false |  |
@@ -42,42 +43,59 @@ cover: https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg
 | PopupRender | 自定义下拉框内容，与 React 的 `popupRender` 对应，为 `DropdownRender` 的兼容别名。 | RenderFragment&lt;RenderFragment> | - | 6.0.0 |
 | SearchDebounceMilliseconds |推迟对搜索输入事件的处理，直到用户停止输入一个预定的时间。 | int        | 250    |
 | EnableSearch | 为单选启用搜索。多选和标签模式默认可搜索，与 Ant Design v6 保持一致。 | bool | false |  |
-| ShowSearch | 是否启用搜索，对应 React 的布尔型 `showSearch`；省略时单选默认关闭，多选和标签模式默认开启。 | bool? | 按模式决定 | 6.0.0 |
+| ShowSearch | 使用布尔值启用搜索，或传入配置对象。配置支持 `OptionFilterProp`（string 或 string[]）和 `FilterOption`；省略时根据 Select 模式决定是否启用。 | OneOf&lt;bool?, SelectShowSearchOptions> | 按模式决定 | 6.0.0 |
 | FilterExpression | 自定义搜索时过滤的逻辑。 | Func<SelectOptionItem<TItemValue, TItem>, string, bool> | (item, searchValue) => item.Label.Contains(searchValue, StringComparison.InvariantCultureIgnoreCase) |  |
+| FilterOption | 是否根据搜索文本过滤选项。设为 false 时保留所有选项；使用 `FilterExpression` 自定义匹配逻辑。 | bool? | true | 6.0.0 |
+| FieldNames | 将自定义选项字段映射到 `Label`、`Value`、嵌套 `Options` 和分组 `GroupLabel`。 | SelectFieldNames | `{ label: "label", value: "value", options: "options", groupLabel: "label" }` | 6.0.0 |
+| OptionFilterProp | **已弃用：**旧的顶层别名；请放到 `ShowSearch` 配置中以匹配 React v6.1。多个字段按 OR 方式匹配。 | OneOf&lt;string, string[]> | value | 6.0.0 |
+| FilterSort | 对过滤后的选项排序，第三个参数是当前搜索文本。 | Func&lt;SelectOptionItem&lt;TItemValue, TItem&gt;, SelectOptionItem&lt;TItemValue, TItem&gt;, string, int&gt; | - | 6.0.0 |
 | GroupName | 用作组指示符的属性的名称。 如果设置了该值，则条目将按组显示。 使用额外的 `SortByGroup` 和 `SortByLabel`. | string | - |  |
 | HideSelected | 是否隐藏选中项. | bool | false |  |
 | IgnoreItemChanges |用于提高速度。 如果希望更改标签名称、组名称或禁用指示器，请禁用此属性。 | bool | true |  |
 | ItemTemplate | 用于自定义Item样式. | RenderFragment&lt;TItem> |  |  |
+| OptionRender | 自定义下拉选项的渲染内容，模板接收选项对应的源数据项。 | RenderFragment&lt;TItem> | - | 6.0.0 |
 | LabelInValue | 是否在 value 中嵌入标签，将 value 的格式从 `TItemValue` 转换为 string (JSON) e.g. { "value": `TItemValue`, "label": "`标签值`" } | bool | false |  |
 | LabelName | 用于标签的属性名称. | string |  |  |
 | LabelTemplate | 用于自定义标签样式. | RenderFragment&lt;TItem> |  |  |
+| LabelRender | 自定义当前选中项的标签。与 React 参数名称对应；模板上下文为选项源数据项。 | RenderFragment&lt;TItem> | - | 6.0.0 |
 | LabelProperty | 指定 option 对象的 label属性 | `Func<TItem, string>` | - |
 | Loading | 显示加载指示器。 必须编写加载逻辑. | bool | false |  |
 | ListboxStyle | 自定义下拉列表样式 | string | display: flex; flex-direction: column; |  |
+| ListHeight | 设置选项列表的最大高度，与 React `listHeight` 同名；别名对应 `PopupContainerMaxHeight`。 | int? | 256 | 6.0.0 |
 | MaxTagCount | 最多显示多少个 tag，响应式模式会对性能产生损耗 | int | `ResponsiveTag.Responsive` | - |  |
 | MaxCount | 多选或标签模式下可选择的最大数量 | int? | - | 6.0.0 |  |
 | Status | 设置 `error` 或 `warning` 校验状态；未设置时继承 `FormItem` 的校验状态 | string | - |  |
 | MaxTagPlaceholder | 隐藏 tag 时显示的内容.如果与 ResponsiveTag.Responsive 一起使用，请实现处理逻辑。 | RenderFragment<IEnumerable<TItem>>> | - |  |
 | MaxTagTextLength | 最大显示的 tag 文本长度. | int | - |  |
+| MenuItemSelectedIcon | 多选或标签模式下，已选选项显示的自定义图标。 | RenderFragment | 勾选图标 | 6.0.0 |
 | Mode | 设置 Select 的模式为多选或标签 - `default` \| `multiple` \| `tags` | string | default |  |
 | NotFoundContent | 当下拉列表为空时显示的内容 | RenderFragment | `Not Found` |  |
 | OnBlur | 失去焦点时回调 | Action | - |  |
+| OnClear | 清除操作完成后调用，与 React `onClear` 对应。 | EventCallback | - | 6.0.0 |
 | OnClearSelected | 当用户清除选择时调用. | Action | - |  |
 | OnCreateCustomTag | 创建自定义标签时调用. | Action | - |  |
 | OnDataSourceChanged | 数据源更改时调用. | Action | - |  |
+| OnDeselect | 多选或标签模式下取消选择选项时调用，参数为选项对象。 | EventCallback&lt;SelectOptionItem&lt;TItemValue, TItem>> | - | 6.0.0 |
 | OnDropdownVisibleChange | 展开下拉菜单的回调 | Action | - |  |
 | OnOpenChange | 下拉菜单开合状态变化时的回调，与 React 的 `onOpenChange` 同名对应。 | EventCallback&lt;bool> | - | 6.0.0 |
 | OnFocus | 获得焦点时回调 | Action | - |  |
+| OnInputKeyDown | Select 输入框获得焦点时按键调用。 | EventCallback&lt;KeyboardEventArgs> | - | 6.0.0 |
 | OnMouseEnter | 鼠标移入时回调 | Action | - |  |
 | OnMouseLeave | 鼠标移出时回调 | Action | - |  |
+| OnPopupScroll | 下拉弹层滚动时调用。 | EventCallback&lt;EventArgs> | - | 6.0.0 |
 | OnSearch | 文本框值变化时回调 | Action&lt;string> | - |  |
+| SearchValue | 受控搜索文本。通过 `SearchValueChanged` 或 `@bind-SearchValue` 同步输入框和筛选状态。 | string | - | 6.0.0 |
+| SearchValueChanged | 搜索文本变化时触发，可用于受控绑定。 | EventCallback&lt;string> | - | 6.0.0 |
+| OnSelect | 选择选项时调用，参数为包含值、标签和源数据的选项对象。 | EventCallback&lt;SelectOptionItem&lt;TItemValue, TItem>> | - | 6.0.0 |
 | OnSelectedItemChanged | 当所选Item更改时调用. | Action&lt;TItem> | - |  |
 | OnSelectedItemsChanged | 当所选Items(多选)更改时调用. | Action&lt;IEnumerable&lt;TItem>> | - |  |
 | Open | 下拉菜单的打开状态. | bool | false |  |
 | Placeholder | 选择框默认文本 | string | - |  |
 | PopupContainerMaxHeight | 弹出容器的最大高度. | string | `256px` |  |
+| RemoveIcon | 自定义已选标签的移除图标。 | RenderFragment | 关闭图标 | 6.0.0 |
 | PopupContainerSelector | 使用它来修复覆盖问题，例如 #area | string | body |  |
 | PrefixIcon | 自定义前缀图标。 对于模式 `multiple` 和 `tags` 仅在未选择数据时可见. | RenderFragment | - |  |
+| Prefix | 自定义前缀内容，与 React `prefix` 同名，对应 `PrefixIcon`。 | RenderFragment | - | 6.0.0 |
 | SelectOptions | 用于手动渲染选择Option. | RenderFragment | - |  |
 | ShowArrowIcon | 是否显示下拉小箭头 | bool | true |  |
 | ShowArrow | 是否显示下拉箭头，与 React 的 `showArrow` 对应，为 `ShowArrowIcon` 的兼容别名。 | bool | true | 6.0.0 |

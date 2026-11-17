@@ -141,9 +141,9 @@ Examples (after installing the tool or running via `dotnet run`):
 
 ## Packaged fallback for offline usage
 
-The MCP server prefers to download the documentation metadata from the remote site by default. If the download fails (network issues, firewall, etc.), the server will fall back to reading pre-generated JSON files shipped inside the NuGet package (under the `data/` path). You can generate these JSON files as part of your release pipeline using `AntDesign.Docs.Build.CLI` and include them in the package.
+The MCP server prefers to download the documentation metadata from the remote site by default. If the download fails (network issues, firewall, etc.), the server will fall back to the pre-generated JSON files shipped inside the NuGet package (under the `data/` path). These fallback catalogs are checked-in package assets.
 
-A sample GitHub Actions workflow `.github/workflows/publish-mcp.yml` is included that builds the project and attempts to run the build CLI to generate JSON files into `site/AntDesign.Docs.MCP/data` before packing and publishing the NuGet package.
+A sample GitHub Actions workflow `.github/workflows/publish-mcp.yml` builds and packages the checked-in fallback catalogs.
 
 ## More information
 

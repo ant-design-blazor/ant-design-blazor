@@ -9,6 +9,7 @@
   "app.theme.switch.editor": "Theme Editor",
   "app.theme.switch.aliyun": "Aliyun Theme",
   "app.header.search": "Search...",
+  "app.header.menu.theme": "Theme",
   "app.header.menu.documentation": "Docs",
   "app.header.menu.components": "Components",
   "app.header.menu.spec": "Design",

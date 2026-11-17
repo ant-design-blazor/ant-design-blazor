@@ -1,3 +1,5 @@
+@using AntDesign.Select.Internal
+
 <Select TItem="SearchOption"
         TItemValue="string"
         DataSource="@options"
@@ -5,7 +7,7 @@
         ValueName="@nameof(SearchOption.Value)"
         Placeholder="Search to Select"
         EnableSearch
-        SortByLabel="SortDirection.Ascending"
+        FilterSort="@CompareOptions"
         Style="width: 200px" />
 
 @code {
@@ -19,6 +21,11 @@
         new() { Value = "5", Label = "Resolved" },
         new() { Value = "6", Label = "Cancelled" }
     ];
+
+    private static int CompareOptions(
+        SelectOptionItem<string, SearchOption> left,
+        SelectOptionItem<string, SearchOption> right,
+        string searchValue) => string.Compare(left.Label, right.Label, StringComparison.InvariantCultureIgnoreCase);
 
     private sealed class SearchOption
     {

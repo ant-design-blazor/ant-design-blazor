@@ -138,13 +138,16 @@ namespace AntDesign
                 builder.AddAttribute(1, "href", Href);
                 builder.AddAttribute(2, "class", ClassMapper.Class);
                 builder.AddAttribute(3, "style", Style);
+                // Keep menu navigation compatible with Blazor Web App static SSR.
+                // Enhanced navigation can intercept this anchor before WASM starts.
+                builder.AddAttribute(4, "data-enhance-nav", "true");
 
                 if (Target.HasValue)
-                    builder.AddAttribute(4, "target", _targetMap[Target.Value]);
+                    builder.AddAttribute(5, "target", _targetMap[Target.Value]);
 
                 builder.SetKey(MenuItem.Key);
-                builder.AddMultipleAttributes(5, Attributes);
-                builder.AddContent(6, ChildContent);
+                builder.AddMultipleAttributes(6, Attributes);
+                builder.AddContent(7, ChildContent);
                 builder.CloseElement();
             }
         }

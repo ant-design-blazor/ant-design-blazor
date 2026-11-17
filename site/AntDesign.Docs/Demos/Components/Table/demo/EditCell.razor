@@ -1,91 +1,109 @@
-﻿<div>
-  <Button OnClick="addRow" Type="ButtonType.Primary" Style="margin-bottom:16px">
-    Add a row
-  </Button>
-  <Table DataSource="listOfData" RowClassName="@(_=>"editable-row")" Bordered>
-    <PropertyColumn Width="30%" Property="c => c.Name">
-      @if (editId == context.Id)
-      {
-        <Input Type="InputType.Text" @bind-Value="context.Name" OnBlur="stopEdit" AutoFocus />
-      }
-      else
-      {
-        <div class="editable-cell-value-wrap" style="padding-right:24px" @onclick="() => startEdit(context.Id)">
-          @context.Name
-        </div>
-      }
-    </PropertyColumn>
-    <PropertyColumn Property="c => c.Age"></PropertyColumn>
-    <PropertyColumn Property="c => c.Address"></PropertyColumn>
-    <ActionColumn Title="Action">
-      <Popconfirm Title="Are you sure you want to delete?"
-                  OnConfirm="() => deleteRow(context.Id)"
-                  OkText="Yes"
-                  CancelText="No">
-        <a>Delete</a>
-      </Popconfirm>
-    </ActionColumn>
-  </Table>
+@using AntDesign.TableModels
+
+<div>
+    <Form TModel="ItemData" Model="_editingModel" @ref="_form" Context="editModel">
+        <Button OnClick="AddRow" Type="ButtonType.Primary" Style="margin-bottom:16px">Add a row</Button>
+        <Table TItem="ItemData" DataSource="_data" RowKey="row => row.Id" RowClassName="@EditableRowClass" Bordered>
+            <ColumnDefinitions>
+                <PropertyColumn Property="row => row.Name" Title="name" Width="30%">
+                    @if (_editingId == context.Id)
+                    {
+                        <FormItem Name="Name" Style="margin: 0px;" Rules="@NameRules">
+                            <Input TValue="string" @bind-Value="editModel.Name" BindOnInput Variant="InputVariant.Filled" AutoFocus OnBlur="SaveOnBlur" OnPressEnter="SaveOnEnter" />
+                        </FormItem>
+                    }
+                    else
+                    {
+                        <div class="editable-cell-value-wrap" style="padding-inline-end: 24px;" @onclick="() => StartEdit(context)">
+                            @context.Name
+                        </div>
+                    }
+                </PropertyColumn>
+                <PropertyColumn Property="row => row.Age" Title="age" />
+                <PropertyColumn Property="row => row.Address" Title="address" />
+                <ActionColumn Title="operation">
+                    <Popconfirm Title="Sure to delete?" OnConfirm="() => DeleteRow(context.Id)" OkText="Yes" CancelText="No">
+                        <Unbound Context="triggerContext">
+                            <a @ref="triggerContext.Current">Delete</a>
+                        </Unbound>
+                    </Popconfirm>
+                </ActionColumn>
+            </ColumnDefinitions>
+        </Table>
+    </Form>
 </div>
 
 <style>
-  .editable-cell {
-      position: relative;
-  }
-
-  .editable-cell-value-wrap {
-      padding: 5px 12px;
-      cursor: pointer;
-  }
-
-  .editable-row:hover .editable-cell-value-wrap {
-      padding: 4px 11px;
-      border: 1px solid #d9d9d9;
-      border-radius: 4px;
-  }
-
-  [data-theme='dark'] .editable-row:hover .editable-cell-value-wrap {
-      border: 1px solid #434343;
-  }
+    .editable-row { position: relative; }
+    .editable-cell-value-wrap {
+        cursor: pointer;
+        padding: var(--ant-padding-xxs, 4px) var(--ant-padding-sm, 12px);
+        border: var(--ant-line-width, 1px) var(--ant-line-type, solid) transparent;
+        border-radius: var(--ant-border-radius-sm, 4px);
+        transition: all var(--ant-motion-duration-fast, .1s) var(--ant-motion-ease-in-out, ease-in-out);
+    }
+    .editable-row:hover .editable-cell-value-wrap { border-color: var(--ant-color-border, #d9d9d9); }
+    .editable-row .ant-form-item-margin-offset { display: none; }
+    .editable-row .ant-form-item-additional { min-height: 0 !important; }
 </style>
 
-@using System.Text.Json;
 @code {
-  int i = 0;
-  string editId;
-  record ItemData(string Id, string Age, string Address)
-  {
-    public string Name { get; set; }
-  };
+    private ItemData[] _data = Array.Empty<ItemData>();
+    private int _nextId;
+    private string _editingId;
+    private ItemData _editingModel = new("", "32", "") { Name = "" };
+    private Form<ItemData> _form;
+    private readonly FormValidationRule[] NameRules = [new() { Required = true, Message = "name is required." }];
 
-  ItemData[] listOfData = { };
+    private string EditableRowClass(RowData<ItemData> _) => "editable-row";
 
-  void addRow()
-  {
-    listOfData = listOfData.Append(new($"{i}", "32", $"London, Park Lane no. {i}") { Name = $"Edward King {i}" });
-    i++;
-  }
+    protected override void OnInitialized()
+    {
+        AddRow();
+        AddRow();
+    }
 
-  void deleteRow(string id)
-  {
-    listOfData = listOfData.Where(d => d.Id != id).ToArray();
-  }
+    private void AddRow()
+    {
+        var id = _nextId++;
+        _data = _data.Append(new ItemData(id.ToString(), "32", $"London, Park Lane no. {id}")
+        {
+            Name = $"Edward King {id}"
+        }).ToArray();
+    }
 
-  void startEdit(string id)
-  {
-    editId = id;
-  }
+    private void StartEdit(ItemData item)
+    {
+        _editingId = item.Id;
+        _editingModel = new ItemData(item.Id, item.Age, item.Address) { Name = item.Name };
+    }
 
-  void stopEdit()
-  {
-    var editedData = listOfData.FirstOrDefault(x => x.Id == editId);
-    Console.WriteLine(JsonSerializer.Serialize(editedData));
-    editId = null;
-  }
+    private void SaveOnBlur(FocusEventArgs _) => SaveEdit();
 
-  protected override void OnInitialized()
-  {
-    addRow();
-    addRow();
-  }
+    private void SaveOnEnter(PressEnterEventArgs _) => SaveEdit();
+
+    private void SaveEdit()
+    {
+        if (_editingId == null) return;
+        if (_form?.Validate() != true) return;
+
+        _data = _data.Select(item => item.Id == _editingId
+            ? item with { Name = _editingModel.Name }
+            : item).ToArray();
+        _editingId = null;
+    }
+
+    private void DeleteRow(string id)
+    {
+        _data = _data.Where(item => item.Id != id).ToArray();
+        if (_editingId == id)
+        {
+            _editingId = null;
+        }
+    }
+
+    private sealed record ItemData(string Id, string Age, string Address)
+    {
+        public string Name { get; set; }
+    }
 }

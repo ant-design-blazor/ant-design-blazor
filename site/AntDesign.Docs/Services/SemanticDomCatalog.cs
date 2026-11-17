@@ -35,4 +35,5 @@ public static class SemanticDomCatalog
             ? node with { Description = description }
             : node).ToArray();
     }
+
 }

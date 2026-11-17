@@ -1,0 +1,3 @@
+[submodule "tools/dim-sum"]
+	path = tools/dim-sum
+	url = https://github.com/ElderJames/dim-sum.git

@@ -308,6 +308,8 @@ namespace AntDesign
             public static string BindTableScroll => $"{FUNC_PREFIX}bindTableScroll";
             public static string UnbindTableScroll => $"{FUNC_PREFIX}unbindTableScroll";
             public static string ScrollToVirtualIndex => $"{FUNC_PREFIX}scrollToVirtualIndex";
+            public static string BindVirtualWindow => $"{FUNC_PREFIX}bindVirtualWindow";
+            public static string UnbindVirtualWindow => $"{FUNC_PREFIX}unbindVirtualWindow";
         }
 
         public static class UploadComponentHelper

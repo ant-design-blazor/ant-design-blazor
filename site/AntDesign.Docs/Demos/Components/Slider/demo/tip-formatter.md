@@ -6,7 +6,7 @@ title:
 ---
 
 ## zh-CN
-使用 `TipFormatter` 可以格式化 `Tooltip` 的内容，设置为空则隐藏 `Tooltip`。
+使用 `TipFormatter` 可以格式化 `Tooltip` 的内容，设置 `HasTooltip="false"` 可隐藏提示框。
 
 ## en-US
-Use `TipFormatter` to format the tooltip content. Set it to null to hide the tooltip.
+Use `TipFormatter` to format the tooltip content. Set `HasTooltip` to `false` to hide the tooltip.

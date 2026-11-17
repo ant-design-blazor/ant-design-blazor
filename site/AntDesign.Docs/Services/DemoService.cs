@@ -29,16 +29,31 @@ namespace AntDesign.Docs.Services
             _baseUrl = _navigationManager.ToAbsoluteUri(_navigationManager.BaseUri);
         }
 
-        public Task<DemoComponent> GetComponentAsync(string componentName) =>
-            Task.FromResult(GeneratedDocsMetadata.GetComponent(CurrentLanguage, componentName));
+        public Task<DemoComponent> GetComponentAsync(string componentName)
+        {
+            var component = GeneratedDemoIndex.GetComponents(CurrentLanguage).FirstOrDefault(item =>
+                string.Equals($"{item.Category}/{item.Title}", componentName, StringComparison.OrdinalIgnoreCase));
+            return Task.FromResult(component);
+        }
 
-        public Task<DemoMenuItem[]> GetMenuAsync() => Task.FromResult(GeneratedDocsMetadata.GetMenu(CurrentLanguage));
+        public Task<DemoMenuItem[]> GetMenuAsync() => Task.FromResult((CurrentLanguage == "zh-CN" ? Menuzh_CN.Data : Menuen_US.Data).ToArray());
+
+        public static string GetLocalizedUrl(string language, string url)
+        {
+            var path = (url ?? string.Empty).TrimStart('/');
+            if (path.StartsWith("en-US/", StringComparison.OrdinalIgnoreCase)) path = path[6..];
+            else if (path.StartsWith("zh-CN/", StringComparison.OrdinalIgnoreCase)) path = path[6..];
+            return $"/{language}/{path}";
+        }
 
         public async ValueTask<DemoMenuItem[]> GetCurrentMenuItems()
         {
             var menuItems = await GetMenuAsync();
             var currentSubmenuUrl = GetCurrentSubMenuUrl();
-            return menuItems.FirstOrDefault(x => x.Url == currentSubmenuUrl)?.Children ?? Array.Empty<DemoMenuItem>();
+            var currentPrefix = $"/{CurrentLanguage}/{currentSubmenuUrl}";
+            return menuItems.FirstOrDefault(x => x.Url.StartsWith(currentPrefix, StringComparison.OrdinalIgnoreCase)
+                || (x.Children ?? Array.Empty<DemoMenuItem>()).Any(child => child.Url.StartsWith(currentPrefix, StringComparison.OrdinalIgnoreCase)))?.Children
+                ?? Array.Empty<DemoMenuItem>();
         }
 
         public string GetCurrentSubMenuUrl()
@@ -48,9 +63,16 @@ namespace AntDesign.Docs.Services
             return string.IsNullOrEmpty(originalUrl) ? "/" : originalUrl.Split('/')[0];
         }
 
-        public Type GetShowCase(string type)
+        public DemoItem GetDemo(string componentId)
         {
-            return GeneratedDocsMetadata.GetDemoType(type) ?? typeof(Template);
+            foreach (var component in GeneratedDemoIndex.GetComponents(CurrentLanguage))
+            {
+                var demo = component.DemoList?.FirstOrDefault(item =>
+                    string.Equals($"components-{component.Title.ToLowerInvariant()}-demo-{item.Name}", componentId, StringComparison.Ordinal));
+                if (demo == null) continue;
+                return demo;
+            }
+            return null;
         }
 
         public Task<DemoMenuItem[]> GetPrevNextMenu(string type, string currentTitle)
@@ -59,22 +81,24 @@ namespace AntDesign.Docs.Services
 
             if (type.ToLowerInvariant() == "docs")
             {
-                items = GeneratedDocsMetadata.GetDocsMenu(CurrentLanguage).OrderBy(x => x.Order).ToArray();
-                currentTitle = $"docs/{currentTitle}";
+                items = GetMenuAsync().Result.FirstOrDefault(x => x.Title == (CurrentLanguage == "zh-CN" ? "文档" : "Docs"))?.Children
+                    ?.OrderBy(x => x.Order).ToArray() ?? Array.Empty<DemoMenuItem>();
+                currentTitle = $"/docs/{currentTitle}";
             }
             else
             {
-                items = GeneratedDocsMetadata.GetDemoMenu(CurrentLanguage)
-                    .OrderBy(x => x.Order)
+                items = GetMenuAsync().Result
+                    .Where(x => x.Title != (CurrentLanguage == "zh-CN" ? "文档" : "Docs"))
                     .SelectMany(x => x.Children ?? Array.Empty<DemoMenuItem>())
-                    .ToArray();
+                    .SelectMany(x => x.Children ?? new[] { x })
+                    .OrderBy(x => x.Order).ToArray();
 
-                currentTitle = $"components/{currentTitle}";
+                currentTitle = $"/components/{currentTitle}";
             }
 
             for (var i = 0; i < items.Length; i++)
             {
-                if (currentTitle.Equals(items[i].Url, StringComparison.InvariantCultureIgnoreCase))
+                if (items[i].Url.EndsWith(currentTitle, StringComparison.InvariantCultureIgnoreCase))
                 {
                     var prev = i == 0 ? null : items[i - 1];
                     var next = i == items.Length - 1 ? null : items[i + 1];

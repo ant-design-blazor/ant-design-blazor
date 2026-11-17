@@ -54,7 +54,7 @@
     <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="3.1.0" />
   </ItemGroup>
 
-  <!-- Include generated data files (from AntDesign.Docs.Build.CLI) in the package and copy to output -->
+  <!-- Include checked-in fallback catalogs in the package and copy to output -->
   <ItemGroup>
     <Content Include="data\**\*.json">
       <Pack>true</Pack>

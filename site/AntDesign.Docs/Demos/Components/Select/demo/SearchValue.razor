@@ -1,0 +1,28 @@
+<Input @bind-Value="_searchValue" BindOnInput Placeholder="Control the search text" Style="width: 240px; margin-bottom: 16px;" />
+<br />
+<Select TItem="SearchOption"
+        TItemValue="string"
+        DataSource="@_options"
+        LabelName="@nameof(SearchOption.Label)"
+        ValueName="@nameof(SearchOption.Value)"
+        ShowSearch="true"
+        @bind-SearchValue="_searchValue"
+        Placeholder="Search is controlled by the input above" />
+<p>Search value: @_searchValue</p>
+
+@code {
+    private string _searchValue = "lu";
+
+    private readonly SearchOption[] _options =
+    [
+        new() { Value = "jack", Label = "Jack" },
+        new() { Value = "lucy", Label = "Lucy" },
+        new() { Value = "tom", Label = "Tom" }
+    ];
+
+    private sealed class SearchOption
+    {
+        public string Value { get; init; } = string.Empty;
+        public string Label { get; init; } = string.Empty;
+    }
+}

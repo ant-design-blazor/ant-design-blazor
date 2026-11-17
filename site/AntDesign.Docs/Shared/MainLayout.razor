@@ -62,7 +62,8 @@
         },
         ["mainWrapper"] = new System.Collections.Generic.Dictionary<string, object>
         {
-            ["position"] = "relative", ["padding"] = "0", ["background"] = "var(--ant-color-bg-container, #fff)",
+            ["position"] = "relative", ["padding"] = "32px 0 0", ["background"] = "var(--ant-color-bg-container, #fff)",
+            ["[data-theme='dark'] &"] = new System.Collections.Generic.Dictionary<string, object> { ["background"] = "var(--ant-color-bg-container, #141414)" },
             ["transition"] = "all 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86)",
             ["& .docs-main-content"] = new System.Collections.Generic.Dictionary<string, object> { ["minWidth"] = 0 },
             ["& .main-container"] = new System.Collections.Generic.Dictionary<string, object>

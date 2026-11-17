@@ -23,8 +23,12 @@ public class App : ComponentBase
     [Parameter] public string RootClassName { get; set; }
     /// <summary>Inline style for the root element.</summary>
     [Parameter] public string Style { get; set; }
-    /// <summary>HTML element name used for the root element.</summary>
-    [Parameter] public string Component { get; set; } = "div";
+    /// <summary>HTML element name used for the root element; set to false to render no root element.</summary>
+    [Parameter] public object Component { get; set; } = "div";
+    /// <summary>Default message configuration for the application.</summary>
+    [Parameter] public MessageGlobalConfig Message { get; set; }
+    /// <summary>Default notification configuration for the application.</summary>
+    [Parameter] public NotificationGlobalConfig Notification { get; set; }
     /// <summary>Content rendered inside the application root and its cascaded context.</summary>
     [Parameter] public RenderFragment ChildContent { get; set; }
     [Parameter(CaptureUnmatchedValues = true)] public IReadOnlyDictionary<string, object> AdditionalAttributes { get; set; }
@@ -34,6 +38,19 @@ public class App : ComponentBase
     protected override void OnInitialized()
     {
         _appContext = new AntDesignAppContext(MessageService, NotificationService, ModalService);
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (Message != null)
+        {
+            MessageService.Config(Message);
+        }
+
+        if (Notification != null)
+        {
+            NotificationService.Config(Notification);
+        }
     }
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
@@ -47,7 +64,14 @@ public class App : ComponentBase
 
     private void RenderRoot(RenderTreeBuilder builder)
     {
-        builder.OpenElement(0, string.IsNullOrWhiteSpace(Component) ? "div" : Component);
+        if (Component is bool renderElement && !renderElement)
+        {
+            builder.AddContent(0, ChildContent);
+            return;
+        }
+
+        var component = Component as string;
+        builder.OpenElement(0, string.IsNullOrWhiteSpace(component) ? "div" : component);
         if (AdditionalAttributes != null)
         {
             builder.AddMultipleAttributes(1, AdditionalAttributes);

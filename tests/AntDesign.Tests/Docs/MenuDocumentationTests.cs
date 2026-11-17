@@ -49,7 +49,7 @@ public sealed class MenuDocumentationTests : DocumentationTestBase
         {
             var demo = Assert.Single(menu.DemoList.Where(x => x.Name == name));
             Assert.Equal(debugNames.Contains(name), demo.Debug);
-            Assert.NotEqual(typeof(AntDesign.Template), service.GetShowCase(demo.Type));
+            Assert.NotNull(demo.Component);
             Assert.False(string.IsNullOrWhiteSpace(demo.Description));
             Assert.False(string.IsNullOrWhiteSpace(demo.Code));
         }

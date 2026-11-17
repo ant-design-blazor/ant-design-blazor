@@ -3,8 +3,8 @@
 <Table TItem="Contact" DataSource="data" RowKey="record => record.Key" RowExpandable="@((record) => record.Data.Name != "Not Expandable")">
     <ColumnDefinitions>
         <PropertyColumn Property="record => record.Name" Title="Name" />
-    <PropertyColumn Property="record => record.Age" Title="Age" />
-    <PropertyColumn Property="record => record.Address" Title="Address" />
+        <PropertyColumn Property="record => record.Age" Title="Age" />
+        <PropertyColumn Property="record => record.Address" Title="Address" />
         <ActionColumn Title="Action">
             <a>Delete</a>
         </ActionColumn>

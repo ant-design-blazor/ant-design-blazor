@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
@@ -21,7 +22,7 @@ namespace AntDesign
     </list>
     </summary>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.Other, "https://gw.alipayobjects.com/zos/alicdn/tJZ5jbTwX/BackTop.svg", Title = "BackTop", SubTitle = "回到顶部")]
+    [Obsolete("Use FloatButtonBackTop, the Blazor equivalent of React's FloatButton.BackTop.")]
     public partial class BackTop : AntDomComponentBase
     {
         /// <summary>

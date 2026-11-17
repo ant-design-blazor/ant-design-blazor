@@ -7,7 +7,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/rrwbSt3FQ/Icon.svg
 
 Semantic vector graphics.
 
-## How to use
+## How to use {#how-to-use}
 
 Install `AntDesign` as usual. Its NuGet dependency supplies the generated v6 icon catalog from `AntDesign.Icons`; no separate SVG files or icon-font stylesheet need to be copied into the application.
 
@@ -32,9 +32,10 @@ The five examples corresponding to React v6 are Basic, Two-tone icon and colorfu
 | Height | SVG height | string | `1em` |
 | IconFont | Icon-font symbol name, used by `IconFont` | string | - |
 | OnClick | Click callback | `EventCallback<MouseEventArgs>` | - |
+| OnKeyDown | Key down callback for interactive icons | `EventCallback<KeyboardEventArgs>` | - |
 | Role | SVG wrapper role; set to an empty string to hide it from assistive technology | string | `img` |
 | Rotate | Rotate by n degrees | int | `0` |
-| Spin | Rotate the icon with animation | bool | false |
+| Spin | Whether to rotate the icon with animation | bool | false |
 | StopPropagation | Stop click event propagation | bool | false |
 | Style | Inline CSS styles, such as `font-size` and `color` | string | - |
 | TabIndex | `tabindex` value for the wrapper | string | - |
@@ -52,6 +53,7 @@ The five examples corresponding to React v6 are Basic, Two-tone icon and colorfu
 | --- | --- | --- | --- |
 | Type | Symbol name, updated when the parameter changes | string | - |
 | ScriptUrl | One JavaScript resource or an ordered array; loaded and cached like React's `createFromIconfontCN` | `OneOf<string, string[]>` | - |
+| ExtraCommonProps | Additional attributes applied to the SVG symbol, such as `aria-label` or `data-*` | `IDictionary<string, object>` | - |
 
 ## Design Token
 

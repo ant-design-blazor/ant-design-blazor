@@ -15,6 +15,195 @@ export class tableHelper {
     holderRef.scrollTo({ top: targetTop, behavior: 'auto' });
   }
 
+  static bindVirtualWindow(holderRef, dotNetRef, itemCount, itemHeight, startIndex, endIndex) {
+    if (!holderRef || !dotNetRef || !Number.isFinite(itemCount) || !Number.isFinite(itemHeight) || itemHeight <= 0) {
+      return;
+    }
+
+    let binding = holderRef.virtualWindowBinding;
+    if (!binding) {
+      binding = {
+        dotNetRef,
+        itemCount,
+        itemHeight,
+        startIndex,
+        endIndex,
+        requestSequence: 0,
+        pendingKey: null,
+        scrollbarTimer: null,
+        touchStart: null,
+        updateWindow: null,
+        onWheel: null,
+        onTouchStart: null,
+        onTouchMove: null,
+        onTouchEnd: null,
+        onScrollbarPointerDown: null,
+        onScrollbarPointerMove: null,
+        onScrollbarPointerUp: null,
+        scrollbarDrag: null
+      };
+
+      binding.updateWindow = event => {
+        tableHelper.updateVirtualScrollbars(holderRef, binding, Boolean(event));
+        const visibleStart = Math.max(0, Math.floor(holderRef.scrollTop / binding.itemHeight));
+        const visibleEnd = Math.min(binding.itemCount, Math.ceil((holderRef.scrollTop + holderRef.clientHeight) / binding.itemHeight));
+        if (visibleStart >= binding.startIndex && visibleEnd <= binding.endIndex) {
+          return;
+        }
+
+        const nextStart = visibleStart;
+        const nextEnd = Math.min(binding.itemCount, Math.max(nextStart + 1, visibleEnd + 2));
+        const key = `${nextStart}:${nextEnd}`;
+        if (key === binding.pendingKey || (nextStart === binding.startIndex && nextEnd === binding.endIndex)) {
+          return;
+        }
+
+        binding.pendingKey = key;
+        const sequence = ++binding.requestSequence;
+        binding.dotNetRef.invokeMethodAsync('OnVirtualWindowChanged', nextStart, nextEnd, sequence)
+          .catch(() => {
+            if (binding.pendingKey === key) binding.pendingKey = null;
+          });
+      };
+
+      binding.onWheel = event => {
+        const deltaX = event.shiftKey && !event.deltaX ? event.deltaY : event.deltaX;
+        const nextLeft = holderRef.scrollLeft + deltaX;
+        const nextTop = holderRef.scrollTop + event.deltaY;
+        const canScrollX = nextLeft !== holderRef.scrollLeft;
+        const canScrollY = nextTop !== holderRef.scrollTop;
+        if (canScrollX) holderRef.scrollLeft = nextLeft;
+        if (canScrollY) holderRef.scrollTop = nextTop;
+        if (canScrollX || canScrollY) event.preventDefault();
+      };
+
+      binding.onTouchStart = event => {
+        const touch = event.touches?.[0];
+        if (touch) binding.touchStart = { x: touch.clientX, y: touch.clientY, left: holderRef.scrollLeft, top: holderRef.scrollTop };
+      };
+      binding.onTouchMove = event => {
+        const touch = event.touches?.[0];
+        if (!touch || !binding.touchStart) return;
+        const nextLeft = binding.touchStart.left + binding.touchStart.x - touch.clientX;
+        const nextTop = binding.touchStart.top + binding.touchStart.y - touch.clientY;
+        const canScrollX = nextLeft !== holderRef.scrollLeft;
+        const canScrollY = nextTop !== holderRef.scrollTop;
+        if (canScrollX) holderRef.scrollLeft = nextLeft;
+        if (canScrollY) holderRef.scrollTop = nextTop;
+        if (canScrollX || canScrollY) event.preventDefault();
+      };
+      binding.onTouchEnd = () => { binding.touchStart = null; };
+
+      binding.onScrollbarPointerDown = event => {
+        const thumb = event.target?.closest('.ant-table-tbody-virtual-scrollbar-thumb');
+        const track = thumb?.parentElement;
+        if (!thumb || !track) return;
+        const horizontal = track.classList.contains('ant-table-tbody-virtual-scrollbar-horizontal');
+        const bounds = track.getBoundingClientRect();
+        binding.scrollbarDrag = {
+          horizontal,
+          pointer: horizontal ? event.clientX : event.clientY,
+          scroll: horizontal ? holderRef.scrollLeft : holderRef.scrollTop,
+          trackSize: horizontal ? bounds.width : bounds.height,
+          thumbSize: horizontal ? thumb.getBoundingClientRect().width : thumb.getBoundingClientRect().height,
+          thumb
+        };
+        thumb.classList.add('ant-table-tbody-virtual-scrollbar-thumb-moving');
+        document.addEventListener('pointermove', binding.onScrollbarPointerMove, { passive: true });
+        document.addEventListener('pointerup', binding.onScrollbarPointerUp, { passive: true });
+        document.addEventListener('pointercancel', binding.onScrollbarPointerUp, { passive: true });
+        event.preventDefault();
+      };
+      binding.onScrollbarPointerMove = event => {
+        const drag = binding.scrollbarDrag;
+        if (!drag) return;
+        const pointer = drag.horizontal ? event.clientX : event.clientY;
+        const trackRange = Math.max(1, drag.trackSize - drag.thumbSize);
+        const scrollRange = drag.horizontal
+          ? Math.max(0, (holderRef.querySelector('.ant-table-tbody-virtual-holder-inner')?.scrollWidth || holderRef.clientWidth) - holderRef.clientWidth)
+          : Math.max(0, holderRef.scrollHeight - holderRef.clientHeight);
+        const nextScroll = drag.scroll + (pointer - drag.pointer) / trackRange * scrollRange;
+        if (drag.horizontal) holderRef.scrollLeft = nextScroll;
+        else holderRef.scrollTop = nextScroll;
+      };
+      binding.onScrollbarPointerUp = () => {
+        binding.scrollbarDrag?.thumb.classList.remove('ant-table-tbody-virtual-scrollbar-thumb-moving');
+        binding.scrollbarDrag = null;
+        document.removeEventListener('pointermove', binding.onScrollbarPointerMove);
+        document.removeEventListener('pointerup', binding.onScrollbarPointerUp);
+        document.removeEventListener('pointercancel', binding.onScrollbarPointerUp);
+      };
+
+      holderRef.addEventListener('scroll', binding.updateWindow, { passive: true });
+      holderRef.addEventListener('wheel', binding.onWheel, { passive: false });
+      holderRef.addEventListener('touchstart', binding.onTouchStart, { passive: true });
+      holderRef.addEventListener('touchmove', binding.onTouchMove, { passive: false });
+      holderRef.addEventListener('touchend', binding.onTouchEnd, { passive: true });
+      holderRef.parentElement?.addEventListener('pointerdown', binding.onScrollbarPointerDown);
+      holderRef.virtualWindowBinding = binding;
+    }
+
+    binding.dotNetRef = dotNetRef;
+    binding.itemCount = itemCount;
+    binding.itemHeight = itemHeight;
+    binding.startIndex = startIndex;
+    binding.endIndex = endIndex;
+    binding.pendingKey = null;
+    tableHelper.updateVirtualScrollbars(holderRef, binding, false);
+    binding.updateWindow();
+  }
+
+  static updateVirtualScrollbars(holderRef, binding, showVertical) {
+    const wrapper = holderRef?.parentElement;
+    const vertical = wrapper?.querySelector('.ant-table-tbody-virtual-scrollbar-vertical');
+    const horizontal = wrapper?.querySelector('.ant-table-tbody-virtual-scrollbar-horizontal');
+    const inner = holderRef?.querySelector('.ant-table-tbody-virtual-holder-inner');
+
+    if (vertical) {
+      const viewport = holderRef.clientHeight;
+      const range = Math.max(holderRef.scrollHeight, binding.itemCount * binding.itemHeight);
+      const thumbSize = Math.floor(Math.max(20, viewport * viewport / Math.max(1, range)));
+      const thumbRange = Math.max(0, viewport - thumbSize);
+      const scrollRange = Math.max(1, range - viewport);
+      const thumbTop = Math.round(holderRef.scrollTop / scrollRange * thumbRange * 10000) / 10000;
+      const thumb = vertical.firstElementChild as HTMLElement;
+      thumb.style.height = `${thumbSize}px`;
+      thumb.style.top = `${thumbTop}px`;
+
+      if (showVertical) {
+        vertical.classList.add('ant-table-tbody-virtual-scrollbar-visible');
+        clearTimeout(binding.scrollbarTimer);
+        binding.scrollbarTimer = setTimeout(() => vertical.classList.remove('ant-table-tbody-virtual-scrollbar-visible'), 3000);
+      }
+    }
+
+    if (horizontal && inner) {
+      const viewport = holderRef.clientWidth;
+      const range = Math.max(viewport, inner.scrollWidth);
+      const thumbSize = Math.floor(Math.max(20, viewport * viewport / Math.max(1, range)));
+      const thumbRange = Math.max(0, viewport - thumbSize);
+      const scrollRange = Math.max(1, range - viewport);
+      const thumbLeft = Math.round(holderRef.scrollLeft / scrollRange * thumbRange * 10000) / 10000;
+      const thumb = horizontal.firstElementChild as HTMLElement;
+      thumb.style.width = `${thumbSize}px`;
+      thumb.style.left = `${thumbLeft}px`;
+    }
+  }
+
+  static unbindVirtualWindow(holderRef) {
+    const binding = holderRef?.virtualWindowBinding;
+    if (!binding) return;
+    holderRef.removeEventListener('scroll', binding.updateWindow);
+    holderRef.removeEventListener('wheel', binding.onWheel);
+    holderRef.removeEventListener('touchstart', binding.onTouchStart);
+    holderRef.removeEventListener('touchmove', binding.onTouchMove);
+    holderRef.removeEventListener('touchend', binding.onTouchEnd);
+    holderRef.parentElement?.removeEventListener('pointerdown', binding.onScrollbarPointerDown);
+    binding.onScrollbarPointerUp();
+    clearTimeout(binding.scrollbarTimer);
+    delete holderRef.virtualWindowBinding;
+  }
+
   static syncVirtualRowSpanOverlays(bodyRef) {
     const inner = bodyRef?.querySelector('.ant-table-tbody-virtual-holder-inner') as HTMLElement;
     if (!inner) {
@@ -348,16 +537,90 @@ export class tableHelper {
         if (innerHolder && virtualContent) {
           const contentHeight = Math.ceil(innerHolder.scrollHeight);
           const contentHeightValue = `${contentHeight}px`;
-          if (contentHeight > 0 && virtualContent.style.height !== contentHeightValue) {
+          const currentContentHeight = Number.parseFloat(virtualContent.style.height);
+          if (contentHeight > 0 && (!Number.isFinite(currentContentHeight) || contentHeight > currentContentHeight)) {
             virtualContent.style.height = contentHeightValue;
           }
         }
 
-        const tableWidth = headerTable.getBoundingClientRect().width;
-        if (!tableWidth) return;
+        const measuredTableWidth = headerTable.getBoundingClientRect().width;
+        if (!measuredTableWidth) return;
+        const containerWidth = headerRef.parentElement?.getBoundingClientRect().width || measuredTableWidth;
+        const tableWidth = !scrollX ? Math.max(containerWidth, 1) : measuredTableWidth;
         const widthValue = `${Math.round(tableWidth * 1000) / 1000}px`;
+        if (!scrollX && headerTable.style.width !== widthValue) {
+          headerTable.style.width = widthValue;
+        }
         const columnCount = Math.min(headerColumns.length, headerCells.length);
-        const columnWidths = Array.from({ length: columnCount }, (_, index) => headerColumns[index].getBoundingClientRect().width);
+        let columnWidths;
+        if (!scrollX) {
+          // rc-table's virtual table supplies x=1 when scroll.x is omitted.
+          // useWidthColumns then fills unconfigured columns from the available
+          // container width: floor each average width and give the remainder
+          // to the final column. Preserve the widths that were present before
+          // this helper started assigning measured widths.
+          if (!bodyRef.virtualInitialHeaderColumnWidths) {
+            bodyRef.virtualInitialHeaderColumnWidths = new WeakMap();
+          }
+          const configuredWidths = [];
+          for (let index = 0; index < headerColumns.length; index++) {
+            const column = headerColumns[index];
+            if (!bodyRef.virtualInitialHeaderColumnWidths.has(column)) {
+              bodyRef.virtualInitialHeaderColumnWidths.set(column, column.style.width);
+            }
+            configuredWidths.push(bodyRef.virtualInitialHeaderColumnWidths.get(column));
+          }
+          let totalWidth = 0;
+          let missingWidthCount = 0;
+          const parseColumnWidth = value => {
+            if (!value) return null;
+            const normalized = value.trim();
+            if (normalized.endsWith('%')) {
+              const percentage = Number.parseFloat(normalized);
+              return Number.isFinite(percentage) ? tableWidth * percentage / 100 : null;
+            }
+            const numericWidth = Number.parseFloat(normalized);
+            return Number.isFinite(numericWidth) ? numericWidth : null;
+          };
+          const widths = Array.from({ length: columnCount }, (_, index) => {
+            const configuredWidth = parseColumnWidth(configuredWidths[index]);
+            if (configuredWidth != null && configuredWidth > 0) {
+              totalWidth += configuredWidth;
+              return configuredWidth;
+            }
+            missingWidthCount += 1;
+            return null;
+          });
+          const maxFitWidth = Math.max(tableWidth, 1);
+          let remainingWidth = Math.max(maxFitWidth - totalWidth, missingWidthCount);
+          let remainingCount = missingWidthCount;
+          const averageWidth = missingWidthCount ? remainingWidth / missingWidthCount : 0;
+          let realTotal = 0;
+          columnWidths = widths.map(width => {
+            const resolvedWidth = width != null
+              ? width
+              : remainingCount === 1 ? remainingWidth : Math.floor(averageWidth);
+            if (width == null) {
+              remainingWidth -= Math.floor(averageWidth);
+              remainingCount -= 1;
+            }
+            realTotal += resolvedWidth;
+            return resolvedWidth;
+          });
+          if (realTotal < maxFitWidth && realTotal > 0) {
+            const scale = maxFitWidth / realTotal;
+            remainingWidth = maxFitWidth;
+            columnWidths = columnWidths.map((width, index) => {
+              const scaledWidth = index === columnWidths.length - 1
+                ? remainingWidth
+                : Math.floor(width * scale);
+              remainingWidth -= scaledWidth;
+              return scaledWidth;
+            });
+          }
+        } else {
+          columnWidths = Array.from({ length: columnCount }, (_, index) => headerColumns[index].getBoundingClientRect().width);
+        }
         const contentWidth = columnWidths.reduce((total, width) => total + width, 0);
 
         columnWidths.forEach((width, index) => {

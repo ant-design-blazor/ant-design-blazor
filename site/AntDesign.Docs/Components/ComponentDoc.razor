@@ -1,0 +1,13 @@
+@namespace AntDesign.Docs.Components
+@using AntDesign.Docs.Pages
+@using AntDesign.Docs
+@inject NavigationManager Navigation
+
+<Components Locale="@Locale" Name="@ComponentName" GeneratedComponent="@DemoComponent" />
+
+@code {
+    [Parameter] public DemoComponent DemoComponent { get; set; }
+
+    private string Locale => Navigation.ToBaseRelativePath(Navigation.Uri).Split('/', StringSplitOptions.RemoveEmptyEntries).FirstOrDefault() ?? "en-US";
+    private string ComponentName => $"{DemoComponent?.Category}/{DemoComponent?.Title}";
+}

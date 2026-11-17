@@ -1,0 +1,168 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "ant-design/ant-design",
+    "revision": "599b251da933709d7b25fc9e9018ed7f4c093b96",
+    "component": "Select"
+  },
+  "config": {
+    "timeoutMs": 20000,
+    "viewport": {
+      "width": 1280,
+      "height": 900,
+      "deviceScaleFactor": 1
+    },
+    "comparisonPolicy": {
+      "normalization": {
+        "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_[rR]_[a-zA-Z0-9_-]+)$",
+        "removeAttributes": [
+          "_bl_*"
+        ],
+        "removeClassPatterns": [
+          "^css-dev-only-do-not-override-",
+          "^css-var-_[rR]_",
+          "^css-[a-zA-Z0-9]+$"
+        ],
+        "removeCommentMarkers": [
+          "<!--!-->"
+        ]
+      }
+    }
+  },
+  "groups": [
+    {
+      "id": "select-option-render-popup",
+      "component": "Select",
+      "captureBlazorBeforeReact": true,
+      "comparisonPolicy": {
+        "normalization": {
+          "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_[rR]_[a-zA-Z0-9_-]+)$",
+          "removeAttributes": [
+            "_bl_*"
+          ],
+          "removeClassPatterns": [
+            "^css-dev-only-do-not-override-",
+            "^css-var-_[rR]_",
+            "^css-[a-zA-Z0-9]+$"
+          ],
+          "removeCommentMarkers": [
+            "<!--!-->"
+          ]
+        },
+        "ignoredSemanticAttributes": {
+          "popup.root": [
+            "style"
+          ]
+        }
+      },
+      "react": {
+        "url": "http://127.0.0.1:8000/components/select?theme=light",
+        "scopeSelector": "#select-demo-option-render .code-box-demo",
+        "rootSelector": "#select-demo-option-render .ant-select",
+        "skeletonSelector": ""
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5011/en-US/components/select?theme=light",
+        "scopeSelector": "#components-select-demo-option-render .code-box-demo",
+        "rootSelector": "#components-select-demo-option-render .ant-select",
+        "skeletonSelector": ""
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "paddingBlock",
+        "paddingInline",
+        "fontSize",
+        "lineHeight",
+        "fontWeight",
+        "color",
+        "backgroundColor",
+        "borderRadius",
+        "boxShadow",
+        "zIndex"
+      ],
+      "semanticNodes": [
+        {
+          "path": "popup.root",
+          "selector": ".ant-select-dropdown:not(.ant-select-dropdown-hidden):not([style*='display: none'])",
+          "portal": true,
+          "portalMatch": "aria-controls",
+          "reactTriggerSelector": "#select-demo-option-render .ant-select",
+          "blazorTriggerSelector": "#components-select-demo-option-render .ant-select",
+          "geometryAnchor": {
+            "mode": "pixel-snap-to-trigger",
+            "verticalOffset": 4
+          },
+          "portalVisible": true,
+          "minimumCount": 1
+        },
+        {
+          "path": "popup.list",
+          "selector": ".ant-select-dropdown-list",
+          "portal": true,
+          "portalParentPath": "popup.root",
+          "geometryParentSelector": ".ant-select-dropdown",
+          "minimumCount": 1
+        },
+        {
+          "path": "popup.option",
+          "selector": ".ant-select-item-option",
+          "portal": true,
+          "portalParentPath": "popup.root",
+          "geometryParentSelector": ".ant-select-dropdown",
+          "minimumCount": 4
+        },
+        {
+          "path": "popup.content",
+          "selector": ".ant-select-item-option-content",
+          "portal": true,
+          "portalParentPath": "popup.root",
+          "geometryParentSelector": ".ant-select-dropdown",
+          "minimumCount": 4
+        },
+        {
+          "path": "popup.state",
+          "selector": ".ant-select-item-option-state",
+          "portal": true,
+          "portalParentPath": "popup.root",
+          "geometryParentSelector": ".ant-select-dropdown",
+          "minimumCount": 1
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "open-option-render-popup",
+          "minimumRoots": 1,
+          "actions": [
+            {
+              "id": "open-popup-visible",
+              "type": "measureClickVisible",
+              "portalMatch": "aria-controls",
+              "reactSelector": "#select-demo-option-render .ant-select input",
+              "blazorSelector": "#components-select-demo-option-render .ant-select input",
+              "reactVisibleSelector": ".ant-select-dropdown:not(.ant-select-dropdown-hidden):not([style*='display: none'])",
+              "blazorVisibleSelector": ".ant-select-dropdown:not(.ant-select-dropdown-hidden):not([style*='display: none'])"
+            },
+            {
+              "type": "waitForSelector",
+              "reactSelector": "#select-demo-option-render .ant-select input[aria-expanded='true']",
+              "blazorSelector": "#components-select-demo-option-render .ant-select input[aria-expanded='true']"
+            },
+            {
+              "type": "focus",
+              "reactSelector": "#select-demo-option-render .ant-select input",
+              "blazorSelector": "#components-select-demo-option-render .ant-select input"
+            },
+            {
+              "type": "wait",
+              "milliseconds": 1200
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

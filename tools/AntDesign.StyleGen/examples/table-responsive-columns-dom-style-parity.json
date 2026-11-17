@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "upstream": { "repository": "ant-design/ant-design", "component": "Table" },
+  "config": {
+    "timeoutMs": 45000,
+    "viewport": { "width": 1280, "height": 900, "deviceScaleFactor": 1 },
+    "colorScheme": "light",
+    "comparisonPolicy": {
+      "normalization": {
+        "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_r_[a-zA-Z0-9_-]+|__runtime-id-\\d+)$",
+        "removeAttributes": ["_bl_*", "id"],
+        "removeClassPatterns": ["^css-dev-only-do-not-override-", "^css-var-_[rR]_", "^css-[a-zA-Z0-9]+$", "^acss-[a-zA-Z0-9_-]+$"],
+        "removeCommentMarkers": ["<!--!-->"],
+        "normalizeStyleAttributes": true,
+        "sortClassTokens": true,
+        "removeInterTagWhitespace": true
+      }
+    }
+  },
+  "groups": [{
+    "id": "table-responsive-columns",
+    "component": "Table",
+    "geometryTolerancePx": 0.5,
+    "computedStylePixelToleranceByProperty": { "width": 0.02, "height": 0.02 },
+    "react": {
+      "url": "http://127.0.0.1:8000/components/table?theme=light#table-demo-responsive",
+      "scopeSelector": "#table-demo-responsive",
+      "rootSelector": ".ant-table-wrapper"
+    },
+    "blazor": {
+      "url": "http://127.0.0.1:5000/en-US/components/table?theme=light#components-table-demo-responsive",
+      "scopeSelector": "#components-table-demo-responsive",
+      "rootSelector": ".ant-table-wrapper"
+    },
+    "styleProperties": ["display", "position", "boxSizing", "width", "height", "paddingBlock", "paddingInline", "marginBlock", "gap", "alignItems", "fontSize", "lineHeight", "fontWeight", "color", "backgroundColor", "borderRadius", "borderTopWidth", "borderBottomWidth"],
+    "semanticNodes": [
+      { "path": "root", "selector": "$root", "minimumCount": 1 },
+      { "path": "table", "selector": ".ant-table", "minimumCount": 1 },
+      { "path": "header.cell", "selector": ".ant-table-thead th", "minimumCount": 1 },
+      { "path": "body.row", "selector": ".ant-table-tbody tr.ant-table-row", "minimumCount": 1 },
+      { "path": "body.cell", "selector": ".ant-table-tbody tr.ant-table-row td.ant-table-cell", "minimumCount": 1 }
+    ],
+    "scenarios": [
+      { "id": "desktop-all-columns", "actions": [{ "type": "wait", "milliseconds": 800 }], "minimumRoots": 1 },
+      { "id": "medium-md-only", "actions": [{ "type": "viewport", "width": 800, "height": 900 }, { "type": "wait", "milliseconds": 800 }], "minimumRoots": 1 },
+      { "id": "narrow-name-only", "actions": [{ "type": "viewport", "width": 600, "height": 900 }, { "type": "wait", "milliseconds": 800 }], "minimumRoots": 1 }
+    ]
+  }]
+}

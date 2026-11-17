@@ -23,13 +23,14 @@ Select component to select value from options.
 | AllowClear | Show clear button. Has no effect if Value type default is also in the list of options, unless used with `ValueOnClear`. | bool | false |  |
 | AutoClearSearchValue | Whether the current search will be cleared on selecting an item. | bool | true |  |
 | AutoFocus | get focus when component mounted                             | boolean        | false         |
-| Bordered | Legacy border toggle. Prefer `Variant` for new code. | bool | true |  |
+| Bordered | **Obsolete:** legacy border toggle retained for backward compatibility. Use `Variant` to choose the selector style. | bool | true |  |
 | BoundaryAdjustMode | `Dropdown` adjustment strategy (when for example browser resize is happening)         | TriggerBoundaryAdjustMode    | TriggerBoundaryAdjustMode.InView         |
 | CustomTagLabelToValue | Converts custom tag (a string) to TItemValue type. | Func<string, TItemValue> | (label) => <br/>    (TItemValue)TypeDescriptor<br/>    .GetConverter(typeof(TItemValue))<br/>    .ConvertFromInvariantString(label) |  |
 | DataSource | The datasource for this component. | IEnumerable&lt;TItem> | - |  |
 | Options | Select options. React-compatible alias for `DataSource`. | IEnumerable&lt;TItem> | - | 6.0.0 |
 | DataSourceEqualityComparer | EqualityComparer that will be used during DataSource change detection. If no comparer set, default comparer will be used that is going to compare only equiality of label & value properties. | IEqualityComparer&lt;TItem> | - |  |
 | DefaultActiveFirstOption | Activates the first item that is not deactivated.  | bool | false |  |
+| DefaultOpen | Whether the dropdown is open on the first render. Use `Open` to control it after initialization. | bool | false | 6.0.0 |
 | DefaultValue | When `Mode = default` - The value is used during initialization and when pressing the Reset button within Forms. | TItemValue | - |  |
 | DefaultValues | When `Mode = multiple` \| `tags` -  The values are used during initialization and when pressing the Reset button within Forms. | IEnumerable&lt;TItemValues> | - |  |
 | Disabled | Whether the Select component is disabled. | bool | false |  |
@@ -42,42 +43,59 @@ Select component to select value from options.
 | PopupRender | Customize dropdown content. React-compatible alias for `DropdownRender`. | RenderFragment&lt;RenderFragment> | - | 6.0.0 |
 | SearchDebounceMilliseconds | Delays the processing of the search input event until the user has stopped typing for a predetermined amount of time | int        |  250         |
 | EnableSearch | Enables search in single mode. Multiple and tags modes are searchable by default, matching Ant Design v6. | bool | false |  |
-| ShowSearch | Whether Select is searchable. React-compatible boolean form; when omitted, single mode defaults off and multiple/tags default on. | bool? | mode-based | 6.0.0 |
+| ShowSearch | Enables search with a boolean or config object. Config supports `OptionFilterProp` (string or string[]) and `FilterOption`; when omitted, search follows the Select mode defaults. | OneOf&lt;bool?, SelectShowSearchOptions> | mode-based | 6.0.0 |
 | FilterExpression | Customize the logic to filter when searching. | Func<SelectOptionItem<TItemValue, TItem>, string, bool> | (item, searchValue) => item.Label.Contains(searchValue, StringComparison.InvariantCultureIgnoreCase) |  |
+| FilterOption | Whether to filter options by the search text. Set to false to keep all options visible; use `FilterExpression` to customize matching. | bool? | true | 6.0.0 |
+| FieldNames | Maps custom option fields for `Label`, `Value`, nested `Options`, and group `GroupLabel`. | SelectFieldNames | `{ label: "label", value: "value", options: "options", groupLabel: "label" }` | 6.0.0 |
+| OptionFilterProp | **Obsolete:** legacy top-level alias; configure this inside `ShowSearch` to match React v6.1. Multiple fields use OR matching. | OneOf&lt;string, string[]> | value | 6.0.0 |
+| FilterSort | Sorts filtered options. The third argument is the current search text. | Func&lt;SelectOptionItem&lt;TItemValue, TItem&gt;, SelectOptionItem&lt;TItemValue, TItem&gt;, string, int&gt; | - | 6.0.0 |
 | GroupName | The name of the property to be used as a group indicator. If the value is set, the entries are displayed in groups. Use additional `SortByGroup` and `SortByLabel`. | string | - |  |
 | HideSelected | Hides the selected items when they are selected. | bool | false |  |
 | IgnoreItemChanges | Is used to increase the speed. If you expect changes to the label name, group name or disabled indicator, disable this property. | bool | true |  |
 | ItemTemplate | Is used to customize the item style. | RenderFragment&lt;TItem> |  |  |
+| OptionRender | Customize how each dropdown option is rendered. The template receives the option's source data item. | RenderFragment&lt;TItem> | - | 6.0.0 |
 | LabelInValue | Whether to embed label in value, turn the format of value from `TItemValue` to string (JSON) e.g. { "value": `TItemValue`, "label": "`Label value`" } | bool | false |  |
 | LabelName | The name of the property to be used for the label. | string |  |  |
 | LabelTemplate | Is used to customize the label style. | RenderFragment&lt;TItem> |  |  |
+| LabelRender | Customize the currently selected label. React-compatible name for `LabelTemplate`; the template receives the selected source item. | RenderFragment&lt;TItem> | - | 6.0.0 |
 | LabelProperty | Specifies the label property in the option object. | Func<TItem, string> | - |
 | Loading | Show loading indicator. You have to write the loading logic on your own. | bool | false |  |
 | ListboxStyle | custom listbox styles | string | display: flex; flex-direction: column; |  |
+| ListHeight | Configures the maximum height of the option list. React-compatible alias for `PopupContainerMaxHeight`. | int? | 256 | 6.0.0 |
 | MaxTagCount | Max tag count to show. responsive will cost render performance. | int | `ResponsiveTag.Responsive` | - |  |
 | MaxCount | Maximum number of options that can be selected in multiple or tags mode. | int? | - | 6.0.0 |  |
 | Status | Set validation status to `error` or `warning`; inherits from `FormItem` when omitted. | string | - |  |
 | MaxTagPlaceholder | Placeholder for hidden tags. If used with `ResponsiveTag.Responsive`, implement your own handling logic. | RenderFragment<IEnumerable<TItem>>> | - |  |
 | MaxTagTextLength | Max tag text length (number of characters) to show. | int | - |  |
+| MenuItemSelectedIcon | Custom icon shown for selected options in multiple or tags mode. | RenderFragment | Check icon | 6.0.0 |
 | Mode | Set mode of Select - `default` \| `multiple` \| `tags` | string | default |  |
 | NotFoundContent | Specify content to show when no result matches. | RenderFragment | `Not Found` |  |
 | OnBlur | Called when blur. | Action | - |  |
+| OnClear | React-compatible callback invoked after the clear action. | EventCallback | - | 6.0.0 |
 | OnClearSelected | Called when the user clears the selection. | Action | - |  |
 | OnCreateCustomTag | Called when custom tag is created. | Action | - |  |
 | OnDataSourceChanged | Called when the datasource changes. | Action | - |  |
+| OnDeselect | Called when an option is deselected in multiple or tags mode. Receives the option item. | EventCallback&lt;SelectOptionItem&lt;TItemValue, TItem>> | - | 6.0.0 |
 | OnDropdownVisibleChange | Called when the dropdown visibility changes. | Action | - |  |
 | OnOpenChange | Called when the dropdown open state changes. React-compatible callback name. | EventCallback&lt;bool> | - | 6.0.0 |
 | OnFocus | Called when focus. | Action | - |  |
+| OnInputKeyDown | Called when a key is pressed while the Select input is focused. | EventCallback&lt;KeyboardEventArgs> | - | 6.0.0 |
 | OnMouseEnter | Called when mouse enter. | Action | - |  |
 | OnMouseLeave | Called when mouse leave. | Action | - |  |
+| OnPopupScroll | Called when the dropdown popup scrolls. | EventCallback&lt;EventArgs> | - | 6.0.0 |
 | OnSearch | Callback function that is fired when input changed. | Action&lt;string> | - |  |
+| SearchValue | Controlled search text. Bind with `SearchValueChanged` or `@bind-SearchValue` to synchronize the input and filtering state. | string | - | 6.0.0 |
+| SearchValueChanged | Called when the controlled search text changes. | EventCallback&lt;string> | - | 6.0.0 |
+| OnSelect | Called when an option is selected. Receives the option item, including its value, label, and source data. | EventCallback&lt;SelectOptionItem&lt;TItemValue, TItem>> | - | 6.0.0 |
 | OnSelectedItemChanged | Called when the selected item changes. | Action&lt;TItem> | - |  |
 | OnSelectedItemsChanged | Called when the selected items changes. | Action&lt;IEnumerable&lt;TItem>> | - |  |
 | Open | Controlled open state of dropdown. | bool | false |  |
 | Placeholder | Placeholder of select. | string | - |  |
 | PopupContainerMaxHeight | The maximum height of the popup container. | string | `256px` |  |
+| RemoveIcon | Custom icon used to remove a selected tag. | RenderFragment | Close icon | 6.0.0 |
 | PopupContainerSelector | Use this to fix overlay problems e.g. #area | string | body |  |
 | PrefixIcon | The custom prefix icon. For mode `multiple` and `tags` visible only when no data selected. | RenderFragment | - |  |
+| Prefix | The custom prefix content. React-compatible alias for `PrefixIcon`. | RenderFragment | - | 6.0.0 |
 | SelectOptions | Used for rendering select options manually. | RenderFragment | - |  |
 | ShowArrowIcon | Whether to show the drop-down arrow | bool | true |  |
 | ShowArrow | Whether to show the dropdown arrow. React-compatible alias for `ShowArrowIcon`. | bool | true | 6.0.0 |

@@ -9,6 +9,7 @@
   "app.theme.switch.editor": "主题编辑器",
   "app.theme.switch.aliyun": "阿里云主题",
   "app.header.search": "全文本搜索...",
+  "app.header.menu.theme": "主题",
   "app.header.menu.documentation": "文档",
   "app.header.menu.components": "组件",
   "app.header.menu.spec": "设计",

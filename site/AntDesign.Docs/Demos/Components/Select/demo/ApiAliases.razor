@@ -1,0 +1,34 @@
+<Select TItemValue="string" TItem="string" Mode="SelectMode.Multiple"
+        DefaultValues="@_selected" DefaultOpen ListHeight="128"
+        Style="width: 320px" Placeholder="Select users">
+    <Prefix>
+        <Icon Type="@IconType.Outline.Search" />
+    </Prefix>
+    <MenuItemSelectedIcon>
+        <span aria-hidden="true">✓</span>
+    </MenuItemSelectedIcon>
+    <RemoveIcon>
+        <span aria-hidden="true">×</span>
+    </RemoveIcon>
+    <SelectOptions>
+        @foreach (var name in _names)
+        {
+            <SelectOption TItemValue="string" TItem="string" Value="@name" Label="@name" />
+        }
+    </SelectOptions>
+</Select>
+
+<div style="margin-top: 16px;">
+    <Select TItemValue="string" TItem="string" DataSource="@_names"
+            ShowSearch FilterOption="false" Placeholder="Search without filtering"
+            Style="width: 320px" />
+</div>
+
+@code {
+    private readonly string[] _selected = ["Ada Lovelace", "Grace Hopper"];
+    private readonly string[] _names = [
+        "Ada Lovelace", "Grace Hopper", "Alan Turing", "Margaret Hamilton",
+        "Edsger Dijkstra", "Barbara Liskov", "Donald Knuth", "Frances Allen",
+        "John Backus", "Katherine Johnson", "Radia Perlman", "Ken Thompson"
+    ];
+}

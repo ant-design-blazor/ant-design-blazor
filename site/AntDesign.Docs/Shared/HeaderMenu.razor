@@ -7,12 +7,25 @@
 @if (ShowNavigation)
 {
 <div class="header-navigation">
-    <Menu Mode="@(IsMobile ? MenuMode.Inline : MenuMode.Horizontal)" DisabledOverflow="IsMobile" Id="nav" Class="menu-site">
+    <Menu Mode="@(IsMobile ? MenuMode.Inline : MenuMode.Horizontal)" InlineIndent="24" Accordion="IsMobile" DisabledOverflow="IsMobile" OverflowedIndicator="@ResponsiveOverflowIndicator" Id="nav" Class="menu-site" @bind-OpenKeys="_openMenuKeys">
         @foreach (var item in NavigationItems)
         {
             @RenderNavigationItem(item)
         }
-        @AdditionalMenuItems
+        @if (IsMobile)
+        {
+            <MenuDivider Class="header-additional-item" />
+            <SubMenu Key="header-more" Icon="ellipsis" Title="@Localizer["app.header.menu.more"]">
+                <SubMenu Key="docs-theme" Icon="bg-colors" Title="@Localizer["app.header.menu.theme"]" Class="docs-mobile-theme-submenu">
+                    <DocsThemeSwitch Inline />
+                </SubMenu>
+                @AdditionalMenuItems
+            </SubMenu>
+        }
+        else
+        {
+            @AdditionalMenuItems
+        }
     </Menu>
 </div>
 }
@@ -20,14 +33,36 @@
 {
     <div class="header-desktop-utilities">
         <div class="header-sponsors" aria-label="Sponsors">
-            <a href="https://youmind.com?utm_source=ant-design" target="_blank" rel="noopener noreferrer" aria-label="YouMind"><img src="https://mdn.alipayobjects.com/huamei_vmgq1x/afts/img/A*SXcuQYBZ6oQAAAAAQJAAAAgAeh6VAQ/original" alt="" /></a>
-            <a href="https://tractian.com?utm_source=ant-design" target="_blank" rel="noopener noreferrer" aria-label="TRACTIAN"><img src="https://mdn.alipayobjects.com/huamei_vmgq1x/afts/img/A*Z4-4Q67SG5UAAAAAQLAAAAgAeh6VAQ/original" alt="" /></a>
-            <a href="https://lobehub.com?utm_source=ant-design" target="_blank" rel="noopener noreferrer" aria-label="LobeHub"><img src="https://unpkg.com/%40lobehub/icons-static-svg@1.79.0/icons/lobehub-color.svg" alt="" /></a>
-            <a href="https://coderabbit.ai?utm_source=ant-design" target="_blank" rel="noopener noreferrer" aria-label="CodeRabbit"><img src="https://mdn.alipayobjects.com/huamei_vmgq1x/afts/img/A*yHnhRL4x1DEAAAAAQBAAAAgAeh6VAQ/original" alt="" /></a>
+            @foreach (var sponsor in Sponsors)
+            {
+                <Popover ContentTemplate="@BuildSponsorCard(sponsor)" Trigger="new[] { Trigger.Hover, Trigger.Focus }" Placement="Placement.BottomRight" ArrowPointAtCenter PopupWidthMode="content" PopupMaxWidth="calc(100vw - 48px)" OverlayClassName="header-sponsor-popover">
+                    <Unbound>
+                        <a @ref="context.Current" href="@SponsorUrl(sponsor)" target="_blank" rel="noopener noreferrer" class="header-sponsor-avatar">
+                            <img src="@sponsor.Logo" alt="@sponsor.Name" draggable="false" />
+                        </a>
+                    </Unbound>
+                </Popover>
+            }
         </div>
-        <Button Class="header-button header-version-button" Size="ButtonSize.Small">@VersionLabel</Button>
-        <Button Class="header-button header-lang-button" Size="ButtonSize.Small" OnClick="@(_ => ChangeLanguage(CurrentLanguage == "en-US" ? "zh-CN" : "en-US"))">@(CurrentLanguage == "en-US" ? "中" : "En")</Button>
-        <Button Class="header-button header-direction-button" Size="ButtonSize.Small" OnClick="@(() => ConfigProvider?.ChangeDirection(Direction?.ToUpperInvariant() == "RTL" ? "ltr" : "rtl"))">@(Direction?.ToUpperInvariant() == "RTL" ? "LTR" : "RTL")</Button>
+        <Select TItem="VersionOption" TItemValue="string" DataSource="@VersionOptions"
+                ItemValue="option => option.Url" ItemLabel="option => option.Label"
+                DefaultValue="@CurrentVersionUrl" OnSelectedItemChanged="OnVersionSelected"
+                PopupMatchSelectWidth="false" PopupContainerSelector=".header-desktop-utilities"
+                Size="InputSize.Small" Variant="InputVariant.Filled" Class="header-version-select" />
+        <Tooltip Title="@(CurrentLanguage == "en-US" ? "English / 中文" : "中文 / English")">
+            <Unbound>
+                <Button RefBack="context" Class="header-button header-lang-button" Type="ButtonType.Text" Title="@(CurrentLanguage == "en-US" ? "English / 中文" : "中文 / English")" AriaLabel="@(CurrentLanguage == "en-US" ? "Switch to Chinese" : "Switch to English")" OnClick="@(_ => ChangeLanguage(CurrentLanguage == "en-US" ? "zh-CN" : "en-US"))">
+                    <span class="header-switch-inner @(CurrentLanguage == "zh-CN" ? "is-chinese" : "is-english")" aria-hidden="true"><span class="header-switch-label label-chinese">中</span><span class="header-switch-label label-english">En</span></span>
+                </Button>
+            </Unbound>
+        </Tooltip>
+        <Tooltip Title="@(Direction?.ToUpperInvariant() == "RTL" ? "RTL" : "LTR")">
+            <Unbound>
+                <Button RefBack="context" Class="header-button header-direction-button" Type="ButtonType.Text" AriaLabel="RTL Switch Button" Title="@(Direction?.ToUpperInvariant() == "RTL" ? "RTL" : "LTR")" OnClick="@(() => ConfigProvider?.ChangeDirection(Direction?.ToUpperInvariant() == "RTL" ? "ltr" : "rtl"))">
+                    <svg class="header-direction-icon" viewBox="0 0 20 20" aria-hidden="true"><title>Direction Icon</title><path d="m14.696 11.647.084.073 2 2a.75.75 0 0 1 0 1.06l-2 2a.75.75 0 0 1-1.06-1.06l.72-.72H3.75a.75.75 0 0 1 0-1.5h10.69l-.72-.72a.75.75 0 0 1 .976-1.133ZM6.5 3c.307 0 .582.187.696.471l3 7.5a.75.75 0 0 1-1.392.558L8 9.5H5l-.81 2.03a.75.75 0 0 1-1.393-.559l3-7.5A.75.75 0 0 1 6.5 3Zm8.196 1.147.084.073 2 2a.75.75 0 0 1 0 1.06l-2 2a.75.75 0 0 1-1.06-1.06l.72-.72h-3.69a.75.75 0 0 1 0-1.5h3.69l-.72-.72a.75.75 0 0 1 .976-1.133ZM6.5 5.77l-.892 2.23h1.784L6.5 5.77Z" /></svg>
+                </Button>
+            </Unbound>
+        </Tooltip>
         <DocsThemeSwitch PopupContainerSelector=".header-desktop-utilities" />
         <GithubButton />
     </div>
@@ -37,18 +72,49 @@
 <style>@((MarkupString)_searchStyles.CssText)</style>
 <style>
     #header .header-desktop-utilities { position: relative; }
+    #header .header-navigation{box-sizing:border-box;position:relative}
+    @@media (min-width:1120px){#header .header-navigation{margin-inline-end:12px;padding-inline-end:12px}#header .header-navigation::after{position:absolute;inset-block:16px;inset-inline-end:0;width:1px;background:var(--ant-color-border-secondary,#f0f0f0);content:""}#header #nav>.header-additional-item{display:none}}
+    @@media (max-width:1119.98px){#header .header-navigation{width:auto;min-width:0;flex:1 1 0}#header #nav.ant-menu-horizontal{width:100%}}
     #header .header-sponsors{display:flex;align-items:center;margin-inline:8px 12px}
-    #header .header-sponsors a{display:block;width:26px;height:26px;margin-inline-start:-6px;border:2px solid var(--ant-color-bg-layout,#f5f5f5);border-radius:50%;position:relative;z-index:0}
-    #header .header-sponsors a:first-child{margin-inline-start:0}
-    #header .header-sponsors a:hover{z-index:1}
-    #header .header-sponsors img{display:block;width:22px;height:22px;object-fit:contain;border-radius:50%;background:var(--ant-color-bg-container,#fff);opacity:.7;transition:transform .15s,opacity .2s}
-    #header .header-sponsors a:hover img{transform:translateY(-2px);opacity:1}
-    @@media (min-width:1120px){#header .header-navigation .header-additional-item{display:none}}
-    [data-theme="dark"] #header .header-sponsors a{border-color:var(--ant-color-bg-layout,#000)}
+    #header .header-sponsors .header-sponsor-avatar{display:block;width:26px;height:26px;margin-inline-start:-6px;border:2px solid var(--ant-color-bg-layout,#f5f5f5);border-radius:50%;position:relative;z-index:0}
+    #header .header-sponsors .header-sponsor-avatar:first-child{margin-inline-start:0}
+    #header .header-sponsors .header-sponsor-avatar:hover,#header .header-sponsors .header-sponsor-avatar:focus-visible{z-index:1}
+    #header .header-sponsors img{display:block;width:22px;height:22px;object-fit:contain;border-radius:50%;background:var(--ant-color-bg-container,#fff);opacity:.5;transition:transform .15s,opacity .2s}
+    #header .header-sponsors .header-sponsor-avatar:hover img,#header .header-sponsors .header-sponsor-avatar:focus-visible img{transform:translateY(-2px);opacity:1}
+    .header-sponsor-popover .ant-popover-inner-content{padding:12px}
+    .header-sponsor-card{width:320px;max-width:320px}
+    .header-sponsor-card-body{display:flex;gap:14px;margin-bottom:12px}
+    .header-sponsor-card-logo{box-sizing:border-box;flex:none;width:64px;height:64px;padding:8px;border:1px solid var(--ant-color-border-secondary,#f0f0f0);border-radius:14px;object-fit:contain;background:var(--ant-color-fill-quaternary,rgba(0,0,0,.02))}
+    .header-sponsor-card-info{display:flex;min-width:0;flex-direction:column;justify-content:center;gap:4px}
+    .header-sponsor-card-name{color:var(--ant-color-text,rgba(0,0,0,.88));font-size:15px;font-weight:600;text-decoration:none}
+    .header-sponsor-card-name:hover{color:var(--ant-color-primary,#1677ff)}
+    .header-sponsor-card-description{color:var(--ant-color-text-secondary,rgba(0,0,0,.65));font-size:13px}
+    .header-sponsor-card-footer{display:flex;align-items:center;justify-content:space-between}
+    .header-sponsor-label{display:flex;align-items:center;gap:4px;color:var(--ant-color-text-tertiary,rgba(0,0,0,.45));font-size:12px}
+    .header-sponsor-heart{display:inline-flex;color:#ff4d4f;font-size:12px;line-height:1}
+    .header-sponsor-heart svg{display:block;width:12px;height:12px}
+    .header-sponsor-card-links{display:flex;align-items:center;gap:2px}
+    .header-sponsor-card-links a{display:inline-flex;align-items:center;height:28px;padding-inline:10px;color:var(--ant-color-text-tertiary,rgba(0,0,0,.45));font-size:13px;line-height:28px;text-decoration:none;white-space:nowrap}
+    .header-sponsor-card-links a:hover{color:var(--ant-color-primary,#1677ff)}
+    .header-sponsor-card-links a:last-child{color:var(--ant-color-primary,#1677ff)}
+    @@media (max-width:575.98px){.header-sponsor-popover .header-sponsor-card{max-width:calc(100vw - 48px)}}
+    .docs-header-mobile-popup .ant-popover-inner-content{max-height:calc(100vh - 32px);overflow-y:auto;overscroll-behavior:contain}
+    [data-theme="dark"] #header .header-sponsors .header-sponsor-avatar{border-color:var(--ant-color-bg-layout,#000)}
     [data-theme="dark"] #header .header-sponsors img{background:var(--ant-color-bg-container,#141414);opacity:.9}
-    #header .header-version-button{width:88px;min-width:88px;margin-inline-end:6px}
-    #header .header-lang-button,#header .header-direction-button{width:32px;min-width:32px;padding-inline:0}
-    #header .header-direction-button{font-size:11px}
+    #header .header-version-select{width:88px;min-width:88px;margin-inline-end:6px}
+    #header .header-version-select .ant-select-selector{border:0!important;box-shadow:none!important;background:var(--ant-color-fill-tertiary,#f5f5f5)!important}
+    #header .header-version-select.ant-select-focused .ant-select-selector{box-shadow:0 0 0 2px var(--ant-control-outline,rgba(5,145,255,.1))!important}
+    #header .header-lang-button,#header .header-direction-button{display:inline-flex;align-items:center;justify-content:center;width:32px;min-width:32px;height:32px;padding:0;font-size:14px}
+    #header .header-lang-button,#header .header-direction-button{border-color:transparent!important;box-shadow:none}
+    #header .header-lang-button{width:var(--ant-control-height,32px)}
+    #header .header-switch-inner{position:relative;display:block;width:1.2em;height:1.2em;transition:all var(--ant-motion-duration-mid,.2s)}
+    #header .header-switch-label{position:absolute;font-size:1.2em;line-height:1;border:1px solid var(--ant-color-text,rgba(0,0,0,.88));color:var(--ant-color-text,rgba(0,0,0,.88));white-space:nowrap}
+    #header .header-switch-inner.is-english .label-chinese{inset-inline-end:-5%;bottom:0;transform:scale(.5);transform-origin:100% 100%}
+    #header .header-switch-inner.is-english .label-english{inset-inline-start:-5%;top:0;z-index:1;background:var(--ant-color-text,rgba(0,0,0,.88));color:var(--ant-color-bg-container,#fff);transform:scale(.7);transform-origin:0 0}
+    #header .header-switch-inner.is-chinese .label-chinese{inset-inline-start:-5%;top:0;z-index:1;background:var(--ant-color-text,rgba(0,0,0,.88));color:var(--ant-color-bg-container,#fff);transform:scale(.7);transform-origin:0 0}
+    #header .header-switch-inner.is-chinese .label-english{inset-inline-end:-5%;bottom:0;transform:scale(.5);transform-origin:100% 100%}
+    #header .header-direction-icon{display:block;width:20px;height:20px;fill:currentColor;transform:scaleX(1)}
+    .ant-row-rtl #header .header-direction-icon{transform:scaleX(-1)}
     #header .docs-theme-switch-trigger{width:32px;height:32px;margin:0}
     #header #github-btn{width:32px;height:32px}
     #header #github-btn .gh-btn{display:flex;align-items:center;justify-content:center;width:32px;height:32px;padding:0;background:transparent;border:0}
@@ -60,7 +126,38 @@
     [Parameter] public bool ShowSearch { get; set; }
     [Parameter] public bool ShowNavigation { get; set; } = true;
 
+    private string SponsorUrl(SponsorInfo sponsor) => CurrentLanguage == "zh-CN" ? sponsor.ChineseUrl : sponsor.EnglishUrl;
+
+    private RenderFragment BuildSponsorCard(SponsorInfo sponsor) => @<div class="header-sponsor-card">
+        <div class="header-sponsor-card-body">
+            <img class="header-sponsor-card-logo" src="@sponsor.Logo" alt="@sponsor.Name" draggable="false" />
+            <div class="header-sponsor-card-info">
+                <a class="header-sponsor-card-name" href="@sponsor.OpenCollective" target="_blank" rel="noopener noreferrer" title="@sponsor.Name">@sponsor.Name</a>
+                <span class="header-sponsor-card-description">@(CurrentLanguage == "zh-CN" ? sponsor.ChineseDescription : sponsor.EnglishDescription)</span>
+            </div>
+        </div>
+        <div class="header-sponsor-card-footer">
+            <span class="header-sponsor-label"><span class="header-sponsor-heart" aria-hidden="true"><svg viewBox="0 0 16 16"><path fill="currentColor" d="M8 14s-6-3.6-6-8a3.3 3.3 0 0 1 6-2 3.3 3.3 0 0 1 6 2c0 4.4-6 8-6 8Z" /></svg></span>@(CurrentLanguage == "zh-CN" ? "赞助商" : "Sponsor")</span>
+            <div class="header-sponsor-card-links">
+                <a href="https://opencollective.com/ant-design/contribute/sponsors-218" target="_blank" rel="noopener noreferrer" title="@(CurrentLanguage == "zh-CN" ? "成为赞助商" : "Become a sponsor")">@(CurrentLanguage == "zh-CN" ? "成为赞助商" : "Become a sponsor")</a>
+                <a href="@SponsorUrl(sponsor)" target="_blank" rel="noopener noreferrer" title="@(CurrentLanguage == "zh-CN" ? "访问官网" : "Visit website")">@(CurrentLanguage == "zh-CN" ? "访问官网 →" : "Visit website →")</a>
+            </div>
+        </div>
+    </div>;
+
+    private sealed record SponsorInfo(string Name, string Logo, string EnglishUrl, string ChineseUrl, string OpenCollective, string EnglishDescription, string ChineseDescription);
+
+    private static readonly SponsorInfo[] Sponsors =
+    {
+        new("YouMind", "https://mdn.alipayobjects.com/huamei_vmgq1x/afts/img/A*SXcuQYBZ6oQAAAAAQJAAAAgAeh6VAQ/original", "https://youmind.com?utm_source=ant-design", "https://youmind.com/zh-CN?utm_source=ant-design", "https://opencollective.com/youmind", "The first AI creation studio where learning meets writing.", "YouMind 是学习与创作交汇的地方。在 YouMind 中，你可以与 AI 智能体一起学习、思考和创作。一切自然流动，与你共同成长。"),
+        new("TRACTIAN", "https://mdn.alipayobjects.com/huamei_vmgq1x/afts/img/A*Z4-4Q67SG5UAAAAAQLAAAAgAeh6VAQ/original", "https://tractian.com?utm_source=ant-design", "https://tractian.com?utm_source=ant-design", "https://opencollective.com/tractian", "Industrial AI platform for predictive maintenance and asset management.", "工业 AI 平台，专注于预测性维护与资产管理。"),
+        new("LobeHub", "https://unpkg.com/%40lobehub/icons-static-svg@1.79.0/icons/lobehub-color.svg", "https://lobehub.com?utm_source=ant-design", "https://lobehub.com?utm_source=ant-design", "https://opencollective.com/lobehub", "Agent teammates that grow with you.", "LobeHub 是你工作与生活的终极空间：在这里发现、构建并与 Agent 团队一起无限进步。"),
+        new("CodeRabbit", "https://mdn.alipayobjects.com/huamei_vmgq1x/afts/img/A*yHnhRL4x1DEAAAAAQBAAAAgAeh6VAQ/original", "https://coderabbit.ai?utm_source=ant-design", "https://coderabbit.ai?utm_source=ant-design", "https://opencollective.com/coderabbit", "AI-powered code review that cuts review time and bugs in half.", "AI 代码审查工具，逐行分析 Pull Request，将代码审查时间与缺陷减半。"),
+    };
+
     private RenderFragment RenderNavigationItem(HeaderNavigationItem item) => @<MenuItem Class="ant-menu-item-only-child" Key="@item.Key" RouterLink="@item.Url" RouterMatch="NavLinkMatch.Prefix"><span>@item.Title</span></MenuItem>;
+
+    private RenderFragment ResponsiveOverflowIndicator => @<Icon Type="@IconType.Outline.UnorderedList" />;
 
     private RenderFragment AdditionalMenuItems => @<text>
         <MenuItem Class="header-additional-item"><a href="https://github.com/ant-design-blazor/ant-design-blazor">Github</a></MenuItem>

@@ -1,17 +1,4 @@
-﻿@page "/components/{name}"
 @using AntDesign.Docs.Services
-@page "/components"
-@page "/charts/{name}"
-@page "/charts"
-@page "/experimental/{name}"
-@page "/experimental"
-
-@page "/{locale}/components"
-@page "/{locale}/components/{name}"
-@page "/{locale}/charts/{name}"
-@page "/{locale}/charts"
-@page "/{locale}/experimental/{name}"
-@page "/{locale}/experimental"
 @using AntDesign.Docs.Components
 <section class="main-container main-container-component @_styles["root"]">
     <article>
@@ -22,28 +9,51 @@
             <PageTitle>@title</PageTitle>
             var componentTokenCount = ComponentTokenCatalog.Get(SemanticComponentKey).Count;
             var docDemos = _demoComponent.DemoList?.Where(x => x.Docs.HasValue && x.Docs.Value) ?? Enumerable.Empty<DemoItem>();
+            var isIconPage = SemanticComponentKey == "icon";
+            var iconGalleryDemo = isIconPage
+                ? _demoComponent.DemoList?.FirstOrDefault(demo => string.Equals(demo.Name, "List", StringComparison.OrdinalIgnoreCase))
+                : null;
             var renderDemos = _demos.Where(demo => !(SemanticComponentKey == "select" &&
-                string.Equals(demo.Name, "_semantic", StringComparison.OrdinalIgnoreCase))).ToList();
+                string.Equals(demo.Name, "_semantic", StringComparison.OrdinalIgnoreCase)) &&
+                !(isIconPage && string.Equals(demo.Name, "List", StringComparison.OrdinalIgnoreCase))).ToList();
 
             if (_anchors.Any())
             {
                 <div class="toc-affix">
                     <Anchor Key="@_demoComponent.Title" Affix="false" TargetOffset="80" Style="max-height: calc(100vh - 120px); overflow-x: hidden; overflow-y: auto;">
-                            @foreach (var demo in _anchors)
+                            @if (SemanticComponentKey == "icon")
                             {
-                                <AnchorLink Href="@($"/{CurrentLanguage}/components/{_demoComponent.Title}#{CodeBox.GetDemoId(_demoComponent.Title, demo.Name)}")" Title="@demo.Title" />
+                                <AnchorLink Href="@($"/{CurrentLanguage}/components/icon#how-to-use")" Title="@(CurrentLanguage == "zh-CN" ? "使用方法" : "How to use")" />
+                                @if (CurrentLanguage == "zh-CN")
+                                {
+                                    <AnchorLink Href="@($"/{CurrentLanguage}/components/icon#designers-exclusive")" Title="设计师专属" />
+                                }
+                                <AnchorLink Href="@($"/{CurrentLanguage}/components/icon#list-of-icons")" Title="@(CurrentLanguage == "zh-CN" ? "图标列表" : "List of icons")" />
+                            }
+                            @if (_anchors.Length > 0)
+                            {
+                                <AnchorLink Href="@($"/{CurrentLanguage}/components/{_demoComponent.Title}#Examples")" Title="@Localizer["app.component.examples"]">
+                                    @foreach (var demo in _anchors)
+                                    {
+                                        <AnchorLink Href="@($"/{CurrentLanguage}/components/{_demoComponent.Title}#{CodeBox.GetDemoId(_demoComponent.Title, demo.Name)}")" Title="@demo.Title" />
+                                    }
+                                </AnchorLink>
                             }
                             @if (!string.IsNullOrEmpty(_demoComponent.ApiDoc))
                             {
                                 <AnchorLink Href="@($"/{CurrentLanguage}/components/{_demoComponent.Title}#API")" Title="API" />
                             }
-                            @if (!string.IsNullOrEmpty(_demoComponent.Faq))
+                            @if (SemanticDomCatalog.Get(SemanticComponentKey).Count > 0)
                             {
-                                <AnchorLink Href="@($"/{CurrentLanguage}/components/{_demoComponent.Title}#Faq")" Title="@Localizer["app.footer.faq"]" />
+                                <AnchorLink Href="@($"/{CurrentLanguage}/components/{_demoComponent.Title}#semantic-dom")" Title="@(CurrentLanguage == "zh-CN" ? "语义 DOM" : "Semantic DOM")" />
                             }
                             @if (_demoComponent.Category == "Components")
                             {
                                 <AnchorLink Href="@($"/{CurrentLanguage}/components/{_demoComponent.Title}#design-token")" Title="Design Token" />
+                            }
+                            @if (!string.IsNullOrEmpty(_demoComponent.Faq))
+                            {
+                                <AnchorLink Href="@($"/{CurrentLanguage}/components/{_demoComponent.Title}#Faq")" Title="@Localizer["app.footer.faq"]" />
                             }
                     </Anchor>
                 </div>
@@ -95,14 +105,19 @@
                     @((MarkupString)ComponentMetadata.SplitDescription(_demoComponent.Desc).Remainder)
                 }
 
-                @foreach (var docDemo in docDemos)
+                @foreach (var docDemo in docDemos.Where(demo => !ReferenceEquals(demo, iconGalleryDemo)))
                 {
-                    <DocDemoView Demo="@docDemo" @key="@($"{_demoComponent.Title}-{docDemo.Type}")" />
+                    <DocDemoView Demo="@docDemo" @key="@docDemo.ComponentId" />
+                }
+
+                @if (isIconPage)
+                {
+                    <AntDesign.Docs.Demos.Components.Icon.demo.List />
                 }
 
                 @if (renderDemos.Any())
                 {
-                    <h2 data-scrollama-index="1">
+                    <h2 id="Examples" data-scrollama-index="1">
                         @Localizer["app.component.examples"]
                         <span class="all-code-box-controls">
                             @if (_demoComponent.Cols != 1)
@@ -135,7 +150,7 @@
                         foreach (var demo in renderDemos)
                         {
                             <AntDesign.Col Span="24" Class="@($"code-boxes-col-1-1 {_styles["demoGridColumn"]}")">
-                                <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="demo.Type" ComponentName="@_demoComponent.Title"></CodeBox>
+                                <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="demo.ComponentId" ComponentName="@_demoComponent.Title"></CodeBox>
                             </AntDesign.Col>
                         }
                     }
@@ -144,7 +159,7 @@
                         @foreach (var demo in renderDemos)
                         {
                             <AntDesign.Col Lg="12" Md="24" Sm="24" Class="@($"code-boxes-col-2-1 {_styles["demoGridColumn"]}")">
-                                <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="demo.Type" ComponentName="@_demoComponent.Title"></CodeBox>
+                                <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="demo.ComponentId" ComponentName="@_demoComponent.Title"></CodeBox>
                             </AntDesign.Col>
                         }
                     }
@@ -155,111 +170,26 @@
                 @((MarkupString)_demoComponent.ApiDoc)
             </section>
 
-            <section class="markdown api-container">
-                @((MarkupString)_demoComponent.Faq)
-            </section>
+            @if (SemanticDomCatalog.Get(SemanticComponentKey).Count > 0)
+            {
+                <section class="markdown api-container semantic-dom-preview">
+                    <h2 id="semantic-dom">@(CurrentLanguage == "zh-CN" ? "语义 DOM" : "Semantic DOM")</h2>
+                    @foreach (var preview in SemanticPreviewCatalog.Get(SemanticComponentKey))
+                    {
+                        <DynamicComponent Type="@typeof(SemanticPreviewRenderer)" Parameters="@CreateSemanticPreviewParameters(preview)" @key="preview.Component" />
+                    }
+                </section>
+            }
 
             @if (_demoComponent.Category == "Components")
             {
                 <ComponentTokenDocumentation Component="@SemanticComponentKey" Language="@CurrentLanguage" />
             }
 
-            @if (SemanticDomCatalog.Get(SemanticComponentKey).Count > 0)
-            {
-                <section class="markdown api-container semantic-dom-preview">
-                    <h2>@(CurrentLanguage == "zh-CN" ? "语义 DOM" : "Semantic DOM")</h2>
-                    @if (SemanticComponentKey == "select")
-                    {
-                        <div data-parity-demo="_semantic" style="width:calc(100% - 2px);font-size:14px;line-height:22px">
-                            <DynamicComponent Type="@typeof(AntDesign.Docs.Demos.Components.Select.demo._semantic)" Parameters="@(new Dictionary<string, object> { ["Language"] = CurrentLanguage })" />
-                        </div>
-                    }
-                    else if (SemanticComponentKey == "table")
-                    {
-                        <div data-parity-demo="_semantic" style="width:calc(100% - 2px);font-size:14px;line-height:22px">
-                            <DynamicComponent Type="@typeof(AntDesign.Docs.Demos.Components.Table.demo._semantic)" />
-                        </div>
-                    }
-                    else
-                    {
-                    <SemanticDomPreview Component="@SemanticComponentKey" Language="@CurrentLanguage">
-                        @if (SemanticComponentKey == "message")
-                        {
-                            <MessageSemanticPreview />
-                        }
-                        else if (SemanticComponentKey == "cascader")
-                        {
-                            <CascaderSemanticPreview />
-                        }
-                        else if (SemanticComponentKey == "notification")
-                        {
-                            <NotificationSemanticPreview />
-                        }
-                        else if (SemanticComponentKey == "image")
-                        {
-                            <ImageSemanticPreview />
-                        }
-                        else if (SemanticComponentKey == "menu")
-                        {
-                            <MenuSemanticPreview />
-                        }
-                        else if (SemanticComponentKey == "collapse")
-                        {
-                            <CollapseSemanticPreview />
-                        }
-                        else if (SemanticComponentKey == "tag")
-                        {
-                            <TagSemanticPreview />
-                        }
-                        else if (SemanticComponentKey == "splitter")
-                        {
-                            <SplitterSemanticPreview />
-                        }
-                        else if (SemanticComponentKey == "tooltip")
-                        {
-                            <TooltipSemanticPreview />
-                        }
-                        else if (SemanticComponentKey == "dropdown")
-                        {
-                            <DropdownSemanticPreview />
-                        }
-                        else if (SemanticComponentKey is "qrcode" or "qr-code")
-                        {
-                            <QRCode Value="https://ant.design" Status="loading" />
-                        }
-                        else if (SemanticPreviewType is { } previewType)
-                        {
-                            <DynamicComponent Type="previewType" />
-                        }
-                    </SemanticDomPreview>
-                    }
-                    @if (SemanticComponentKey == "float-button")
-                    {
-                        <SemanticDomPreview Component="float-button-group">
-                            <div style="min-height:220px;display:grid;place-items:center">
-                                <FloatButtonGroup Trigger="FloatButtonGroupTrigger.Hover" Open="true"
-                                                  Style="position:relative;inset:auto;padding:12px">
-                                    <FloatButton Icon="alert" />
-                                    <FloatButton Icon="bug" />
-                                    <FloatButton Icon="bulb" />
-                                </FloatButtonGroup>
-                            </div>
-                        </SemanticDomPreview>
-                    }
-                    @if (SemanticComponentKey == "card")
-                    {
-                        <SemanticDomPreview Component="card-meta">
-                            <div style="min-height:220px;display:grid;place-items:center">
-                                <Card Style="width:300px">
-                                    <CardMeta Avatar="https://api.dicebear.com/10.x/lorelei/svg?seed=8"
-                                              Title="Card Meta title"
-                                              Description="This is the description" />
-                                </Card>
-                            </div>
-                        </SemanticDomPreview>
-                    }
-                </section>
-            }
+            <section class="markdown api-container">
+                @((MarkupString)_demoComponent.Faq)
+            </section>
+
         }
         else
         {
@@ -281,6 +211,14 @@
 <style>@((MarkupString)_styles.CssText)</style>
 
 @code {
+    private IDictionary<string, object> CreateSemanticPreviewParameters(SemanticPreviewRegistration preview) => new Dictionary<string, object>
+    {
+        [nameof(SemanticPreviewRenderer.Component)] = preview.Component,
+        [nameof(SemanticPreviewRenderer.Language)] = CurrentLanguage,
+        [nameof(SemanticPreviewRenderer.PreviewType)] = preview.ComponentType,
+        [nameof(SemanticPreviewRenderer.WrapInSemanticDom)] = preview.WrapInSemanticDom
+    };
+
     private static readonly CssStyleSheet _styles = CssInJs.CreateStyles("docs-component-page", new System.Collections.Generic.Dictionary<string, object>
     {
         ["root"] = new System.Collections.Generic.Dictionary<string, object>

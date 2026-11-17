@@ -61,7 +61,7 @@
     private static readonly Regex SectionHeading = new(@"<h[2-6](?:\s|>)", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
     private bool IsChinese => Language == "zh-CN";
     private string NormalizedLanguage => IsChinese ? "zh-CN" : "en-US";
-    private bool HasMarkdown => GeneratedComponentMarkdown.HasDocument(ComponentName, NormalizedLanguage);
+    private bool HasMarkdown => true;
     private string ImportCode => ComponentName == "Icon" ? "@using AntDesign.Icons" : "@using AntDesign";
     private string SourceUrl => RepositoryUrl + "/tree/master/components/" + ComponentKey;
     private string DocumentationPath => FilePath ?? $"site/AntDesign.Docs/Demos/Components/{ComponentName}/doc/index.{NormalizedLanguage}.md";

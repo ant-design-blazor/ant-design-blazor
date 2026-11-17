@@ -50,12 +50,14 @@ interaction coverage, and the rest of Upload remains under audit.
 
 ## Documentation page top alignment — 2026-11-15
 
-Removed the extra 32px top padding from `.main-wrapper`, so the docs region
-starts directly under the fixed header as in the React page. The wrapper keeps
-the container background, and the component title's additional top margin stays
-removed. Docs.Server `net11.0` builds with 0 errors. Existing Select Semantic
-DOM fixture remains 2/2 with zero normalized differences
-(`/tmp/select-semantic-recheck-final-20261115.json`).
+Rechecked the rendered React v6 page after the earlier zero-gap adjustment.
+React's fixed 64px header is followed by a normal-flow 32px top margin on the
+documentation `<main>`; that space scrolls away with the page. Blazor now uses
+32px top padding on `.main-wrapper`, moving both the sidebar and article below
+the header while keeping the space in the scrolling document. The component
+title keeps its zero extra heading margin. Browser measurements on React were:
+header bottom `64px`, main top `96px`, and after scrolling 120px the main top
+was `-24px` while the header stayed fixed.
 
 ## Blazor brand gradient and Upload StyleClass — 2026-11-15
 
@@ -65,8 +67,8 @@ the official page's `#512BD4` to `#D600AA` gradient. Browser computed styles
 confirm the same gradient is active in both locations. The homepage's existing
 five-layer white happy-work `text-shadow` washed the gradient out; disabling
 that shadow only on the gradient title restores the full gradient, verified in
-a fresh browser screenshot. Also removed the additional top padding from the
-docs wrapper; its computed padding is now zero and its background remains white.
+a fresh browser screenshot. The docs wrapper now has the React-matched 32px
+top space, which stays in normal page flow and scrolls away with the content.
 
 Rebuilt Upload `StyleClass` to match React's two vertical Upload examples,
 including identical three-file status data, `name="file"`, `multiple` on the
@@ -395,6 +397,28 @@ render the same merged-cell overlay rows (992, 996, 1000). This confirms that
 the visible geometry matches while the virtual range and renderer structure do
 not; changing the scroll offset alone would only trade one mismatch for another.
 
+A speculative follow-up tried advancing the `ScrollTo(index)` target by one
+extra row. The fixture contains 10,000 items, so the extra 55px would change
+the target from React's `scrollTop=54600` to `54655`; it is not clamped at the
+end of the list. The experiment was removed because it moves the requested row
+one position too far down. The focused report still has 221 normalized DOM
+differences and 0 visual-style differences
+(`/tmp/table-virtual-list-after-offset-20261115.json`); it was captured after
+restoring the React-aligned scroll formula.
+
+Source inspection of React's `@rc-component/virtual-list` confirms the required
+renderer contract: the holder owns `max-height` and hidden overflow; its first
+child is a full-height filler (`data.length * itemHeight`); the filler contains
+an absolutely positioned `ant-table-tbody-virtual-holder-inner` translated to
+the measured start offset; the mounted range starts at the first row whose
+bottom is at or below `scrollTop`, and includes the first row below the viewport
+plus one additional row for motion. At the fixture's `scrollTop=54600`, 55px
+rows, and 400px height, this yields start index 992, offset 54560px, and rows
+992–1001. React also renders custom vertical and horizontal scrollbars as
+siblings of the filler. The current .NET `Virtualize` path instead owns the
+spacers, so the next implementation should replace that path for client-side
+virtual data and keep provider-backed data as a separate case.
+
 ## Table Virtual List current-build recheck — 2026-11-15
 
 Rebuilt and restarted Docs.Server on `net11.0`, reloaded the user-facing browser
@@ -404,6 +428,20 @@ holder. The fresh focused report, `.tmp/table-virtual-list-after-rebuild.json`,
 again passes the visible-row visual-style check (1/1, 0 visual-style diffs) and
 retains 221 normalized DOM differences. This confirms the remaining gap is the
 window/spacer DOM model, not a failure to render or scroll the demo.
+
+## Table Virtual List viewport-height experiment — 2026-11-15
+
+Tested using the full configured `ScrollY` as the inner `Virtualize` viewport
+instead of subtracting 29px. The focused fixture still reports 211 normalized
+DOM differences and 0 visual-style differences; the framework spacer remains
+54505px and the rendered window still starts at row 991. Reverted this change
+because it did not improve the window and did not move the target toward React's
+rendered structure. Report: `/tmp/table-virtual-list-viewport-height-20261115.json`.
+
+The remaining client-side virtual-list work needs a renderer that owns the
+React-shaped filler, translated inner window, and visible row range instead of
+trying to tune the framework `Virtualize` spacer. Keep provider-backed data on
+its existing path while replacing only the client-side virtual rendering.
 
 ## Table drag sorting demos — 2026-11-15
 
@@ -4157,3 +4195,603 @@ initial-state H/C/G candidates remain in 19/17/17 matched demos; one page was
 blocked by a React runtime error. This whole-page scan is a triage signal, not
 an acceptance gate, because the five scoped Upload examples pass the dedicated
 fixture. Report: `/tmp/upload-inventory-latest-20261115.json`.
+
+## Table responsive columns and documentation spacing — 2026-11-15
+
+Added the React-compatible `Responsive` breakpoint parameter to Table columns,
+including selection and action columns. The responsive demo now uses the same
+single data row and breakpoint-driven columns as React, with its default
+pagination retained. Initial viewport width is read before first-render early
+returns; resize updates flow through a changing cascading viewport value so
+already-mounted column components recalculate visibility.
+
+The focused fixture at
+`tools/AntDesign.StyleGen/examples/table-responsive-columns-dom-style-parity.json`
+passes desktop (1280px), medium (800px), and narrow (600px) scenarios 3/3, with
+zero normalized DOM, computed-style, geometry, or visual-style differences.
+Report: `/tmp/table-responsive-columns-20261115e.json`. Docs.Server `net11.0`
+build succeeds with 0 errors.
+
+The documentation shell keeps React's 32px normal-flow gap below its 64px
+sticky header. Browser measurements match: the Blazor article content starts at
+y=96px and moves to y=-24px after scrolling 120px while the header stays at
+y=0..64px. The containing `.main-wrapper` begins at y=64px and supplies 32px
+top padding.
+
+## Documentation header theme controls — 2026-11-15
+
+Added the missing vertical separator beside desktop navigation and made the
+theme controls available as menu items so they flow into the responsive
+overflow menu. At 900px, browser DOM inspection confirms the overflow popup
+contains Follow System, Light theme, Dark theme, Compact theme, Happy Work
+Effect, Theme Generator, and Theme Editor. Dark mode uses the same `#141414`
+documentation surface for `.main-wrapper` and the central article area,
+including the normal-flow gap below the sticky header. Browser measurements at
+1280px confirm the 1px by 24px separator and matching dark backgrounds. Docs.Server
+`net11.0` builds with 0 errors; opening the overflow popup and selecting an
+option was then checked in the narrow navigation: selecting Light theme closed
+the popup and changed the theme; reopening it and selecting Dark theme restored
+the original dark appearance.
+
+## Table responsive columns follow-up — 2026-11-15
+
+The focused React v6 comparison covers desktop, medium, and narrow viewport
+states for responsive columns. All three report scenarios pass with matching
+normalized DOM and computed styles; report:
+`/tmp/table-responsive-columns-20261115e.json`. This confirms the added
+`Responsive` breakpoint support for data, selection, and action columns at the
+tested states. The larger Table virtual-list fixture remains the next Table
+gap: its React-style translated virtual window and fixed-column offsets still
+have structural differences, recorded above.
+
+## Select and Icon documentation recheck — 2026-11-15
+
+Re-ran the Select core manifest (size, variant, and placement) at the shared
+1280px viewport: 6/6 scenarios pass with zero normalized DOM, computed CSS,
+geometry, or visual-style differences (`/tmp/select-core-review-20261115.json`).
+The controlled-open Semantic DOM preview passes 2/2 with the same zero-difference
+result (`/tmp/select-semantic-review-20261115.json`).
+
+The five canonical Icon demos pass 5/5, and the 842-icon responsive gallery
+passes desktop and narrow layouts 2/2; both have zero normalized differences
+(`/tmp/icon-canonical-review-20261115.json` and
+`/tmp/icon-gallery-review-20261115.json`). A browser measurement at 1280px,
+after scrolling both docs pages to `scrollY=1200`, places the segmented/search
+controls at y=80 / y=88 in React and y=80 / y=89 in Blazor, respectively.
+
+## Icon gallery Search geometry correction — 2026-11-15
+
+The Blazor Search component's group wrapper was 44px tall while React's
+compact Search wrapper is 40px; its inner input group also started 1px lower.
+The gallery now constrains the Search wrapper to 40px and offsets the inner
+group up by 1px. Fresh React/Blazor browser measurements at 1280px and 800px
+show the same 40px segmented control, 40px toolbar Search wrapper, 24px input,
+and an 8px input-to-segment top offset in both pages. This closes the reported
+1px input offset in the live toolbar. The 842-icon responsive grid fixture
+continues to pass desktop/narrow checks. React still clips long labels while
+Blazor wraps them intentionally. Whole-route Select/Icon demo/API/token
+coverage remains incomplete; continue with Table's virtual-list structure.
+## Table Virtual List range preservation — 2026-11-15
+
+Changed the client-rendered virtual window so a data refresh with an unchanged
+row count preserves the current start/end indices. Reset to the initial range
+only on first initialization or when the total row count changes. The callback
+also uses a dedicated one-render request flag to avoid the Table's shared
+`ShouldRender` gate dropping the scroll update.
+
+Verified against React's `table-demo-virtual-list` and Blazor's
+`components-table-demo-virtual-list` after clicking “Scroll To index 999”:
+
+- Blazor `scrollTop=54600`, viewport `400px`, window indices `992–1001`, and
+  translated inner window `54560px`, matching the React capture.
+- Added React-compatible virtual scrollbar nodes and matched their range,
+  position, visibility, and thumb style. The focused comparison
+  `/tmp/table-virtual-final-report.json` passes 1/1 with zero normalized DOM,
+  computed CSS, geometry, and visual-style differences.
+- Toggling Empty and restoring the 10,000-row source resets to row 0 and a
+  `translateY(0px)` window.
+- Dragging the vertical scrollbar thumb moved `scrollTop` from 54600 to 141379
+  and changed the visible row window from 992 to 2570.
+
+The docs server is built with the .NET 11 preview SDK and left running on port
+5011 for manual review. This closes the focused Virtual List fixture; other
+Table demos and the rest of the component matrix remain in progress.
+
+## Table Nested Table and initial expansion keys — 2026-11-15
+
+Added `Table.DefaultExpandedRowKeys`, matching the React `defaultExpandedRowKeys`
+behavior against each row's `RowKey`, and documented the parameter in both Table
+API pages. The nested row content remains mounted but hidden after its first
+expansion, matching React's collapse/reopen DOM lifecycle.
+
+Rebuilt the Nested Table demo to match React's three outer tables (default,
+medium, and small), each with three rows and a nested table in the first row.
+The nested table uses the same columns, status badge, action links, dropdown,
+and sample data. `Unbound` keeps the dropdown trigger anchor free of an extra
+wrapper.
+
+The focused fixture `tools/AntDesign.StyleGen/examples/table-nested-table-dom-style-parity.json` (verified via `/tmp/table-nested-table-current-report5-20261115.json`)
+passes initial expansion, collapse, and reopen (3/3) with zero normalized DOM,
+computed CSS, geometry, or visual-style differences. The Tree Data regression
+fixture `/tmp/table-tree-data-current-report-20261115.json` also passes all
+three states after the shared row-state change.
+
+The docs site was rebuilt for `net11.0` with 0 errors and restarted on port
+5011. The browser remains open at
+`http://127.0.0.1:5011/en-US/components/table#components-table-demo-nested-table`
+for manual review. The broad 71-component inventory remains a dated baseline;
+remaining Table demos and all other first-phase API, token, docs, Theme Preview,
+and Semantic DOM work are still in progress.
+
+## Select and Icon focused recheck — 2026-11-16
+
+Re-ran the Select interaction and Semantic DOM fixtures against the current
+Docs.Server on port 5011, preserving each fixture's own normalization rules.
+The interaction scenarios pass 4/4 and the controlled single/multiple Semantic
+DOM previews pass 2/2, with zero normalized DOM, computed CSS, geometry, or
+visual-style differences. Reports:
+`/tmp/select-interaction-current-report-20261116.json` and
+`/tmp/select-semantic-preview-current-report-20261115.json`. The latter report
+uses the same current Select markup; only its filename reflects the first
+capture date. The prior six-scenario Select core fixture still covers size,
+variant, and placement; whole-route API, demo, and token audits remain open.
+
+The Icon toolbar responsive fixture passes desktop and narrow states (2/2):
+`/tmp/icon-gallery-responsive-current-report-20261115.json`. The five canonical
+Icon demo fixtures were rechecked on 2026-11-15 and pass 5/5. The 842-icon grid
+fixture has matching normalized DOM and desktop root geometry; its text labels
+and narrow layout intentionally differ from React. React keeps names on one
+line inside 100px cells and clips overflow; Blazor wraps names and uses two
+readable columns at 500px so names remain visible. Tightened the wrapped label
+line height to 1.25 while keeping the 8px icon spacing; this keeps the desktop
+cell height at 100px. Latest raw comparisons are in
+`/tmp/icon-gallery-grid-current-report-20261116c.json` (2 scenarios; no capture
+blockers; expected label and narrow-grid differences remain). Keep this
+intentional accessibility/legibility tradeoff visible in follow-up comparisons;
+do not treat it as strict React visual parity. Full Icon docs/API/token audit
+remains open.
+
+The full 71-component matrix at the beginning of
+`runtime-parity-summary-2026-11-12.md` is the progress index; its untouched rows
+remain the prior broad-scan baseline and are not claims of full parity. The
+current next focus is the remaining Select route/API/token coverage, then the
+Icon docs/token audit before continuing down the component matrix.
+
+## Slider Basic parity — 2026-11-16
+
+Compared React's `components/slider/demo/basic.tsx` and rendered Slider nodes to
+the Blazor Basic demo. The Blazor sample initially used 35 instead of React's
+30 and rendered an extra marks/range slider. Its ordinary values also inserted
+an `.ant-slider-tracks` wrapper around the active track, emitted an empty
+`.ant-slider-mark`, serialized percentages as `30.00%`, added `right:auto`, and
+omitted `aria-orientation` from handles.
+
+The Basic demo now uses the React values and only the two sliders plus Disabled
+switch. The component renders tracks directly for ordinary sliders, reserves
+the tracks wrapper for multi-value tracks, omits marks when not configured,
+emits `aria-orientation`, and formats percentage styles without unnecessary
+decimal places or `auto` declarations. `user-select:none` is supplied by the
+component stylesheet rather than an extra inline root style.
+
+The focused fixture
+`tools/AntDesign.StyleGen/examples/slider-basic-dom-style-parity.json` passes
+1/1 against React v6 on 2026-11-16. Normalized DOM tree, selected computed CSS,
+geometry, and visual styles all match; raw HTML remains different due to
+attribute ordering and Blazor renderer markers. Report:
+`/tmp/slider-basic-dom-style-parity-20261116-final.json`. This result covers
+only Basic; the remaining 14 demos, API, Semantic DOM, and component token docs
+remain open. Continue with the Select API/docs reconciliation, then Icon docs
+and tokens, per the first-stage priority.
+
+## Select DefaultOpen behavior — 2026-11-16
+
+Added the `DefaultOpen` API corresponding to React v6 `defaultOpen`, added its
+API rows in English and Chinese, and created a Blazor-only focused demo because
+React has no demo with this API state. Refreshed generated demo metadata using
+the CLI under .NET 11 major roll-forward (the CLI project targets .NET 10, which
+is not installed in this environment); rebuilt Docs.Server for `net11.0` with
+0 errors. Chrome verified that the popup is visible on first render and closes
+after an outside click. This confirms the Blazor behavior and route, but does
+not count as React DOM/CSS parity. The current tab remains on
+`http://127.0.0.1:5011/en-US/components/select#components-select-demo-default-open`.
+
+## Select OptionRender API — 2026-11-16
+
+Added the React-compatible `OptionRender` parameter; `ItemTemplate` remains a
+supported alias and is used when `OptionRender` is omitted. Updated the existing
+Option Render demo and the Select API tables in both locales. The focused
+React/Blazor open-popup fixture
+`tools/AntDesign.StyleGen/examples/select-option-render-dom-style-parity.json`
+passes normalized DOM tree, computed CSS, geometry, SVG use, and visual-style
+checks. The runner still reports raw `htmlExact` difference from Razor's
+whitespace serialization; the structured DOM tree is equal. Report:
+`/tmp/select-option-render-option-api-20261116-final.json`. Docs.Server
+`net11.0` build succeeds with 0 errors. Browser is left at
+`http://127.0.0.1:5011/en-US/components/select#components-select-demo-option-render`.
+
+## Select selection and clear callbacks — 2026-11-16
+
+Added React-compatible `OnSelect` and `OnDeselect` callbacks that receive the
+selected `SelectOptionItem<TItemValue, TItem>` (value, label, and source item).
+`OnDeselect` runs only when an item is toggled off in multiple or tags mode.
+Added `OnClear` for the clear action while preserving the existing
+`OnClearSelected` callback. Both English and Chinese Select API tables now
+describe these parameters. Docs.Server `net11.0` builds with 0 errors, and the
+browser confirms the published English Markdown contains all three API rows.
+The Select inventory is now 28 React / 53 Blazor / 28 matched; the Events demo
+is a Blazor-only API exercise.
+
+## Select input and popup event callbacks — 2026-11-16
+
+Added React-named `OnInputKeyDown` and `OnPopupScroll` event parameters. The
+input callback receives `KeyboardEventArgs`; the popup callback receives the
+scroll event as `EventArgs`. Both event rows are documented in English and
+Chinese, and the new Events demo is registered in both generated component
+catalogs and in the compiled docs metadata/type map.
+
+Docs.Server `net11.0` builds with 0 errors (4,187 existing warnings). In the
+browser at 390×844, the demo produced `Selected: Option 1`, `Deselected: Option
+1`, `Cleared selection`, `Key: ArrowDown`/`Key: Enter`, and `Popup scrolled`.
+The Select page is left open at `http://127.0.0.1:5011/en-US/components/select#components-select-demo-events`;
+the browser console had no errors after the fresh navigation. This verifies
+the event wiring and docs entry, not parity of all Select demos or remaining
+API, token, Semantic DOM, Icon, and docs scope.
+
+## Design Token value previews — 2026-11-16
+
+Added a reusable `DesignTokenValue` display to component and global token
+reference tables. Color tokens show an inline color dot next to their value;
+`motionEase*` cubic-bezier tokens show an SVG grid, easing curve, and control
+points. Other values remain code text. Docs.Server `net11.0` builds with 0
+errors (591 existing warnings). Browser verification on Button Design Token
+found 25 color swatches and one cubic-bezier chart, with visible grid and blue
+curve strokes. This validates the visualization, not underlying token value
+parity or complete coverage across all docs pages.
+
+## Icon documentation structure and API summaries — 2026-11-16
+
+The Blazor Icon Gallery now renders as a standalone section before Examples, as
+in React v6; it is no longer nested inside the examples heading/card list. The
+TOC links to “List of icons” independently. Browser inspection confirmed the
+React and Blazor section order, the Blazor gallery search, six categories, and
+842 rendered icon entries. Corrected the Icon `Role` and `Spin` XML summaries,
+added the Chinese translations, regenerated component metadata, and documented
+`OnKeyDown`. The live API table displays the updated summaries and keydown row.
+Docs.Server `net11.0` builds with 0 errors (591 existing warnings). This closes
+these documentation issues only; it does not complete Icon API/token/FAQ or
+all-demo visual parity.
+
+## Select React-named list and icon props — 2026-11-16
+
+Added `ListHeight` as a React-compatible alias for `PopupContainerMaxHeight`.
+Added React-named `Prefix`, plus customizable `RemoveIcon` and
+`MenuItemSelectedIcon` render fragments. Existing Blazor parameters and default
+icons remain available. Added the English/Chinese API rows and an `api-aliases`
+demo with a multiple Select and a 128px option list.
+
+Docs.Server `net11.0` builds with 0 errors (591 existing warnings). The demo is
+present in generated metadata for both locales. Browser inspection confirms
+the prefix, custom remove glyphs, custom selected-option glyph, and
+`max-height: 128px`; clicking a remove glyph removes its selected tag. The
+console has no errors. This verifies the newly added API wiring and docs, not
+whole-route parity. Select currently has 54 Blazor demos, 28 React demos, and
+all 28 React demo names represented. The broad runtime H/C/G inventory remains
+stale and must be refreshed before using those counts as current parity status.
+
+## Select multi-field search configuration — 2026-11-16
+
+Added `tools/AntDesign.StyleGen/examples/select-multi-field-search-dom-style-parity.json` for the React v6 `showSearch.optionFilterProp` multi-field case. The focused runner passes 1/1: normalized DOM, selected computed styles, geometry, and visual-style checks agree. Raw serialized HTML differs only because of Razor whitespace and attribute serialization. Browser interaction comparison with query `c11` returns the matching `a11` item in both React and Blazor. This is one targeted fixture; it does not refresh the broad 71-component H/C/G inventory.
+
+## Select controlled search value — 2026-11-16
+
+Added a Blazor controlled-search demo using `@bind-SearchValue`. Browser interaction verification changes the external input to `jack`; the Select's internal search input updates to `jack` and its popup filters to the `Jack` option. The Docs.Server page has no console errors. This is a behavior/API check for a Blazor-only exercise, not a React DOM/style parity fixture; the broad 71-component H/C/G inventory was not rerun.
+
+## Select field defaults and dim-sum demo renderers — 2026-11-16
+
+Aligned Select's default `FieldNames.GroupLabel` with React v6 (`label`) and
+the fallback `OptionFilterProp` with React v6 (`value`). Set the legacy
+top-level Blazor alias default explicitly so the generated API table also shows
+`value`. English and Chinese FieldNames rows now display React's complete
+default mapping. The current React API table confirms the same defaults and
+the `string[]` OR search behavior.
+
+Browser review exposed that dim-sum was emitting demo type names as strings
+without emitting a runtime `Type`; the old `DemoService` reflection hookup
+therefore left demos blank. Updated dim-sum to consume the type name only while
+generating source and emit a strongly typed `RenderFragment` for every demo.
+Removed the runtime type-name/Type lookup from `DemoService`; source paths are
+generated at compile time. Docs.Server `net11.0` builds with 0 errors (641
+existing warnings). Browser confirms the Field Names demo now renders its
+Select and source edit link, the API table shows `groupLabel: "label"` and
+`OptionFilterProp` default `value`, and the freshly navigated page has no
+console errors. This validates the generator path and Select defaults, not the
+full component DOM/style inventory.
+
+`AntDesign.Docs.Build.CLI` has been removed completely. Token metadata input
+generation now runs through StyleGen's `sync-v6`; static LLM Markdown export
+uses StyleGen's `export-llms` against the compiled docs routes. Documentation
+builds no longer use the old CLI project or its runtime translation service.
+
+## Slider Reverse and Vertical demo source alignment — 2026-11-16
+
+Compared against the current Ant Design v6 demo sources at
+`components/slider/demo/reverse.tsx` and `vertical.tsx` from the upstream GitHub
+repository. Reverse used `33` where React uses `30`; Vertical used `31` instead
+of `30`, left-only margins instead of `marginInlineStart`, and the Unicode
+degree-Celsius symbol instead of React's `°C` labels. Updated these source-level
+discrepancies. This is demo source alignment, not a browser DOM comparison: the
+React docs server is unavailable in this environment. A focused browser capture
+and runtime DOM/CSS/geometry comparison remain outstanding.
+
+## Slider Tooltip and TipFormatter demo source alignment — 2026-11-16
+
+Compared with upstream React v6 `show-tooltip.tsx` and `tip-formatter.tsx`.
+The always-visible tooltip example already matches React's default value 30 and
+open tooltip behavior. The TipFormatter example previously rendered one
+controlled slider at 34; React renders two uncontrolled default sliders, one
+with a percent formatter and one with the tooltip disabled. Updated the Blazor
+demo and localized guidance to match these two scenarios (`HasTooltip=false`
+is the Blazor API equivalent of React's `tooltip.formatter: null`). Source-level
+alignment only; live React DOM/CSS/geometry capture remains pending because the
+React docs service is unavailable.
+
+## Slider Multiple Handles and Disabled per handle — 2026-11-16
+
+Compared to React v6 `multiple.tsx` and `disabled-handle.tsx`. Multiple Handles
+now recalculates both gradient endpoint colors from the first and last slider
+values (matching React's RGB interpolation), instead of using a fixed full-range
+gradient. Disabled per handle now supplies React's `minCount: 2` and
+`maxCount: 5` along with draggable track and the three per-handle disabled
+controls. Updated both localized descriptions. Runtime DOM/CSS/geometry
+comparison against React remains pending because its docs server is unavailable.
+
+## Header navigation and utility icons — 2026-11-16
+
+Updated the desktop documentation header after comparing it with the supplied
+React v6 reference. Top-level section links now target their section root so
+`/components/*` routes select the Components item and show the active underline.
+Language and direction controls use Global and Translation icons with accessible
+labels and tooltips; theme and GitHub remain icon controls. Mobile-only overflow
+items are hidden in the desktop navigation, and the navigation divider remains
+visible.
+
+The Docs project builds for `net10.0` with 0 errors. Browser DOM inspection on
+`http://127.0.0.1:5026/en-US/components/slider?header-style-check=4` confirms the
+Components item is selected, its href is `/en-US/Components`, the language,
+direction, and theme icons render, and duplicate desktop overflow items are
+hidden. The page is left open for manual review. Click behavior and cross-browser
+visual parity remain unverified in this local runtime.
+
+A fresh `phase1-progress.mjs` audit at `/tmp/phase1-progress-current-20261116.json`
+reports: CSS IR 72/72, theme algorithms 3/3, Semantic DOM API/documented slots
+423/423, component token docs 65/65 with 583/583 rows, global-token usage docs
+64/64 with 1464/1464 rows, and zero token metadata mismatches. These are generated
+catalog and documentation coverage checks, not runtime proof. Ten entries have
+no component-specific token rows; the audit lists them explicitly and confirms
+no missing React token metadata. The full dated component-by-component runtime
+candidate matrix remains in `runtime-parity-summary-2026-11-12.md`; it still
+requires focused acceptance for every component and demo.
+
+## Theme Preview dark-background switch — 2026-11-16
+
+Compared the home preview switch against React v6
+`.dumi/pages/index/components/ThemePreview/index.tsx`. React applies
+`tabsDark` and `tabsItemDark` when the selected theme has a dark background
+image. Blazor previously rendered the same segmented switch styles for every
+theme. It now conditionally applies the matching translucent switch surface,
+light thumb, and high-contrast item/hover colors for themes whose generated
+catalog marks `DarkBackground`.
+
+The focused `HomeThemePreviewTests` suite passes (5/5 on `net10.0`, with
+`DOTNET_ROLL_FORWARD=Major` for the installed .NET 11 runtime). The test now
+checks that theme state changes the switch/item classes and that the dark
+surface and item colors are present in generated CSS. The Docs.Server `net11.0`
+build now succeeds and the server renders the Table route; Theme Preview's
+visual comparison still needs a browser pass. Component and demo DOM/CSS parity remains incomplete; see
+`runtime-parity-summary-2026-11-12.md` for the dated 71-component candidate
+matrix.
+
+## Table responsive breakpoints from theme tokens — 2026-11-16
+
+React v6 Table filters `column.responsive` using `useBreakpoint`; the responsive
+observer builds its media queries from the resolved theme's `screenXSMax`,
+`screenSM`, `screenMD`, `screenLG`, `screenXL`, `screenXXL`, and `screenXXXL`
+tokens. Blazor previously hard-coded equivalent numeric cutoffs, including a
+2000px `xxxl` cutoff, so `ConfigProvider` breakpoint overrides did not affect
+columns. `Table.IsResponsiveColumnHidden` now compares the viewport against the
+active ConfigProvider's resolved global tokens. Its default `xxxl` threshold is
+1920px, matching React.
+
+The focused `TableResponsiveTests` test renders a custom `screenMD=900` theme:
+the column is hidden at 899px and visible at 900px (2/2). `AntDesign.csproj`
+builds on `net10.0`; `Docs.Server` builds on `net11.0` with 0 errors. The
+Responsive columns demo now documents that default thresholds are customizable
+through `ConfigProvider`. The Table docs page is open for manual review at
+`http://127.0.0.1:5000/en-US/components/table?theme=light#components-table-demo-responsive`.
+
+The broader `AntDesign.Tests.Table` filter is not fully green: 5/10 tests fail
+because existing tests use strict bUnit JS interop without configuring the
+Table's `bindTableRowHover` call. The focused responsive test passes. The full
+71-component candidate matrix remains at
+`runtime-parity-summary-2026-11-12.md`; this fix does not close the remaining
+API, demo, token, docs, or Semantic DOM audit for Table or other components.
+
+## Header menu responsive overflow follow-up — 2026-11-17
+
+The responsive header must keep the React-style overflow behavior; it must not
+disable or replace it with a fixed breakpoint-only menu. The desktop `Menu`
+receives the full ordered list of navigation and utility entries, and its
+available flex width is bounded so Menu's overflow observer moves trailing
+items into the built-in unordered-list More submenu as space runs out.
+
+At 820px in the running Docs.Server browser, the menu is 355px wide. Docs,
+Components, and Charts remain visible; Experimental, AI, Github, 简体中文, and
+RTL have `aria-hidden=true` and zero opacity in the inline row. Clicking the
+built-in More item opens `rc-menu-uuid-nav-rc-menu-more-popup` with those five
+entries. The page is left open at 820px with More expanded for manual review.
+`git diff --check` passes. This verifies the responsive overflow behavior at
+one narrow desktop width; the component-wide v6 audit and remaining runtime,
+API, token, documentation, Theme Preview, and Semantic DOM work are still
+open.
+
+## Header navigation style follow-up — 2026-11-17
+
+Aligned the desktop header columns and responsive menu with React v6. At
+1512px, the logo column is 315px and the search control is 220px; top-level
+Github/language/RTL entries are hidden while the utility controls remain at the
+right. Below 1120px, the desktop utility row is hidden and the navigation gets a
+bounded flex slot so the Menu's own overflow behavior can move trailing links
+into its More submenu. Responsive CSS is emitted after base rules to prevent
+the utilities and menu width from being overridden.
+
+Browser inspection at 820px confirms the header stays within the viewport,
+search remains 220px, the utility row is hidden, Docs/Components/Charts remain
+inline, and opening More exposes Experimental, AI, Github, 简体中文, and RTL.
+The Docs.Server `net11.0` build succeeds (0 errors; 591 existing warnings).
+The focused responsive menu check is complete; broader component parity work
+remains open.
+
+The Table Dynamic Settings fixture was rerun against this build as part of the
+same continuation. All three scenarios pass with zero normalized DOM, CSS,
+geometry, or visual-style differences (2 groups / 3 scenarios); only raw HTML
+serialization differs in attribute order and Razor renderer output. Report:
+`/tmp/table-dynamic-settings-20261117.json`.
+
+## Header utility controls — 2026-11-17
+
+Synced the React header utility controls: the version is a searchable Select
+with the React version list and 88px filled small control; its popup is hosted
+beside the utility row. Sponsor avatars open hover/focus Popovers with the
+localized SponsorCard content. Language switching uses the overlapping `中`
+and `En` glyphs and localized Tooltip text. Direction switching uses the
+React-matching target-direction Tooltip, `title="RTL"`/`title="LTR"`, and
+`aria-label="RTL Switch Button"`. GitHub has a Tooltip and the external link
+has `title`, `aria-label`, `target`, and `rel` attributes.
+
+At 1512px, Blazor and React version controls both measure 88×24px and their
+dropdowns both measure 88×264px with the same ten options. Browser checks
+confirm the English language Tooltip, RTL Tooltip/title/ARIA, GitHub Tooltip
+and link attributes, and sponsor card content with its image loaded. Both
+Blazor locales have no browser console errors. Docs.Server builds on `net11.0`
+with 0 errors (591 existing warnings). The full 71-component parity matrix and
+remaining header dark/mobile edge cases remain open.
+
+## Select Design Token contract — 2026-11-17
+
+Compared React v6 `components/select/style/token.ts` against the C# generated
+`SelectComponentToken`, its 24 `ComponentTokenDefinition` entries, and both
+localized Select docs tables. The 24 public component token names match in all
+four places; the docs include each React CSS variable, descriptions, and
+defaults expressed in terms of their dependent global tokens. Browser review
+at `/components/select?theme=light#select-design-token` confirms that React
+and Blazor each render 24 rows, from `activeBorderColor` through `zIndexPopup`.
+This closes the Select component-token surface audit, not its broader API,
+demo, runtime, Semantic DOM, or Theme Preview audit.
+
+## Table Editable Cells — 2026-11-17
+
+Fixed the Form context in the editable Table demo, which previously threw when
+an editable cell was clicked. The editor now validates required names, keeps
+the input open when validation fails, saves valid edits on blur/Enter, and
+supports adding rows. The Popconfirm trigger uses `Unbound` to avoid an extra
+wrapper. Editable cell padding, hover border, and validation row height match
+React.
+
+The StyleGen fixture compares initial, edit, and subsequent edit states across
+React and Blazor. All 3 scenarios pass with zero normalized DOM, CSS,
+geometry, or visual-style differences. Framework-generated form `name`
+attributes and equivalent inline-style serialization are normalized; computed
+styles are still compared. Manual browser interaction also verified required
+validation, save, and Add a row. Build: Docs and Docs.Server on `net11.0`, 0
+errors. Report: `/tmp/table-edit-cell-dom-style-parity-20261117-verified.json`.
+This closes only the Editable Cells demo; the remaining Table route is still
+open.
+
+## Table Expand Sticky — 2026-11-17
+
+Added React's `expandedRowOffset: 3` and second-column expand icon ordering to
+the Blazor demo. Expanded rows now extend the row spans of the expand icon and
+all leading offset columns by one, matching React's inserted expanded row.
+The Team demo keeps its source `rowSpan=2`; the table renderer extends it to 3
+while expanded. The detail cell spans the same three remaining columns.
+
+The focused fixture passes both initial and first-row-expanded scenarios with
+zero normalized DOM, computed CSS, geometry, or visual-style differences.
+Manual browser inspection confirms Team=`3`, expand icon=`2`, Name=`2`, and
+detail `colSpan=3`. Raw HTML serialization differs only in framework whitespace
+and renderer markers. Fixture: `tools/AntDesign.StyleGen/examples/table-expand-sticky-dom-style-parity.json`;
+report: `/tmp/table-expand-sticky-dom-style-parity-20261117-final.json`.
+
+## Table Drag Sorting — 2026-11-17
+
+Aligned the sortable-row screen-reader instructions with React's dnd-kit text
+and hidden-node behavior (`display: none`). Each row's `aria-describedby` points
+to the local instructions node; its generated id differs from dnd-kit's
+page-order-dependent `DndDescribedBy-*` value. Browser inspection confirmed
+both references resolve to equivalent instructions.
+
+`tools/AntDesign.StyleGen/examples/table-drag-sorting-dom-style-parity.json`
+passes 1/1 with zero normalized DOM, computed CSS, geometry, and visual-style
+differences. The fixture ignores `aria-describedby`'s opaque generated id; a
+separate browser check verified the relationship and text. Interaction checks
+confirmed keyboard Space → ArrowDown → Space moves John below Jim, and a pointer
+drag applies row transforms before release and reorders the data to Jim, John,
+Joe. Docs.Server `net11.0` builds with 0 errors (591 existing warnings). The
+Table and App pages remain open in separate browser tabs.
+
+This closes only the basic row-drag demo. Drag sorting with a handle, drag
+column sorting, the remaining Table demos, and the full 71-component API/token/
+docs/Semantic DOM/Theme Preview/runtime audit remain open. Next: Table drag
+sorting with a handle.
+
+## Table Drag Sorting with Handler — 2026-11-17
+
+Moved the drag handle into the leading action column, matching React's column
+order and using the first-cell icon button as the pointer target. The focused
+fixture passes both Table row-sorting groups (2/2) with equal normalized DOM,
+computed styles, and visual styles; no geometry differences were reported.
+Manual pointer interaction on both React and Blazor commits the reordered
+rows. With the same logical target (move John Brown to the second row), both
+end in Jim Green, John Brown, Joe Black. Blazor's intermediate transform
+preview was sampled directly; React's intermediate preview was not separately
+captured in this check.
+
+This closes only the handler demo. Drag Column Sorting and the remaining Table
+demos plus the full 71-component audit remain open. Next: Table Drag Column
+Sorting.
+
+## Table current-build follow-up — 2026-11-17
+
+The current `scroll-to-index-999` Virtual List fixture passes 1/1 across
+normalized DOM, computed styles, and visual styles; report:
+`/tmp/table-virtual-list-active-20261117.json`. This supersedes older temporary
+reports that recorded the pre-fix virtual window.
+
+The initial Style/Class virtual-table fixture had 17 normalized DOM
+differences, all in inline table/column width values. The width synchronization
+now sets the virtual table to the available container width and distributes
+fluid columns using rc-table's floor/remainder behavior. The follow-up report
+`/tmp/table-style-class-virtual-width-fixed-20261117.json` has equal normalized
+DOM trees and selected computed styles. Three repeated final-column cell
+measurements remain 0.016px narrower in Chromium (185.312px vs 185.328px); the
+inline styles match exactly, and row/cell geometry samples match. This is an
+open subpixel visual-style discrepancy; do not add a DOM/style hack to force a
+fractional layout unit. Raw HTML differs only in Razor whitespace. Continue
+with remaining Table demos and revisit only if a browser-supported layout
+change can remove the subpixel difference without changing the React-matching
+inline column values.
+
+## Table Ajax — 2026-11-17
+
+Aligned the Ajax demo with React's remote-data example using the same MockAPI
+endpoint, Name/Gender/Email columns, and server-side page, filter, and sort
+parameters. The initial request no longer sends the default `SortDirection.None`
+as a descending order. The fixture covers initial loaded rows, sorting by Name,
+and filtering to Male. All 3 scenarios pass with equal normalized DOM trees,
+selected computed CSS, geometry, and visual styles; no differences or blocked
+states remain. The filter interaction targets the menu item by its stable
+`data-menu-id` suffix because React and Blazor render different checkbox wrapper
+classes. Report: `/tmp/table-ajax-dom-style-parity-20261117-final.json`.
+This closes only the Table Ajax demo; remaining Table demos and the full
+71-component API/token/docs/Semantic DOM/Theme Preview/runtime audit remain
+open.

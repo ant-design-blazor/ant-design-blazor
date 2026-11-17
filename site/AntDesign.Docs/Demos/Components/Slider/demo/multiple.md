@@ -11,4 +11,4 @@ title:
 
 ## en-US
 
-Use `double[]` as the range value to render multiple handles. This example adds a gradient to the track with semantic styles.
+Use `double[]` as the range value to render multiple handles. The track gradient follows the first and last handle values, matching the React example.

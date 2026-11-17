@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { copyFile, mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -10,7 +10,7 @@ import { generateReactCssBaseline } from './react-css-baseline.mjs';
 import { generateIconCategoriesSource, syncAntDesignIconCategories } from './icon-categories.mjs';
 import { csharpTokenType, extractComponentTokenDefinitions, extractExcludedComponentTokenNames } from './component-tokens.mjs';
 import { syncGlobalTokenDocs } from './global-token-docs.mjs';
-import { renderComponentGlobalTokenCatalog } from './component-global-tokens.mjs';
+import { collectComponentGlobalTokens, renderComponentGlobalTokenCatalog } from './component-global-tokens.mjs';
 import { renderSeedTokenDefaults } from './seed-token-defaults.mjs';
 import { generateReactThemeReference } from './react-theme-reference.mjs';
 import { extractPreviewThemeMetadata, extractPreviewAlgorithm, extractCompatibleV4Defaults } from './preview-theme-metadata.mjs';
@@ -25,6 +25,8 @@ const usage = `Usage:
   node src/cli.mjs sync-color-spec --antd-path <path> --output <ColorSpecCatalog.g.cs> [--check]
   node src/cli.mjs generate-preview-theme-catalog --ir <themes.json> --output <GeneratedPreviewThemes.cs>
   node src/cli.mjs sync-v6 --antd-path <path> [--blazor-path <path>] [--output <path>]
+  node src/cli.mjs export-llms --docs-url <running-docs-site-url> --output <static-site-root>
+  node src/cli.mjs generate-llms-tokens --ir <style-ir.json> --antd-path <path> --output <llms-tokens.json>
   node src/cli.mjs sync-semantic-dom --antd-path <path> [--blazor-path <path>] [--output <semantic-dom-catalog.json>] [--semantic-docs-path <react-_site>] [--semantic-md-output <path>]
   node src/cli.mjs css-baseline-update --antd-path <path> --output <path> [--docs-theme-output <path>]
   node src/cli.mjs exact-check --expected <baseline-dir> --actual <candidate-dir> [--allowlist <id,id>] [--report <path>]
@@ -650,7 +652,7 @@ async function syncV6(args) {
     englishPath: join(blazorPath, 'docs/customize-theme.en-US.md'),
     chinesePath: join(blazorPath, 'docs/customize-theme.zh-CN.md'),
   });
-  await renderRuntimeGlobalTokenDocs(blazorPath);
+  await writeLlmsTokenInputs({ ir: join(irOutput, 'style-ir.json'), antdPath, output: join(blazorPath, 'docs/antd-v6/llms-tokens.json') });
   await generatePreviewThemeCatalog({ ir: join(irOutput, 'themes.json'), 'antd-path': antdPath, output: generatedThemes });
   const structure = await verifyGeneratedStructure({
     antdPath,
@@ -698,19 +700,60 @@ async function syncV6(args) {
   console.log(JSON.stringify({ output, revision: manifest.upstream.revision, generatedComponents, generatedTheme, baselineOutput, iconCategories, iconCategoriesSourceOutput, globalTokenCount }, null, 2));
 }
 
-async function renderRuntimeGlobalTokenDocs(blazorPath) {
-  const siteDocs = join(blazorPath, 'site/AntDesign.Docs/wwwroot/docs');
+async function writeLlmsTokenInputs({ ir: irPath, antdPath, output: outputPath }) {
+  const ir = await readJson(irPath, 'style IR');
+  const metadata = await readJson(join(antdPath, 'components/version/token-meta.json'), 'React Design Token metadata');
+  const tokenData = await readJson(join(antdPath, 'components/version/token.json'), 'React component token usage');
+  const existingPath = resolve(outputPath);
+  const existing = existsSync(existingPath) ? await readJson(existingPath, 'existing LLM token defaults') : {};
+  const componentTokens = (ir.tokens ?? []).filter(token => token.kind === 'component' && token.component && token.name && token.cssVariable)
+    .sort((left, right) => `${left.component}:${left.name}`.localeCompare(`${right.component}:${right.name}`))
+    .map(token => ({
+      Component: token.component, Name: token.name, CssVariable: token.cssVariable,
+      Type: token.sourceType ?? token.type ?? 'unknown', CSharpType: csharpTokenType(token.sourceType ?? token.type),
+      Description: token.description ?? '', DescriptionEn: token.descriptionEn ?? '', DefaultValue: token.defaultValue ?? '',
+      Deprecated: Boolean(token.deprecated), Documented: Boolean(token.documented), Reserved: Boolean(token.reserved),
+    }));
+  const globalTokens = Object.entries(metadata.global ?? {}).map(([name, token]) => ({
+    Name: name, Description: token.desc ?? '', DescriptionEn: token.descEn ?? '', Type: token.type ?? 'unknown', Source: token.source ?? 'other',
+    CssVariable: `--ant-${name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').replace(/([A-Z])([A-Z][a-z])/g, '$1-$2').toLowerCase()}`,
+  }));
+  const data = {
+    schemaVersion: 1, componentTokens, globalTokens,
+    globalUsage: collectComponentGlobalTokens(tokenData, metadata),
+    // ThemeConfig resolves algorithm-derived defaults; keep this generated baseline while refreshing its metadata.
+    defaultValues: existing.defaultValues ?? {},
+  };
+  await mkdir(dirname(existingPath), { recursive: true });
+  await writeFile(existingPath, `${JSON.stringify(data, null, 2)}\n`, 'utf8');
+  return { output: existingPath, componentTokens: componentTokens.length, globalTokens: globalTokens.length };
+}
+
+async function exportLlms(args) {
+  if (!args.output) throw new Error('export-llms requires --output');
+  const base = String(args['docs-url'] ?? 'http://127.0.0.1:5000').replace(/\/$/, '');
+  const output = resolve(args.output);
+  const index = ['# Ant Design Blazor', ''];
   for (const language of ['en-US', 'zh-CN']) {
-    await copyFile(join(blazorPath, `docs/customize-theme.${language}.md`), join(siteDocs, `customize-theme.${language}.md`));
+    const response = await fetch(`${base}/${language}/llms.txt`);
+    if (!response.ok) throw new Error(`Could not read ${language} document catalog (${response.status}); make sure the compiled docs site is running.`);
+    const links = [...(await response.text()).matchAll(/^- \[([^\]]+)\]\((\/[^)]+\.md)\)$/gm)];
+    index.push(`## ${language}`, '');
+    for (const [, title, path] of links) {
+      const document = await fetch(`${base}${path}`);
+      if (!document.ok) throw new Error(`Could not export ${path} (${document.status})`);
+      const filename = path.split('/').at(-1);
+      const directory = path.includes('/components/') ? 'components' : 'docs';
+      const destination = join(output, language, directory, filename);
+      await mkdir(dirname(destination), { recursive: true });
+      await writeFile(destination, await document.text(), 'utf8');
+      index.push(`- [${title}](${path.slice(1)})`);
+    }
+    index.push('');
   }
-  const cliProject = join(blazorPath, 'site/AntDesign.Docs.Build.CLI/AntDesign.Docs.Build.CLI.csproj');
-  const result = spawnSync('dotnet', [
-    'run', '--no-launch-profile', '--framework', 'net10.0', '--project', cliProject,
-    'docs2html', siteDocs, siteDocs,
-  ], { cwd: blazorPath, encoding: 'utf8', stdio: 'pipe' });
-  if (result.status !== 0) {
-    throw new Error(`Failed to render synchronized Design Token docs: ${result.stderr || result.stdout || `dotnet exited ${result.status}`}`);
-  }
+  await mkdir(output, { recursive: true });
+  await writeFile(join(output, 'llms.txt'), `${index.join('\n')}\n`, 'utf8');
+  console.log(JSON.stringify({ output, documents: (index.join('\n').match(/^- \[/gm) ?? []).length }, null, 2));
 }
 
 async function generatePreviewThemeCatalog(args) {
@@ -986,7 +1029,9 @@ function pascalCase(value) {
 }
 
 const args = parseArgs(process.argv.slice(2));
-if (args.command === 'sync-color-spec') {
+if (args.help || args.command === 'help') {
+  console.log(usage);
+} else if (args.command === 'sync-color-spec') {
   if (!args['antd-path'] || !args.output) fail('sync-color-spec requires --antd-path and --output');
   else syncColorSpec({ antdPath: args['antd-path'], output: args.output, check: Boolean(args.check) }).then(result => console.log(JSON.stringify(result))).catch(error => fail(error.message));
 } else if (args.command === 'sync') {
@@ -1008,6 +1053,11 @@ if (args.command === 'sync-color-spec') {
   generatePreviewThemeCatalog(args).catch((error) => fail(error.message));
 } else if (args.command === 'sync-v6') {
   syncV6(args).catch((error) => fail(error.message));
+} else if (args.command === 'generate-llms-tokens') {
+  if (!args.ir || !args['antd-path'] || !args.output) fail('generate-llms-tokens requires --ir, --antd-path and --output');
+  else writeLlmsTokenInputs({ ir: args.ir, antdPath: args['antd-path'], output: args.output }).then(result => console.log(JSON.stringify(result, null, 2))).catch(error => fail(error.message));
+} else if (args.command === 'export-llms') {
+  exportLlms(args).catch(error => fail(error.message));
 } else if (args.command === 'sync-semantic-dom') {
   if (!args['antd-path']) fail('sync-semantic-dom requires --antd-path');
   else {
@@ -1038,5 +1088,5 @@ if (args.command === 'sync-color-spec') {
     .then((result) => console.log(JSON.stringify(result, null, 2)))
     .catch((error) => fail(error.message));
 } else {
-  fail('supported commands are sync, baseline-update, css-baseline-update, generate-csharp-tokens, generate-csharp-theme-tokens, generate-theme-reference, sync-v6, sync-semantic-dom, exact-check and theme-exact-check');
+  fail('supported commands are sync, baseline-update, css-baseline-update, sync-color-spec, generate-csharp-tokens, generate-csharp-theme-tokens, generate-theme-reference, generate-preview-theme-catalog, generate-llms-tokens, export-llms, sync-v6, sync-semantic-dom, exact-check and theme-exact-check');
 }

@@ -8,7 +8,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/rrwbSt3FQ/Icon.svg
 
 语义化的矢量图形。
 
-## 如何使用
+## 使用方法 {#how-to-use}
 
 按常规方式安装 `AntDesign` 即可。NuGet 依赖会提供由 `AntDesign.Icons` 生成的 v6 图标目录；应用无需另行复制 SVG 文件或安装图标字体样式表。
 
@@ -19,6 +19,10 @@ cover: https://gw.alipayobjects.com/zos/alicdn/rrwbSt3FQ/Icon.svg
 只传主色时，生成式组件通过 `AntDesign.Colors.ColorPalette.Generate(primary)[0]` 计算次色；`Icon` 适配组件使用 `TwoToneColor` 执行相同计算。需要指定两种颜色时，生成式组件传入包含主色和次色的双元素数组；`Icon` 适配组件同时设置 `TwoToneColor` 和 `TwoToneSecondaryColor`。这个独立 C# 库迁移自 Ant v6 的 `@ant-design/colors`，默认/暗色主题 Token、预设色板、中性色和阴影也使用它；生成完整十档明暗色板，而不是 Icon 专用的近似算法。无需 JavaScript，首次渲染和服务端预渲染即可得到正确颜色。例如 `#52c41a` 对应 `#f6ffed`。`IconColorPalette.GetSecondaryColor` 和 `IconService.GetSecondaryColor` 保留为兼容包装。
 
 与 React v6 对应的五个示例为：基本用法、多色图标、自定义图标、使用 iconfont.cn、使用多个 iconfont.cn 资源。基本用法和双色示例直接使用 `AntDesign.Icons` 的生成式组件。Blazor 另外提供可搜索、按分类分组的完整图标库，以及独立的动态双色改色示例。
+
+## 设计师专属 {#designers-exclusive}
+
+安装 [Kitchen Sketch 插件 💎](https://kitchen.alipay.com)，即可拖拽使用 Ant Design 和 Iconfont 图标，并关联自己的项目。
 
 ## API
 
@@ -33,9 +37,10 @@ cover: https://gw.alipayobjects.com/zos/alicdn/rrwbSt3FQ/Icon.svg
 | Height | SVG 高度 | string | `1em` |
 | IconFont | 图标字体 symbol 名称，供 `IconFont` 使用 | string | - |
 | OnClick | 点击回调 | `EventCallback<MouseEventArgs>` | - |
+| OnKeyDown | 交互式图标的按键回调 | `EventCallback<KeyboardEventArgs>` | - |
 | Role | SVG 包装元素的 role；设为空字符串可从辅助技术中隐藏 | string | `img` |
 | Rotate | 图标旋转角度 | int | `0` |
-| Spin | 是否显示旋转动画 | bool | false |
+| Spin | 是否旋转图标并显示动画 | bool | false |
 | StopPropagation | 是否阻止点击事件冒泡 | bool | false |
 | Style | 行内样式，例如 `font-size` 和 `color` | string | - |
 | TabIndex | 包装元素的 `tabindex` 值 | string | - |
@@ -53,6 +58,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/rrwbSt3FQ/Icon.svg
 | --- | --- | --- | --- |
 | Type | Symbol 名称，参数变化时同步更新 | string | - |
 | ScriptUrl | 单个 JS 资源地址或有序数组，按 React 的 `createFromIconfontCN` 规则加载和缓存 | `OneOf<string, string[]>` | - |
+| ExtraCommonProps | 应用到 SVG symbol 的额外属性，例如 `aria-label` 或 `data-*` | `IDictionary<string, object>` | - |
 
 ## 主题变量（Design Token）
 

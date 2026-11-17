@@ -3788,7 +3788,8 @@ html.en-us .design-card.main-card {
 /* Docs layout styles are generated once and resolve token var() values to the
    light palette. Restore the matching dark surfaces and text in dark mode. */
 [data-theme="dark"] .main-wrapper {
-  background: #000;
+  /* The top spacing is part of the document surface and follows the active theme. */
+  background: var(--ant-color-bg-container, #141414);
 }
 [data-theme="dark"] .main-wrapper .main-container,
 [data-theme="dark"] .main-wrapper .main-container-component {

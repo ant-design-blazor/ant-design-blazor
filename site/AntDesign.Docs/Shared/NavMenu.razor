@@ -22,7 +22,7 @@
             {
                 if (menu.Type == "menuItem")
                 {
-                        <MenuItem RouterLink="@($"{context.LocalizationService.CurrentCulture.Name}/{menu.Url}")" RouterMatch="@NavLinkMatch.All">
+                        <MenuItem RouterLink="@DemoService.GetLocalizedUrl(context.LocalizationService.CurrentCulture.Name, menu.Url)" RouterMatch="@NavLinkMatch.All">
                             <span>@menu.Title</span>
                             @if (context.LocalizationService.CurrentCulture.Name == "zh-CN" && menu.SubTitle != null)
                             {

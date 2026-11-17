@@ -19,34 +19,37 @@ public sealed class LlmsMarkdownGenerator : IIncrementalGenerator
     {
         var inputs = context.AdditionalTextsProvider.Where(file => {
             var name = Path.GetFileName(file.Path);
-            return name.StartsWith("components.", StringComparison.Ordinal) && name.EndsWith(".json", StringComparison.Ordinal)
-                || name is "semantic-dom-catalog.json" or "llms-tokens.json"
-                || file.Path.Replace('\\', '/').Contains("/docs/") && (name.EndsWith(".en-US.md", StringComparison.Ordinal) || name.EndsWith(".zh-CN.md", StringComparison.Ordinal));
+            return name is "semantic-dom-catalog.json" or "llms-tokens.json"
+                || file.Path.Replace('\\', '/').Contains("/Demos/Components/")
+                    && (name.EndsWith(".md", StringComparison.OrdinalIgnoreCase) || name.EndsWith(".razor", StringComparison.OrdinalIgnoreCase))
+                || file.Path.Replace('\\', '/').Contains("/docs/")
+                    && !file.Path.Replace('\\', '/').Contains("/site/AntDesign.Docs/wwwroot/docs/")
+                    && (name.EndsWith(".en-US.md", StringComparison.Ordinal) || name.EndsWith(".zh-CN.md", StringComparison.Ordinal));
         }).Select((file, token) => new Input(file.Path, file.GetText(token)?.ToString() ?? "")).Collect();
         context.RegisterSourceOutput(inputs, (output, files) => {
+            var generationStage = "parse catalogs";
             try
             {
                 using var semantics = JsonDocument.Parse(files.FirstOrDefault(f => Path.GetFileName(f.Path) == "semantic-dom-catalog.json")?.Text ?? "{}");
                 var tokenInput = files.FirstOrDefault(f => Path.GetFileName(f.Path) == "llms-tokens.json");
-                if (files.Any(f => Path.GetFileName(f.Path).StartsWith("components.", StringComparison.Ordinal)) && tokenInput == null)
-                    throw new InvalidOperationException("Missing llms-tokens.json; run the docs CLI llms-tokens command before compiling.");
-                using var tokens = JsonDocument.Parse(tokenInput?.Text ?? "{}");
+                if (tokenInput == null) throw new InvalidDataException("Required input llms-tokens.json was not supplied.");
+                using var tokens = JsonDocument.Parse(tokenInput.Text);
                 var docs = new List<(string Kind, string Language, string Name, string Markdown)>();
                 foreach (var file in files.OrderBy(f => f.Path, StringComparer.Ordinal))
                 {
+                    generationStage = file.Path;
                     var name = Path.GetFileName(file.Path);
-                    if (name.StartsWith("components.", StringComparison.Ordinal))
+                    var normalizedPath = file.Path.Replace('\\', '/');
+                    if (normalizedPath.Contains("/Demos/Components/") && normalizedPath.Contains("/doc/index.") && name.EndsWith(".md", StringComparison.OrdinalIgnoreCase))
                     {
-                        var language = name.Substring("components.".Length).Replace(".json", "");
-                        using var components = JsonDocument.Parse(file.Text);
-                        foreach (var component in components.RootElement.EnumerateArray())
-                        {
-                            if (component.GetProperty("Category").GetString() != "Components") continue;
-                            var title = component.GetProperty("Title").GetString()!;
-                            docs.Add(("components", language, title, LlmsMarkdownBuilder.Build(component, language, semantics.RootElement, tokens.RootElement)));
-                        }
+                        var language = name.EndsWith("index.zh-CN.md", StringComparison.OrdinalIgnoreCase) ? "zh-CN" : "en-US";
+                        var component = BuildComponentInput(file, files, language);
+                        if (component == null) continue;
+                        docs.Add(("components", language, component.Title, LlmsMarkdownBuilder.Build(component, language, semantics.RootElement, tokens.RootElement)));
                     }
-                    else if (name.EndsWith(".md", StringComparison.Ordinal))
+                    else if (normalizedPath.Contains("/docs/", StringComparison.Ordinal)
+                        && !normalizedPath.Contains("/site/AntDesign.Docs/wwwroot/docs/", StringComparison.Ordinal)
+                        && (name.EndsWith(".en-US.md", StringComparison.Ordinal) || name.EndsWith(".zh-CN.md", StringComparison.Ordinal)))
                     {
                         var language = name.EndsWith(".zh-CN.md", StringComparison.Ordinal) ? "zh-CN" : "en-US";
                         var key = name.Substring(0, name.Length - language.Length - 4);
@@ -72,10 +75,95 @@ public sealed class LlmsMarkdownGenerator : IIncrementalGenerator
                 code.AppendLine("        _ => System.Array.Empty<string>(),\n    };\n}");
                 output.AddSource("GeneratedLlmsMarkdown.g.cs", SourceText.From(code.ToString(), Encoding.UTF8));
             }
-            catch (Exception error) { output.ReportDiagnostic(Diagnostic.Create(InvalidInput, Location.None, error.Message)); }
+            catch (Exception error) { output.ReportDiagnostic(Diagnostic.Create(InvalidInput, Location.None, generationStage + ": " + error.Message)); }
         });
     }
     private static string Literal(string text) => Microsoft.CodeAnalysis.CSharp.SymbolDisplay.FormatLiteral(text, true);
+
+    private static LlmsDocInput? BuildComponentInput(Input document, IReadOnlyList<Input> files, string language)
+    {
+        var frontMatter = ReadFrontMatter(document.Text);
+        var category = ReadValue(frontMatter, "category");
+        if (!string.Equals(category, "Components", StringComparison.OrdinalIgnoreCase)) return null;
+
+        var title = ReadValue(frontMatter, "title");
+        if (string.IsNullOrWhiteSpace(title)) return null;
+        var body = RemoveFrontMatter(document.Text);
+        var apiMarker = Regex.Match(body, @"(?im)^##\s+API\s*$");
+        var description = apiMarker.Success ? body.Substring(0, apiMarker.Index) : body;
+        var api = apiMarker.Success ? body.Substring(apiMarker.Index) : string.Empty;
+        var path = document.Path.Replace('\\', '/');
+        var docDirectory = path.Substring(0, path.LastIndexOf('/'));
+        var docMarker = docDirectory.LastIndexOf("/doc", StringComparison.OrdinalIgnoreCase);
+        if (docMarker < 0) return null;
+        var componentPath = docDirectory.Substring(0, docMarker);
+        var componentDirectory = componentPath.Substring(componentPath.LastIndexOf('/') + 1);
+        var faqName = $"faq.{language}.md";
+        var faq = files.FirstOrDefault(file => file.Path.Replace('\\', '/').EndsWith("/" + faqName, StringComparison.OrdinalIgnoreCase)
+            && file.Path.Replace('\\', '/').Contains($"/Demos/Components/{componentDirectory}"));
+
+        var demoDirectory = docDirectory.Substring(0, docMarker) + "/demo";
+        var demos = files.Where(file => file.Path.Replace('\\', '/').StartsWith(demoDirectory + "/", StringComparison.Ordinal)
+                && file.Path.EndsWith(".md", StringComparison.OrdinalIgnoreCase))
+            .Select(file => BuildDemoInput(file, files, language))
+            .OfType<LlmsDemoInput>()
+            .OrderBy(demo => demo.Order)
+            .ToArray();
+
+        return new LlmsDocInput
+        {
+            Title = title,
+            Desc = MarkdownBody(description),
+            ApiDoc = MarkdownBody(api),
+            Faq = faq == null ? string.Empty : MarkdownBody(RemoveFrontMatter(faq.Text)),
+            DemoList = demos.ToList(),
+        };
+    }
+
+    private static LlmsDemoInput? BuildDemoInput(Input markdown, IReadOnlyList<Input> files, string language)
+    {
+        var frontMatter = ReadFrontMatter(markdown.Text);
+        var title = ReadLocalizedValue(frontMatter, "title", language);
+        if (string.IsNullOrWhiteSpace(title)) return null;
+        var content = ReadSection(RemoveFrontMatter(markdown.Text), language);
+        var demoName = Path.GetFileNameWithoutExtension(markdown.Path);
+        var normalizedName = NormalizeDemoName(demoName);
+        var razor = files.FirstOrDefault(file => file.Path.EndsWith(".razor", StringComparison.OrdinalIgnoreCase)
+            && NormalizeDemoName(Path.GetFileNameWithoutExtension(file.Path)) == normalizedName
+            && Path.GetDirectoryName(file.Path.Replace('\\', '/')) == Path.GetDirectoryName(markdown.Path.Replace('\\', '/')));
+        if (razor == null) return null;
+        var orderText = ReadValue(frontMatter, "order");
+        double.TryParse(orderText, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var order);
+        var debug = bool.TryParse(ReadValue(frontMatter, "debug"), out var isDebug) && isDebug;
+        return new LlmsDemoInput { Order = order, Name = demoName, Title = title, Description = MarkdownBody(content), Code = razor.Text, Debug = debug };
+    }
+
+    private static string ReadFrontMatter(string text)
+    {
+        var match = Regex.Match(text.TrimStart('\uFEFF'), @"\A---\s*\r?\n(.*?)\r?\n---\s*(?:\r?\n|\z)", RegexOptions.Singleline);
+        return match.Success ? match.Groups[1].Value : string.Empty;
+    }
+
+    private static string RemoveFrontMatter(string text) => Regex.Replace(text.TrimStart('\uFEFF'), @"\A---\s*\r?\n.*?\r?\n---\s*(?:\r?\n|\z)", string.Empty, RegexOptions.Singleline);
+
+    private static string ReadValue(string frontMatter, string key) => Regex.Match(frontMatter, $@"(?m)^{Regex.Escape(key)}:\s*([^\r\n]+)").Groups[1].Value.Trim().Trim('"', '\'');
+
+    private static string ReadLocalizedValue(string frontMatter, string key, string language)
+    {
+        var match = Regex.Match(frontMatter, $@"(?ms)^{Regex.Escape(key)}:\s*\r?\n(.*?)(?=^\S|\z)");
+        return Regex.Match(match.Groups[1].Value, $@"(?m)^\s+{Regex.Escape(language)}:\s*(.+?)\s*$").Groups[1].Value.Trim().Trim('"', '\'');
+    }
+
+    private static string ReadSection(string body, string language)
+    {
+        var match = Regex.Match(body, $@"(?ims)^##\s+{Regex.Escape(language)}\s*\r?\n(.*?)(?=^##\s+|\z)");
+        return match.Success ? match.Groups[1].Value.Trim() : body.Trim();
+    }
+
+    private static string MarkdownBody(string markdown) => Regex.Replace(markdown.Trim(), @"(?m)^##\s+API\s*$", "<h2 id=\"API\">API</h2>");
+
+    private static string NormalizeDemoName(string name) => new string(name.Where(char.IsLetterOrDigit).Select(char.ToLowerInvariant).ToArray());
+
     private static string Pack(string markdown)
     {
         using var output = new MemoryStream();
@@ -92,4 +180,5 @@ public sealed class LlmsMarkdownGenerator : IIncrementalGenerator
         internal string Text { get; }
         internal Input(string path, string text) { Path = path; Text = text; }
     }
+
 }

@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Json;
 using System.Threading.Tasks;
 using AntDesign.Docs.Highlight;
 using AntDesign.Docs.Services;
@@ -15,6 +14,8 @@ using AntDesign.Extensions.Localization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.Extensions.Localization;
+using Markdig.Extensions.Tables;
+using Markdig;
 
 namespace AntDesign.Docs.Pages
 {
@@ -46,7 +47,6 @@ namespace AntDesign.Docs.Pages
         [Inject] private IStringLocalizer Localizer { get; set; }
         [Inject] private DemoService DemoService { get; set; }
         [Inject] private IPrismHighlighter PrismHighlighter { get; set; }
-        [Inject] private HttpClient HttpClient { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
@@ -74,9 +74,7 @@ namespace AntDesign.Docs.Pages
         {
             if (!string.IsNullOrEmpty(FileName))
             {
-                var baseUrl = NavigationManager.ToAbsoluteUri(NavigationManager.BaseUri);
-                var docUrl = new Uri(baseUrl, $"_content/AntDesign.Docs/docs/{FileName}.{CurrentLanguage}.json").ToString();
-                _file = await HttpClient.GetFromJsonAsync<DocsFile>(docUrl);
+                _file = null;
                 _waitingHighlight = true;
 
                 if (MainLayout != null)

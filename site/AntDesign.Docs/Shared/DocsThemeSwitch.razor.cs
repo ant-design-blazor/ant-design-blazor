@@ -20,6 +20,7 @@ namespace AntDesign.Docs.Shared
         private string _themeMode = "light";
         private bool _compact;
         private bool _happyWorkEnabled;
+        private bool _dropdownVisible;
         private bool _initialized;
         private Dropdown _dropdown;
         private IJSObjectReference _happyWorkModule;

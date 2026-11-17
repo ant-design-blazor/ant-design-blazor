@@ -1,29 +1,26 @@
 ﻿<Divider>Columns displayed</Divider>
-<Space Wrap>
-    @for (var i = 0; i < _shown.Length; i++)
-    {
-        var index = i;
-        <Checkbox @bind-Value="_shown[index]">Column @(index + 1)</Checkbox>
-    }
-</Space>
-<Table TItem="HiddenColumnRow" DataSource="@_rows" Style="margin-top:24px;">
-    <PropertyColumn Property="x => x.Address" Title="Column 1" Hidden="@(!_shown[0])" />
-    <PropertyColumn Property="x => x.Address" Title="Column 2" Hidden="@(!_shown[1])" />
-    <PropertyColumn Property="x => x.Address" Title="Column 3" Hidden="@(!_shown[2])" />
-    <PropertyColumn Property="x => x.Address" Title="Column 4" Hidden="@(!_shown[3])" />
-    <PropertyColumn Property="x => x.Address" Title="Column 5" Hidden="@(!_shown[4])" />
-    <PropertyColumn Property="x => x.Address" Title="Column 6" Hidden="@(!_shown[5])" />
-    <PropertyColumn Property="x => x.Address" Title="Column 7" Hidden="@(!_shown[6])" />
-    <PropertyColumn Property="x => x.Address" Title="Column 8" Hidden="@(!_shown[7])" />
+<CheckboxGroup TValue="string" Options="@_options" @bind-Value="_checkedColumns" />
+<Table TItem="HiddenColumnRow" DataSource="@_rows" RowKey="x => x.Id" Style="margin-top:24px;">
+    <PropertyColumn Property="x => x.Address" Title="Column 1" Hidden="@(!_checkedColumns.Contains("1"))" />
+    <PropertyColumn Property="x => x.Address" Title="Column 2" Hidden="@(!_checkedColumns.Contains("2"))" />
+    <PropertyColumn Property="x => x.Address" Title="Column 3" Hidden="@(!_checkedColumns.Contains("3"))" />
+    <PropertyColumn Property="x => x.Address" Title="Column 4" Hidden="@(!_checkedColumns.Contains("4"))" />
+    <PropertyColumn Property="x => x.Address" Title="Column 5" Hidden="@(!_checkedColumns.Contains("5"))" />
+    <PropertyColumn Property="x => x.Address" Title="Column 6" Hidden="@(!_checkedColumns.Contains("6"))" />
+    <PropertyColumn Property="x => x.Address" Title="Column 7" Hidden="@(!_checkedColumns.Contains("7"))" />
+    <PropertyColumn Property="x => x.Address" Title="Column 8" Hidden="@(!_checkedColumns.Contains("8"))" />
 </Table>
 
 @code {
-    private readonly bool[] _shown = Enumerable.Repeat(true, 8).ToArray();
+    private string[] _checkedColumns = Enumerable.Range(1, 8).Select(index => index.ToString()).ToArray();
+    private static readonly CheckboxOption<string>[] _options = Enumerable.Range(1, 8)
+        .Select(index => new CheckboxOption<string> { Label = $"Column {index}", Value = index.ToString() })
+        .ToArray();
     private readonly HiddenColumnRow[] _rows =
     [
-        new() { Address = "New York Park" },
-        new() { Address = "London Park" }
+        new() { Id = "1", Address = "New York Park" },
+        new() { Id = "2", Address = "London Park" }
     ];
 
-    private sealed class HiddenColumnRow { public string Address { get; set; } = string.Empty; }
+    private sealed class HiddenColumnRow { public string Id { get; set; } = string.Empty; public string Address { get; set; } = string.Empty; }
 }

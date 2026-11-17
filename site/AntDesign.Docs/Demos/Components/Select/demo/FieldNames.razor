@@ -1,0 +1,37 @@
+<Select TItem="FieldNameOption"
+        TItemValue="string"
+        DataSource="@options"
+        FieldNames="@fieldNames"
+        Mode="SelectMode.Multiple"
+        Placeholder="Select members"
+        Style="width: 280px" />
+
+@code {
+    private readonly SelectFieldNames fieldNames = new()
+    {
+        Label = nameof(FieldNameOption.Text),
+        Value = nameof(FieldNameOption.Key),
+        Options = nameof(FieldNameOption.Items),
+        GroupLabel = nameof(FieldNameOption.Header)
+    };
+
+    private readonly List<FieldNameOption> options = new()
+    {
+        new() { Header = "Design", Items = new() {
+            new() { Text = "Alice", Key = "alice" },
+            new() { Text = "Bob", Key = "bob" }
+        } },
+        new() { Header = "Engineering", Items = new() {
+            new() { Text = "Charlie", Key = "charlie" },
+            new() { Text = "Diana", Key = "diana" }
+        } }
+    };
+
+    private sealed class FieldNameOption
+    {
+        public string Text { get; init; }
+        public string Key { get; init; }
+        public string Header { get; init; }
+        public List<FieldNameOption> Items { get; init; }
+    }
+}

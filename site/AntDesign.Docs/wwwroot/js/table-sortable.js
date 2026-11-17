@@ -1,5 +1,5 @@
 const ROW_SELECTOR = 'tr.ant-table-row[data-row-key]';
-const HANDLE_SELECTOR = '.table-sort-handle';
+const HANDLE_SELECTOR = 'td:first-child > .ant-btn-icon-only';
 const TRANSITION = 'transform 200ms ease';
 
 export function initializeTableSortable(root, dotNet, handleOnly) {

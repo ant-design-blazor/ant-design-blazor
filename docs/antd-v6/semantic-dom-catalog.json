@@ -90,7 +90,14 @@
     },
     {
       "name": "app",
-      "nodes": []
+      "nodes": [
+        {
+          "name": "root",
+          "selector": ".ant-app",
+          "description": "App 的根容器，承载子树内容并应用基础排版样式",
+          "version": "5.1.0"
+        }
+      ]
     },
     {
       "name": "auto-complete",

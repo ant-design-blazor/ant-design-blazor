@@ -11,4 +11,4 @@ title:
 
 ## en-US
 
-Search the options; matching labels are sorted case-insensitively, equivalent to React's `showSearch.filterSort`.
+Search the options; `FilterSort` sorts matching labels case-insensitively, corresponding to React's `showSearch.filterSort`.

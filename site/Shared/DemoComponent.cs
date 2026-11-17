@@ -3,6 +3,8 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Collections.Generic;
+using System;
+using Microsoft.AspNetCore.Components;
 
 namespace AntDesign.Docs
 {
@@ -30,7 +32,7 @@ namespace AntDesign.Docs
 
     public class DemoItem
     {
-        public decimal Order { get; set; }
+        public double Order { get; set; }
 
         public string Name { get; set; }
 
@@ -40,7 +42,14 @@ namespace AntDesign.Docs
 
         public string Code { get; set; }
 
-        public string Type { get; set; }
+        /// <summary>Strongly typed demo renderer emitted by the docs source generator.</summary>
+        public RenderFragment Component { get; set; }
+
+        /// <summary>Repository-relative source file path for edit links.</summary>
+        public string SourcePath { get; set; }
+
+        /// <summary>Stable demo element id used by the isolated preview page.</summary>
+        public string ComponentId { get; set; }
 
         public string Style { get; set; }
 
