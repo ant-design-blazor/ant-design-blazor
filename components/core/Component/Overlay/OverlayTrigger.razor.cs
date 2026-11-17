@@ -896,7 +896,7 @@ namespace AntDesign.Internal
 
         internal virtual async Task Show(int? overlayLeft = null, int? overlayTop = null)
         {
-            if (!_mouseInTrigger && IsContainTrigger(TriggerType.Hover))
+            if (!_mouseInTrigger && IsContainTrigger(TriggerType.Hover) && !Visible)
             {
                 return;
             }

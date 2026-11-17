@@ -506,6 +506,14 @@ namespace AntDesign
 
         private string TableLayoutStyle => $"table-layout: {(IsVirtualEnabled ? "fixed" : TableLayout ?? "auto")};";
 
+        private string TableColumnCountStyle => $"--columns-count: {ColumnContext?.Columns.Count ?? 0};";
+
+        private string GetSplitBodyStyle()
+        {
+            var style = $"{(ScrollX != null ? "overflow: auto scroll;" : ScrollY != null ? "overflow-y: scroll;" : "")}{(ScrollY != null && !AutoHeight ? $" max-height: {(CssSizeLength)ScrollY};" : "")}{(ScrollY != null && UseItemsProvider && !AutoHeight ? $" min-height: {(CssSizeLength)ScrollY};" : "")}{(ScrollY != null && ScrollBarWidth != null ? $" --scrollbar-width: {(CssSizeLength)_scrollBarWidth};" : "")}";
+            return GetSemanticStyle("body.wrapper", string.IsNullOrWhiteSpace(style) ? null : style);
+        }
+
         private string VirtualViewportHeight
         {
             get
@@ -578,7 +586,7 @@ namespace AntDesign
             ? TableLayoutStyle
             : $"{TableLayoutStyle} --scrollbar-width: {(CssSizeLength)_scrollBarWidth};";
 
-        private bool ShouldRenderColGroup => ScrollX != null || ScrollY != null
+        private bool ShouldRenderColGroup => ScrollX != null || ScrollY != null || IsSticky
             || ColumnContext?.Columns.Any(column => column is not ColumnBase baseColumn || baseColumn.RequiresColGroup) == true;
 
         private string StickyHolderStyle => StickyOffsetHeader.HasValue ? $"top: {StickyOffsetHeader.Value}px;" : "";
@@ -1140,7 +1148,7 @@ namespace AntDesign
                 ScrollY = "0px";
             }
 
-            if (ScrollX != null || ScrollY != null)
+            if (ScrollX != null || ScrollY != null || IsSticky)
             {
                 TableLayout ??= "fixed";
             }
@@ -1231,9 +1239,9 @@ namespace AntDesign
 
                 await JsInvokeAsync(JSInteropConstants.TableComponentHelper.BindTableRowHover, Ref);
 
-                if (ScrollY != null || ScrollX != null || Resizable || AutoHeight)
+                if (ScrollY != null || ScrollX != null || IsSticky || Resizable || AutoHeight)
                 {
-                    await JsInvokeAsync(JSInteropConstants.BindTableScroll, _wrapperRef, _tableBodyRef, _tableRef, _tableHeaderRef, ScrollX != null, ScrollY != null, Resizable, AutoHeight);
+                    await JsInvokeAsync(JSInteropConstants.BindTableScroll, _wrapperRef, _tableBodyRef, _tableRef, _tableHeaderRef, ScrollX != null, ScrollY != null || IsSticky, Resizable, AutoHeight);
                 }
 
                 if (ScrollY != null && ScrollY != null && _scrollBarWidth == null)
@@ -1349,7 +1357,7 @@ namespace AntDesign
                 {
                     await JsInvokeAsync(JSInteropConstants.TableComponentHelper.UnbindTableRowHover, Ref);
 
-                    if (ScrollY != null || ScrollX != null || Resizable || AutoHeight)
+                    if (ScrollY != null || ScrollX != null || IsSticky || Resizable || AutoHeight)
                     {
                         await JsInvokeAsync(JSInteropConstants.UnbindTableScroll, _tableBodyRef);
                     }

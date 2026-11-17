@@ -28,7 +28,41 @@ else if (IsPlaceholder)
 }
 else if (IsMeasure)
 {
-    <td style="padding-top: 0px; padding-bottom: 0px; border-top: 0px; border-bottom: 0px; height: 0px;"><div style="height: 0px; overflow: hidden; font-weight: bold;">@if (Sortable) { <div class="ant-table-column-sorters">@SortHeader()</div> } else { @Title }</div></td>
+    <td style="padding-top: 0px; padding-bottom: 0px; border-top: 0px; border-bottom: 0px; height: 0px;"><div style="height: 0px; overflow: hidden; font-weight: bold;">
+        @if (HasFilterControl)
+        {
+            <div class="ant-table-filter-column">
+                <span class="ant-table-column-title">
+                    @if (Sortable)
+                    {
+                        <div class="ant-table-column-sorters">@SortHeader()</div>
+                    }
+                    else
+                    {
+                        @ColumnTitle()
+                    }
+                </span>
+                <span class="ant-table-filter-trigger" role="button" tabindex="-1">
+                    @if (FilterIcon is not null)
+                    {
+                        @FilterIcon(IsFiltered)
+                    }
+                    else
+                    {
+                        <Icon Type="@IconType.Fill.Filter" Theme="@IconThemeType.Fill" />
+                    }
+                </span>
+            </div>
+        }
+        else if (Sortable)
+        {
+            <div class="ant-table-column-sorters">@SortHeader()</div>
+        }
+        else
+        {
+            @Title
+        }
+    </div></td>
 }
 else if (IsColGroup)
 {
@@ -42,7 +76,7 @@ else if (IsColGroup)
         <col style="width: @((CssSizeLength)Width);">
     }
     else if (Table.ScrollX == "max-content"
-        || (Table.ScrollY != null && IsHeaderColGroup)
+        || ((Table.ScrollY != null || Table.IsSticky) && IsHeaderColGroup)
         || Context?.Columns.Skip(ColIndex + 1).Any(column => column is not ColumnBase baseColumn || baseColumn.RequiresColGroup) == true)
     {
         <col />
@@ -357,7 +391,7 @@ else if (IsBody && (Table.IsVirtual || (RowSpan != 0 && ColSpan != 0 && IsCellVi
 
     RenderFragment HeaderCellContent()
     {
-        if (Sortable || (_filterable && (_filters?.Any() == true || _hasFiltersAttribute)))
+        if (Sortable || _filterable)
         {
             return FilterToolTipSorter();
         }
@@ -406,9 +440,21 @@ else if (IsBody && (Table.IsVirtual || (RowSpan != 0 && ColSpan != 0 && IsCellVi
 
         if (IsSorterIconTooltipTarget)
         {
+            if (IsSorterTooltipOpen)
+            {
+                return@<div class="ant-table-column-sorters ant-table-column-sorters-tooltip-target-sorter" @onclick="HandleSort">
+                    @ColumnTitleWithClass()
+                    <Tooltip Title="@SorterTooltip" Visible="true">
+                        <Unbound>
+                            @SorterIcon()
+                        </Unbound>
+                    </Tooltip>
+                </div>;
+            }
+
             return@<div class="ant-table-column-sorters ant-table-column-sorters-tooltip-target-sorter" @onclick="HandleSort">
                 @ColumnTitleWithClass()
-                <Tooltip Title="@SorterTooltip" @attributes="SorterTooltipAttributes">
+                <Tooltip Title="@SorterTooltip">
                     <Unbound>
                         @SorterIcon()
                     </Unbound>
@@ -416,7 +462,18 @@ else if (IsBody && (Table.IsVirtual || (RowSpan != 0 && ColSpan != 0 && IsCellVi
             </div>;
         }
 
-        return@<Tooltip Title="@SorterTooltip" @attributes="SorterTooltipAttributes">
+        if (IsSorterTooltipOpen)
+        {
+            return@<Tooltip Title="@SorterTooltip" Visible="true">
+                <Unbound>
+                    <div class="ant-table-column-sorters ant-tooltip-open" @ref="context.Current" @onclick="HandleSort">
+                        @SortHeader()
+                    </div>
+                </Unbound>
+            </Tooltip>;
+        }
+
+        return@<Tooltip Title="@SorterTooltip">
             <Unbound>
                 <div class="ant-table-column-sorters" @ref="context.Current" @onclick="HandleSort">
                     @SortHeader()

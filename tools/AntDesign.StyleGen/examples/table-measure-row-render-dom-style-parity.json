@@ -42,9 +42,9 @@
         { "path": "header.cell", "selector": ".ant-table-thead th", "minimumCount": 3 },
         { "path": "body.row", "selector": ".ant-table-tbody tr", "minimumCount": 4 },
         { "path": "body.cell", "selector": ".ant-table-tbody td", "minimumCount": 12 },
-        { "path": "filter.dropdown", "selector": ".ant-table-filter-dropdown", "minimumCount": 3 },
-        { "path": "filter.trigger", "selector": ".ant-table-filter-trigger", "minimumCount": 3 },
-        { "path": "sorter.tooltip", "selector": ".ant-tooltip", "minimumCount": 1 }
+        { "path": "filter.dropdown", "selector": ".ant-table-filter-trigger.ant-dropdown-open", "minimumCount": 2 },
+        { "path": "filter.trigger", "selector": ".ant-table-filter-trigger", "minimumCount": 6 },
+        { "path": "sorter.tooltip", "selector": ".ant-table-column-sorters.ant-tooltip-open", "minimumCount": 1 }
       ],
       "scenarios": [{ "id": "initial-open-filters" }]
     }

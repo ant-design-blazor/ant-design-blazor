@@ -39,7 +39,7 @@
                                 @ChildContent(_fieldModel)
                             }
                         </CascadingValue>
-                        <div class="@ClassMapper.Class" @ref="_wrapperRef">
+                        <div class="@ClassMapper.Class" style="@TableColumnCountStyle" @ref="_wrapperRef">
                         @if (TitleTemplate != null)
                         {
                             <div class="@GetSemanticClass("title", "ant-table-title")" style="@GetSemanticStyle("title")">@TitleTemplate</div>
@@ -49,7 +49,7 @@
                             <div class="@GetSemanticClass("title", "ant-table-title")" style="@GetSemanticStyle("title")">@Title</div>
                         }
                         <div class="@GetSemanticClass("section", "ant-table-container")" style="@GetSemanticStyle("section")">
-                            @if (ScrollY != null)
+                            @if (ScrollY != null || IsSticky)
                             {
                                 <div class="ant-table-header @(IsSticky?"ant-table-sticky-holder":"")" style="overflow: hidden;@(string.IsNullOrWhiteSpace(StickyHolderStyle) ? "" : $" {StickyHolderStyle}")" @ref="_tableHeaderRef">
                                     <table style="@(IsVirtualEnabled && ScrollX != null ? $"{TableLayoutStyle} min-width: 100%; width: {(CssSizeLength)ScrollX};" : IsVirtualEnabled && _tableWidth > 0 ? $"{TableLayoutStyle} min-width: 100%; width: {_tableWidth}px;" : ScrollX != null ? $"{TableLayoutStyle} min-width: 100%; width: {(CssSizeLength)ScrollX};" : $"{TableLayoutStyle} min-width: 100%;")">
@@ -94,7 +94,7 @@
                                 }
                                 else
                                 {
-                                    <div class="ant-table-body" @ref="_tableBodyRef" style="@($"{(ScrollX != null ? "overflow: auto scroll;" : "overflow-y: scroll;")}{(AutoHeight ? "" : $" max-height: {(CssSizeLength)ScrollY};")}{(UseItemsProvider && !AutoHeight ? $" min-height: {(CssSizeLength)ScrollY};" : "")}{(ScrollBarWidth == null ? "" : $" --scrollbar-width: {(CssSizeLength)_scrollBarWidth};")}")">
+                                    <div class="ant-table-body" @ref="_tableBodyRef" style="@GetSplitBodyStyle()">
                                         <table style="@(ScrollX != null ? $"width: {(CssSizeLength)ScrollX}; min-width: 100%; {TableLayoutStyle}" : TableLayoutStyle)" @ref="_tableRef">
                                             @colGroup(this, false)
                                             <tbody class="@GetSemanticClass("body.wrapper", "ant-table-tbody")" style="@GetSemanticStyle("body.wrapper")">
@@ -159,13 +159,13 @@
                                     </table>
                                 </div>
                             }
-                            @if (IsSticky)
-                            {
-                                <div class="ant-table-sticky-scroll" style="height: 15px; bottom: 0px;">
-                                    <div class="ant-table-sticky-scroll-bar" style="transform: translate3d(0px, 0px, 0px);"></div>
-                                </div>
-                            }
                         </div>
+                        @if (IsSticky && ScrollX != null)
+                        {
+                            <div class="ant-table-sticky-scroll" style="height: 15px; bottom: 0px;">
+                                <div class="ant-table-sticky-scroll-bar" style="transform: translate3d(0px, 0px, 0px);"></div>
+                            </div>
+                        }
                         @if (FooterTemplate != null)
                         {
                             <div class="@GetSemanticClass("footer", "ant-table-footer")" style="@GetSemanticStyle("footer")">@FooterTemplate</div>

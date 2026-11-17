@@ -344,6 +344,8 @@ namespace AntDesign
 
         private bool IsFiltered => _hasFilterSelected || Filtered;
 
+        private bool HasFilterControl => _filterable || _hasFiltersAttribute || _hasFilterableAttribute || FilterDropdown != null;
+
         private bool _preventClose = false;
 
         private string _filterSearchValue = string.Empty;
@@ -603,15 +605,10 @@ namespace AntDesign
 
         private bool IsSorterTooltipEnabled => EffectiveSorterTooltip.IsT0 ? EffectiveSorterTooltip.AsT0 : true;
 
+        private bool IsSorterTooltipOpen => EffectiveSorterTooltip.IsT1 && EffectiveSorterTooltip.AsT1?.Open == true;
+
         private bool IsSorterIconTooltipTarget => EffectiveSorterTooltip.IsT1
             && string.Equals(EffectiveSorterTooltip.AsT1?.Target, "sorter-icon", StringComparison.Ordinal);
-
-        private IReadOnlyDictionary<string, object> SorterTooltipAttributes =>
-            EffectiveSorterTooltip.IsT1 && EffectiveSorterTooltip.AsT1?.Open == true
-                ? new Dictionary<string, object> { ["Visible"] = true }
-                : EmptySorterTooltipAttributes;
-
-        private static readonly IReadOnlyDictionary<string, object> EmptySorterTooltipAttributes = new Dictionary<string, object>();
 
         private SortDirection NextSortDirection()
         {

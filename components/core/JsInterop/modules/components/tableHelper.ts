@@ -791,9 +791,18 @@ export class tableHelper {
         // The header's fluid column can retain a width assigned during its
         // initial render. Determine which columns are explicitly sized from
         // the body colgroup, where React leaves fluid columns widthless.
-        const bodyColumnWidth = bodyColumns[index]?.style.width;
+        const bodyColumn = bodyColumns[index];
+        const bodyColumnWidth = bodyColumn?.style.width;
         if (bodyColumnWidth) {
-          explicitWidth += Number.parseFloat(bodyColumnWidth) || 0;
+          // Percentage widths are already resolved by the browser on the body
+          // table. Use that measured width so the sticky header receives the
+          // same pixel sizing as rc-table after its layout pass.
+          const measuredWidth = bodyColumn.getBoundingClientRect().width || Number.parseFloat(bodyColumnWidth) || 0;
+          explicitWidth += measuredWidth;
+          const widthValue = `${Math.round(measuredWidth * 1000) / 1000}px`;
+          if (column.style.width !== widthValue) {
+            column.style.width = widthValue;
+          }
           continue;
         }
 

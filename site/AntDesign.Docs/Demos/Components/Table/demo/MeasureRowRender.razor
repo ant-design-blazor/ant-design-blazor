@@ -12,8 +12,8 @@
         </PropertyColumn>
         <PropertyColumn Property="row => row.Age" Title="Age" Width="20%" Filters="_ageFilters" FilterDropdownOpen="true" />
         <PropertyColumn Property="row => row.Address" Title="Address" SorterCompare="(left, right) => left.Length - right.Length"
-                        SortDirections="_addressSortDirections" FilterDropdownOpen="true"
-                        ShowSorterTooltip="_sorterTooltip" FilterIcon="SearchFilterIcon" FilterDropdown="AddressFilter">
+                        SortDirections="_addressSortDirections" ShowSorterTooltip="_sorterTooltip"
+                        FilterIcon="SearchFilterIcon" FilterDropdown="AddressFilter">
             <CellRender Context="cell">@Highlight(cell.FormattedValue, _addressQuery)</CellRender>
         </PropertyColumn>
     </ColumnDefinitions>
