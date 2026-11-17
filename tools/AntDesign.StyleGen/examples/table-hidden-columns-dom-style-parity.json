@@ -29,6 +29,7 @@
         "removeCommentMarkers": [
           "<!--!-->"
         ],
+        "normalizeStyleAttributes": true,
         "sortClassTokens": true,
         "removeInterTagWhitespace": true
       }
@@ -44,7 +45,7 @@
         "rootSelector": ".ant-table-wrapper"
       },
       "blazor": {
-        "url": "http://127.0.0.1:5011/en-US/components/table",
+        "url": "http://127.0.0.1:5000/en-US/components/table",
         "scopeSelector": "#components-table-demo-hidden-columns",
         "rootSelector": ".ant-table-wrapper"
       },
@@ -98,6 +99,13 @@
         },
         {
           "id": "column-2-hidden",
+          "semanticMinimumCounts": {
+            "root": 1,
+            "table": 1,
+            "header.cell": 7,
+            "body.row": 2,
+            "body.cell": 14
+          },
           "actions": [
             {
               "type": "click",

@@ -4795,3 +4795,23 @@ classes. Report: `/tmp/table-ajax-dom-style-parity-20261117-final.json`.
 This closes only the Table Ajax demo; remaining Table demos and the full
 71-component API/token/docs/Semantic DOM/Theme Preview/runtime audit remain
 open.
+
+## Table Hidden Columns — 2026-11-17
+
+Rebuilt the `net11.0` Docs.Server and started it in Development mode so the
+AntDesign static web assets load correctly. Updated the fixture to compare
+against the local server at `http://127.0.0.1:5000`; the earlier 5011 attempt
+was a stale Production host whose missing `ant-design-blazor.js` left demos in
+Skeleton state and is not parity evidence.
+
+The demo now renders the eight column toggles through `CheckboxGroup` and
+applies its top margin to the Table wrapper. The fixture normalizes equivalent
+CSS declaration whitespace and declares per-scenario semantic node counts, so
+hiding one column expects seven header cells and fourteen body cells. Both
+initial and column-hidden scenarios pass (2/2) with equal normalized DOM,
+computed CSS, geometry, and visual styles; report:
+`/tmp/table-hidden-columns-20261117-current-final.json`. Manual browser
+interaction confirmed the counts transition `8 → 7 → 8` after hiding and
+restoring Column 2. The Blazor page is open at
+`http://127.0.0.1:5000/en-US/components/table#components-table-demo-hidden-columns`
+for continued manual review. This closes only the Hidden Columns demo.

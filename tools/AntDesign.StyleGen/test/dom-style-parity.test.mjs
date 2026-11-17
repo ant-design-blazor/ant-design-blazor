@@ -38,6 +38,19 @@ test('Collapse gate retains meaningful attributes and requires every React seman
   assert.equal(manifest.groups.find(group => group.id === 'collapse-collapsible').scenarios[0].minimumRoots, 3);
 });
 
+test('scenario-specific semantic minimum counts support interactive table states', async () => {
+  const manifest = JSON.parse(await readFile(new URL('../examples/table-hidden-columns-dom-style-parity.json', import.meta.url), 'utf8'));
+  validateParityManifest(manifest);
+  assert.deepEqual(manifest.groups[0].scenarios[1].semanticMinimumCounts, {
+    root: 1,
+    table: 1,
+    'header.cell': 7,
+    'body.row': 2,
+    'body.cell': 14,
+  });
+  assert.equal(manifest.config.comparisonPolicy.normalization.normalizeStyleAttributes, true);
+});
+
 test('Select Escape gate settles the open and close motions before capture', async () => {
   const manifest = JSON.parse(await readFile(new URL('../examples/select-basic-popup-dom-style-parity.json', import.meta.url), 'utf8'));
   validateParityManifest(manifest);

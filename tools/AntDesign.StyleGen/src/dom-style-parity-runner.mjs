@@ -873,7 +873,8 @@ async function runGroup(reactBrowser, blazorBrowser, group, config) {
         geometryTolerancePx: group.geometryTolerancePx ?? config.comparisonPolicy.geometryTolerancePx ?? 0,
         computedStylePixelToleranceByProperty: group.computedStylePixelToleranceByProperty
           ?? comparisonPolicy.computedStylePixelToleranceByProperty,
-        semanticMinimumCounts: Object.fromEntries((group.semanticNodes ?? []).map(({ path, minimumCount }) => [path, minimumCount ?? 0])),
+        semanticMinimumCounts: scenario.semanticMinimumCounts
+          ?? Object.fromEntries((group.semanticNodes ?? []).map(({ path, minimumCount }) => [path, minimumCount ?? 0])),
         svgUsePaths: (group.semanticNodes ?? []).filter(node => node.verifySvgUse).map(node => node.path),
       });
       scenarioResult.status = comparison.equal ? 'passed' : 'differences';
