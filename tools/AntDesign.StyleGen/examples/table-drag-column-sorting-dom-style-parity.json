@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "ant-design/ant-design",
+    "revision": "599b251da933709d7b25fc9e9018ed7f4c093b96",
+    "component": "Table"
+  },
+  "config": {
+    "timeoutMs": 90000,
+    "viewport": { "width": 1280, "height": 1000, "deviceScaleFactor": 1 },
+    "colorScheme": "light",
+    "comparisonPolicy": {
+      "normalization": {
+        "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_r_[a-zA-Z0-9_-]+)$",
+        "removeAttributes": ["_bl_*", "id", "name", "aria-describedby"],
+        "removeClassPatterns": ["^acss-[a-zA-Z0-9_-]+$", "^css-dev-only-do-not-override-", "^css-var-_[rR]_", "^css-var-root$", "^css-[a-zA-Z0-9]+$"],
+        "removeCommentMarkers": ["<!--!-->"],
+        "normalizeStyleAttributes": true,
+        "sortAttributes": true,
+        "sortClassTokens": true,
+        "removeInterTagWhitespace": true
+      }
+    }
+  },
+  "groups": [
+    {
+      "id": "table-drag-column-sorting",
+      "component": "Table",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/table",
+        "scopeSelector": "#table-demo-drag-column-sorting",
+        "rootSelector": ".ant-table-wrapper"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/table",
+        "scopeSelector": "#components-table-demo-drag-column-sorting",
+        "rootSelector": ".ant-table-wrapper"
+      },
+      "styleProperties": [
+        "display", "position", "boxSizing", "width", "height", "paddingBlock", "paddingInline",
+        "marginBlock", "gap", "alignItems", "lineHeight", "fontSize", "fontWeight", "color",
+        "backgroundColor", "opacity", "transform", "transition", "userSelect", "zIndex",
+        "borderInlineStartWidth", "borderInlineStartStyle", "borderInlineStartColor",
+        "borderInlineEndWidth", "borderInlineEndStyle", "borderInlineEndColor"
+      ],
+      "semanticNodes": [
+        { "path": "root", "selector": "$root", "minimumCount": 1 },
+        { "path": "header.cell", "selector": ".ant-table-thead th", "minimumCount": 5 },
+        { "path": "body.row", "selector": ".ant-table-tbody tr", "minimumCount": 4 },
+        { "path": "body.cell", "selector": ".ant-table-tbody td", "minimumCount": 20 }
+      ],
+      "scenarios": [
+        { "id": "initial" },
+        {
+          "id": "name-dropped-over-age",
+          "actions": [
+            {
+              "type": "drag",
+              "durationMs": 150,
+              "reactFromSelector": "#table-demo-drag-column-sorting .ant-table-thead th[id='0']",
+              "reactToSelector": "#table-demo-drag-column-sorting .ant-table-thead th[id='2']",
+              "blazorFromSelector": "#components-table-demo-drag-column-sorting .ant-table-thead th[id='0']",
+              "blazorToSelector": "#components-table-demo-drag-column-sorting .ant-table-thead th[id='2']",
+              "reactHeaderSelector": "#table-demo-drag-column-sorting .ant-table-thead th",
+              "blazorHeaderSelector": "#components-table-demo-drag-column-sorting .ant-table-thead th",
+              "reactExpectedOrder": ["Gender", "Age", "Name", "Email", "Address"],
+              "blazorExpectedOrder": ["Gender", "Age", "Name", "Email", "Address"]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

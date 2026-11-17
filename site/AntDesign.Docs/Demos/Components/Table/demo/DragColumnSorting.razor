@@ -6,7 +6,7 @@
     <div id="DndDescribedBy-1" class="table-column-drag-instructions">
         To pick up a draggable column, press the space bar. While dragging, use the left and right arrow keys to move the column. Press space again to drop it, or press escape to cancel.
     </div>
-    <Table RefBack="@_tableRef" TItem="Row" DataSource="_rows" RowKey="row => row.Key" Class="table-column-drag-table">
+    <Table RefBack="@_tableRef" TItem="Row" DataSource="_rows" RowKey="row => row.Key">
         <ColumnDefinitions>
             @foreach (var column in _columnOrder)
             {
@@ -54,10 +54,6 @@
         clip: rect(0, 0, 0, 0);
         white-space: nowrap;
         border: 0;
-    }
-
-    .table-column-drag-demo .table-column-drag-table thead th[id] {
-        cursor: move;
     }
 
     .table-column-drag-overlay {
@@ -112,7 +108,8 @@
         ["role"] = "button",
         ["aria-disabled"] = "false",
         ["aria-roledescription"] = "sortable",
-        ["aria-describedby"] = InstructionsId
+        ["aria-describedby"] = InstructionsId,
+        ["style"] = "cursor: move;"
     };
 
     private static Dictionary<string, object> CellAttributes(string column) => new()

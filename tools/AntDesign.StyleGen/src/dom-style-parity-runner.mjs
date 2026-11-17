@@ -531,6 +531,38 @@ export async function applyAction(page, side, action, timeoutMs) {
       await page.focus(selector);
       await page.keyboard.press(action.key);
       break;
+    case 'drag': {
+      const fromSelector = action[`${side}FromSelector`] ?? action.fromSelector;
+      const toSelector = action[`${side}ToSelector`] ?? action.toSelector;
+      if (!fromSelector || !toSelector) throw new Error(`${side} fromSelector and toSelector are required for drag`);
+      await page.waitForSelector(fromSelector, { timeout: timeoutMs });
+      await page.waitForSelector(toSelector, { timeout: timeoutMs });
+      await page.$eval(fromSelector, element => element.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'instant' }));
+      await page.$eval(toSelector, element => element.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'instant' }));
+      const points = await page.evaluate(({ fromSelector, toSelector }) => {
+        const center = selector => {
+          const element = document.querySelector(selector);
+          if (!element) throw new Error(`drag target not found: ${selector}`);
+          const rect = element.getBoundingClientRect();
+          return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+        };
+        return { from: center(fromSelector), to: center(toSelector) };
+      }, { fromSelector, toSelector });
+      await page.mouse.move(points.from.x, points.from.y);
+      await page.mouse.down();
+      await page.mouse.move(points.to.x, points.to.y, { steps: action.steps ?? 8 });
+      if (action.durationMs) await new Promise(resolvePromise => setTimeout(resolvePromise, action.durationMs));
+      await page.mouse.up();
+      const expectedOrder = action[`${side}ExpectedOrder`] ?? action.expectedOrder;
+      if (expectedOrder) {
+        const headerSelector = action[`${side}HeaderSelector`] ?? action.headerSelector ?? 'thead th';
+        await page.waitForFunction(({ headerSelector, expectedOrder }) => {
+          const actualOrder = [...document.querySelectorAll(headerSelector)].map(element => element.textContent.trim());
+          return JSON.stringify(actualOrder) === JSON.stringify(expectedOrder);
+        }, { timeout: timeoutMs }, { headerSelector, expectedOrder });
+      }
+      break;
+    }
     case 'wait':
       await new Promise((resolvePromise) => setTimeout(resolvePromise, action.milliseconds ?? 0));
       break;
@@ -843,8 +875,9 @@ async function runGroup(reactBrowser, blazorBrowser, group, config) {
         blazor = await captureSide('blazor', blazorPage, group.blazor);
       } else {
         for (const action of actions) {
-          activeStage = `${action.type} action`;
+          activeStage = `react ${action.type} action`;
           const reactDurationMs = await applyAction(reactPage, 'react', action, config.timeoutMs);
+          activeStage = `blazor ${action.type} action`;
           const blazorDurationMs = await applyAction(blazorPage, 'blazor', action, config.timeoutMs);
           if (action.type === 'measureClickVisible') {
             scenarioResult.timings ??= {};
@@ -993,9 +1026,21 @@ export function validateParityManifest(manifest) {
     for (const scenario of group.scenarios) {
       if (!scenario.id || scenarioIds.has(scenario.id)) throw new Error(`${group.id} has a missing or duplicate scenario id`);
       scenarioIds.add(scenario.id);
+      if (scenario.semanticMinimumCounts !== undefined) {
+        if (!scenario.semanticMinimumCounts || typeof scenario.semanticMinimumCounts !== 'object' || Array.isArray(scenario.semanticMinimumCounts)) {
+          throw new Error(`${group.id}.${scenario.id}.semanticMinimumCounts must be an object`);
+        }
+        for (const [path, count] of Object.entries(scenario.semanticMinimumCounts)) {
+          if (!path || !Number.isInteger(count) || count < 0) {
+            throw new Error(`${group.id}.${scenario.id} has an invalid semantic minimum count for ${path}`);
+          }
+        }
+      }
       for (const action of scenario.actions ?? []) {
-        if (!['click', 'measureClickVisible', 'hover', 'focus', 'fill', 'typeText', 'press', 'wait', 'waitForSelector', 'waitForSelectOptions', 'waitForPortal', 'viewport'].includes(action.type)) throw new Error(`${group.id}.${scenario.id} has unsupported action ${action.type}`);
+        if (!['click', 'measureClickVisible', 'hover', 'focus', 'fill', 'typeText', 'press', 'drag', 'wait', 'waitForSelector', 'waitForSelectOptions', 'waitForPortal', 'viewport'].includes(action.type)) throw new Error(`${group.id}.${scenario.id} has unsupported action ${action.type}`);
         const hasActionSelector = side => action.selector || action[`${side}Selector`]
+          || (action.type === 'drag' && (action[`${side}FromSelector`] ?? action.fromSelector)
+            && (action[`${side}ToSelector`] ?? action.toSelector))
           || (action.type === 'waitForPortal' && action[`${side}TriggerSelector`]);
         if (!['wait', 'viewport'].includes(action.type) && !hasActionSelector('react')) throw new Error(`${group.id}.${scenario.id} has an action without a React selector`);
         if (!['wait', 'viewport'].includes(action.type) && !hasActionSelector('blazor')) throw new Error(`${group.id}.${scenario.id} has an action without a Blazor selector`);

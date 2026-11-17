@@ -65,6 +65,33 @@ test('press actions use Puppeteer keyboard events after focusing the side-specif
   assert.deepEqual(calls, ['front', 'ready:#blazor-input', 'focus:#blazor-input', 'press:Tab']);
 });
 
+test('drag actions send a pointer sequence and wait for the expected order', async () => {
+  const calls = [];
+  const page = {
+    async bringToFront() { calls.push('front'); },
+    async waitForSelector(selector) { calls.push(`wait:${selector}`); },
+    async $eval(selector) { calls.push(`scroll:${selector}`); },
+    async evaluate(_fn, args) { calls.push(`points:${args.fromSelector}:${args.toSelector}`); return { from: { x: 10, y: 20 }, to: { x: 90, y: 20 } }; },
+    mouse: {
+      async move(x, y, options) { calls.push(`move:${x}:${y}:${options?.steps ?? 0}`); },
+      async down() { calls.push('down'); },
+      async up() { calls.push('up'); },
+    },
+    async waitForFunction(_fn, options, args) { calls.push(`order:${options.timeout}:${args.headerSelector}:${args.expectedOrder.join(',')}`); },
+  };
+  await applyAction(page, 'react', {
+    type: 'drag',
+    reactFromSelector: '#name',
+    reactToSelector: '#age',
+    reactExpectedOrder: ['Gender', 'Age', 'Name'],
+  }, 5000);
+  assert.deepEqual(calls, [
+    'front', 'wait:#name', 'wait:#age', 'scroll:#name', 'scroll:#age',
+    'points:#name:#age', 'move:10:20:0', 'down', 'move:90:20:8', 'up',
+    'order:5000:thead th:Gender,Age,Name',
+  ]);
+});
+
 test('click actions scroll deep documentation targets into view instantly before clicking', async () => {
   const calls = [];
   const page = {

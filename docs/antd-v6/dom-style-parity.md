@@ -4815,3 +4815,20 @@ interaction confirmed the counts transition `8 → 7 → 8` after hiding and
 restoring Column 2. The Blazor page is open at
 `http://127.0.0.1:5000/en-US/components/table#components-table-demo-hidden-columns`
 for continued manual review. This closes only the Hidden Columns demo.
+
+## Table Drag Column Sorting — 2026-11-17
+
+Matched the demo's header styling to React by putting `cursor: move` on each
+header cell and removing the extra Blazor-only Table class. The parity runner
+now supports pointer drag actions and reports which implementation side fails
+an interaction. The fixture waits 150ms after pointer movement so React's
+dnd-kit sensor can process the final drag position before pointer-up.
+
+The initial state and moving Name over Age both pass (2/2), with no normalized
+DOM, selected computed CSS, geometry, or visual-style differences. The
+`net11.0` Docs.Server build succeeds with 0 errors (4204 existing warnings).
+Report: `/tmp/table-drag-column-sorting-20261117-final.json`. Blazor remains
+open at `http://127.0.0.1:5000/en-US/components/table#components-table-demo-drag-column-sorting`
+for manual review. This closes only Table Drag Column Sorting; the remaining
+Table demos and 71-component API/token/docs/Semantic DOM/Theme Preview/runtime
+audit remain open.
