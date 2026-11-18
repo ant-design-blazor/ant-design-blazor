@@ -4904,3 +4904,58 @@ Docs.Server build succeeded with 0 errors (4211 existing warnings); browser
 inspection confirms the generated Blazor demo description is visible. The
 remaining Table demos and the 71-component API/token/docs/Semantic DOM/Theme
 Preview/runtime audit remain open.
+
+## Table Grouping Headers — 2026-11-18
+
+Compared the Blazor Grouping Headers demo with React v6. The Blazor demo used a
+small table and fixed scroll dimensions; it now uses React's medium size,
+`calc(50% + 700px)` horizontal width, 235px scroll height, stable row keys, and
+matching column labels. `SimpleTableHeader` now emits `scope="colgroup"` for
+spanning headers, matching React table semantics. The `Table ColSpan and
+RowSpan` regression fixture still passes 1/1 after this shared header change.
+
+The final Grouping Headers fixture passes 1/1 with normalized DOM, computed
+styles, geometry, pseudo-element z-index, and visual styles equal. The demo
+sets `ScrollBarWidth="0px"` to match React's fixed-header gutter behavior;
+zero width no longer emits a scrollbar-width class or CSS variable. The parity
+normalizer removes only the Blazor-specific `--columns-count` style declaration
+from markup; its rendered effect remains checked through sampled z-index and
+geometry. Report: `/tmp/table-grouping-columns-dom-style-parity-20261118-complete.json`.
+The `Table ColSpan and RowSpan` regression also passes 1/1:
+`/tmp/table-colspan-rowspan-dom-style-parity-20261118-regression-final.json`.
+Docs.Server `net11.0` builds with 0 errors (4194 warnings). Remaining Table
+demos and the full 71-component API, tokens, docs, Semantic DOM, Theme Preview,
+and runtime audit remain open.
+
+## Table Head and Dim Sum demo pairing — 2026-11-18
+
+The React `Head` demo already had a Blazor implementation, but the docs page
+never rendered it. Dim Sum grouped demo files by a punctuation-insensitive
+stem and required exactly two files; the unpaired legacy `Head_.razor` collided
+with `Head.razor` and caused the valid `head.md` + `Head.razor` pair to be
+skipped. The generator now pairs each Markdown file to an exact-stem Razor file
+when possible, falling back to a unique normalized match. The Head demo is now
+present in the generated page and has bilingual description text. Its focused
+fixture passes 1/1 with equal normalized DOM, computed styles, geometry, and
+visual styles: `/tmp/table-head-dom-style-parity-20261118-rerun.json`.
+
+Dim Sum fix committed and pushed to `codex/blazor-docs-generator` as
+`2be0c39` (`fix: pair demo markdown with exact razor names`). Docs.Server
+`net11.0` build passed with 0 errors (645 existing warnings). Remaining Table
+demos and the full component/API/token/docs/Semantic DOM/Theme Preview/runtime
+audit remain open.
+
+## Table JSX Composition — 2026-11-18
+
+Replaced the generic Table parity placeholder with React's JSX-composition
+example: three rows, a two-level Name header, Age/Address/Tags/Action columns,
+wrapped color tags, and Invite/Delete actions. Added localized demo copy and a
+focused fixture that asserts the grouped and leaf headers, 18 body cells, five
+tags, and six action links. The fixture passes 1/1 with equal normalized DOM,
+selected computed styles, geometry, and visual styles. Raw HTML serialization
+only differs in Razor whitespace; the normalized tree is equal. React logged
+site-level 404/contributor-fetch errors during capture; the Blazor page had no
+navigation errors. Report: `/tmp/table-jsx-dom-style-parity-20261118.json`.
+Docs.Server `net11.0` build succeeded with 0 errors (600 existing warnings).
+The Table route and full 71-component API, token, docs, Semantic DOM, Theme
+Preview, and runtime audit remain incomplete.

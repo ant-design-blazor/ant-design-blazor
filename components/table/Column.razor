@@ -513,7 +513,7 @@ else if (IsBody && (Table.IsVirtual || (RowSpan != 0 && ColSpan != 0 && IsCellVi
                 </span>
             </Unbound>
             <Overlay>
-                <div class="ant-table-filter-dropdown">
+                <div class="ant-table-filter-dropdown" role="presentation">
                     @if (FilterDropdown != null)
                     {
                         @FilterDropdown(new(() => { _filterOpened = false; _preventClose = false; }, () => { _preventClose = true; }))

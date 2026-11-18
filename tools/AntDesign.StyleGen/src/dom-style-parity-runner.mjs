@@ -261,6 +261,20 @@ export async function applyAction(page, side, action, timeoutMs) {
   // computed styles are sampled from the same settled state.
   await page.bringToFront();
   const selector = action[`${side}Selector`] ?? action.selector;
+  const getVisibleTarget = async () => {
+    const candidates = await page.$$(selector);
+    for (const candidate of candidates) {
+      const visible = await candidate.evaluate((element) => {
+        const style = getComputedStyle(element);
+        const rect = element.getBoundingClientRect();
+        return style.display !== 'none' && style.visibility !== 'hidden'
+          && Number(style.opacity) > 0 && rect.width > 0 && rect.height > 0
+          && rect.bottom > 0 && rect.right > 0 && rect.top < innerHeight && rect.left < innerWidth;
+      });
+      if (visible) return candidate;
+    }
+    throw new Error(`${side} no visible match for ${selector}`);
+  };
   switch (action.type) {
     case 'click':
       if (action.force) {
@@ -271,22 +285,7 @@ export async function applyAction(page, side, action, timeoutMs) {
         // Component documentation keeps previously opened portal nodes mounted
         // while hidden or offscreen. Resolve the first actually visible match
         // before clicking instead of timing out on an earlier stale portal.
-        const candidates = await page.$$(selector);
-        let target;
-        for (const candidate of candidates) {
-          const visible = await candidate.evaluate((element) => {
-            const style = getComputedStyle(element);
-            const rect = element.getBoundingClientRect();
-            return style.display !== 'none' && style.visibility !== 'hidden'
-              && Number(style.opacity) > 0 && rect.width > 0 && rect.height > 0
-              && rect.bottom > 0 && rect.right > 0 && rect.top < innerHeight && rect.left < innerWidth;
-          });
-          if (visible) {
-            target = candidate;
-            break;
-          }
-        }
-        if (!target) throw new Error(`${side} no visible match for ${selector}`);
+        const target = await getVisibleTarget();
         await target.evaluate((element) => element.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'instant' }));
         await target.click({ timeout: timeoutMs });
       } else {
@@ -519,7 +518,8 @@ export async function applyAction(page, side, action, timeoutMs) {
       await page.focus(selector);
       break;
     case 'fill':
-      await page.locator(selector).fill(action.value ?? '', { timeout: timeoutMs });
+      if (action.visible) await (await getVisibleTarget()).fill(action.value ?? '', { timeout: timeoutMs });
+      else await page.locator(selector).fill(action.value ?? '', { timeout: timeoutMs });
       break;
     case 'typeText':
       await page.waitForSelector(selector, { timeout: timeoutMs });
@@ -527,9 +527,12 @@ export async function applyAction(page, side, action, timeoutMs) {
       await page.keyboard.type(action.value ?? '', { delay: action.delayMs ?? 0 });
       break;
     case 'press':
-      await page.waitForSelector(selector, { timeout: timeoutMs });
-      await page.focus(selector);
-      await page.keyboard.press(action.key);
+      if (action.visible) await (await getVisibleTarget()).press(action.key, { timeout: timeoutMs });
+      else {
+        await page.waitForSelector(selector, { timeout: timeoutMs });
+        await page.focus(selector);
+        await page.keyboard.press(action.key);
+      }
       break;
     case 'drag': {
       const fromSelector = action[`${side}FromSelector`] ?? action.fromSelector;

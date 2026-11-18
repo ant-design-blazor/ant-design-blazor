@@ -1,78 +1,157 @@
-<Table @ref="_table" DataSource="dataSource" OnChange="OnChange" TItem="Data">
+@using AntDesign.TableModels
+@using AntDesign.Filters
+@using System.Net
+
+@* React's custom filter example uses the same four-button search panel on each column. *@
+<Table TItem="Data" DataSource="_dataSource" OnChange="OnChange" RowKey="row => row.Key">
     <ColumnDefinitions>
-        <PropertyColumn Property="c=>c.Name"
-                        SorterCompare="@((a,b)=> a.Length - b.Length)"
-                        SortDirections="new[] { SortDirection.Descending }"
-                        Filtered="!string.IsNullOrWhiteSpace(searchString)">
-            <FilterDropdown Context="dropdown">
-                @{
-                    dropdown.PreventClose(); 
-                }
-                <Search Placeholder="Search Name" WrapperStyle="padding:20px;" @bind-Value="searchString" OnSearch="()=>_table?.ReloadData()" />
-                <Button Size="ButtonSize.Small" OnClick="()=> dropdown.FilterClose()">Cancel</Button>
-            </FilterDropdown>
+        <PropertyColumn Property="row => row.Name" Title="Name" Width="30%"
+                        Filtered="IsFiltered(nameof(Data.Name))"
+                        OnFilter="(query, value) => value.Contains(query, StringComparison.OrdinalIgnoreCase)"
+                        FilterDropdown="@(context => SearchFilter(context, nameof(Data.Name), "name"))">
+            <CellRender Context="cell">@Highlight(cell.FormattedValue, nameof(Data.Name))</CellRender>
+            <FilterIcon Context="filtered">
+                <Icon Type="@IconType.Outline.Search" Style="@(filtered ? "color: #1677ff" : null)" />
+            </FilterIcon>
         </PropertyColumn>
-        <PropertyColumn Property="c=>c.Age"
-                        DefaultSortOrder="SortDirection.Descending"
-                        SorterCompare="@((a,b)=> a - b)" />
-        <PropertyColumn Property="c=>c.Address"
-                        SorterCompare="@((a,b)=> a.Length - b.Length)"
+        <PropertyColumn Property="row => row.Age" Title="Age" Width="20%"
+                        Filtered="IsFiltered(nameof(Data.Age))"
+                        OnFilter="(query, value) => value.ToString().Contains(query.ToString(), StringComparison.OrdinalIgnoreCase)"
+                        FilterDropdown="@(context => SearchFilter(context, nameof(Data.Age), "age"))">
+            <CellRender Context="cell">@Highlight(cell.FormattedValue, nameof(Data.Age))</CellRender>
+            <FilterIcon Context="filtered">
+                <Icon Type="@IconType.Outline.Search" Style="@(filtered ? "color: #1677ff" : null)" />
+            </FilterIcon>
+        </PropertyColumn>
+        <PropertyColumn Property="row => row.Address" Title="Address"
+                        SorterCompare="(left, right) => left.Length - right.Length"
                         SortDirections="new[] { SortDirection.Descending, SortDirection.Ascending }"
-                        Filters="addressFilters"
-                        FilterMultiple="false"
-                        OnFilter="(value,address)=>address.StartsWith(value)" />
+                        Filtered="IsFiltered(nameof(Data.Address))"
+                        OnFilter="(query, value) => value.Contains(query, StringComparison.OrdinalIgnoreCase)"
+                        FilterDropdown="@(context => SearchFilter(context, nameof(Data.Address), "address"))">
+            <CellRender Context="cell">@Highlight(cell.FormattedValue, nameof(Data.Address))</CellRender>
+            <FilterIcon Context="filtered">
+                <Icon Type="@IconType.Outline.Search" Style="@(filtered ? "color: #1677ff" : null)" />
+            </FilterIcon>
+        </PropertyColumn>
     </ColumnDefinitions>
 </Table>
 
-@using AntDesign.TableModels;
-@using System.Text.Json;
 @code {
-    string searchString;
-    IEnumerable<Data> dataSource;
-    ITable _table;
+    private readonly Data[] _data =
+    [
+        new("1", "John Brown", 32, "New York No. 1 Lake Park"),
+        new("2", "Joe Black", 42, "London No. 1 Lake Park"),
+        new("3", "Jim Green", 32, "Sydney No. 1 Lake Park"),
+        new("4", "Jim Red", 32, "London No. 2 Lake Park")
+    ];
 
-    class Data
+    private IEnumerable<Data> _dataSource = Array.Empty<Data>();
+    private QueryModel<Data>? _query;
+    private string _pendingName = string.Empty;
+    private string _pendingAge = string.Empty;
+    private string _pendingAddress = string.Empty;
+    private string _activeColumn = string.Empty;
+    private string _activeSearchText = string.Empty;
+
+    protected override void OnInitialized()
     {
-        public Data(string name, int age, string address)
+        _dataSource = _data;
+    }
+
+    private const string InputStyle = "margin-bottom: 8px; display: block;";
+
+    private RenderFragment SearchFilter(TableFilterDropdownContext context, string column, string field) => @<div style="padding: 8px;" @onkeydown:stopPropagation>
+        <Input TValue="string" Placeholder="@($"Search {field}")" Value="PendingValue(column)" ValueChanged="value => SetPendingValue(column, value)"
+               Style="@InputStyle" OnPressEnter="() => ApplySearch(context, column, true)" />
+        <Space>
+            <SpaceItem><Button Type="ButtonType.Primary" Size="ButtonSize.Small" Icon="@IconType.Outline.Search"
+                               Style="display: inline-flex; width: 90px" OnClick="() => ApplySearch(context, column, true)">Search</Button></SpaceItem>
+            <SpaceItem><Button Size="ButtonSize.Small" Style="display: inline-flex; width: 90px" OnClick="() => ResetSearch(context, column)">Reset</Button></SpaceItem>
+            <SpaceItem><Button Type="ButtonType.Link" Size="ButtonSize.Small" Style="display: inline-flex" OnClick="() => ApplySearch(context, column, false)">Filter</Button></SpaceItem>
+            <SpaceItem><Button Type="ButtonType.Link" Size="ButtonSize.Small" Style="display: inline-flex" OnClick="() => context.FilterClose()">close</Button></SpaceItem>
+        </Space>
+    </div>;
+
+    private string PendingValue(string column) => column switch
+    {
+        nameof(Data.Name) => _pendingName,
+        nameof(Data.Age) => _pendingAge,
+        _ => _pendingAddress
+    };
+
+    private void SetPendingValue(string column, string value)
+    {
+        switch (column)
         {
-            Name = name;
-            Age = age;
-            Address = address;
+            case nameof(Data.Name): _pendingName = value; break;
+            case nameof(Data.Age): _pendingAge = value; break;
+            default: _pendingAddress = value; break;
+        }
+    }
+
+    private bool IsFiltered(string column) => _activeColumn == column && !string.IsNullOrEmpty(_activeSearchText);
+
+    private MarkupString Highlight(string text, string column)
+    {
+        text ??= string.Empty;
+        var match = _activeColumn == column ? _activeSearchText : string.Empty;
+        var matchIndex = string.IsNullOrEmpty(match) ? -1 : text.IndexOf(match, StringComparison.OrdinalIgnoreCase);
+        if (matchIndex < 0)
+        {
+            return new MarkupString(WebUtility.HtmlEncode(text));
         }
 
-        public string Name { get; set; }
-        public int Age { get; set; }
-        public string Address { get; set; }
+        var highlighted = string.Concat(
+            WebUtility.HtmlEncode(text[..matchIndex]),
+            "<mark class=\"highlight\" style=\"background-color: rgb(255, 192, 105); padding: 0px;\">",
+            WebUtility.HtmlEncode(text.Substring(matchIndex, match.Length)),
+            "</mark>",
+            WebUtility.HtmlEncode(text[(matchIndex + match.Length)..]));
+        return new MarkupString(highlighted);
     }
 
-    Data[] data =
+    private void ApplySearch(TableFilterDropdownContext context, string column, bool closeDropdown)
     {
-        new("John Brown",32,"New York No. 1 Lake Park"),
-        new("Jim Green",42, "London No. 1 Lake Park"),
-        new("Joe Black", 32,"Sidney No. 1 Lake Park"),
-        new("Jim Red",32,"London No. 2 Lake Park"),
-    };
-
-    public TableFilter<string>[] nameFilters = new TableFilter<string>[] {
-        new() { Text = "Joe", Value = "Joe" },
-        new() { Text = "Jim", Value = "Jim" },
-    };
-
-    public TableFilter<string>[] addressFilters = new TableFilter<string>[] {
-        new() { Text = "London", Value = "London" },
-        new() { Text = "New York", Value = "New York" },
-    };
-
-    void OnChange(QueryModel<Data> query)
-    {
-        Console.WriteLine(JsonSerializer.Serialize(query));
-
-        dataSource = query.ExecuteQuery(data.AsQueryable())
-            .Where(x => string.IsNullOrWhiteSpace(searchString) || x.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase));
+        _activeColumn = column;
+        _activeSearchText = PendingValue(column);
+        RefreshDataSource();
+        if (closeDropdown)
+        {
+            context.FilterClose();
+        }
     }
 
-    void OnRowClick(RowData<Data> row)
+    private void ResetSearch(TableFilterDropdownContext context, string column)
     {
-        Console.WriteLine($"row {row.Data.Name} was clicked");
+        SetPendingValue(column, string.Empty);
+        _activeColumn = string.Empty;
+        _activeSearchText = string.Empty;
+        RefreshDataSource();
+        context.FilterClose();
     }
+
+    private void OnChange(QueryModel<Data> query)
+    {
+        _query = query;
+        RefreshDataSource();
+    }
+
+    private void RefreshDataSource()
+    {
+        var query = _query?.ExecuteQuery(_data.AsQueryable()) ?? _data.AsQueryable();
+        if (!string.IsNullOrEmpty(_activeSearchText))
+        {
+            query = _activeColumn switch
+            {
+                nameof(Data.Name) => query.Where(row => row.Name.Contains(_activeSearchText, StringComparison.OrdinalIgnoreCase)),
+                nameof(Data.Age) => query.Where(row => row.Age.ToString().Contains(_activeSearchText, StringComparison.OrdinalIgnoreCase)),
+                _ => query.Where(row => row.Address.Contains(_activeSearchText, StringComparison.OrdinalIgnoreCase))
+            };
+        }
+
+        _dataSource = query.ToArray();
+    }
+
+    private sealed record Data(string Key, string Name, int Age, string Address);
 }

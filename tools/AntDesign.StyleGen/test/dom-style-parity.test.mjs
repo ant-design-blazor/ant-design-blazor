@@ -405,6 +405,17 @@ test('sorts CSS class tokens only when explicitly requested by the comparison po
     '<div class="marker ant-component is-active"></div>');
 });
 
+test('removes only explicitly declared framework style properties', () => {
+  assert.equal(normalizeRuntimeHtml('<div class="ant-table" style="--columns-count: 8;"></div>', {
+    removeStyleProperties: ['--columns-count'],
+  }), '<div class="ant-table"></div>');
+  assert.equal(normalizeRuntimeHtml('<div style="--columns-count: 8; color: red;"></div>', {
+    removeStyleProperties: ['--columns-count'],
+  }), '<div style="color: red;"></div>');
+  assert.equal(normalizeRuntimeHtml('<div style="--columns-count: 8; color: red;"></div>'),
+    '<div style="--columns-count: 8; color: red;"></div>');
+});
+
 test('normalizes only CSS declaration separator whitespace when explicitly requested', () => {
   const html = '<div style="width: 120px; color: rgb(0, 0, 0);"></div>';
   assert.equal(normalizeRuntimeHtml(html, { normalizeStyleAttributes: true }),

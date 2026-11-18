@@ -1,14 +1,14 @@
 ﻿@using System.ComponentModel
 
-<Table DataSource="@data" Bordered Size="TableSize.Small" ScrollX="1350" ScrollY="240">
+<Table TItem="Data" DataSource="@data" RowKey="item => item.Key" Bordered Size="TableSize.Medium" ScrollX="calc(50% + 700px)" ScrollY="235px" ScrollBarWidth="0px">
     <ColumnDefinitions>
-        <PropertyColumn Property="c=>c.Name" Width="100" Fixed="ColumnFixPlacement.Left" />
-        <PropertyColumn Property="c=>c.Age" Width="150" />
+        <PropertyColumn Property="c=>c.Name" Width="100" Fixed="ColumnFixPlacement.Left" Filters="filters" OnFilter="(v1, v2) => v2.Contains(v1)" />
+        <PropertyColumn Property="c=>c.Age" Width="150" Sortable />
         <PropertyColumn Property="c=>c.Street" Width="150" />
         <PropertyColumn Property="c=>c.Building" Width="100" />
-        <PropertyColumn Property="c=>c.Number" Width="100" />
-        <PropertyColumn Property="c=>c.CompanyAddress" Width="200" />
-        <PropertyColumn Property="c=>c.CompanyName" />
+        <PropertyColumn Property="c=>c.Number" Title="Door No." Width="100" />
+        <PropertyColumn Property="c=>c.CompanyAddress" Title="Company Address" Width="200" />
+        <PropertyColumn Property="c=>c.CompanyName" Title="Company Name" />
         <PropertyColumn Property="c=>c.Gender" Width="80" Fixed="ColumnFixPlacement.Right" />
     </ColumnDefinitions>
     <HeaderTemplate>

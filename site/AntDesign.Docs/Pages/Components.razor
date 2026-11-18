@@ -8,6 +8,8 @@
             var title = $"{(CurrentLanguage == "zh-CN" ? _demoComponent.SubTitle + " " : "")}{_demoComponent.Title} - Ant Design Blazor".Trim();
             <PageTitle>@title</PageTitle>
             var componentTokenCount = ComponentTokenCatalog.Get(SemanticComponentKey).Count;
+            var semanticPreviews = GetSemanticPreviews(SemanticComponentKey);
+            var hasSemanticDom = semanticPreviews.Count > 0;
             var docDemos = _demoComponent.DemoList?.Where(x => x.Docs.HasValue && x.Docs.Value) ?? Enumerable.Empty<DemoItem>();
             var isIconPage = SemanticComponentKey == "icon";
             var iconGalleryDemo = isIconPage
@@ -43,7 +45,7 @@
                             {
                                 <AnchorLink Href="@($"/{CurrentLanguage}/components/{_demoComponent.Title}#API")" Title="API" />
                             }
-                            @if (SemanticDomCatalog.Get(SemanticComponentKey).Count > 0)
+                            @if (hasSemanticDom)
                             {
                                 <AnchorLink Href="@($"/{CurrentLanguage}/components/{_demoComponent.Title}#semantic-dom")" Title="@(CurrentLanguage == "zh-CN" ? "语义 DOM" : "Semantic DOM")" />
                             }
@@ -170,13 +172,22 @@
                 @((MarkupString)_demoComponent.ApiDoc)
             </section>
 
-            @if (SemanticDomCatalog.Get(SemanticComponentKey).Count > 0)
+            @if (hasSemanticDom)
             {
                 <section class="markdown api-container semantic-dom-preview">
                     <h2 id="semantic-dom">@(CurrentLanguage == "zh-CN" ? "语义 DOM" : "Semantic DOM")</h2>
-                    @foreach (var preview in SemanticPreviewCatalog.Get(SemanticComponentKey))
+                    @foreach (var preview in semanticPreviews)
                     {
-                        <DynamicComponent Type="@typeof(SemanticPreviewRenderer)" Parameters="@CreateSemanticPreviewParameters(preview)" @key="preview.Component" />
+                        @if (preview.WrapInSemanticDom)
+                        {
+                            <SemanticDomPreview Component="@preview.Component" Language="@CurrentLanguage" @key="preview.Component">
+                                <DynamicComponent Type="@preview.ComponentType" />
+                            </SemanticDomPreview>
+                        }
+                        else
+                        {
+                            <DynamicComponent Type="@preview.ComponentType" @key="preview.Component" />
+                        }
                     }
                 </section>
             }
@@ -211,13 +222,16 @@
 <style>@((MarkupString)_styles.CssText)</style>
 
 @code {
-    private IDictionary<string, object> CreateSemanticPreviewParameters(SemanticPreviewRegistration preview) => new Dictionary<string, object>
+    private static IReadOnlyList<SemanticPreviewRegistration> GetSemanticPreviews(string componentName)
     {
-        [nameof(SemanticPreviewRenderer.Component)] = preview.Component,
-        [nameof(SemanticPreviewRenderer.Language)] = CurrentLanguage,
-        [nameof(SemanticPreviewRenderer.PreviewType)] = preview.ComponentType,
-        [nameof(SemanticPreviewRenderer.WrapInSemanticDom)] = preview.WrapInSemanticDom
-    };
+        var key = string.Equals(componentName, "qrcode", StringComparison.OrdinalIgnoreCase)
+            ? "qr-code"
+            : componentName ?? string.Empty;
+
+        return GeneratedDemoIndex.SemanticPreviews.TryGetValue(key, out var previews)
+            ? previews
+            : Array.Empty<SemanticPreviewRegistration>();
+    }
 
     private static readonly CssStyleSheet _styles = CssInJs.CreateStyles("docs-component-page", new System.Collections.Generic.Dictionary<string, object>
     {

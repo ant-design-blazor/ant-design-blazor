@@ -457,6 +457,8 @@ namespace AntDesign
 
         private bool IsVirtualEnabled => Virtual;
 
+        private bool HasConfiguredScrollbarWidth => ScrollBarWidth != null && !string.Equals(_scrollBarWidth, "0px", StringComparison.OrdinalIgnoreCase) && !string.Equals(_scrollBarWidth, "0", StringComparison.OrdinalIgnoreCase);
+
         private bool HasScrollbarPlaceholder => ScrollY != null && !IsVirtualEnabled && !string.Equals(_scrollBarWidth, "0px", StringComparison.OrdinalIgnoreCase);
         private bool _hasFixLeft;
         private bool _hasFixRight;
@@ -512,7 +514,7 @@ namespace AntDesign
 
         private string GetSplitBodyStyle()
         {
-            var style = $"{(ScrollX != null ? "overflow: auto scroll;" : ScrollY != null ? "overflow-y: scroll;" : "")}{(ScrollY != null && !AutoHeight ? $" max-height: {(CssSizeLength)ScrollY};" : "")}{(ScrollY != null && UseItemsProvider && !AutoHeight ? $" min-height: {(CssSizeLength)ScrollY};" : "")}{(ScrollY != null && ScrollBarWidth != null ? $" --scrollbar-width: {(CssSizeLength)_scrollBarWidth};" : "")}";
+            var style = $"{(ScrollX != null ? "overflow: auto scroll;" : ScrollY != null ? "overflow-y: scroll;" : "")}{(ScrollY != null && !AutoHeight ? $" max-height: {(CssSizeLength)ScrollY};" : "")}{(ScrollY != null && UseItemsProvider && !AutoHeight ? $" min-height: {(CssSizeLength)ScrollY};" : "")}{(ScrollY != null && HasConfiguredScrollbarWidth ? $" --scrollbar-width: {(CssSizeLength)_scrollBarWidth};" : "")}";
             return GetSemanticStyle("body.wrapper", string.IsNullOrWhiteSpace(style) ? null : style);
         }
 
@@ -584,7 +586,7 @@ namespace AntDesign
             _virtualEndIndex = Math.Min(_total, initialCount);
         }
 
-        private string TableLayoutWithScrollbar => ScrollBarWidth == null
+        private string TableLayoutWithScrollbar => !HasConfiguredScrollbarWidth
             ? TableLayoutStyle
             : $"{TableLayoutStyle} --scrollbar-width: {(CssSizeLength)_scrollBarWidth};";
 
@@ -1103,7 +1105,7 @@ namespace AntDesign
                 .If($"{prefixCls}-has-fix-end", () => _hasFixRight)
                 .If($"{prefixCls}-fix-start-shadow {prefixCls}-fix-end-shadow", () => ScrollX != null || IsVirtualEnabled)
                 .If($"{prefixCls}-fix-end-shadow-show", () => ScrollX != null)
-                .If($"{prefixCls}-has-scrollbar-width", () => ScrollBarWidth != null)
+                .If($"{prefixCls}-has-scrollbar-width", () => HasConfiguredScrollbarWidth)
                 //.If($"{prefixCls}-ping-left", () => _pingLeft)
                 //.If($"{prefixCls}-ping-right", () => _pingRight)
                 .If($"{prefixCls}-rtl", () => RTL)

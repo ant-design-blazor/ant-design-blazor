@@ -345,3 +345,9 @@ Column Defaults 与 Expand 示例由
 并验证切换按钮、筛选列、空 SVG 和分页显隐。当前完整 Table 回归组为 13 个 demo、16 个场景，均通过 DOM、计算样式、
 几何和视觉样式比较。React v6 已移除独立的 Column Alignment 和 Custom Pagination 示例，
 因此它们不作为直接对齐目标；对应行为分别由 Column Defaults 和 Pagination Placement 覆盖。
+Grouping Headers 有独立 fixture `examples/table-grouping-columns-dom-style-parity.json`。
+该 fixture 同时比较嵌套表头与固定列/固定表头。Blazor 专用的 `--columns-count` inline 声明仅从
+DOM serialization 中归一化，并另行采样检查伪元素 z-index 与 geometry；其余 DOM、computed styles
+和 visual styles 均严格比较。当前 fixture 1/1 通过。
+Table 的 `Head`（Header）示例由 `examples/table-head-dom-style-parity.json` 覆盖默认排序、筛选表头和四条数据行；当前 1/1 通过。
+Table 的 `JSX Composition` 示例由 `examples/table-jsx-dom-style-parity.json` 覆盖分组/叶子表头、3 行数据、Tag、Flex 和行操作；当前 1/1 通过，归一化 DOM、computed styles、geometry 和 visual styles 均一致。

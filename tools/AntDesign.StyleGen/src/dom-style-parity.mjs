@@ -19,6 +19,7 @@ export function normalizeRuntimeHtml(html, policy = {}) {
   ]);
   const removeAttributes = policy.removeAttributes ?? [];
   const removeEmptyAttributes = new Set(policy.removeEmptyAttributes ?? []);
+  const removeStyleProperties = new Set(policy.removeStyleProperties ?? []);
   const runtimeIdAttributes = new Set(policy.runtimeIdAttributes ?? []);
   const removeClassPatterns = (policy.removeClassPatterns ?? []).map((pattern) => compilePattern(pattern));
   const idMap = new Map();
@@ -102,6 +103,16 @@ export function normalizeRuntimeHtml(html, policy = {}) {
       if (policy.sortClassTokens) classes.sort();
       if (classes.length === 0) return '';
       return ` ${name}=${quote}${classes.join(' ')}${quote}`;
+    }
+
+    if (name === 'style' && removeStyleProperties.size > 0 && !policy.normalizeStyleAttributes) {
+      const declarations = value.split(';').map((declaration) => declaration.trim()).filter(Boolean);
+      const retained = declarations.filter((declaration) => {
+        const separator = declaration.indexOf(':');
+        return separator < 0 || !removeStyleProperties.has(declaration.slice(0, separator).trim());
+      });
+      if (retained.length === 0) return '';
+      return ` ${name}=${quote}${retained.join(';')}${value.trimEnd().endsWith(';') ? ';' : ''}${quote}`;
     }
 
     if (name === 'style' && policy.normalizeStyleAttributes) {

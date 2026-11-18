@@ -1,1 +1,61 @@
-<TableParityDemo Variant="jsx" />
+@using AntDesign.TableModels
+
+<Table TItem="Data" DataSource="_data" RowKey="row => row.Key">
+    <ColumnDefinitions>
+        <PropertyColumn Property="row => row.FirstName" Title="First Name" />
+        <PropertyColumn Property="row => row.LastName" Title="Last Name" />
+        <PropertyColumn Property="row => row.Age" Title="Age" />
+        <PropertyColumn Property="row => row.Address" Title="Address" />
+        <PropertyColumn Property="row => row.Tags" Title="Tags">
+            <Flex Gap="FlexGap.Small" Align="FlexAlign.Center" Wrap="FlexWrap.Wrap">
+                @foreach (var tag in context.Tags)
+                {
+                    var color = tag.Length > 5 ? TagColor.GeekBlue : TagColor.Green;
+                    if (tag == "kawaii")
+                    {
+                        color = TagColor.Volcano;
+                    }
+                    <Tag Color="@color">@tag.ToUpperInvariant()</Tag>
+                }
+            </Flex>
+        </PropertyColumn>
+        <ActionColumn Title="Action">
+            <Space Size="SpaceSize.Middle">
+                <SpaceItem><a>Invite @context.LastName</a></SpaceItem>
+                <SpaceItem><a>Delete</a></SpaceItem>
+            </Space>
+        </ActionColumn>
+    </ColumnDefinitions>
+    <HeaderTemplate>
+        <TableRow>
+            <SimpleTableHeader ColSpan="2">Name</SimpleTableHeader>
+            <SimpleTableHeader RowSpan="2">Age</SimpleTableHeader>
+            <SimpleTableHeader RowSpan="2">Address</SimpleTableHeader>
+            <SimpleTableHeader RowSpan="2">Tags</SimpleTableHeader>
+            <SimpleTableHeader RowSpan="2">Action</SimpleTableHeader>
+        </TableRow>
+        <TableRow>
+            <TableHeader @bind-Field="context.FirstName">First Name</TableHeader>
+            <TableHeader @bind-Field="context.LastName">Last Name</TableHeader>
+        </TableRow>
+    </HeaderTemplate>
+</Table>
+
+@code {
+    private readonly Data[] _data =
+    [
+        new("1", "John", "Brown", 32, "New York No. 1 Lake Park", ["nice", "developer"]),
+        new("2", "Jim", "Green", 42, "London No. 1 Lake Park", ["kawaii"]),
+        new("3", "Joe", "Black", 32, "Sydney No. 1 Lake Park", ["cool", "teacher"])
+    ];
+
+    private sealed class Data(string key, string firstName, string lastName, int age, string address, string[] tags)
+    {
+        public string Key { get; set; } = key;
+        public string FirstName { get; set; } = firstName;
+        public string LastName { get; set; } = lastName;
+        public int Age { get; set; } = age;
+        public string Address { get; set; } = address;
+        public string[] Tags { get; set; } = tags;
+    }
+}
