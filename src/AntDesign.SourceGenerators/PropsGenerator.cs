@@ -54,12 +54,13 @@ public sealed class PropsGenerator : ISourceGenerator
             var propsMetadataName = component.ContainingNamespace.IsGlobalNamespace
                 ? propsName
                 : component.ContainingNamespace.ToDisplayString() + "." + propsName;
-            if (properties.Length == 0 || context.Compilation.GetTypeByMetadataName(propsMetadataName) is not null)
+            if (properties.Length == 0)
             {
                 continue;
             }
 
-            context.AddSource($"{component.ContainingNamespace.ToDisplayString().Replace('.', '_')}_{component.Name}_{component.Arity}.Props.g.cs", Source(model, component, propsName, properties, !HasPropertyInBaseTypes(component, "Id"), !HasPropertyInBaseTypes(component, "CascadingPropsCollection")));
+            var generatePropsClass = context.Compilation.GetTypeByMetadataName(propsMetadataName) is null;
+            context.AddSource($"{component.ContainingNamespace.ToDisplayString().Replace('.', '_')}_{component.Name}_{component.Arity}.Props.g.cs", Source(model, component, propsName, properties, generatePropsClass, !HasPropertyInBaseTypes(component, "Id"), !HasPropertyInBaseTypes(component, "CascadingPropsCollection")));
         }
     }
 
@@ -89,7 +90,7 @@ public sealed class PropsGenerator : ISourceGenerator
         return false;
     }
 
-    private static string Source(SemanticModel model, INamedTypeSymbol component, string propsName, IEnumerable<IPropertySymbol> properties, bool generateId, bool generatePropsCollection)
+    private static string Source(SemanticModel model, INamedTypeSymbol component, string propsName, IEnumerable<IPropertySymbol> properties, bool generatePropsClass, bool generateId, bool generatePropsCollection)
     {
         var cascadingPropsName = "Cascading" + component.Name + "Props";
         var source = new StringBuilder();
@@ -97,33 +98,36 @@ public sealed class PropsGenerator : ISourceGenerator
         source.AppendLine("#nullable enable");
         source.Append("namespace ").Append(component.ContainingNamespace.ToDisplayString()).AppendLine();
         source.AppendLine("{");
-        source.Append("    public sealed class ").Append(propsName);
-        AppendTypeParameters(source, component);
-        source.AppendLine(" : global::AntDesign.ComponentProps");
-        AppendConstraints(source, component);
-        source.AppendLine("    {");
-        foreach (var property in properties)
+        if (generatePropsClass)
         {
-            var type = GetPropsPropertyType(property);
-            var field = "_" + char.ToLowerInvariant(property.Name[0]) + property.Name.Substring(1);
-            var initializer = property.DeclaringSyntaxReferences
-                .Select(reference => reference.GetSyntax())
-                .OfType<PropertyDeclarationSyntax>()
-                .Select(declaration => declaration.Initializer?.Value)
-                .FirstOrDefault(value => value is not null);
-            var defaultValue = GetDefaultValueExpression(model, initializer);
-            source.Append("        private ").Append(type).Append(' ').Append(field);
-            if (defaultValue is not null)
+            source.Append("    public sealed class ").Append(propsName);
+            AppendTypeParameters(source, component);
+            source.AppendLine(" : global::AntDesign.ComponentProps");
+            AppendConstraints(source, component);
+            source.AppendLine("    {");
+            foreach (var property in properties)
             {
-                source.Append(" = ").Append(defaultValue);
+                var type = GetPropsPropertyType(property);
+                var field = "_" + char.ToLowerInvariant(property.Name[0]) + property.Name.Substring(1);
+                var initializer = property.DeclaringSyntaxReferences
+                    .Select(reference => reference.GetSyntax())
+                    .OfType<PropertyDeclarationSyntax>()
+                    .Select(declaration => declaration.Initializer?.Value)
+                    .FirstOrDefault(value => value is not null);
+                var defaultValue = GetDefaultValueExpression(model, initializer);
+                source.Append("        private ").Append(type).Append(' ').Append(field);
+                if (defaultValue is not null)
+                {
+                    source.Append(" = ").Append(defaultValue);
+                }
+                source.AppendLine(";");
+                source.Append("        public ").Append(type).Append(' ').Append(property.Name)
+                    .Append(" { get => ").Append(field).Append("; set => SetProperty(ref ").Append(field)
+                    .Append(", value, nameof(").Append(property.Name).AppendLine(")); }");
             }
-            source.AppendLine(";");
-            source.Append("        public ").Append(type).Append(' ').Append(property.Name)
-                .Append(" { get => ").Append(field).Append("; set => SetProperty(ref ").Append(field)
-                .Append(", value, nameof(").Append(property.Name).AppendLine(")); }");
+            source.AppendLine("    }");
+            source.AppendLine();
         }
-        source.AppendLine("    }");
-        source.AppendLine();
         source.Append("    public partial class ").Append(component.Name);
         AppendTypeParameters(source, component);
         source.Append(" : global::AntDesign.IComponentPropsReceiver");
