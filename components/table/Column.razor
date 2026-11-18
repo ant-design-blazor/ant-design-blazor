@@ -69,7 +69,7 @@ else if (IsHeader && HeaderColSpan != 0)
         </th>
     </CascadingValue>
 }
-else if (IsBody && RowSpan != 0 && ColSpan != 0)
+else if (IsBody && GetRowSpan(RowData) != 0 && GetColSpan(RowData) != 0)
 {
     RenderBody(__builder, RowData);
 }
@@ -114,7 +114,9 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
 
     void RenderBody(RenderTreeBuilder __builder, RowData rowData)
     {
-        if (Hidden || RowSpan == 0 || ColSpan == 0)
+        var rowSpan = GetRowSpan(rowData);
+        var colSpan = GetColSpan(rowData);
+        if (Hidden || rowSpan == 0 || colSpan == 0)
         {
             return;
         }
@@ -146,7 +148,7 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
         }
 
         <td @attributes="GetAdditionalAttributes(cellAttributes)" class="@ClassMapper.Class" style="@($"{FixedStyle} {Style}")"
-            rowspan="@RowSpan" colspan="@ColSpan"
+            rowspan="@rowSpan" colspan="@colSpan"
             title="@(((Ellipsis || EllipsisShowTitle == true) && EllipsisShowTitle != false) ? fieldText : false)" data-label="@title">
             <CascadingValue Name="IsBody" Value="false" IsFixed>
                 @if (ColIndex == Table.TreeExpandIconColumnIndex && (Table.TreeMode || rowData.IsGrouping))
@@ -196,7 +198,7 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
         }
 
         <td @attributes="GetAdditionalAttributes(cellAttributes)" class="@ClassMapper.Class" style="@($"{QuickFixedStyle} {Style}")"
-            rowspan="@(RowSpan > 1 ? RowSpan : false)" colspan="@(cellData.RowData.IsGrouping ? Context.Columns.Count + 1 : (ColSpan > 1 ? ColSpan : false))"
+            rowspan="@(GetRowSpan(cellData.RowData) > 1 ? GetRowSpan(cellData.RowData) : false)" colspan="@(cellData.RowData.IsGrouping ? Context.Columns.Count + 1 : (GetColSpan(cellData.RowData) > 1 ? GetColSpan(cellData.RowData) : false))"
             title="@(ShouldShowEllipsis ? cellData.FormattedValue : false)" data-label="@title">
             @if (ColIndex == Table.TreeExpandIconColumnIndex && (Table.TreeMode || cellData.RowData.IsGrouping))
             {

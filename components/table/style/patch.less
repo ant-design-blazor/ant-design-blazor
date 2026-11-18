@@ -72,6 +72,14 @@
     }
 }
 
+// A fixed header has one scrollbar placeholder column, even when its header
+// spans multiple rows. TableRow emits the placeholder on each header row so
+// custom HeaderTemplate fragments work without inspection; hide all but the
+// final row's placeholder to keep grouped headers aligned with the body.
+.@{table-prefix-cls}-thead > tr:not(:last-child) > .@{table-prefix-cls}-cell-scrollbar {
+    display: none;
+}
+
 .@{table-prefix-cls}-resizable {
 
     .@{table-prefix-cls}-resizable-handle {

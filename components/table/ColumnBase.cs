@@ -93,11 +93,27 @@ namespace AntDesign
         public int RowSpan { get; set; } = 1;
 
         /// <summary>
+        /// Gets the row span for each data row. Use this when the span depends on the current row.
+        /// </summary>
+        [Parameter]
+        public Func<RowData, int> RowSpanFunc { get; set; }
+
+        /// <summary>
         /// Column span
         /// </summary>
         /// <default value="1" />
         [Parameter]
         public int ColSpan { get; set; } = 1;
+
+        /// <summary>
+        /// Gets the column span for each data row. Use this when the span depends on the current row.
+        /// </summary>
+        [Parameter]
+        public Func<RowData, int> ColSpanFunc { get; set; }
+
+        public int GetRowSpan(RowData rowData) => RowSpanFunc?.Invoke(rowData) ?? RowSpan;
+
+        public int GetColSpan(RowData rowData) => ColSpanFunc?.Invoke(rowData) ?? ColSpan;
 
         /// <summary>
         /// Header column span

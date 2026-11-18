@@ -1,50 +1,63 @@
-﻿<Table DataSource="listOfData" TItem="ItemData" RowClassName="@(_=>"editable-row")" Bordered TableLayout="fixed">
+﻿@using AntDesign.TableModels
+<Table DataSource="listOfData" TItem="ItemData" RowClassName="@(_=>"editable-row")" Bordered TableLayout="fixed">
     <ChildContent Context="data">
         <Column TData="string" Title="Name">
-            @if (!editCache[data.Id].edit)
+            <CellRender Context="cell">
+            @if (!editCache[((RowData<ItemData>)cell.RowData).Data.Id].edit)
             {
-                @data.Name
+                @(((RowData<ItemData>)cell.RowData).Data.Name)
             }
             else
             {
-                <Input @bind-Value="editCache[data.Id].data.Name" />
+                <Input @bind-Value="@(editCache[((RowData<ItemData>)cell.RowData).Data.Id].data.Name)" />
             }
+        
+            </CellRender>
         </Column>
         <Column TData="string" Title="Age">
-            @if (!editCache[data.Id].edit)
+            <CellRender Context="cell">
+            @if (!editCache[((RowData<ItemData>)cell.RowData).Data.Id].edit)
             {
-                @data.Age
+                @(((RowData<ItemData>)cell.RowData).Data.Age)
             }
             else
             {
-                <Input @bind-Value="editCache[data.Id].data.Age" />
+                <Input @bind-Value="@(editCache[((RowData<ItemData>)cell.RowData).Data.Id].data.Age)" />
             }
+        
+            </CellRender>
         </Column>
         <Column TData="string" Title="Address">
-            @if (!editCache[data.Id].edit)
+            <CellRender Context="cell">
+            @if (!editCache[((RowData<ItemData>)cell.RowData).Data.Id].edit)
             {
-                @data.Address
+                @(((RowData<ItemData>)cell.RowData).Data.Address)
             }
             else
             {
-                <Input @bind-Value="editCache[data.Id].data.Address" />
+                <Input @bind-Value="@(editCache[((RowData<ItemData>)cell.RowData).Data.Id].data.Address)" />
             }
+        
+            </CellRender>
         </Column>
         <ActionColumn Title="Action">
-            @if (!editCache[data.Id].edit)
+            <CellRender Context="cell">
+            @if (!editCache[((RowData<ItemData>)cell.RowData).Data.Id].edit)
             {
-                <a @onclick="() => startEdit(data.Id)">Edit</a>
+                <a @onclick="() => startEdit(((RowData<ItemData>)cell.RowData).Data.Id)">Edit</a>
             }
             else
             {
-                <a @onclick="() => saveEdit(data.Id)" class="save">Save</a>
+                <a @onclick="() => saveEdit(((RowData<ItemData>)cell.RowData).Data.Id)" class="save">Save</a>
                 <Popconfirm Title="Sure to cancel?"
-                        OnConfirm="() => cancelEdit(data.Id)"
+                        OnConfirm="() => cancelEdit(((RowData<ItemData>)cell.RowData).Data.Id)"
                         OkText="Yes"
                         CancelText="No">
                     <a>Cancel</a>
                 </Popconfirm>
             }
+        
+            </CellRender>
         </ActionColumn>
     </ChildContent>
 </Table>

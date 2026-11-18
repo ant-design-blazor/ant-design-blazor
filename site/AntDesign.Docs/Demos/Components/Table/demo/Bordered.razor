@@ -2,7 +2,10 @@
 
 <Table DataSource="@data" Bordered=@true Title="@title" Footer="@footer" HidePagination="@true">
   <PropertyColumn Property="c=>c.Name">
-    <a>@context.Name</a>
+      <CellRender Context="cell">
+    <a>@(((dynamic)cell.RowData).Data.Name)</a>
+  
+      </CellRender>
   </PropertyColumn>
   <PropertyColumn Property="c=>c.Money" Style="text-align: right"></PropertyColumn>
   <PropertyColumn Property="c=>c.Address"></PropertyColumn>

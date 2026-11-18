@@ -298,7 +298,7 @@ namespace AntDesign
 
         void IQuickRenderColumn.RenderQuickBody(RenderTreeBuilder __builder, RowData rowData)
         {
-            if (Hidden || RowSpan == 0 || ColSpan == 0 || (rowData.IsGrouping && ColIndex != Table.TreeExpandIconColumnIndex))
+            if (Hidden || GetRowSpan(rowData) == 0 || GetColSpan(rowData) == 0 || (rowData.IsGrouping && ColIndex != Table.TreeExpandIconColumnIndex))
             {
                 return;
             }

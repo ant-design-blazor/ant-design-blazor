@@ -2,7 +2,10 @@
 
 <Table TItem="Data" DataSource="@data">
     <PropertyColumn Property="c=>c.Name">
-        <a>@context.Name</a>
+        <CellRender Context="cell">
+        <a>@(((dynamic)cell.RowData).Data.Name)</a>
+    
+        </CellRender>
     </PropertyColumn>
     <PropertyColumn Property="c=>c.Age" Hidden="@hidden"></PropertyColumn>
     <PropertyColumn Property="c=>c.Address">
@@ -11,7 +14,8 @@
         </TitleTemplate>
     </PropertyColumn>
     <PropertyColumn Property="c=>c.Tags">
-        @foreach (var tag in context.Tags)
+        <CellRender Context="cell">
+        @foreach (var tag in ((dynamic)cell.RowData).Data.Tags)
         {
             var color = tag.Length > 5 ? TagColor.GeekBlue : TagColor.Green;
             if (tag == "loser")
@@ -20,6 +24,8 @@
             }
             <Tag Color="@color">@tag</Tag>
         }
+    
+        </CellRender>
     </PropertyColumn>
 </Table>
 

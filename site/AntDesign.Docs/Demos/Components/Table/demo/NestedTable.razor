@@ -6,20 +6,27 @@
     <PropertyColumn Property="c=>c.UpgradeNum" />
     <PropertyColumn Property="c=>c.Creator" />
     <PropertyColumn Property="c=>c.CreatedAt" />
-    <ActionColumn Title="Action"> <a>Publish</a> </ActionColumn>
+    <ActionColumn Title="Action">
+        <CellRender Context="cell"> <a>Publish</a> 
+        </CellRender>
+    </ActionColumn>
   </ColumnDefinitions>
   <ExpandTemplate Context="rowData">
     <Table DataSource="rowData.Data.NestedData" Loading="rowData.Data.NestedData==null" HidePagination>
       <PropertyColumn Property="c=>c.Date" />
       <PropertyColumn Property="c=>c.Name" />
       <Column TData="string" Title="Status">
+          <CellRender Context="cell">
         <span>
           <Badge Status="BadgeStatus.Success" />
           Finished
         </span>
+      
+          </CellRender>
       </Column>
       <PropertyColumn Property="c=>c.UpgradeNum" />
       <ActionColumn Title="Action">
+          <CellRender Context="cell">
         <Space Size="SpaceSize.Middle">
           <SpaceItem><a>Pause</a></SpaceItem>
           <SpaceItem><a>Stop</a></SpaceItem>
@@ -29,6 +36,8 @@
             </Dropdown>
           </SpaceItem>
         </Space>
+      
+          </CellRender>
       </ActionColumn>
     </Table>
   </ExpandTemplate>

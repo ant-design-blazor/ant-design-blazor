@@ -53,7 +53,7 @@ else if (IsHeader && HeaderColSpan != 0)
 		}
 	</th>
 }
-else if (!IsHeader && RowSpan != 0 && ColSpan != 0)
+else if (!IsHeader && GetRowSpan(RowData) != 0 && GetColSpan(RowData) != 0)
 {
     RenderBody(__builder, RowData, quick: false);
 }
@@ -61,7 +61,9 @@ else if (!IsHeader && RowSpan != 0 && ColSpan != 0)
 @code {
     void RenderBody(RenderTreeBuilder __builder, RowData rowData, bool quick)
     {
-        if (Hidden || RowSpan == 0 || ColSpan == 0)
+        var rowSpan = GetRowSpan(rowData);
+        var colSpan = GetColSpan(rowData);
+        if (Hidden || rowSpan == 0 || colSpan == 0)
         {
             return;
         }
@@ -84,7 +86,7 @@ else if (!IsHeader && RowSpan != 0 && ColSpan != 0)
         }
 
         <td @attributes="@(quick ? GetAdditionalAttributes(null) : AdditionalAttributes)" class="@ClassMapper.Class" style="@($"{(quick ? QuickFixedStyle : FixedStyle)} {Style}")"
-            rowspan="@(quick ? (RowSpan > 1 ? RowSpan : false) : RowSpan)" colspan="@(quick ? (ColSpan > 1 ? ColSpan : false) : ColSpan)" data-label="@(quick ? false : title)">
+            rowspan="@(quick ? (rowSpan > 1 ? rowSpan : false) : rowSpan)" colspan="@(quick ? (colSpan > 1 ? colSpan : false) : colSpan)" data-label="@(quick ? false : title)">
 			@if (!quick && ColIndex == Table.TreeExpandIconColumnIndex && Table.TreeMode)
 			{
 				<span class="ant-table-row-indent indent-level-@rowData.Level" style="padding-left: @((CssSizeLength)(rowData.Level * Table.IndentSize));"></span>
