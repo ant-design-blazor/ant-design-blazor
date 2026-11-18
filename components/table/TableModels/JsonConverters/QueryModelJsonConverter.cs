@@ -97,7 +97,7 @@ namespace AntDesign.TableModels.JsonConverters
                     string propertyName = reader.GetString();
                     reader.Read();
 
-                    switch (propertyName.ToLower())
+                    switch (propertyName.ToLowerInvariant())
                     {
                         case "pageindex":
                             pageIndex = reader.GetInt32();
