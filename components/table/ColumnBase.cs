@@ -194,7 +194,11 @@ namespace AntDesign
 
         protected string FixedStyle => _fixedStyle;
 
-        protected string QuickFixedStyle => CalcFixedStyle();
+        // Quick rendering reuses each registered column instance for both the
+        // header and body. InitializeQuickHeader leaves IsHeader set on that
+        // instance, so calculate body sticky offsets explicitly without the
+        // extra scrollbar gutter that only belongs to the fixed header.
+        protected string QuickFixedStyle => CalcFixedStyle(isHeader: false);
 
         private int ActualColumnSpan => IsHeader ? HeaderColSpan : ColSpan;
 
@@ -331,7 +335,7 @@ namespace AntDesign
             base.Dispose(disposing);
         }
 
-        private string CalcFixedStyle()
+        private string CalcFixedStyle(bool? isHeader = null)
         {
             CssStyleBuilder cssStyleBuilder = new CssStyleBuilder();
             if (Align != ColumnAlign.Left)
@@ -381,7 +385,7 @@ namespace AntDesign
                 }
             }
 
-            if (IsHeader && Table.ScrollY != null && Table.ScrollX != null && Fixed == ColumnFixPlacement.Right)
+            if ((isHeader ?? IsHeader) && Table.ScrollY != null && Table.ScrollX != null && Fixed == ColumnFixPlacement.Right)
             {
                 fixedWidths = fixedWidths.Append($"{(CssSizeLength)Table.ScrollBarWidth}");
             }
