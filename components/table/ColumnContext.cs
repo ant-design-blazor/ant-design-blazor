@@ -24,6 +24,8 @@ namespace AntDesign
 
         private int _colGroupIndex = -1;
 
+        private readonly HashSet<IColumn> _registeredColumns = new();
+
         private int[] _headerColIndexesOccupied;
 
         private int[] _bodyColIndexesOccupied;
@@ -42,8 +44,31 @@ namespace AntDesign
                 return;
             }
 
+            if (!_registeredColumns.Add(column))
+            {
+                return;
+            }
+
             column.ColIndex = _nextColumnIndex++;
             Columns.Add(column);
+        }
+
+        public void RemoveColumn(IColumn column)
+        {
+            if (column == null || !_registeredColumns.Remove(column))
+            {
+                return;
+            }
+
+            Columns.Remove(column);
+            HeaderColumns.Remove(column);
+            for (var i = 0; i < Columns.Count; i++)
+            {
+                Columns[i].ColIndex = i;
+            }
+            _nextColumnIndex = Columns.Count;
+            _headerColIndexesOccupied = null;
+            _bodyColIndexesOccupied = null;
         }
 
         public void BeginHeaderRow()
@@ -76,7 +101,10 @@ namespace AntDesign
             _headerColIndex = FindNextColumnIndex(_headerColIndex, _headerColIndexesOccupied);
 
             column.ColIndex = _headerColIndex;
-            HeaderColumns.Add(column);
+            if (!HeaderColumns.Contains(column))
+            {
+                HeaderColumns.Add(column);
+            }
             _headerColIndex += columnSpan - 1;
 
             if (column.RowSpan > 1)

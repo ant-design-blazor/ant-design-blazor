@@ -28,7 +28,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg
 - **ActionColumn** 用于放置操作按钮，也可以作为不绑定类型的模板。
 - **Selection** 用来开启选择列，并提供选择框。
 
-Table 默认启用 `Quick` 快速渲染，以减少单元格组件实例。自定义单元格内容时建议使用 `CellRender`。详情请参阅[Quick Table 基准测试](/zh-CN/docs/table-quick-render-benchmark)。
+### Quick Table
 
 Table 默认启用 `Quick` 快速渲染，以减少单元格组件实例。自定义单元格内容必须使用列的 `CellRender`；否则表格会回退到性能较低的兼容渲染模式。详见[Quick Table 基准测试](/zh-CN/docs/table-quick-render-benchmark)。
 

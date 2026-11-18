@@ -27,7 +27,7 @@ Specify `dataSource` of Table as an array of data, the `OnChange` event and its 
 - **ActionColumn** for operation buttons or template, would not bind the data.
 - **Selection** for add checkboxes for row selection.
 
-Table enables `Quick` rendering by default to reduce cell component instances. Prefer `CellRender` for custom cell content. See the [Quick Table benchmarks](/en-US/docs/table-quick-render-benchmark).
+### Quick Table
 
 Table enables `Quick` rendering by default to reduce cell component instances. Custom cell content must use a column's `CellRender`; otherwise, the table falls back to a slower compatibility rendering path. See the [Quick Table benchmarks](/en-US/docs/table-quick-render-benchmark).
 

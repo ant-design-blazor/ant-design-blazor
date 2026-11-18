@@ -2,10 +2,8 @@
 @using AntDesign.TableModels
 
 Dynamic columns:
-<CheckboxGroup @bind-Value="columns">
-    <Checkbox Label="Age"></Checkbox>
-    <Checkbox Label="Address"></Checkbox>
-</CheckboxGroup>
+<Checkbox @bind-Checked="showAge">Age</Checkbox>
+<Checkbox @bind-Checked="showAddress">Address</Checkbox>
 <br />
 <Table TItem="Data" DataSource="@data">
     <PropertyColumn Property="c=>c.Name">
@@ -14,10 +12,8 @@ Dynamic columns:
     
         </CellRender>
     </PropertyColumn>
-    @foreach (var column in columns)
-    {
-        <Column TData="object" DataIndex="@column"></Column>
-    }
+    <Column TData="object" DataIndex="Age" Hidden="@(!showAge)"></Column>
+    <Column TData="object" DataIndex="Address" Hidden="@(!showAddress)"></Column>
     <PropertyColumn Property="c=>c.Tags">
         <CellRender Context="cell">
         @foreach (var tag in ((dynamic)cell.RowData).Data.Tags)
@@ -48,7 +44,9 @@ Dynamic columns:
 </Table>
 
 @code {
-    string[] columns = ["Age", "Address"];
+    bool showAge = true;
+
+    bool showAddress = true;
 
     Data[] data = new Data[]
     {

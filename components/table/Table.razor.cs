@@ -421,6 +421,8 @@ namespace AntDesign
 
         private bool _hasInitialized;
         private bool _quickCompatibilityWarningLogged;
+
+        private int _columnRegistrationVersion;
         private bool _waitingDataSourceReload;
         private bool _waitingReloadAndInvokeChange;
         private bool _treeMode;
@@ -1057,6 +1059,7 @@ namespace AntDesign
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
+            _columnRegistrationVersion++;
             if (_preventRender)
             {
                 _shouldRender = false;

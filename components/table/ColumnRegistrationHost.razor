@@ -20,6 +20,9 @@
     public RenderFragment<TItem> ColumnDefinitions { get; set; }
 
     [Parameter]
+    public int RegistrationVersion { get; set; }
+
+    [Parameter]
     public TItem Model { get; set; }
 
     [Parameter]
@@ -35,12 +38,24 @@
     public ConcurrentDictionary<string, object> RelationCache { get; set; }
 
     private RenderFragment<TItem> _registeredDefinitions;
+    private int _registeredVersion;
     private bool _definitionsChanged;
 
     protected override void OnParametersSet()
     {
-        _definitionsChanged = !ReferenceEquals(_registeredDefinitions, ColumnDefinitions);
+        _definitionsChanged = !ReferenceEquals(_registeredDefinitions, ColumnDefinitions)
+            || _registeredVersion != RegistrationVersion;
         _registeredDefinitions = ColumnDefinitions;
+        _registeredVersion = RegistrationVersion;
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (_definitionsChanged)
+        {
+            _definitionsChanged = false;
+            TableInstance?.Refresh();
+        }
     }
 
     private RenderFragment RenderDefinitions() => builder =>

@@ -273,15 +273,28 @@ namespace AntDesign
             SetClass();
         }
 
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+
+            // ColumnRegistrationHost starts a fresh registration pass whenever
+            // the column definition fragment changes. Re-register existing
+            // component instances as they receive their updated parameters so
+            // removed and reordered dynamic columns are reflected in Quick mode.
+            if (IsInitialize)
+            {
+                Context?.AddColumn(this);
+            }
+        }
+
         protected void InitializeQuickHeader()
         {
-            if (_quickHeaderInitialized)
+            if (!_quickHeaderInitialized)
             {
-                return;
+                _quickHeaderInitialized = true;
+                IsHeader = true;
             }
 
-            _quickHeaderInitialized = true;
-            IsHeader = true;
             Context?.AddHeaderColumn(this);
             _fixedStyle = CalcFixedStyle();
         }
@@ -310,7 +323,7 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            //Context?.Columns.Remove(this);
+            Context?.RemoveColumn(this);
             if (IsInitialize)
             {
                 Table?.RebuildColumns(false);
