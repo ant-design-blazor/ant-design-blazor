@@ -16,6 +16,7 @@ namespace AntDesign.Docs.Build.CLI.Documentations
             DocumentationAttribute docAttribute,
             string title,
             IDictionary<string, string> componentSummary,
+            IDictionary<string, string> componentApiSupplement,
             IDictionary<string, string> pageUrl,
             IDictionary<string, IEnumerable<IApiDocumentation>> apiDocs,
             IDictionary<string, IDictionary<string, IEnumerable<IApiDocumentation>>> seeAlso,
@@ -45,6 +46,8 @@ namespace AntDesign.Docs.Build.CLI.Documentations
                     allApiDocumentation.Append(GenerateApiMethodDocumentation(seeAlsoMember.Value[language], language));
                 }
             }
+
+            allApiDocumentation.Append(componentApiSupplement[language]);
 
             if (faqs[language] is not null)
             {

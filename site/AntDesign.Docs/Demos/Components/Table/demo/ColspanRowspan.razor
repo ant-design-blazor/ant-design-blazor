@@ -1,11 +1,12 @@
 ﻿@using System.ComponentModel
+@using AntDesign.TableModels
 
 <Table DataSource="@data" Bordered>
-  <PropertyColumn Property="c=>c.Name" ColSpan="@GetColSpan(context.Key,"name")"></PropertyColumn>
-  <PropertyColumn Property="c=>c.Age" ColSpan="@GetColSpan(context.Key)"></PropertyColumn>
-  <PropertyColumn Property="c=>c.Tel" Title="Home phone" HeaderColSpan="2" RowSpan="@GetRowSpan(context.Key)" ColSpan="@GetColSpan(context.Key)"></PropertyColumn>
-  <PropertyColumn Property="c=>c.Phone" HeaderColSpan="0" ColSpan="@GetColSpan(context.Key)"></PropertyColumn>
-  <PropertyColumn Property="c=>c.Address" ColSpan="@GetColSpan(context.Key)"></PropertyColumn>
+  <PropertyColumn Property="c=>c.Name" ColSpanFunc="@(row => GetColSpan(((RowData<Data>)row).Data.Key, "name"))"></PropertyColumn>
+  <PropertyColumn Property="c=>c.Age" ColSpanFunc="@(row => GetColSpan(((RowData<Data>)row).Data.Key))"></PropertyColumn>
+  <PropertyColumn Property="c=>c.Tel" Title="Home phone" HeaderColSpan="2" RowSpanFunc="@(row => GetRowSpan(((RowData<Data>)row).Data.Key))" ColSpanFunc="@(row => GetColSpan(((RowData<Data>)row).Data.Key))"></PropertyColumn>
+  <PropertyColumn Property="c=>c.Phone" HeaderColSpan="0" ColSpanFunc="@(row => GetColSpan(((RowData<Data>)row).Data.Key))"></PropertyColumn>
+  <PropertyColumn Property="c=>c.Address" ColSpanFunc="@(row => GetColSpan(((RowData<Data>)row).Data.Key))"></PropertyColumn>
 </Table>
 
 @code {

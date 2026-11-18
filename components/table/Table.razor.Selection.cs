@@ -158,6 +158,19 @@ namespace AntDesign
             SelectionChanged();
         }
 
+        void ITable.SetSelection(ISelectionColumn selectItem, RowData rowData)
+        {
+            _preventRowDataTriggerSelectedRowsChanged = true;
+
+            ClearSelectedRows();
+            rowData.SetSelected(true, selectItem.Type == SelectionType.Radio || selectItem.CheckStrictly);
+
+            _preventRowDataTriggerSelectedRowsChanged = false;
+
+            _selection?.StateHasChanged();
+            SelectionChanged();
+        }
+
         void ITable.UnSelectSelection(ISelectionColumn selectItem)
         {
             _preventRowDataTriggerSelectedRowsChanged = true;

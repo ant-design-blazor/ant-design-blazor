@@ -3,15 +3,32 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AntDesign.Core.Documentation;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Rendering;
 
 namespace AntDesign
 {
     public class ColumnBase : AntDomComponentBase, IColumn
     {
+        private readonly Dictionary<string, object> _registeredParameters = new(StringComparer.Ordinal);
+
+        internal IReadOnlyDictionary<string, object> RegisteredParameters => _registeredParameters;
+
+        public override Task SetParametersAsync(ParameterView parameters)
+        {
+            foreach (var parameter in parameters)
+            {
+                _registeredParameters[parameter.Name] = parameter.Value;
+            }
+
+            return base.SetParametersAsync(parameters);
+        }
+
         [CascadingParameter]
         public ITable Table { get; set; }
 
@@ -76,11 +93,27 @@ namespace AntDesign
         public int RowSpan { get; set; } = 1;
 
         /// <summary>
+        /// Gets the row span for each data row. Use this when the span depends on the current row.
+        /// </summary>
+        [Parameter]
+        public Func<RowData, int> RowSpanFunc { get; set; }
+
+        /// <summary>
         /// Column span
         /// </summary>
         /// <default value="1" />
         [Parameter]
         public int ColSpan { get; set; } = 1;
+
+        /// <summary>
+        /// Gets the column span for each data row. Use this when the span depends on the current row.
+        /// </summary>
+        [Parameter]
+        public Func<RowData, int> ColSpanFunc { get; set; }
+
+        public int GetRowSpan(RowData rowData) => RowSpanFunc?.Invoke(rowData) ?? RowSpan;
+
+        public int GetColSpan(RowData rowData) => ColSpanFunc?.Invoke(rowData) ?? ColSpan;
 
         /// <summary>
         /// Header column span
@@ -153,9 +186,15 @@ namespace AntDesign
 
         private string _fixedStyle;
 
+        private bool _quickHeaderInitialized;
+
+        protected bool QuickHeaderInitialized => _quickHeaderInitialized;
+
         private ColumnAlign _align = ColumnAlign.Left;
 
         protected string FixedStyle => _fixedStyle;
+
+        protected string QuickFixedStyle => CalcFixedStyle();
 
         private int ActualColumnSpan => IsHeader ? HeaderColSpan : ColSpan;
 
@@ -217,6 +256,10 @@ namespace AntDesign
             {
                 Context?.AddHeaderColumn(this);
             }
+            else if (IsMeasure)
+            {
+                // Measurement columns render markup only; they are not row columns.
+            }
             else
             {
                 Context?.AddRowColumn(this);
@@ -230,9 +273,57 @@ namespace AntDesign
             SetClass();
         }
 
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+
+            // ColumnRegistrationHost starts a fresh registration pass whenever
+            // the column definition fragment changes. Re-register existing
+            // component instances as they receive their updated parameters so
+            // removed and reordered dynamic columns are reflected in Quick mode.
+            if (IsInitialize)
+            {
+                Context?.AddColumn(this);
+            }
+        }
+
+        protected void InitializeQuickHeader()
+        {
+            if (!_quickHeaderInitialized)
+            {
+                _quickHeaderInitialized = true;
+                IsHeader = true;
+            }
+
+            Context?.AddHeaderColumn(this);
+            _fixedStyle = CalcFixedStyle();
+        }
+
+        protected void RenderQuickColGroup(RenderTreeBuilder builder)
+        {
+            Context?.AddColGroup(this);
+            if (Hidden)
+            {
+                return;
+            }
+            if (AppendExpandColumn)
+            {
+                builder.OpenElement(0, "col");
+                builder.AddAttribute(1, "class", "ant-table-expand-icon-col");
+                builder.CloseElement();
+            }
+
+            builder.OpenElement(2, "col");
+            if (Width != null)
+            {
+                builder.AddAttribute(3, "style", $"width: {(CssSizeLength)Width}; min-width: {(CssSizeLength)Width};");
+            }
+            builder.CloseElement();
+        }
+
         protected override void Dispose(bool disposing)
         {
-            //Context?.Columns.Remove(this);
+            Context?.RemoveColumn(this);
             if (IsInitialize)
             {
                 Table?.RebuildColumns(false);
@@ -315,14 +406,26 @@ namespace AntDesign
 
         protected void ToggleTreeNode()
         {
-            RowData.Expanded = !RowData.Expanded;
-            Table?.OnExpandChange(RowData);
+            ToggleTreeNode(RowData);
+        }
+
+        protected void ToggleTreeNode(RowData rowData)
+        {
+            rowData.Expanded = !rowData.Expanded;
+            Table?.OnExpandChange(rowData);
         }
 
         void IColumn.UpdateFixedStyle()
         {
             _fixedStyle = CalcFixedStyle();
-            StateHasChanged();
+            if (_quickHeaderInitialized)
+            {
+                Table?.Refresh();
+            }
+            else
+            {
+                StateHasChanged();
+            }
         }
     }
 }

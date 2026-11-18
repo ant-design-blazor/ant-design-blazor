@@ -32,7 +32,7 @@ namespace AntDesign
     /// <typeparam name="TData">
     /// The type of a property of the TItem objec. 
     /// </typeparam>
-    public partial class Column<TData> : ColumnBase, IFieldColumn, IColumnInternal<TData>
+    public partial class Column<TData> : ColumnBase, IFieldColumn, IColumnInternal<TData>, IQuickRenderColumn
     {
         [CascadingParameter(Name = "AntDesign.Column.Blocked")]
         internal bool Blocked { get; set; }
@@ -201,7 +201,7 @@ namespace AntDesign
         [Parameter]
         public virtual Func<TData, object> GroupBy { get; set; }
 
-        private IEnumerable<TableFilter> _filters;
+        private IEnumerable<TableFilter> _filters = [];
 
         private bool _hasFiltersAttribute;
 
@@ -293,10 +293,237 @@ namespace AntDesign
 
         protected LambdaExpression GetFieldExpression { get; set; }
 
+        private Func<object, TData> _quickValueGetter;
+        private Func<RowData, object> _quickItemGetter;
+
+        void IQuickRenderColumn.RenderQuickBody(RenderTreeBuilder __builder, RowData rowData)
+        {
+            if (Hidden || GetRowSpan(rowData) == 0 || GetColSpan(rowData) == 0 || (rowData.IsGrouping && ColIndex != Table.TreeExpandIconColumnIndex))
+            {
+                return;
+            }
+
+            var value = rowData.IsGrouping || GetFieldExpression == null ? default : GetQuickValue(GetQuickItem(rowData));
+            var cellData = new CellData<TData>(rowData, value, Format);
+            var cellAttributes = rowData.IsGrouping ? null : OnCell?.Invoke(cellData);
+            var title = Context?.HeaderColumns.LastOrDefault(x => x.ColIndex <= ColIndex && x.ColIndex + x.HeaderColSpan > ColIndex)?.Title;
+            QuickBody(__builder, cellData, cellAttributes, title);
+        }
+
+        void IQuickRenderColumn.RenderQuickHeader(RenderTreeBuilder builder)
+        {
+            InitializeQuickHeader();
+            InitializeQuickHeaderState();
+            if (Hidden || HeaderColSpan == 0)
+            {
+                return;
+            }
+
+            if (AppendExpandColumn)
+            {
+                builder.OpenElement(0, "th");
+                builder.AddAttribute(1, "class", "ant-table-cell ant-table-row-expand-icon-cell");
+                builder.CloseElement();
+            }
+
+            var headerCellAttributes = OnHeaderCell?.Invoke();
+            builder.OpenComponent<CascadingValue<bool>>(2);
+            builder.AddAttribute(3, "Name", "IsHeader");
+            builder.AddAttribute(4, "Value", false);
+            builder.AddAttribute(5, "IsFixed", true);
+            builder.AddAttribute(6, "ChildContent", (RenderFragment)(contentBuilder =>
+            {
+                contentBuilder.OpenElement(0, "th");
+                contentBuilder.AddMultipleAttributes(1, GetAdditionalAttributes(headerCellAttributes));
+                contentBuilder.AddAttribute(2, "class", ClassMapper.Class);
+                contentBuilder.AddAttribute(3, "style", $"{FixedStyle} {HeaderStyle}");
+                if (HeaderColSpan > 1) contentBuilder.AddAttribute(4, "colspan", HeaderColSpan);
+                if (RowSpan > 1) contentBuilder.AddAttribute(5, "rowspan", RowSpan);
+                if (Ellipsis) contentBuilder.AddAttribute(6, "title", Title);
+                if (IsFixedEllipsis)
+                {
+                    contentBuilder.OpenElement(7, "span");
+                    contentBuilder.AddAttribute(8, "class", "ant-table-cell-content");
+                    contentBuilder.AddContent(9, HeaderCellContent());
+                    contentBuilder.CloseElement();
+                }
+                else
+                {
+                    contentBuilder.AddContent(10, HeaderCellContent());
+                }
+                contentBuilder.CloseElement();
+            }));
+            builder.CloseComponent();
+        }
+
+        void IQuickRenderColumn.RenderQuickColGroup(RenderTreeBuilder builder)
+        {
+            RenderQuickColGroup(builder);
+        }
+
+        private void InitializeQuickHeaderState()
+        {
+            if (_quickHeaderStateInitialized)
+            {
+                return;
+            }
+
+            _quickHeaderStateInitialized = true;
+            if (FieldExpression != null)
+            {
+                if (FieldExpression.Body is not MemberExpression memberExp)
+                {
+                    throw new ArgumentException("'Field' parameter must be child member");
+                }
+
+                var paramExp = Expression.Parameter(ItemType);
+                var bodyExp = Expression.MakeMemberAccess(paramExp, memberExp.Member);
+                GetFieldExpression = Expression.Lambda(bodyExp, paramExp);
+            }
+            else if (DataIndex != null)
+            {
+                (_, GetFieldExpression) = ColumnDataIndexHelper<TData>.GetDataIndexConfig(this);
+            }
+
+            if (GetFieldExpression != null)
+            {
+                var member = ColumnExpressionHelper.GetReturnMemberInfo(GetFieldExpression);
+                DisplayName = member?.GetCustomAttribute<DisplayNameAttribute>(true)?.DisplayName
+                           ?? member?.GetCustomAttribute<DisplayAttribute>(true)?.GetName()
+                           ?? member?.Name;
+                FieldName = DataIndex ?? member?.Name;
+            }
+
+            if (Sortable && GetFieldExpression != null)
+            {
+                SortModel = new SortModel<TData>(this, GetFieldExpression, FieldName, SorterMultiple, DefaultSortOrder ?? SortDirection.None, SorterCompare);
+            }
+
+            if (Grouping) Table.AddGroupColumn(this);
+            else Table.RemoveGroupColumn(this);
+
+            if (_hasFiltersAttribute)
+            {
+                if (!_hasFilterableAttribute) Filterable = true;
+                _columnFilterType = TableFilterType.List;
+            }
+            else if (_hasFilterableAttribute)
+            {
+                _columnDataType = THelper.GetUnderlyingType<TData>();
+                _columnFilterType = TableFilterType.FieldType;
+
+                if (FieldFilterType is null)
+                {
+                    if (_columnDataType == typeof(bool))
+                    {
+                        _columnFilterType = TableFilterType.List;
+                        _filters = new List<TableFilter>();
+                        var trueFilterOption = GetNewFilter();
+                        trueFilterOption.Text = Table.Locale.FilterOptions.True;
+                        trueFilterOption.Value = true;
+                        ((List<TableFilter>)_filters).Add(trueFilterOption);
+                        var falseFilterOption = GetNewFilter();
+                        falseFilterOption.Text = Table.Locale.FilterOptions.False;
+                        falseFilterOption.Value = false;
+                        ((List<TableFilter>)_filters).Add(falseFilterOption);
+                    }
+                    else if (_columnDataType.IsEnum && _columnDataType.GetCustomAttribute<FlagsAttribute>() == null)
+                    {
+                        _columnFilterType = TableFilterType.List;
+                        _filters = EnumHelper<TData>.GetValueLabelList().Select(item =>
+                        {
+                            var filterOption = GetNewFilter();
+                            filterOption.Text = item.Label;
+                            filterOption.Value = item.Value;
+                            return filterOption;
+                        }).ToList();
+                    }
+                }
+
+                if (_columnFilterType == TableFilterType.List && THelper.IsTypeNullable<TData>())
+                {
+                    var nullFilterOption = GetNewFilter();
+                    nullFilterOption.Text = Table.Locale.FilterOptions.Operator(TableFilterCompareOperator.IsNull);
+                    nullFilterOption.Value = null;
+                    ((List<TableFilter>)_filters).Add(nullFilterOption);
+                }
+            }
+
+            Context.HeaderColumnInitialized(this);
+            _renderDefaultFilterDropdown = RenderDefaultFilterDropdown;
+            SortDirections ??= Table.SortDirections;
+            Sortable = Sortable || SortModel != null;
+            _sortDirection = SortModel?.SortDirection ?? DefaultSortOrder ?? SortDirection.None;
+            _filterable = _filterable || FilterDropdown != null;
+            if (_columnFilterType == TableFilterType.FieldType && _fieldFilterType == null && Filterable)
+            {
+                _fieldFilterType = FieldFilterType ?? Table.FieldFilterTypeResolver.Resolve<TData>();
+                if (DefaultFilters is null)
+                {
+                    ResetFieldFilters();
+                }
+                else
+                {
+                    _filters = DefaultFilters;
+                    _hasFilterSelected = DefaultFilters.Any(filter => filter.Selected);
+                }
+            }
+
+            FilterModel = _filterable && _filters?.Any(filter => filter.Selected) == true
+                ? new FilterModel<TData>(this, GetFieldExpression, FieldName, OnFilter,
+                    _filters.Where(filter => filter.Selected).ToList(), _columnFilterType, _fieldFilterType)
+                : null;
+        }
+
+        private object GetQuickItem(RowData rowData)
+        {
+            if (_quickItemGetter == null)
+            {
+                var rowType = typeof(RowData<>).MakeGenericType(ItemType);
+                var rowParameter = Expression.Parameter(typeof(RowData), "row");
+                var typedRow = Expression.Convert(rowParameter, rowType);
+                var dataProperty = rowType.GetProperty(nameof(RowData<int>.Data));
+                _quickItemGetter = Expression.Lambda<Func<RowData, object>>(
+                    Expression.Convert(Expression.Property(typedRow, dataProperty), typeof(object)),
+                    rowParameter).Compile();
+            }
+
+            return _quickItemGetter(rowData);
+        }
+
+        private TData GetQuickValue(object item)
+        {
+            if (item == null)
+            {
+                return default;
+            }
+
+            if (_quickValueGetter == null)
+            {
+                var itemParameter = Expression.Parameter(typeof(object), "item");
+                var fieldValue = Expression.Invoke(GetFieldExpression, Expression.Convert(itemParameter, ItemType));
+                _quickValueGetter = Expression.Lambda<Func<object, TData>>(fieldValue, itemParameter).Compile();
+            }
+
+            return _quickValueGetter(item);
+        }
+
         void IFieldColumn.ClearSorter()
         {
             SetSorter(SortDirection.None);
             if (FieldExpression == null)
+            {
+                RefreshQuickHeader();
+            }
+        }
+
+        private void RefreshQuickHeader()
+        {
+            if (QuickHeaderInitialized)
+            {
+                Table?.Refresh();
+            }
+            else
             {
                 StateHasChanged();
             }
@@ -311,6 +538,8 @@ namespace AntDesign
         private string[] _selectedFilterValues;
 
         private RenderFragment _renderDefaultFilterDropdown;
+
+        private bool _quickHeaderStateInitialized;
 
         private bool IsFixedEllipsis => ShouldShowEllipsis && Fixed is ColumnFixPlacement.Left or ColumnFixPlacement.Right;
 
@@ -619,7 +848,7 @@ namespace AntDesign
             }
 
             _selectedFilterValues = _filters.Where(x => x.Selected).Select(x => x.Value?.ToString()).ToArray();
-            StateHasChanged();
+            RefreshQuickHeader();
         }
 
         private void FilterConfirm(bool isReset = false)
@@ -730,8 +959,22 @@ namespace AntDesign
 
         protected object _filterInputRef;
 
+        private void OnFilterTriggerClick()
+        {
+            if (_filterOpened)
+            {
+                FilterConfirm();
+            }
+            else
+            {
+                _filterOpened = true;
+                RefreshQuickHeader();
+            }
+        }
+
         private void FilterDropdownOnVisibleChange(bool visible)
         {
+            RefreshQuickHeader();
 #if NET5_0_OR_GREATER
             if (!visible ||
                 _filterInputRef is not AntDomComponentBase baseDomComponent ||
@@ -788,7 +1031,7 @@ namespace AntDesign
 
                 var getFieldExpression = GetFieldExpression;
 
-                StateHasChanged();
+                RefreshQuickHeader();
             }
         }
 

@@ -26,16 +26,35 @@
             }
         }
 
+        @if (Quick)
+        {
+            <ColumnRegistrationHost TItem="TItem"
+                                    ColumnDefinitions="ChildContent"
+                                    RegistrationVersion="_columnRegistrationVersion"
+                                    Model="_fieldModel"
+                                    TableInstance="this"
+                                    ItemType="typeof(TItem)"
+                                    Context="ColumnContext"
+                                    RelationCache="RelationDataCache" />
+        }
+
         <CascadingValue Value="@this" TValue="ITable" IsFixed>
             <CascadingValue Value=@typeof(TItem) Name="ItemType" IsFixed>
                 <CascadingValue Value="@ColumnContext" IsFixed>
                     <CascadingValue Name="RelationCache" Value="@RelationDataCache" IsFixed>
-                        <CascadingValue Name="IsInitialize" Value="true" IsFixed>
-                            @if (_fieldModel is not null)
-                            {
-                                @ChildContent(_fieldModel)
-                            }
-                        </CascadingValue>
+                        @if (Quick)
+                        {
+                            @* Column definitions are registered in the stable host above. *@
+                        }
+                        else
+                        {
+                            <CascadingValue Name="IsInitialize" Value="true" IsFixed>
+                                @if (_fieldModel is not null)
+                                {
+                                    @ChildContent(_fieldModel)
+                                }
+                            </CascadingValue>
+                        }
                     <div class="@ClassMapper.Class" @ref="_wrapperRef">
                         @if (TitleTemplate != null || Title != null)
                         {
@@ -47,7 +66,7 @@
                             @if (ScrollY != null)
                             {
                                 <div class="ant-table-header @(IsSticky?"ant-table-sticky-holder":"")" style="overflow: hidden; @StickyHolderStyle" @ref="_tableHeaderRef">
-                                    <table style="@TableLayoutStyle">
+                                    <table style="@(ScrollX != null ? $"width: {(CssSizeLength)ScrollX}; min-width: 100%;" : "") @TableLayoutStyle">
                                         @colGroup(this, true)
                                         @header()
                                     </table>
@@ -60,7 +79,14 @@
                                                 <CascadingValue Name="IsMeasure" Value="true" IsFixed>
                                                     @if (_fieldModel is not null)
                                                     {
-                                                        @ChildContent(_fieldModel)
+                                                        @if (Quick)
+                                                        {
+                                                            @RenderRegisteredColumns()
+                                                        }
+                                                        else
+                                                        {
+                                                            @ChildContent(_fieldModel)
+                                                        }
                                                     }
                                                 </CascadingValue>
                                             </tr>
@@ -81,7 +107,14 @@
                                                 <CascadingValue Name="IsMeasure" Value="true" IsFixed>
                                                     @if (_fieldModel is not null)
                                                     {
-                                                        @ChildContent(_fieldModel)
+                                                        @if (Quick)
+                                                        {
+                                                            @RenderRegisteredColumns()
+                                                        }
+                                                        else
+                                                        {
+                                                            @ChildContent(_fieldModel)
+                                                        }
                                                     }
                                                 </CascadingValue>
                                             </tr>
@@ -167,7 +200,14 @@
                                 else
                                 {
                                     <TableRow>
-                                        @ChildContent(_fieldModel)
+                                        @if (Quick)
+                                        {
+                                            @RenderRegisteredHeaders()
+                                        }
+                                        else
+                                        {
+                                            @ChildContent(_fieldModel)
+                                        }
                                     </TableRow>
                                 }
                             }
@@ -185,7 +225,14 @@
                 <CascadingValue Name="IsColGroup" Value="true" IsFixed>
                 @if (_fieldModel is not null)
                 {
-                    @table.ChildContent(_fieldModel)
+                    @if (table.Quick)
+                    {
+                        @table.RenderRegisteredColGroups()
+                    }
+                    else
+                    {
+                        @table.ChildContent(_fieldModel)
+                    }
                 }
                 </CascadingValue>
                 @if (table.ScrollY != null && header)
@@ -298,10 +345,29 @@
                             {
                                 @RowTemplate(currentRowData)
                             }
-                            else
+                            else if (Quick && HasQuickLegacyChildContent)
                             {
                                 <TableRow>
                                     @ChildContent(currentDataItem.Data)
+                                </TableRow>
+                            }
+                            else if (Quick && ColumnContext.Columns.All(column => column is IQuickRenderColumn))
+                            {
+                                <TableRow>
+                                    @RenderQuickCells(currentRowData)
+                                </TableRow>
+                            }
+                            else
+                            {
+                                <TableRow>
+                                    @if (Quick)
+                                    {
+                                        @RenderRegisteredBodyColumns(currentRowData)
+                                    }
+                                    else
+                                    {
+                                        @ChildContent(currentDataItem.Data)
+                                    }
                                 </TableRow>
                             }
                         </CascadingValue>

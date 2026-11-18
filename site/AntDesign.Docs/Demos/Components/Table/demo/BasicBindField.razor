@@ -3,7 +3,10 @@
 
 <Table TItem="IData" DataSource="@data" OnRowClick="OnRowClick">
     <Column @bind-Field="@context.Name">
-        <a>@context.Name</a>
+        <CellRender Context="cell">
+        <a>@(((dynamic)cell.RowData).Data.Name)</a>
+    
+        </CellRender>
     </Column>
     <Column TData="int" DataIndex="Age"></Column>
     <Column @bind-Field="@context.Address">
@@ -12,7 +15,8 @@
         </TitleTemplate>
     </Column>
     <Column @bind-Field="@context.Tags">
-        @foreach (var tag in context.Tags)
+        <CellRender Context="cell">
+        @foreach (var tag in ((dynamic)cell.RowData).Data.Tags)
         {
             var color = tag.Length > 5 ? TagColor.GeekBlue : TagColor.Green;
             if (tag == "loser")
@@ -21,16 +25,21 @@
             }
             <Tag Color="@color">@tag</Tag>
         }
+    
+        </CellRender>
     </Column>
     <ActionColumn Title="Action">
+        <CellRender Context="cell">
         <Space Size="SpaceSize.Middle">
             <SpaceItem>
-                <a>Invite @context.Name</a>
+                <a>Invite @(((dynamic)cell.RowData).Data.Name)</a>
             </SpaceItem>
             <SpaceItem>
                 <a>Delete</a>
             </SpaceItem>
         </Space>
+    
+        </CellRender>
     </ActionColumn>
 </Table>
 

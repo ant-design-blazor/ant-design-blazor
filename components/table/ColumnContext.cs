@@ -16,9 +16,19 @@ namespace AntDesign
 
         public IList<IColumn> ColumnDefs => Columns.Where(x => x.IsInitialize).ToList();
 
-        private int CurrentColIndex { get; set; }
+        private int _nextColumnIndex;
 
-        private int[] ColIndexOccupied { get; set; }
+        private int _headerColIndex = -1;
+
+        private int _bodyColIndex = -1;
+
+        private int _colGroupIndex = -1;
+
+        private readonly HashSet<IColumn> _registeredColumns = new();
+
+        private int[] _headerColIndexesOccupied;
+
+        private int[] _bodyColIndexesOccupied;
 
         private ITable _table;
 
@@ -34,8 +44,43 @@ namespace AntDesign
                 return;
             }
 
-            column.ColIndex = CurrentColIndex++;
+            if (!_registeredColumns.Add(column))
+            {
+                return;
+            }
+
+            column.ColIndex = _nextColumnIndex++;
             Columns.Add(column);
+        }
+
+        public void RemoveColumn(IColumn column)
+        {
+            if (column == null || !_registeredColumns.Remove(column))
+            {
+                return;
+            }
+
+            Columns.Remove(column);
+            HeaderColumns.Remove(column);
+            for (var i = 0; i < Columns.Count; i++)
+            {
+                Columns[i].ColIndex = i;
+            }
+            _nextColumnIndex = Columns.Count;
+            _headerColIndexesOccupied = null;
+            _bodyColIndexesOccupied = null;
+        }
+
+        public void BeginHeaderRow()
+        {
+            _headerColIndex = -1;
+            AdvanceOccupiedColumns(_headerColIndexesOccupied);
+        }
+
+        public void BeginBodyRow()
+        {
+            _bodyColIndex = -1;
+            AdvanceOccupiedColumns(_bodyColIndexesOccupied);
         }
 
         public void AddHeaderColumn(IColumn column)
@@ -45,35 +90,29 @@ namespace AntDesign
                 return;
             }
 
+            if (Columns.Count == 0)
+            {
+                return;
+            }
+
             var columnSpan = column.HeaderColSpan;
             if (column.RowSpan == 0) columnSpan = 0;
 
-            do
-            {
-                if (++CurrentColIndex >= Columns.Count)
-                {
-                    CurrentColIndex = 0;
-                    if (ColIndexOccupied != null)
-                    {
-                        foreach (ref var item in ColIndexOccupied.AsSpan())
-                        {
-                            if (item > 0) item--;
-                        }
-                    }
-                }
-            } 
-            while (ColIndexOccupied != null && ColIndexOccupied[CurrentColIndex] > 0);
+            _headerColIndex = FindNextColumnIndex(_headerColIndex, _headerColIndexesOccupied);
 
-            column.ColIndex = CurrentColIndex;
-            HeaderColumns.Add(column);
-            CurrentColIndex += columnSpan - 1;
+            column.ColIndex = _headerColIndex;
+            if (!HeaderColumns.Contains(column))
+            {
+                HeaderColumns.Add(column);
+            }
+            _headerColIndex += columnSpan - 1;
 
             if (column.RowSpan > 1)
             {
-                ColIndexOccupied ??= new int[Columns.Count];
-                for (var i = column.ColIndex; i <= CurrentColIndex; i++)
+                _headerColIndexesOccupied ??= new int[Columns.Count];
+                for (var i = column.ColIndex; i <= _headerColIndex; i++)
                 {
-                    ColIndexOccupied[i] = column.RowSpan;
+                    _headerColIndexesOccupied[i] = column.RowSpan;
                 }
             }
         }
@@ -85,12 +124,14 @@ namespace AntDesign
                 return;
             }
 
-            if (++CurrentColIndex >= Columns.Count)
+            if (Columns.Count == 0)
             {
-                CurrentColIndex = 0;
+                return;
             }
 
-            column.ColIndex = CurrentColIndex;
+            if (++_colGroupIndex >= Columns.Count) _colGroupIndex = 0;
+
+            column.ColIndex = _colGroupIndex;
 
             if (_table.ScrollX != null && Columns.Any(x => x.Width == null))
             {
@@ -123,40 +164,61 @@ namespace AntDesign
                 return;
             }
 
-            var columnSpan = column.ColSpan;
-            if (column.RowSpan == 0) columnSpan = 0;
-
-            do
+            if (Columns.Count == 0)
             {
-                if (++CurrentColIndex >= Columns.Count)
-                {
-                    CurrentColIndex = 0;
-                    if (ColIndexOccupied != null)
-                    {
-                        foreach (ref var item in ColIndexOccupied.AsSpan())
-                        {
-                            if (item > 0) item--;
-                        }
-                    }
-                }
+                return;
             }
-            while (ColIndexOccupied != null && ColIndexOccupied[CurrentColIndex] > 0);
+
+            var rowSpan = column.GetRowSpan(column.RowData);
+            var columnSpan = column.GetColSpan(column.RowData);
+            if (rowSpan == 0) columnSpan = 0;
+
+            _bodyColIndex = FindNextColumnIndex(_bodyColIndex, _bodyColIndexesOccupied);
 
             if (_table.AutoColIndexes)
             {
-                column.ColIndex = CurrentColIndex;
+                column.ColIndex = _bodyColIndex;
             }
 
-            CurrentColIndex += columnSpan - 1;
+            _bodyColIndex += columnSpan - 1;
 
-            if (column.RowSpan > 1)
+            if (rowSpan > 1)
             {
-                ColIndexOccupied ??= new int[Columns.Count];
-                for (var i = column.ColIndex; i <= CurrentColIndex; i++)
+                _bodyColIndexesOccupied ??= new int[Columns.Count];
+                for (var i = column.ColIndex; i <= _bodyColIndex; i++)
                 {
-                    ColIndexOccupied[i] = column.RowSpan;
+                    _bodyColIndexesOccupied[i] = rowSpan;
                 }
             }
+        }
+
+        private static void AdvanceOccupiedColumns(int[] occupiedColumns)
+        {
+            if (occupiedColumns == null)
+            {
+                return;
+            }
+
+            foreach (ref var item in occupiedColumns.AsSpan())
+            {
+                if (item > 0) item--;
+            }
+        }
+
+        private int FindNextColumnIndex(int currentIndex, int[] occupiedColumns)
+        {
+            for (var offset = 1; offset <= Columns.Count; offset++)
+            {
+                var candidate = (currentIndex + offset) % Columns.Count;
+                if (occupiedColumns == null || occupiedColumns[candidate] == 0)
+                {
+                    return candidate;
+                }
+            }
+
+            // Invalid spans can occupy every registered slot. Keep rendering
+            // bounded so a malformed template cannot hang the whole table.
+            return (currentIndex + 1) % Columns.Count;
         }
 
         internal void HeaderColumnInitialized(IColumn column)

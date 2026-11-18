@@ -57,6 +57,8 @@ namespace AntDesign
 
         internal void SetSelection(ISelectionColumn selectItem);
 
+        internal void SetSelection(ISelectionColumn selectItem, RowData rowData);
+
         internal void UnSelectSelection(ISelectionColumn selectItem);
 
         internal bool AllSelected { get; }
@@ -66,6 +68,8 @@ namespace AntDesign
         internal bool HasHeaderTemplate { get; }
 
         internal bool HasRowTemplate { get; }
+
+        internal bool Quick { get; }
 
         //internal void SelectionChanged();
 

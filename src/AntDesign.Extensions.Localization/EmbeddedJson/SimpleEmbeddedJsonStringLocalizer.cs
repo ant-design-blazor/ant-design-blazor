@@ -61,7 +61,24 @@ namespace AntDesign.Extensions.Localization.EmbeddedJson
 
         private static IDictionary<string, string> ReadResources(string resourcePathName, Assembly resourceAssembly, CultureInfo cultureInfo, IOptions<SimpleStringLocalizerOptions> options, bool isFallback)
         {
-            return options.Value.GetResource(cultureInfo.Name) ?? new Dictionary<string, string>();
+            var resources = options.Value.GetResource(cultureInfo.Name);
+            if (resources != null)
+            {
+                return resources;
+            }
+
+            // The docs only ship a small set of supported locales (en-US and zh-CN). During
+            // server prerendering, the process culture can be a regional variant such as en-CN,
+            // which has no exact resource even though a translation for the same language exists.
+            // Fall back to that language's available resource instead of rendering the key itself.
+            var language = cultureInfo.TwoLetterISOLanguageName;
+            var matchingResource = options.Value.Resources
+                .Where(resource => CultureInfo.GetCultureInfo(resource.Key).TwoLetterISOLanguageName == language)
+                .OrderBy(resource => resource.Key, StringComparer.Ordinal)
+                .Select(resource => resource.Value)
+                .FirstOrDefault();
+
+            return matchingResource ?? new Dictionary<string, string>();
 
             //var availableResources = resourceAssembly
             //    .GetManifestResourceNames()

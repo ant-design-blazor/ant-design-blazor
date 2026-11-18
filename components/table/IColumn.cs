@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using AntDesign.TableModels;
 
 namespace AntDesign
@@ -36,7 +37,15 @@ namespace AntDesign
 
         public int RowSpan { get; set; }
 
+        public Func<RowData, int> RowSpanFunc { get; set; }
+
         public int HeaderColSpan { get; set; }
+
+        public Func<RowData, int> ColSpanFunc { get; set; }
+
+        public int GetRowSpan(RowData rowData);
+
+        public int GetColSpan(RowData rowData);
 
         internal void UpdateFixedStyle();
     }
