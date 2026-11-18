@@ -18,7 +18,7 @@
                         <div class="ant-drawer-header-title">
                             @if (Closable)
                             {
-                                <button @onclick="_=>CloseClick()" type="button" aria-label="Close" class="@GetSemanticClass("close", "ant-drawer-close")" style="@GetSemanticStyle("close")">
+                                <button @onclick="CloseClick" type="button" aria-label="Close" class="@GetSemanticClass("close", "ant-drawer-close")" style="@GetSemanticStyle("close")">
                                     <Icon Type="close" />
                                 </button>
                             }

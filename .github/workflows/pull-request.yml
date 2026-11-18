@@ -28,7 +28,7 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 11.0.x
-          dotnet-quality: preview
+          dotnet-quality: ga
 
       - uses: actions/setup-node@v1
         with:
@@ -65,7 +65,7 @@ jobs:
             coverage-flag: dotnet-net10
           - tfm: net11.0
             sdk-version: 11.0.x
-            sdk-quality: preview
+            sdk-quality: ga
             coverage-flag: dotnet-net11
 
     steps:
@@ -82,7 +82,7 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 11.0.x
-          dotnet-quality: preview
+          dotnet-quality: ga
 
       - name: Test
         run: >-

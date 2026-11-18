@@ -35,7 +35,7 @@ namespace AntDesign
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-        [Parameter(CaptureUnmatchedValues = true)]
+        [Parameter]
         public Dictionary<string, object> Attributes { get; set; }
 
         /// <summary>

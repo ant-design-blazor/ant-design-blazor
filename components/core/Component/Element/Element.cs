@@ -20,7 +20,7 @@ namespace AntDesign.Internal
         [Parameter]
         public EventCallback<ElementReference> RefChanged { get; set; }
 
-        [Parameter(CaptureUnmatchedValues = true)]
+        [Parameter]
         public Dictionary<string, object> Attributes { get; set; } = new Dictionary<string, object>();
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
@@ -28,7 +28,7 @@ namespace AntDesign.Internal
             base.BuildRenderTree(builder);
 
             builder.OpenElement(0, HtmlTag);
-            builder.AddMultipleAttributes(1, Attributes);
+            builder.AddMultipleAttributes(1, GetAdditionalAttributes(Attributes));
             builder.AddAttribute(2, "class", Class);
             builder.AddAttribute(3, "style", Style);
             if (HtmlTag == "button")

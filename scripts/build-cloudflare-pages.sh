@@ -24,9 +24,9 @@ cd "${REPO_ROOT}"
 rm -rf "${OUTPUT_DIR}" "${PUBLISH_DIR}"
 mkdir -p "${OUTPUT_DIR}"
 
-if ! command -v dotnet >/dev/null 2>&1 || ! dotnet --list-sdks | grep -q '^10\.'; then
+if ! command -v dotnet >/dev/null 2>&1 || ! dotnet --list-sdks | grep -q '^11\.'; then
   curl -fsSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin \
-    --channel 10.0 \
+    --channel 11.0 \
     --install-dir "${DOTNET_INSTALL_DIR}"
   export DOTNET_ROOT="${DOTNET_INSTALL_DIR}"
   export PATH="${DOTNET_INSTALL_DIR}:${PATH}"

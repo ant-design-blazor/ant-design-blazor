@@ -20,8 +20,9 @@ namespace AntDesign
             if (builder != null)
             {
                 builder.OpenElement(0, Tag);
-                builder.AddAttribute(1, "class", ClassMapper.Class);
-                builder.AddAttribute(2, "style", GenerateStyle());
+                builder.AddMultipleAttributes(1, AdditionalAttributes);
+                builder.AddAttribute(2, "class", ClassMapper.Class);
+                builder.AddAttribute(3, "style", GenerateStyle());
                 builder.AddAttribute(4, "id", Id);
                 builder.AddElementReferenceCapture(5, (value) => { Ref = value; });
                 builder.AddContent(7, ChildContent);

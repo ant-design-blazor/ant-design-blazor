@@ -462,7 +462,7 @@ namespace AntDesign
         private SelectOptionItem<TItemValue, TItem> CreateOption(TreeNode<TItem> node, bool append = false)
         {
             if (!TreeCheckable || TreeCheckStrictly || (ShowCheckedStrategy == TreeCheckedStrategy.ShowAll)
-                    || ((ShowCheckedStrategy == TreeCheckedStrategy.ShowParent) && ((node.ParentNode == null) || (!_cachedValues.Contains(_getValue(node.ParentNode.DataItem)))))
+                    || ((ShowCheckedStrategy == TreeCheckedStrategy.ShowParent) && ((node.ParentNode == null) || (!_cachedValues.Contains(GetValueFromNode(node.ParentNode)))))
                     || ((ShowCheckedStrategy == TreeCheckedStrategy.ShowChild) && !node.HasChildNodes))
             {
                 var o = new SelectOptionItem<TItemValue, TItem>()
@@ -639,11 +639,7 @@ namespace AntDesign
                 await OnValuesChangeAsync(Values);
                 return;
             }
-            var node = args.Node;
-
-            var key = node.Key;
-            var value = GetValueFromNode(node);
-            var checkedNodes = _tree._allNodes.Where(x => _tree.CheckedKeys.Contains(x.Key)).ToArray();
+            var checkedNodes = _tree._allNodes.Where(node => node.Checked).ToArray();
             if (MaxCount is > 0 && GetDisplayedCheckedNodeCount(checkedNodes) > MaxCount.Value)
             {
                 // TreeNode applies checkbox changes before raising OnCheck. Restore the previous
@@ -652,14 +648,8 @@ namespace AntDesign
                 return;
             }
 
-            if (_tree.CheckedKeys.Contains(key))
-            {
-                Values = Values == null ? [value] : Values.Append(value);
-            }
-            else
-            {
-                Values = Values?.Where(v => !v.AllNullOrEquals(value)).ToArray();
-            }
+            var checkedValues = checkedNodes.Select(GetValueFromNode).ToArray();
+            Values = (Values ?? []).Intersect(checkedValues).Union(checkedValues).ToArray();
             await OnValuesChangeAsync(Values);
         }
 

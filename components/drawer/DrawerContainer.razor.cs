@@ -51,6 +51,8 @@ namespace AntDesign
         {
             if (!_drawerRefs.Contains(drawerRef))
             {
+                // Reopening creates a new feedback component; do not retain the disposed template.
+                ((IFeedbackRef)drawerRef).ModalTemplate = null;
                 _drawerRefs.Add(drawerRef);
                 await InvokeAsync(StateHasChanged);
                 await Task.Delay(10);

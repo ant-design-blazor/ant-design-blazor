@@ -887,7 +887,7 @@ namespace AntDesign
                 builder.AddAttribute(60, "placeholder", Placeholder);
             }
             builder.AddAttribute(61, "value", CurrentValueAsString);
-            builder.AddAttribute(62, "disabled", needsDisabled);
+            builder.AddAttribute(62, "disabled", Disabled);
             builder.AddAttribute(63, "readonly", ReadOnly);
 
             if (!AutoComplete)

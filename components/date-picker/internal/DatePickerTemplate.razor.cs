@@ -13,6 +13,8 @@ namespace AntDesign.Internal
         private int _maxCol;
         private int _maxRow;
         private DateTime _viewStartDate;
+        private DateTime? _hoveredDateTime;
+        private int _hoveredPickerIndex;
 
         [Parameter]
         public RenderFragment RenderPickerHeader { get; set; }
@@ -105,11 +107,12 @@ namespace AntDesign.Internal
             DatePicker.ChangePreviewValue(placeholder, focusIndex);
         }
 
-        private void DateOnMouseLeave()
+        private void DateOnMouseLeave(DateTime hoverDateTime)
         {
-            if (IsRange)
+            var pickerIndex = GetPickerIndex();
+            if (_hoveredDateTime != hoverDateTime || _hoveredPickerIndex != pickerIndex)
             {
-                DatePicker.HoverDateTime = null;
+                return;
             }
 
             DatePicker.ResetPreviewValue();

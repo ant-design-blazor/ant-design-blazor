@@ -178,6 +178,7 @@ namespace AntDesign
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             builder.OpenElement(1, Component ?? "div");
+            builder.AddMultipleAttributes(2, AdditionalAttributes);
 
             builder.AddAttribute(2, "class", ClassMapper.Class);
             var mergedStyle = $"{FlexStyle} {Style}".Trim();

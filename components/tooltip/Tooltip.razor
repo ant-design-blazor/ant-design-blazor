@@ -5,7 +5,7 @@
 
 @if (ChildContent != null)
 {
-    <div class="@ClassMapper.Class" @ref="@Ref" Id="@Id" style="display: inline-block; @Style"
+    <div @attributes="AdditionalAttributes" class="@ClassMapper.Class" @ref="@Ref" Id="@Id" style="display: inline-block; @Style"
      @onclick="OnClickDiv"
      @onmouseenter="OnTriggerMouseEnter"
      @onmouseleave="OnTriggerMouseLeave"

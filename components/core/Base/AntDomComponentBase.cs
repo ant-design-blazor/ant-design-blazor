@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Components;
 using AntDesign.Theming;
 using System.Linq;
@@ -10,6 +11,22 @@ namespace AntDesign
 {
     public abstract class AntDomComponentBase : AntComponentBase
     {
+        /// <summary>
+        /// Additional HTML attributes for the component's DOM target.
+        /// </summary>
+        [Parameter(CaptureUnmatchedValues = true)]
+        public IReadOnlyDictionary<string, object> AdditionalAttributes { get; set; }
+
+        internal IReadOnlyDictionary<string, object> GetAdditionalAttributes(IReadOnlyDictionary<string, object> attributes)
+        {
+            var additionalAttributes = AdditionalAttributes;
+            if (additionalAttributes == null) return attributes;
+            if (attributes == null) return additionalAttributes;
+            var merged = new Dictionary<string, object>(additionalAttributes, System.StringComparer.OrdinalIgnoreCase);
+            foreach (var attribute in attributes) merged[attribute.Key] = attribute.Value;
+            return merged;
+        }
+
         private static readonly System.Collections.Generic.HashSet<string> GlobalTokenNames = new(GeneratedGlobalTokens.All.Select(token => token.Name), System.StringComparer.Ordinal);
         [Inject]
         private IComponentIdGenerator ComponentIdGenerator { get; set; }

@@ -36,6 +36,28 @@ High performance Form component with data scope management. Including data colle
 | ValidateOnChange | Whether to verify when changing | bool | false |
 | RequiredMark | Change how required/optional field labels are displayed on the form. | FormRequiredMark | FormRequiredMark.Required |
 
+### Asynchronous validation (.NET 11+)
+
+When targeting `net11.0`, Form supports model validation with `AsyncValidationAttribute` and `IAsyncValidatableObject`. The default validation path automatically includes `DataAnnotationsValidator`, and form submission waits for asynchronous validation to finish. When validating or submitting a form from code, use `ValidateAsync()` or `SubmitAsync()`; the synchronous `Validate()` and `Submit()` methods don't support asynchronous validation.
+
+The supplied `CancellationToken` is passed to async validators. Pass it through to cancellable I/O operations in your validator; canceling it signals the active validation pass to stop.
+
+```csharp
+using System;
+using System.Threading;
+
+using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+var isValid = await form.ValidateAsync(cts.Token);
+// Or, when submitting: await form.SubmitAsync(cts.Token);
+```
+
+### Validation methods
+
+| Name | Description | Return value |
+| --- | --- | --- |
+| ValidateAsync(CancellationToken) | Validate the form asynchronously; returns `true` when validation succeeds. | Task&lt;bool&gt; |
+| SubmitAsync(CancellationToken) | Validate asynchronously, then invoke `OnFinish` or `OnFinishFailed`. | Task |
+
 ### FormItem
 | Name | Description | Type | Default Value |
 | --- | --- | --- | --- |

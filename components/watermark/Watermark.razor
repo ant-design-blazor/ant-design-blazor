@@ -1,7 +1,7 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
 
-<div style="position: relative; overflow: hidden; width: 100%; @Style" @ref="Ref" id="@Id" class="@Class">
+<div @attributes="AdditionalAttributes" style="position: relative; overflow: hidden; width: 100%; @Style" @ref="Ref" id="@Id" class="@Class">
     @ChildContent
     <div @ref="_watermarkContentRef" 
         style=@($@"

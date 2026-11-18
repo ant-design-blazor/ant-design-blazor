@@ -71,5 +71,5 @@
 }
 else
 {
-    <textarea @ref="Ref" class="@ClassMapper.OriginalClass @_textareaClassMapper.Class" @attributes="attributes" @onchange:stopPropagation="@StopPropagation" @onblur:stopPropagation="@StopPropagation" />
+    <textarea @attributes="GetAdditionalAttributes(attributes)" @ref="Ref" class="@ClassMapper.OriginalClass @_textareaClassMapper.Class" @onchange:stopPropagation="@StopPropagation" @onblur:stopPropagation="@StopPropagation" />
 }

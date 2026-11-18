@@ -120,6 +120,10 @@
         {
             context.FilterClose();
         }
+        else
+        {
+            context.PreventClose();
+        }
     }
 
     private void ResetSearch(TableFilterDropdownContext context, string column)

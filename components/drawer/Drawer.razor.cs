@@ -591,11 +591,11 @@ namespace AntDesign
         /// trigger when mask is clicked
         /// </summary>
         /// <returns></returns>
-        private void MaskClick(MouseEventArgs _)
+        private async Task MaskClick(MouseEventArgs args)
         {
             if (MaskClosable && Mask)
             {
-                CloseClick();
+                await CloseClick(args);
             }
         }
 
@@ -603,8 +603,14 @@ namespace AntDesign
         /// trigger when Closer is clicked
         /// </summary>
         /// <returns></returns>
-        private void CloseClick()
+        private async Task CloseClick(MouseEventArgs args)
         {
+            if (DrawerRef != null)
+            {
+                await DrawerRef.CancelAsync(args);
+                return;
+            }
+
             _hasInvokeClosed = false;
             _status = ComponentStatus.Closing;
         }
@@ -629,11 +635,6 @@ namespace AntDesign
                 await OpenChanged.InvokeAsync(false);
             }
             _isOpen = false;
-
-            if (DrawerRef != null)
-            {
-                await DrawerRef.CloseAsync();
-            }
         }
 
         private void CalcDrawerStyle()

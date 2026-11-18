@@ -56,9 +56,10 @@
                             <td title="@GetColTitle?.Invoke(currentColDate)"
                                 class="@cellCls"
                                 @onmouseenter="e => DateOnMouseEnter(currentColDate)"
-                                @onmouseleave="e => DateOnMouseLeave()"
+                                @onmouseleave="e => DateOnMouseLeave(currentColDate)"
                                 @onclick="e=> OnValueSelect?.Invoke(currentColDate)" >
-                                <div class="@innerCellCls"> 
+                                <div class="@innerCellCls"
+                                     @onmouseenter="e => DateOnMouseEnter(currentColDate)">
                                     @if (IsCalendar)
                                     {
                                         <div class="@(PrefixCls)-calendar-date-value">

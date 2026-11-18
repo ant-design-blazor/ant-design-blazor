@@ -7,7 +7,7 @@
     okProps.Loading = ModalProps.ConfirmLoading;
 }
 
-<div>
+<div @attributes="AdditionalAttributes">
     <Button OnClick="@HandleOk"
             Loading="@okProps.Loading"
             Type="@okProps.Type"
