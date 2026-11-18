@@ -706,3 +706,12 @@ The generated preview registry received additional browser smoke checks on Selec
 | Table — Measure Row Render | Sticky-table behavior still emits the internal column-count variable as required; the prior demo remains aligned. | Regression fixture passes 1/1 with 0 DOM/CSS/geometry/visual-style differences. Report: `/tmp/table-measure-row-render-20261118-final.json`. |
 | All 71 component routes | This closes two focused Table demo states only. The rest of Table and the full API, token, docs, Semantic DOM, Theme Preview, and runtime audit remain open. | See the 71-row matrix above; it is a historical broad-scan snapshot, not a current acceptance result. |
 | Next | Continue remaining Table demos in descending React/Blazor mismatch volume, then resume Select/Icon route and API/token/docs audits. | React and Blazor Narrow demo pages remain open in the browser for manual review. |
+
+## Focused continuation — 2026-11-18 (Table Order Column and Filter Search)
+
+| Component / area | Current progress | Verification / remaining |
+|---|---|---|
+| Table — Order Column | Removed the extra Blazor-only non-expandable row rule and aligned the hidden checkbox input's inherited font weight with React across the generated theme bundles. | Focused fixture 1/1 passed; normalized DOM, computed styles, geometry, and visual styles agree. `/tmp/table-order-column-dom-style-parity-20261118-final.json`. |
+| Table — Filter Search | Added bilingual demo copy and changed the row prefix predicate to ordinal, case-sensitive matching, equivalent to React's `startsWith`. | Default, open tree filter, and option search pass 3/3 with no DOM/CSS/geometry/visual-style differences. `/tmp/table-filter-search-dom-style-parity-20261118-final.json`. Docs.Server `net11.0` build: 0 errors (4211 existing warnings). |
+| Remaining scope | These close two Table demo states only. Other Table demos and the full API, Design Token, docs, Semantic DOM, Theme Preview, and runtime audit remain open. | The 71-component matrix is a historical inventory, not current full acceptance evidence. |
+| Next | Continue Table's remaining demo differences in current priority order, then resume Select/Icon page and API/token/docs audits. | React and Blazor Table pages remain open for manual review. |

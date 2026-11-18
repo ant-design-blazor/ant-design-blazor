@@ -4881,3 +4881,26 @@ rerun as a regression and also passes 1/1 with no differences. Reports:
 `/tmp/table-measure-row-render-20261118-final.json`. Docs.Server `net11.0`
 build: 0 errors (3623 existing warnings). This closes only these two focused
 demo states; remaining Table demos and the 71-component audit remain open.
+
+## Table Order Column and Filter Search — 2026-11-18
+
+Order Column now follows React's default expandability for every row; its demo
+no longer adds a Blazor-only `RowExpandable` exclusion. The remaining
+computed-style difference was the invisible checkbox input's `font-weight`.
+The checkbox input now inherits the surrounding weight, matching React, and
+the checked-in theme CSS bundles were updated alongside the Less source. The
+Order Column fixture passes 1/1 with equal normalized DOM, computed styles,
+geometry, and visual styles. Report:
+`/tmp/table-order-column-dom-style-parity-20261118-final.json`.
+
+Filter Search now has localized English and Chinese demo descriptions. Its row
+filter predicate uses ordinal, case-sensitive prefix matching like React's
+`startsWith`, and the focused fixture covers the default table, opening the
+Name tree filter, and searching its options for `Category 1`. All 3 states pass
+with equal normalized DOM, selected computed styles, geometry, and visual
+styles. Report:
+`/tmp/table-filter-search-dom-style-parity-20261118-final.json`. The .NET 11
+Docs.Server build succeeded with 0 errors (4211 existing warnings); browser
+inspection confirms the generated Blazor demo description is visible. The
+remaining Table demos and the 71-component API/token/docs/Semantic DOM/Theme
+Preview/runtime audit remain open.

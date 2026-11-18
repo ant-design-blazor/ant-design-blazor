@@ -2,9 +2,9 @@
 
 <Table TItem="FilterRow" DataSource="_data" RowKey="row => row.Key">
     <ColumnDefinitions>
-        <PropertyColumn Property="row => row.Name" Title="Name" Width="30%" FilterMode="TableFilterMode.Tree" FilterSearch="true" Filters="_nameFilters" OnFilter="(value, name) => name.StartsWith(value, StringComparison.OrdinalIgnoreCase)" />
+        <PropertyColumn Property="row => row.Name" Title="Name" Width="30%" FilterMode="TableFilterMode.Tree" FilterSearch="true" Filters="_nameFilters" OnFilter="(value, name) => name.StartsWith(value, StringComparison.Ordinal)" />
         <PropertyColumn Property="row => row.Age" Title="Age" Sortable SorterCompare="(left, right) => left - right" />
-        <PropertyColumn Property="row => row.Address" Title="Address" Width="40%" FilterSearch="true" Filters="_addressFilters" OnFilter="(value, address) => address.StartsWith(value, StringComparison.OrdinalIgnoreCase)" />
+        <PropertyColumn Property="row => row.Address" Title="Address" Width="40%" FilterSearch="true" Filters="_addressFilters" OnFilter="(value, address) => address.StartsWith(value, StringComparison.Ordinal)" />
     </ColumnDefinitions>
 </Table>
 
