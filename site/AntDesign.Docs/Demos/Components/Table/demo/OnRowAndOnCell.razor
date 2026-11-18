@@ -13,6 +13,9 @@
     <TitleTemplate>
       <span><Icon Type="@IconType.Outline.Environment" /> Address</span>
     </TitleTemplate>
+    <CellRender Context="cell">
+      @(((RowData<Data>)cell.RowData).Data.Address)
+    </CellRender>
   </Column>
   <Column Title="Tag" TData="string">
       <CellRender Context="cell">
