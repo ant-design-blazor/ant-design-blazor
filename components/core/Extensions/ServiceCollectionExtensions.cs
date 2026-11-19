@@ -4,14 +4,12 @@
 
 using System.Globalization;
 using System.Runtime.InteropServices;
-using System.Text.Encodings.Web;
 using AntDesign;
 using AntDesign.Core;
 using AntDesign.Core.Services;
 using AntDesign.Filters;
 using AntDesign.JsInterop;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Logging;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -32,9 +30,6 @@ namespace Microsoft.Extensions.DependencyInjection
                 return domEventService.CreateDomEventListerner();
             });
 
-            services.TryAddScoped(sp => new HtmlRenderService(new HtmlRenderer(sp, sp.GetRequiredService<ILoggerFactory>(),
-                        s => HtmlEncoder.Default.Encode(s)))
-            );
             services.TryAddScoped<IconService>();
             services.TryAddScoped<InteropService>();
             services.TryAddScoped<ClientDimensionService>();
