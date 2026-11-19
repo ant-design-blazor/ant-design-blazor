@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.Core.Extensions;
@@ -18,7 +19,8 @@ public class DomEventListener(IJSRuntime jsRuntime, DomEventSubscriptionStore do
 {
     private readonly string _id = Guid.NewGuid().ToString();
     private readonly Dictionary<DomEventKey, IDisposable> _exclusiveDotNetObjectStore = [];
-    private readonly Dictionary<DomEventKey, IDisposable> _sharedDotNetObjectStore = [];
+    private readonly Dictionary<DomEventKey, IDisposable> _resizeDotNetObjectStore = [];
+    private readonly Dictionary<DomEventKey, Delegate> _fallbackResizeCallbackStore = [];
 
     private bool? _isResizeObserverSupported = null;
     private bool _isDisposed;
@@ -67,6 +69,7 @@ public class DomEventListener(IJSRuntime jsRuntime, DomEventSubscriptionStore do
         if (_exclusiveDotNetObjectStore.TryGetValue(key, out var dotNetObject))
         {
             jsRuntime.InvokeVoidAsync(JSInteropConstants.RemoveDomEventListener, dom, eventName, dotNetObject);
+            dotNetObject.Dispose();
         }
         _exclusiveDotNetObjectStore.Remove(key);
     }
@@ -76,6 +79,7 @@ public class DomEventListener(IJSRuntime jsRuntime, DomEventSubscriptionStore do
         foreach (var (key, dotNetObject) in _exclusiveDotNetObjectStore)
         {
             jsRuntime.InvokeVoidAsync(JSInteropConstants.RemoveDomEventListener, key.Selector, key.EventName, dotNetObject);
+            dotNetObject.Dispose();
         }
         _exclusiveDotNetObjectStore.Clear();
     }
@@ -103,7 +107,7 @@ public class DomEventListener(IJSRuntime jsRuntime, DomEventSubscriptionStore do
                     }
                 }));
 
-                _sharedDotNetObjectStore.Add(key, dotNetObject);
+                domEventSubscriptionStore.TryAddDotNetObject(key, dotNetObject);
 
                 jsRuntime.InvokeVoidAsync(JSInteropConstants.AddDomEventListener, dom, eventName, preventDefault, dotNetObject);
             }
@@ -143,7 +147,7 @@ public class DomEventListener(IJSRuntime jsRuntime, DomEventSubscriptionStore do
                     }
                 }));
 
-                _sharedDotNetObjectStore.Add(key, dotNetObject);
+                domEventSubscriptionStore.TryAddDotNetObject(key, dotNetObject);
 
                 jsRuntime.InvokeVoidAsync(JSInteropConstants.AddDomEventListener, dom, eventName, preventDefault, dotNetObject);
             }
@@ -164,6 +168,7 @@ public class DomEventListener(IJSRuntime jsRuntime, DomEventSubscriptionStore do
             if (index >= 0)
             {
                 subscriptions.RemoveAt(index);
+                DisposeSharedEventIfUnused(key);
             }
         }
     }
@@ -177,6 +182,7 @@ public class DomEventListener(IJSRuntime jsRuntime, DomEventSubscriptionStore do
             if (index >= 0)
             {
                 subscriptions.RemoveAt(index);
+                DisposeSharedEventIfUnused(key);
             }
         }
     }
@@ -193,9 +199,10 @@ public class DomEventListener(IJSRuntime jsRuntime, DomEventSubscriptionStore do
                 var tempList = domEventSubscriptionStore[key];
                 tempList.Remove(subscription);
 
-                if (tempList.Count == 0 && _sharedDotNetObjectStore.TryGetValue(key, out var dotNetObject))
+                if (tempList.Count == 0 && domEventSubscriptionStore.TryRemoveDotNetObject(key, out var dotNetObject))
                 {
                     jsRuntime.InvokeVoidAsync(JSInteropConstants.RemoveDomEventListener, key.Selector, key.EventName, dotNetObject);
+                    dotNetObject.Dispose();
 
                     domEventSubscriptionStore.Remove(key, out var _);
                 }
@@ -216,9 +223,11 @@ public class DomEventListener(IJSRuntime jsRuntime, DomEventSubscriptionStore do
         var key = FormatKey(dom.Id, nameof(JSInteropConstants.ObserverConstants.Resize));
         if (!await IsResizeObserverSupported())
         {
-            AddShared<JsonElement>("window", "resize", Callback, false);
+            var callbackWrapper = (Action<JsonElement>)(_ => callback.Invoke([new ResizeObserverEntry()]));
+            _fallbackResizeCallbackStore[key] = callbackWrapper;
+            AddShared("window", "resize", callbackWrapper, false);
 
-            void Callback(JsonElement _) => callback.Invoke([new ResizeObserverEntry()]);
+            return;
         }
         else
         {
@@ -227,14 +236,16 @@ public class DomEventListener(IJSRuntime jsRuntime, DomEventSubscriptionStore do
                 subscriptions = [];
                 if (domEventSubscriptionStore.TryAdd(key, subscriptions))
                 {
-                    await jsRuntime.InvokeVoidAsync(JSInteropConstants.ObserverConstants.Resize.Create, key.ToString(), DotNetObjectReference.Create(new Invoker<string>((p) =>
+                    var dotNetObject = DotNetObjectReference.Create(new Invoker<string>((p) =>
                     {
                         foreach (var subscription in subscriptions)
                         {
                             var tP = JsonSerializer.Deserialize(p, subscription.Type);
                             subscription.Delegate.DynamicInvoke(tP);
                         }
-                    })));
+                    }));
+                    _resizeDotNetObjectStore[key] = dotNetObject;
+                    await jsRuntime.InvokeVoidAsync(JSInteropConstants.ObserverConstants.Resize.Create, key.ToString(), dotNetObject);
                     await jsRuntime.InvokeVoidAsync(JSInteropConstants.ObserverConstants.Resize.Observe, key.ToString(), dom);
                 }
                 else
@@ -252,9 +263,11 @@ public class DomEventListener(IJSRuntime jsRuntime, DomEventSubscriptionStore do
         var key = FormatKey(dom.Id, nameof(JSInteropConstants.ObserverConstants.Resize));
         if (!await IsResizeObserverSupported())
         {
-            AddShared<JsonElement>("window", "resize", AsyncCallback, false);
+            var callbackWrapper = (Func<JsonElement, Task>)(async _ => await callback.Invoke([new ResizeObserverEntry()]));
+            _fallbackResizeCallbackStore[key] = callbackWrapper;
+            AddShared("window", "resize", callbackWrapper, false);
 
-            async void AsyncCallback(JsonElement _) => await callback.Invoke([new ResizeObserverEntry()]);
+            return;
         }
         else
         {
@@ -263,7 +276,7 @@ public class DomEventListener(IJSRuntime jsRuntime, DomEventSubscriptionStore do
                 subscriptions = [];
                 if (domEventSubscriptionStore.TryAdd(key, subscriptions))
                 {
-                    await jsRuntime.InvokeVoidAsync(JSInteropConstants.ObserverConstants.Resize.Create, key.ToString(), DotNetObjectReference.Create(new AsyncInvoker<string>(async (p) =>
+                    var dotNetObject = DotNetObjectReference.Create(new AsyncInvoker<string>(async (p) =>
                     {
                         foreach (var subscription in subscriptions)
                         {
@@ -277,7 +290,9 @@ public class DomEventListener(IJSRuntime jsRuntime, DomEventSubscriptionStore do
                                 subscription.Delegate.DynamicInvoke(tP);
                             }
                         }
-                    })));
+                    }));
+                    _resizeDotNetObjectStore[key] = dotNetObject;
+                    await jsRuntime.InvokeVoidAsync(JSInteropConstants.ObserverConstants.Resize.Create, key.ToString(), dotNetObject);
                     await jsRuntime.InvokeVoidAsync(JSInteropConstants.ObserverConstants.Resize.Observe, key.ToString(), dom);
                 }
                 else
@@ -295,11 +310,21 @@ public class DomEventListener(IJSRuntime jsRuntime, DomEventSubscriptionStore do
         var key = FormatKey(dom.Id, nameof(JSInteropConstants.ObserverConstants.Resize));
         if (domEventSubscriptionStore.TryGetValue(key, out var list))
         {
-            var index = list.FindIndex(s => s.Delegate == (Delegate)callback);
+            var index = list.FindIndex(s => s.Id == _id && s.Delegate == (Delegate)callback);
             if (index >= 0)
             {
                 list.RemoveAt(index);
             }
+        }
+
+        if (_fallbackResizeCallbackStore.TryGetValue(key, out var fallbackCallback))
+        {
+            RemoveFallbackResizeCallback(key, fallbackCallback);
+        }
+
+        if (!domEventSubscriptionStore.TryGetValue(key, out var remainingSubscriptions) || remainingSubscriptions.Count == 0)
+        {
+            await DisposeResizeObserver(dom);
         }
 
         await Task.CompletedTask;
@@ -310,11 +335,21 @@ public class DomEventListener(IJSRuntime jsRuntime, DomEventSubscriptionStore do
         var key = FormatKey(dom.Id, nameof(JSInteropConstants.ObserverConstants.Resize));
         if (domEventSubscriptionStore.TryGetValue(key, out var list))
         {
-            var index = list.FindIndex(s => s.Delegate == (Delegate)callback && s.IsAsync);
+            var index = list.FindIndex(s => s.Id == _id && s.Delegate == (Delegate)callback && s.IsAsync);
             if (index >= 0)
             {
                 list.RemoveAt(index);
             }
+        }
+
+        if (_fallbackResizeCallbackStore.TryGetValue(key, out var fallbackCallback))
+        {
+            RemoveFallbackResizeCallback(key, fallbackCallback);
+        }
+
+        if (!domEventSubscriptionStore.TryGetValue(key, out var remainingSubscriptions) || remainingSubscriptions.Count == 0)
+        {
+            await DisposeResizeObserver(dom);
         }
 
         await Task.CompletedTask;
@@ -328,6 +363,14 @@ public class DomEventListener(IJSRuntime jsRuntime, DomEventSubscriptionStore do
             await jsRuntime.InvokeVoidAsync(JSInteropConstants.ObserverConstants.Resize.Dispose, key.ToString());
         }
         domEventSubscriptionStore.TryRemove(key, out _);
+        if (_resizeDotNetObjectStore.Remove(key, out var dotNetObject))
+        {
+            dotNetObject.Dispose();
+        }
+        if (_fallbackResizeCallbackStore.TryGetValue(key, out var fallbackCallback))
+        {
+            RemoveFallbackResizeCallback(key, fallbackCallback);
+        }
     }
 
     public async ValueTask DisconnectResizeObserver(ElementReference dom)
@@ -344,6 +387,47 @@ public class DomEventListener(IJSRuntime jsRuntime, DomEventSubscriptionStore do
     }
 
     private async ValueTask<bool> IsResizeObserverSupported() => _isResizeObserverSupported ??= await jsRuntime.IsResizeObserverSupported();
+
+    private void RemoveFallbackResizeCallback(DomEventKey key, Delegate callback)
+    {
+        if (callback is Action<JsonElement> action)
+        {
+            RemoveShared("window", "resize", action);
+        }
+        else if (callback is Func<JsonElement, Task> asyncCallback)
+        {
+            RemoveShared("window", "resize", asyncCallback);
+        }
+
+        _fallbackResizeCallbackStore.Remove(key);
+    }
+
+    private void DisposeSharedEventIfUnused(DomEventKey key)
+    {
+        if (domEventSubscriptionStore.TryGetValue(key, out var subscriptions) && subscriptions.Count == 0
+            && domEventSubscriptionStore.TryRemoveDotNetObject(key, out var dotNetObject))
+        {
+            jsRuntime.InvokeVoidAsync(JSInteropConstants.RemoveDomEventListener, key.Selector, key.EventName, dotNetObject);
+            dotNetObject.Dispose();
+            domEventSubscriptionStore.TryRemove(key, out _);
+        }
+    }
+
+    private void DisposeResizeObservers()
+    {
+        foreach (var (key, dotNetObject) in _resizeDotNetObjectStore)
+        {
+            jsRuntime.InvokeVoidAsync(JSInteropConstants.ObserverConstants.Resize.Dispose, key.ToString());
+            dotNetObject.Dispose();
+            domEventSubscriptionStore.TryRemove(key, out _);
+        }
+        _resizeDotNetObjectStore.Clear();
+
+        foreach (var (key, callback) in _fallbackResizeCallbackStore.ToList())
+        {
+            RemoveFallbackResizeCallback(key, callback);
+        }
+    }
 
     #endregion ResizeObserver
 
@@ -389,6 +473,7 @@ public class DomEventListener(IJSRuntime jsRuntime, DomEventSubscriptionStore do
         if (!_isDisposed)
         {
             DisposeExclusive();
+            DisposeResizeObservers();
             DisposeShared();
             _isDisposed = true;
         }

@@ -1,0 +1,14 @@
+﻿@namespace AntDesign
+@inherits AntDomComponentBase
+@typeparam T
+
+<CascadingValue Value="this" IsFixed="true">
+    <div class="@GetRootClass()" style="@GetRootStyle()" id="@Id" @ref="Ref" @onload="CollectItemSizesAsync" @onerror="CollectItemSizesAsync">
+        @for (var index = 0; index < _items.Count; index++)
+        {
+            var item = _items[index];
+            var itemKey = GetItemKey(item, index);
+            <MasonryItemView @key="itemKey" ItemKey="@itemKey" Class="@GetItemClass(itemKey)" Style="@GetItemStyle(itemKey)" Content="@RenderItem(item, index)" />
+        }
+    </div>
+</CascadingValue>

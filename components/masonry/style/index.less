@@ -1,0 +1,46 @@
+@import '../../style/themes/index';
+@import '../../style/mixins/index';
+
+@masonry-prefix-cls: ~'@{ant-prefix}-masonry';
+
+.@{masonry-prefix-cls} {
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+
+  &-rtl {
+    direction: rtl;
+  }
+
+  & > &-item {
+    box-sizing: border-box;
+
+    &-fade {
+      &-appear {
+        transition: opacity @animation-duration-slow @ease-out;
+        opacity: 0;
+
+        &-active {
+          opacity: 1;
+        }
+      }
+
+      &-leave {
+        transition: opacity @animation-duration-fast @ease-out;
+        opacity: 1;
+
+        &-active {
+          opacity: 0;
+        }
+      }
+    }
+
+    &:not(&-fade) {
+      transition: left @animation-duration-slow @ease-out,
+        right @animation-duration-slow @ease-out,
+        top @animation-duration-slow @ease-out;
+    }
+  }
+}

@@ -1,0 +1,8 @@
+﻿<Masonry T="int" Fresh="true" Columns="4" Gutter="16" Items="_items" ItemRender="RenderItem" />
+
+@code {
+    private readonly IEnumerable<MasonryItem<int>> _items = new[] { 150, 50, 90, 70, 110, 150, 130, 80 }
+        .Select((height, index) => new MasonryItem<int> { Key = $"item-{index}", Data = height });
+
+    private RenderFragment<MasonryItemRenderContext<int>> RenderItem => item => @<Card Size="CardSize.Small" Style="@($"height: {item.Data}px")">@(item.Index + 1) - Click</Card>;
+}
