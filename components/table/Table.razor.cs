@@ -1055,7 +1055,14 @@ namespace AntDesign
                 {
                     if (ScrollY != null || ScrollX != null || Resizable || AutoHeight)
                     {
-                        await JsInvokeAsync(JSInteropConstants.UnbindTableScroll, _tableBodyRef);
+                        try
+                        {
+                            await JsInvokeAsync(JSInteropConstants.UnbindTableScroll, _tableBodyRef);
+                        }
+                        catch (TaskCanceledException ex)
+                        {
+                            Logger.LogDebug(ex, "AntDesign: The Table scroll cleanup interop call was canceled during disposal.");
+                        }
                     }
                 }
                 DomEventListener?.Dispose();
