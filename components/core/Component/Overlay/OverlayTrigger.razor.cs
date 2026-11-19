@@ -467,7 +467,14 @@ namespace AntDesign.Internal
 
         protected virtual void OnOverlayMouseUp()
         {
+            MarkMouseUpInOverlay();
+        }
+
+        private void MarkMouseUpInOverlay()
+        {
             _mouseUpInOverlay = true;
+            // A child overlay stops Blazor propagation, but still belongs to its ancestors.
+            _overlay?.ParentTrigger?.MarkMouseUpInOverlay();
         }
 
         /// <summary>

@@ -1,7 +1,50 @@
 @inherits AntDesignTestBase
 @using Bunit
+@using AntDesign.Internal
+@using AntDesign.Core.JsInterop.Modules.Components
+@using System.Text.Json
+@using Microsoft.AspNetCore.Components.Web
+@using Moq
 
 @code {
+    [Fact]
+    public async Task Clicking_a_nested_overlay_does_not_invoke_the_parent_mask_callback()
+    {
+        JSInterop.Mode = JSRuntimeMode.Loose;
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition());
+
+        Action<JsonElement>? documentMouseUp = null;
+        MockedDomEventListener
+            .Setup(listener => listener.AddShared("document", "mouseup", It.IsAny<Action<JsonElement>>(), false))
+            .Callback<object, string, Action<JsonElement>, bool>((_, _, callback, _) => documentMouseUp ??= callback);
+
+        var maskClicks = 0;
+        var cut = Render(@<OverlayTrigger Visible="true" OnMaskClick="() => maskClicks++">
+            <ChildContent><button>Parent trigger</button></ChildContent>
+            <Overlay>
+                <OverlayTrigger Visible="true">
+                    <ChildContent><button>Child trigger</button></ChildContent>
+                    <Overlay><button id="nested-overlay-content">Select date</button></Overlay>
+                </OverlayTrigger>
+            </Overlay>
+        </OverlayTrigger>);
+
+        cut.WaitForAssertion(() => Assert.Single(cut.FindAll("#nested-overlay-content")));
+        var overlays = cut.FindComponents<OverlayTrigger>();
+        cut.WaitForAssertion(() => Assert.True(overlays[0].Instance.IsOverlayShow()));
+        Assert.NotNull(documentMouseUp);
+
+        await cut.Find("#nested-overlay-content").MouseUpAsync(new MouseEventArgs());
+        await cut.InvokeAsync(() => documentMouseUp!(default));
+
+        Assert.Equal(0, maskClicks);
+
+        await cut.InvokeAsync(() => documentMouseUp!(default));
+
+        Assert.Equal(1, maskClicks);
+    }
+
     [Fact]
     public void Overlay_RendersMousePropagationGuards()
     {
@@ -9,5 +52,74 @@
         var overlay = new AntDesign.Internal.Overlay();
 
         Assert.NotNull(overlay);
+    }
+
+    [Fact]
+    public async Task Nested_mouse_up_marks_all_ancestors_without_calling_their_overrides()
+    {
+        JSInterop.Mode = JSRuntimeMode.Loose;
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition());
+
+        var documentMouseUps = new List<Action<JsonElement>>();
+        MockedDomEventListener
+            .Setup(listener => listener.AddShared("document", "mouseup", It.IsAny<Action<JsonElement>>(), false))
+            .Callback<object, string, Action<JsonElement>, bool>((_, _, callback, _) => documentMouseUps.Add(callback));
+
+        var outerMaskClicks = 0;
+        var middleMaskClicks = 0;
+        RenderFragment outerTrigger = @<button>Outer</button>;
+        RenderFragment middleTrigger = @<button>Middle</button>;
+        RenderFragment middleOverlay = @<OverlayTrigger Visible="true">
+            <ChildContent><button>Inner</button></ChildContent>
+            <Overlay><button id="inner-overlay-content">Select date</button></Overlay>
+        </OverlayTrigger>;
+        var middle = new ComponentParameterCollectionBuilder<MouseUpTrackingDropdown>()
+            .Add(p => p.Visible, true)
+            .Add(p => p.OnMaskClick, () => middleMaskClicks++)
+            .Add(p => p.ChildContent, middleTrigger)
+            .Add(p => p.Overlay, middleOverlay)
+            .Build();
+        var cut = RenderComponent<MouseUpTrackingDropdown>(parameters => parameters
+            .Add(p => p.Visible, true)
+            .Add(p => p.OnMaskClick, () => outerMaskClicks++)
+            .Add(p => p.ChildContent, outerTrigger)
+            .Add(p => p.Overlay, middle.ToRenderFragment<MouseUpTrackingDropdown>()));
+
+        cut.WaitForAssertion(() =>
+        {
+            Assert.Single(cut.FindAll("#inner-overlay-content"));
+            Assert.Equal(3, documentMouseUps.Count);
+            Assert.All(cut.FindComponents<OverlayTrigger>(), trigger => Assert.True(trigger.Instance.IsOverlayShow()));
+        });
+        var middleInstance = cut.FindComponents<OverlayTrigger>()
+            .Select(component => component.Instance).OfType<MouseUpTrackingDropdown>()
+            .Single(instance => instance != cut.Instance);
+
+        await cut.Find("#inner-overlay-content").MouseUpAsync(new MouseEventArgs());
+        await DispatchDocumentMouseUp();
+
+        Assert.Equal(0, cut.Instance.OverlayMouseUps);
+        Assert.Equal(0, middleInstance.OverlayMouseUps);
+        Assert.Equal((0, 0), (outerMaskClicks, middleMaskClicks));
+
+        await DispatchDocumentMouseUp();
+
+        Assert.Equal((1, 1), (outerMaskClicks, middleMaskClicks));
+
+        Task DispatchDocumentMouseUp() => cut.InvokeAsync(() =>
+        {
+            foreach (var callback in documentMouseUps)
+            {
+                callback(default);
+            }
+        });
+    }
+
+    public sealed class MouseUpTrackingDropdown : Dropdown
+    {
+        public int OverlayMouseUps { get; private set; }
+
+        protected override void OnOverlayMouseUp() => OverlayMouseUps++;
     }
 }

@@ -32,26 +32,45 @@ namespace AntDesign.Filters
         {
             if (compareOperator == TableFilterCompareOperator.Between)
             {
-                Expression range0 = Expression.ArrayIndex(rightExpr, Expression.Constant(0));
-                Expression range1 = Expression.ArrayIndex(rightExpr, Expression.Constant(1));
-
-                if (THelper.IsTypeNullable(range0.Type))
-                {
-                    range0 = Expression.Property(range0, nameof(Nullable<DateTime>.Value));
-                }
-
-                if (THelper.IsTypeNullable(range1.Type))
-                {
-                    range1 = Expression.Property(range1, nameof(Nullable<DateTime>.Value));
-                }
-
-                return Expression.AndAlso(
-                           Expression.GreaterThanOrEqual(leftExpr, range0),
-                           Expression.LessThanOrEqual(leftExpr, range1)
-                       );
-            };
+                return GetScalarBetweenExpression(leftExpr, rightExpr);
+            }
 
             return base.GetFilterExpression(compareOperator, leftExpr, rightExpr);
+        }
+
+        internal static Expression GetScalarBetweenExpression(Expression leftExpr, Expression rightExpr,
+            Func<Expression, Expression> prepareValue = null)
+        {
+            Expression notNull = null;
+
+            // The shared filter conversion uses the array type. Only the built-in comparison expects a scalar field.
+            if (leftExpr is UnaryExpression { NodeType: ExpressionType.Convert } conversion
+                && conversion.Operand.Type == typeof(object) && leftExpr.Type == rightExpr.Type && rightExpr.Type.IsArray)
+            {
+                leftExpr = Expression.Convert(conversion.Operand, rightExpr.Type.GetElementType());
+                if (THelper.IsTypeNullable(leftExpr.Type))
+                {
+                    notNull = Expression.NotEqual(leftExpr, Expression.Constant(null));
+                    leftExpr = Expression.Property(leftExpr, nameof(Nullable<DateTime>.Value));
+                }
+            }
+
+            leftExpr = prepareValue?.Invoke(leftExpr) ?? leftExpr;
+            var lowerBound = GetRangeEndpoint(rightExpr, 0);
+            var upperBound = GetRangeEndpoint(rightExpr, 1);
+            var between = Expression.AndAlso(
+                Expression.GreaterThanOrEqual(leftExpr, lowerBound),
+                Expression.LessThanOrEqual(leftExpr, upperBound));
+
+            return notNull is null ? between : Expression.AndAlso(notNull, between);
+        }
+
+        private static Expression GetRangeEndpoint(Expression range, int index)
+        {
+            var endpoint = Expression.ArrayIndex(range, Expression.Constant(index));
+            return THelper.IsTypeNullable(endpoint.Type)
+                ? Expression.Property(endpoint, nameof(Nullable<DateTime>.Value))
+                : endpoint;
         }
 
         public override sealed Expression GetFilterExpression(TableFilterCompareOperator compareOperator, Expression leftExpr, Expression rightExpr)
@@ -106,17 +125,13 @@ namespace AntDesign.Filters
         protected override Expression GetNonNullFilterExpression(TableFilterCompareOperator compareOperator,
             Expression leftExpr, Expression rightExpr)
         {
-            if (compareOperator != TableFilterCompareOperator.TheSameDateWith)
-            {
-                leftExpr = RemoveMilliseconds(leftExpr);
-            }
-
             return compareOperator switch
             {
+                TableFilterCompareOperator.Between => GetScalarBetweenExpression(leftExpr, rightExpr, RemoveMilliseconds),
                 TableFilterCompareOperator.TheSameDateWith => Expression.Equal(
                     Expression.Property(leftExpr, nameof(DateTime.Date)),
                     Expression.Property(rightExpr, nameof(DateTime.Date))),
-                _ => base.GetNonNullFilterExpression(compareOperator, leftExpr, rightExpr)
+                _ => base.GetNonNullFilterExpression(compareOperator, RemoveMilliseconds(leftExpr), rightExpr)
             };
         }
 
