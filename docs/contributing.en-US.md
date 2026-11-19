@@ -70,5 +70,5 @@ After cloning `ant-design-blazor` and running `npm install` to fetch its depende
 * `dotnet test` runs the complete test suite.
 * `dotnet publish -c release -o publish` creates build of `ant-design-blazor`.
 
-If you running into problems while developing ant-design-blazor, you can refer to our [developement guide](https://github.com/ant-design-blazor/ant-design-blazor/wiki/Development-Guide) on GitHub.
+If you running into problems while developing ant-design-blazor, you can refer to our [development guide](https://github.com/ant-design-blazor/ant-design-blazor/wiki/Development-Guide) on GitHub.
 
