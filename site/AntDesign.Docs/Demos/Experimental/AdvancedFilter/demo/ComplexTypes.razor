@@ -1,0 +1,117 @@
+@page "/experimental/advanced-filter/complex-types"
+@using System.Linq.Expressions
+@using System.ComponentModel.DataAnnotations
+
+<Space Direction="SpaceDirection.Vertical" Style="width: 100%;">
+    <SpaceItem>
+        <Alert
+        Message="This demo shows filtering on enum types (Priority, Status), booleans (IsUrgent), and dates (DueDate)"
+        Type="AlertType.Info" ShowIcon="true" />
+    </SpaceItem>
+    <SpaceItem>
+        <Card Title="Task Filter" Size="@CardSize.Small">
+
+            <Body>
+                <AdvancedFilter TItem="TaskItem" @ref="filterRef" ShowHeader="true" AllowGroup="true"
+                                OnFilterChanged="@OnFilterChanged" />
+            </Body>
+        </Card>
+    </SpaceItem>
+    <SpaceItem>
+        <Card Title="Tasks" Size="@CardSize.Small">
+
+            <Body>
+                <Table TItem="TaskItem" DataSource="@_filteredData" HidePagination>
+                    <Column @bind-Field="@context.Id" Title="ID" Width="80px" />
+                    <Column @bind-Field="@context.Title" Title="Title" />
+                    <Column @bind-Field="@context.Priority" Title="Priority" />
+                    <Column @bind-Field="@context.Status" Title="Status" />
+                    <Column @bind-Field="@context.IsUrgent" Title="Urgent" />
+                    <Column @bind-Field="@context.DueDate" Title="Due Date" Format="yyyy-MM-dd" />
+                </Table>
+            </Body>
+        </Card>
+    </SpaceItem>
+</Space>
+
+@code {
+    private AdvancedFilter<TaskItem> filterRef;
+    private List<TaskItem> _allData;
+    private List<TaskItem> _filteredData;
+
+    public enum TaskPriority
+    {
+        [System.ComponentModel.DataAnnotations.Display(Name = "Low")]
+        Low = 1,
+        [System.ComponentModel.DataAnnotations.Display(Name = "Medium")]
+        Medium = 2,
+        [System.ComponentModel.DataAnnotations.Display(Name = "High")]
+        High = 3,
+        [System.ComponentModel.DataAnnotations.Display(Name = "Critical")]
+        Critical = 4
+    }
+
+    public enum TaskStatus
+    {
+        [System.ComponentModel.DataAnnotations.Display(Name = "To Do")]
+        Todo = 1,
+        [System.ComponentModel.DataAnnotations.Display(Name = "In Progress")]
+        InProgress = 2,
+        [System.ComponentModel.DataAnnotations.Display(Name = "Review")]
+        Review = 3,
+        [System.ComponentModel.DataAnnotations.Display(Name = "Done")]
+        Done = 4
+    }
+
+    public class TaskItem
+    {
+        public int Id { get; set; }
+        public string Title { get; set; }
+
+        [Display(Name = "Priority")]
+        public TaskPriority Priority { get; set; }
+
+        [Display(Name = "Status")]
+        public TaskStatus Status { get; set; }
+
+        [Display(Name = "Is Urgent")]
+        public bool IsUrgent { get; set; }
+
+        [Display(Name = "Due Date")]
+        public DateTime DueDate { get; set; }
+    }
+
+    protected override void OnInitialized()
+    {
+        _allData = new List<TaskItem>
+        {
+            new() { Id = 1, Title = "Setup development environment", Priority = TaskPriority.High, Status = TaskStatus.Done,
+IsUrgent = false, DueDate = new DateTime(2024, 10, 15) },
+            new() { Id = 2, Title = "Design database schema", Priority = TaskPriority.Critical, Status = TaskStatus.InProgress,
+IsUrgent = true, DueDate = new DateTime(2024, 11, 5) },
+            new() { Id = 3, Title = "Implement API endpoints", Priority = TaskPriority.High, Status = TaskStatus.InProgress,
+IsUrgent = true, DueDate = new DateTime(2024, 11, 10) },
+            new() { Id = 4, Title = "Write unit tests", Priority = TaskPriority.Medium, Status = TaskStatus.Todo, IsUrgent = false,
+DueDate = new DateTime(2024, 11, 20) },
+            new() { Id = 5, Title = "Code review and testing", Priority = TaskPriority.High, Status = TaskStatus.Review, IsUrgent =
+false, DueDate = new DateTime(2024, 11, 15) },
+            new() { Id = 6, Title = "Bug fixes", Priority = TaskPriority.Low, Status = TaskStatus.Todo, IsUrgent = false, DueDate =
+new DateTime(2024, 12, 1) },
+        };
+
+        _filteredData = new List<TaskItem>(_allData);
+    }
+
+    private void OnFilterChanged(Expression<Func<TaskItem, bool>> filterExpression)
+    {
+        if (filterExpression != null)
+        {
+            var compiled = filterExpression.Compile();
+            _filteredData = _allData.Where(compiled).ToList();
+        }
+        else
+        {
+            _filteredData = new List<TaskItem>(_allData);
+        }
+    }
+}

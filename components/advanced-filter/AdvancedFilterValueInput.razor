@@ -1,0 +1,52 @@
+@namespace AntDesign
+@using System.Linq
+@using AntDesign.Filters
+
+@if (Context?.Field?.CustomInput != null)
+{
+    @Context.Field.CustomInput(Context)
+}
+else if (Context?.InputKind == AdvancedFilterValueInputKind.Select && Context.Options?.Count > 0)
+{
+    <Select TItem="AdvancedFilterOption" TItemValue="object" DataSource="@Context.Options" Value="@Context.Value"
+            ValueChanged="@OnSingleValueChanged" ValueName="@nameof(AdvancedFilterOption.Value)"
+            LabelName="@nameof(AdvancedFilterOption.Label)" Style="min-width: 160px;" />
+}
+else if (Context?.InputKind == AdvancedFilterValueInputKind.Radio && Context.Options?.Count > 0)
+{
+    <RadioGroup TValue="object" Options="@RadioOptions" Value="@Context.Value" ValueChanged="@OnSingleValueChanged" />
+}
+else if (Context?.InputKind == AdvancedFilterValueInputKind.Checkbox && Context.Options?.Count > 0)
+{
+    <CheckboxGroup TValue="object" Options="@CheckboxOptions" Value="@CheckboxValue"
+                   ValueChanged="@OnMultipleValueChanged" />
+}
+else if (Context?.Field?.FilterType?.FilterInput != null)
+{
+    @Context.Field.FilterType.FilterInput(Context.ToTableFilterInputRenderOptions())
+}
+
+@code {
+    [Parameter]
+    public AdvancedFilterInputContext Context { get; set; }
+
+    private RadioOption<object>[] RadioOptions => Context.Options
+        .Select(option => new RadioOption<object> { Label = option.Label, Value = option.Value, Disabled = option.Disabled })
+        .ToArray();
+
+    private CheckboxOption<object>[] CheckboxOptions => Context.Options
+        .Select(option => new CheckboxOption<object> { Label = option.Label, Value = option.Value, Disabled = option.Disabled })
+        .ToArray();
+
+    private object[] CheckboxValue => Context.Value as object[] ?? [];
+
+    private void OnSingleValueChanged(object value)
+    {
+        Context.Value = value;
+    }
+
+    private void OnMultipleValueChanged(object[] value)
+    {
+        Context.Value = value;
+    }
+}

@@ -154,6 +154,14 @@
       "between": "在区间"
     }
   },
+  "AdvancedFilter": {
+    "matchingPrefix": "匹配",
+    "matchingSuffix": "个条件",
+    "addCondition": "添加条件",
+    "addGroup": "添加条件组",
+    "clearAll": "清空全部",
+    "selectField": "选择字段"
+  },
   "Modal": {
     "okText": "确定",
     "cancelText": "取消"

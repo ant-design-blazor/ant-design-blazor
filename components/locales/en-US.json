@@ -158,6 +158,14 @@
       "between": "Between"
     }
   },
+  "AdvancedFilter": {
+    "matchingPrefix": "Matching",
+    "matchingSuffix": "of the conditions",
+    "addCondition": "Add Condition",
+    "addGroup": "Add Group",
+    "clearAll": "Clear All",
+    "selectField": "Select field"
+  },
   "Modal": {
     "okText": "OK",
     "cancelText": "Cancel"
