@@ -85,7 +85,7 @@ WebAssembly 静态托管页面示例
 - 安装模板
 
   ```bash
-  $ dotnet new --install AntDesign.Templates
+  $ dotnet new install AntDesign.Templates
   ```
 
 - 从模板创建 Ant Design Blazor Pro 项目
