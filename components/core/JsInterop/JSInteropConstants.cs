@@ -318,6 +318,13 @@ namespace AntDesign
             public static string Destroy => $"{FUNC_PREFIX}destroy";
         }
 
+        public static class BorderBeamHelper
+        {
+            private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "borderBeamHelper.";
+
+            public static string Mount => $"{FUNC_PREFIX}mount";
+        }
+
         public static class SplitterHelper
         {
             private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "splitterHelper.";

@@ -1,0 +1,23 @@
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; max-width: 960px;">
+    @foreach (var item in _sizes)
+    {
+        <div style="@(item.Full ? "grid-column: 1 / -1;" : null)">
+            <BorderBeam Size="@item.Size">
+                <Card Title="@item.Name">
+                    <Text Type="TextElementType.Secondary">@item.Description</Text>
+                </Card>
+            </BorderBeam>
+        </div>
+    }
+</div>
+
+@code {
+    private readonly SizeItem[] _sizes =
+    {
+        new("Default", null, "Uses the default 100px visible beam segment.", false),
+        new("Compact", 56, "Keeps the highlight shorter for dense card groups.", false),
+        new("Extended", 160, "Creates a longer highlight for wider feature panels.", true),
+    };
+
+    private sealed record SizeItem(string Name, object Size, string Description, bool Full);
+}

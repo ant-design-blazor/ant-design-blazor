@@ -14,6 +14,7 @@ export {
   uploadHelper,
   downloadHelper,
   watermarkHelper,
+  borderBeamHelper,
   splitterHelper,
 } from './modules/components/export'
 

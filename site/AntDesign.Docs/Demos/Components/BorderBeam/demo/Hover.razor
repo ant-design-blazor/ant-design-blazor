@@ -1,0 +1,10 @@
+<BorderBeam Class="border-beam-hover-host">
+    <Card Class="border-beam-hover-card" Title="Hover over the card">
+        The border beam appears when the pointer moves over this card.
+    </Card>
+</BorderBeam>
+
+<style>
+    .border-beam-hover-card .ant-border-beam { opacity: 0; transition: opacity .3s; }
+    .border-beam-hover-card:hover .ant-border-beam { opacity: 1; }
+</style>
