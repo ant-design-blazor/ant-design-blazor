@@ -49,15 +49,16 @@ else
             }
         </span>
     }
+}
 
-    @if (!ParentSelect.Disabled && ParentSelect.AllowClear && ParentSelect.HasValue)
-    {
-        <span class="ant-select-clear"
-              unselectable="on" 
-              aria-hidden="true" 
-              style="user-select: none;" 
-              @ref="@_clearRef">
-            <Icon Type="@IconType.Fill.CloseCircle" />
-        </span>
-    }
+@* Keep the clear element mounted so its click listener is reused when loading changes. *@
+@if (ParentSelect.SuffixIcon is null && !ParentSelect.Disabled && ParentSelect.AllowClear && ParentSelect.HasValue)
+{
+    <span class="ant-select-clear"
+          unselectable="on"
+          aria-hidden="true"
+          style="user-select: none; @(Loading ? "display: none;" : "")"
+          @ref="@_clearRef">
+        <Icon Type="@IconType.Fill.CloseCircle" />
+    </span>
 }
