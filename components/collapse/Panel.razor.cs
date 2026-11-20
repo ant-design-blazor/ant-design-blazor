@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
@@ -229,7 +230,7 @@ namespace AntDesign
                     StateHasChanged();
                     await Task.Delay(100);
 
-                    _warpperStyle = $"height: {_warpperHight}px; opacity: 1;";
+                    _warpperStyle = FormattableString.Invariant($"height: {_warpperHight}px; opacity: 1;");
                     StateHasChanged();
                     await Task.Delay(450);
 
@@ -252,7 +253,7 @@ namespace AntDesign
             {
                 _isCollapseLeavePrepare = false;
                 _isCollapseLeaveStart = true;
-                _warpperStyle = $"height: {_warpperHight}px;";
+                _warpperStyle = FormattableString.Invariant($"height: {_warpperHight}px;");
 
                 CallAfterRender(async () =>
                 {
