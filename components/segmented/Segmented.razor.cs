@@ -289,13 +289,13 @@ namespace AntDesign
 
             _sliding = true;
             _slidingCls = "ant-segmented-thumb ant-segmented-thumb-motion ant-segmented-thumb-motion-appear ant-segmented-thumb-motion-appear-start";
-            _slidingStyle = $"transform: translateX({_itemRefs[_items[_activeIndex].Id].OffsetLeft}px); width: {_itemRefs[_items[_activeIndex].Id].ClientWidth}px;";
+            _slidingStyle = FormattableString.Invariant($"transform: translateX({_itemRefs[_items[_activeIndex].Id].OffsetLeft}px); width: {_itemRefs[_items[_activeIndex].Id].ClientWidth}px;");
 
             StateHasChanged();
             await Task.Delay(100);
 
             _slidingCls = "ant-segmented-thumb ant-segmented-thumb-motion ant-segmented-thumb-motion-appear ant-segmented-thumb-motion-appear-active ";
-            _slidingStyle = $"transform: translateX({_itemRefs[item.Id].OffsetLeft}px); width: {_itemRefs[item.Id].ClientWidth}px;";
+            _slidingStyle = FormattableString.Invariant($"transform: translateX({_itemRefs[item.Id].OffsetLeft}px); width: {_itemRefs[item.Id].ClientWidth}px;");
 
             StateHasChanged();
             await Task.Delay(300);
