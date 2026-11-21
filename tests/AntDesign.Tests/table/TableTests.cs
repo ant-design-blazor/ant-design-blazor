@@ -9,6 +9,10 @@ using AntDesign.Core.JsInterop.Modules.Components;
 using AntDesign.JsInterop;
 using Bunit;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.JSInterop;
+using Moq;
 using Xunit;
 
 namespace AntDesign.Tests.Table
@@ -271,6 +275,48 @@ namespace AntDesign.Tests.Table
             await cut.InvokeAsync(() => cut.FindComponent<AntDesign.Dropdown>().Instance.OnMaskClick.InvokeAsync());
 
             cut.WaitForAssertion(() => Assert.Contains("ant-dropdown-open", cut.Find(".ant-table-filter-trigger").ClassList));
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task DisposeAsync_distinguishes_canceled_scroll_cleanup_from_js_errors(bool canceled)
+        {
+            var logger = new Mock<ILogger>();
+            var loggerFactory = new Mock<ILoggerFactory>();
+            loggerFactory.Setup(factory => factory.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
+            Services.AddSingleton<ILogger<Table<Person>>>(new Logger<Table<Person>>(loggerFactory.Object));
+            var cleanup = JSInterop.SetupVoid(JSInteropConstants.UnbindTableScroll, _ => true);
+            var jsError = new JSException("Table scroll cleanup failed.");
+            if (canceled)
+            {
+                cleanup.SetCanceled();
+            }
+            else
+            {
+                cleanup.SetException(jsError);
+            }
+
+            var cut = CreatePersonsTable(new[] { new Person { Id = 1 } }, parameters => parameters
+                .Add(p => p.ScrollX, "600px")
+                .Add(p => p.HidePagination, true));
+
+            await cut.InvokeAsync(() => ((IAsyncDisposable)cut.Instance).DisposeAsync().AsTask());
+
+            Assert.Single(cleanup.Invocations);
+            if (canceled)
+            {
+                var log = Assert.Single(logger.Invocations);
+                Assert.Equal(LogLevel.Debug, log.Arguments[0]);
+                Assert.IsType<TaskCanceledException>(log.Arguments[3]);
+                MockedDomEventListener.Verify(listener => listener.Dispose(), Times.Once);
+            }
+            else
+            {
+                var log = Assert.Single(logger.Invocations);
+                Assert.Equal(LogLevel.Error, log.Arguments[0]);
+                Assert.Same(jsError, log.Arguments[3]);
+            }
         }
 
         private IRenderedComponent<Table<Person>> CreateFilterableTable(bool closeOnOutsideClick = true)
