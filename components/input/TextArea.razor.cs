@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Diagnostics;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -333,7 +334,7 @@ namespace AntDesign
                 var offsetHeight = textAreaInfo.PaddingTop + textAreaInfo.PaddingBottom
                     + textAreaInfo.BorderTop + textAreaInfo.BorderBottom;
 
-                _heightStyle = $"height: {Rows * rowHeight + offsetHeight}px;overflow-y: auto;overflow-x: hidden;";
+                _heightStyle = FormattableString.Invariant($"height: {Rows * rowHeight + offsetHeight}px;overflow-y: auto;overflow-x: hidden;");
                 StateHasChanged();
             }
         }

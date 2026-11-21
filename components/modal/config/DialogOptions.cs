@@ -147,7 +147,7 @@ namespace AntDesign
             }
             else
             {
-                return $"width:{Width.AsT1}px;";
+                return FormattableString.Invariant($"width:{Width.AsT1}px;");
             }
         }
 
