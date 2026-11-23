@@ -2,11 +2,11 @@
 @inherits AntInputBoolComponentBase
 @using Microsoft.AspNetCore.Components.Rendering
 
-@if (HasLabel)
-{
-    <label class="@ClassMapperLabel.Class" style="@Style" for="@Id" @ref="Ref" @onclick:stopPropagation>
-       @RenderCheckboxControl
+<label class="@ClassMapperLabel.Class" style="@Style" for="@Id" @ref="Ref" @onclick:stopPropagation>
+    @RenderCheckboxControl
 
+    @if (HasLabel)
+    {
         @if (ChildContent != null)
         {
             <span>
@@ -17,12 +17,8 @@
         {
             <span>@Label</span>
         }
-    </label>
-}
-else
-{
-    @RenderCheckboxControl
-}
+    }
+</label>
 
 @code {
     private void RenderCheckboxControl(RenderTreeBuilder __builder)
