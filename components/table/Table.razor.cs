@@ -705,6 +705,7 @@ namespace AntDesign
 
         private RenderFragment RenderRegisteredHeaders() => builder =>
         {
+            ColumnContext.BeginQuickHeaderRow();
             var sequence = 0;
             foreach (var column in ColumnContext.Columns)
             {

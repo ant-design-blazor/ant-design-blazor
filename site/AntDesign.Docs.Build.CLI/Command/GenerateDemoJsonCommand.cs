@@ -201,11 +201,10 @@ namespace AntDesign.Docs.Build.CLI.Command
                 var faqs = GetAllLanguagesFaqDocs(componentName);
                 var demos = GetAllLanguagesDemos(componentName);
                 var docs = GetAllLanguagesComponentDocs(title);
-                var apiSupplement = GetAllLanguagesComponentApiSupplement(title);
 
                 // Build docs for multiple languages
-                componentsDocsByLanguage[Constants.EnglishLanguage].Add(GenerateApiDocumentation.ForComponent(Constants.EnglishLanguage, docAttribute, title, docs, apiSupplement, pageUrl, apiDocs, seeAlso, faqs, demos));
-                componentsDocsByLanguage[Constants.ChineseLanguage].Add(GenerateApiDocumentation.ForComponent(Constants.ChineseLanguage, docAttribute, title, docs, apiSupplement, pageUrl, apiDocs, seeAlso, faqs, demos));
+                componentsDocsByLanguage[Constants.EnglishLanguage].Add(GenerateApiDocumentation.ForComponent(Constants.EnglishLanguage, docAttribute, title, docs, pageUrl, apiDocs, seeAlso, faqs, demos));
+                componentsDocsByLanguage[Constants.ChineseLanguage].Add(GenerateApiDocumentation.ForComponent(Constants.ChineseLanguage, docAttribute, title, docs, pageUrl, apiDocs, seeAlso, faqs, demos));
             }
 
             // Track components processed from reflection to avoid duplicates
@@ -657,44 +656,6 @@ namespace AntDesign.Docs.Build.CLI.Command
                 { Constants.EnglishLanguage, GetComponentDocs(componentName, Constants.EnglishLanguage) },
                 { Constants.ChineseLanguage, GetComponentDocs(componentName, Constants.ChineseLanguage) }
             };
-        }
-
-        private Dictionary<string, string> GetAllLanguagesComponentApiSupplement(string componentName)
-        {
-            return new Dictionary<string, string>
-            {
-                { Constants.EnglishLanguage, GetComponentApiSupplement(componentName, Constants.EnglishLanguage) },
-                { Constants.ChineseLanguage, GetComponentApiSupplement(componentName, Constants.ChineseLanguage) }
-            };
-        }
-
-        private string GetComponentApiSupplement(string componentName, string language)
-        {
-            const string startMarker = "<!-- API-EXTRA-START -->";
-            const string endMarker = "<!-- API-EXTRA-END -->";
-            var componentFile = new FileInfo(Path.Combine(_demoDirectory, "Components", componentName, "doc", $"index.{language}.md"));
-            if (!componentFile.Exists)
-            {
-                return string.Empty;
-            }
-
-            var content = File.ReadAllText(componentFile.FullName);
-            var start = content.IndexOf(startMarker, StringComparison.Ordinal);
-            if (start < 0)
-            {
-                return string.Empty;
-            }
-
-            start += startMarker.Length;
-            var end = content.IndexOf(endMarker, start, StringComparison.Ordinal);
-            if (end < 0)
-            {
-                return string.Empty;
-            }
-
-            var markdown = content.Substring(start, end - start).Trim();
-            var pipeline = new MarkdownPipelineBuilder().UsePipeTables().Build();
-            return Markdown.ToHtml(markdown, pipeline);
         }
 
         /// <returns>{ seeAlsoName: { language: [docs] } }</returns>

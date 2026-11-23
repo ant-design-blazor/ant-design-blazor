@@ -77,6 +77,13 @@ namespace AntDesign
             AdvanceOccupiedColumns(_headerColIndexesOccupied);
         }
 
+        public void BeginQuickHeaderRow()
+        {
+            _headerColIndex = -1;
+            _headerColIndexesOccupied = null;
+            HeaderColumns.Clear();
+        }
+
         public void BeginBodyRow()
         {
             _bodyColIndex = -1;
@@ -110,7 +117,7 @@ namespace AntDesign
             if (column.RowSpan > 1)
             {
                 _headerColIndexesOccupied ??= new int[Columns.Count];
-                for (var i = column.ColIndex; i <= _headerColIndex; i++)
+                for (var i = column.ColIndex; i <= _headerColIndex && i < _headerColIndexesOccupied.Length; i++)
                 {
                     _headerColIndexesOccupied[i] = column.RowSpan;
                 }
@@ -185,7 +192,7 @@ namespace AntDesign
             if (rowSpan > 1)
             {
                 _bodyColIndexesOccupied ??= new int[Columns.Count];
-                for (var i = column.ColIndex; i <= _bodyColIndex; i++)
+                for (var i = column.ColIndex; i <= _bodyColIndex && i < _bodyColIndexesOccupied.Length; i++)
                 {
                     _bodyColIndexesOccupied[i] = rowSpan;
                 }
