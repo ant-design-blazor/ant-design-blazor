@@ -42,6 +42,60 @@ type cooridnates = {
   right: number 
 }
 
+describe('Overlay cursor presets in popup containers', () => {
+  const cases = [
+    { name: 'body', body: true, left: 0, top: 0, scrollLeft: 0, scrollTop: 0, border: 0 },
+    { name: 'left drawer', body: false, left: 0, top: 0, scrollLeft: 0, scrollTop: 0, border: 0 },
+    { name: 'right drawer at 1280px', body: false, left: 860, top: 0, scrollLeft: 0, scrollTop: 0, border: 0 },
+    { name: 'right drawer at 1920px', body: false, left: 1500, top: 0, scrollLeft: 0, scrollTop: 0, border: 0 },
+    { name: 'bottom drawer', body: false, left: 0, top: 600, scrollLeft: 0, scrollTop: 0, border: 0 },
+    { name: 'scrolled container with borders', body: false, left: 300, top: 200, scrollLeft: 12, scrollTop: 40, border: 2 }
+  ];
+
+  for (const test of cases) {
+    it(`positions the cursor relative to the ${test.name}`, () => {
+      const sandbox = sinon.createSandbox();
+      const container = test.body ? document.body : domInit.addElementToBody('<div id="preset-container"></div>');
+      const trigger = document.createElement('textarea');
+      const element = document.createElement('div');
+      container.appendChild(trigger);
+      container.appendChild(element);
+      try {
+        sandbox.stub(resizeObserver, 'create');
+        sandbox.stub(mutationObserver, 'create');
+        const containerInfo = {
+          ...domInfoDefaults, absoluteLeft: test.left, absoluteTop: test.top,
+          scrollLeft: test.scrollLeft, scrollTop: test.scrollTop,
+          clientLeft: test.border, clientTop: test.border,
+          scrollWidth: 2000, scrollHeight: 1000, clientWidth: 420, clientHeight: 800
+        };
+        sandbox.stub(infoHelper, 'getInfo').callsFake((node: HTMLElement) => {
+          if (node === container) return containerInfo;
+          if (node === trigger) return {
+            ...domInfoDefaults,
+            absoluteLeft: test.left + test.border + 24 - test.scrollLeft,
+            absoluteTop: test.top + test.border + 80 - test.scrollTop,
+            offsetWidth: 300, offsetHeight: 72
+          };
+          return { ...domInfoDefaults, clientWidth: 100, clientHeight: 64 };
+        });
+        const overlay = new Overlay('preset-test', element, container, trigger,
+          Placement.BottomLeft, TriggerBoundyAdjustMode.None, false, '', overlayConstraintsDefaults);
+
+        const position = overlay.calculatePosition(false, true, { x: 26, y: 20 });
+
+        expect(position.left).to.equal(50);
+        expect(position.top).to.equal(104);
+      } finally {
+        sandbox.restore();
+        trigger.remove();
+        element.remove();
+        if (!test.body) container.remove();
+      }
+    });
+  }
+});
+
 describe ('Overlay maps test', () => {
   const rewModule = rewire('../../../../../components/core/JsInterop/modules/components/overlay');
   const rewClass = rewModule.__get__('Overlay');
