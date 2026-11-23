@@ -35,7 +35,6 @@ cover: https://gw.alipayobjects.com/zos/alicdn/QAXskNI4G/Transfer.svg
 | ShowSelectAll | 是否展示全选勾选框 | bool | true |  |
 | TargetKeys | 显示在右侧框数据的 key 集合 | string\[] | \[] |  |
 | Titles | 标题集合，顺序从左至右 | string\[] | \['', ''] |  |
-| SelectAllLabels | 自定义顶部多选框标题的集合 |  |  |  |
 | Locale | 语言配置，包括过filter，空文本，项目单元等 | TransferLocale |  |  |
 | ListStyle | 两个穿梭框的自定义样式 | Func<TransferDirection,string> | | |
 | OnChange | 选项在两栏之间转移时的回调函数 | TransferSelectChangeArgs |  |  |
@@ -43,18 +42,9 @@ cover: https://gw.alipayobjects.com/zos/alicdn/QAXskNI4G/Transfer.svg
 | OnSearch | 搜索框内容时改变时的回调函数 | TransferSearchArgs | - |  |
 | OnSelectChange | 选中项发生改变时的回调函数 | TransferSelectChangeArgs |  |  |
 
-### Render Props
+### 自定义面板内容
 
-Transfer 支持接收 `ChildContent` 自定义渲染列表，并返回以下参数：
-
-| 参数            | 说明           | 类型                                | 版本 |
-| --------------- | -------------- | ----------------------------------- | ---- |
-| direction       | 渲染列表的方向 | `left` \| `right`                   |      |
-| disabled        | 是否禁用列表   | bool                                |      |
-| filteredItems   | 过滤后的数据   | List\<TransferItem>                 |      |
-| onItemSelect    | 勾选条目       | (key: string, selected: boolean)    |      |
-| onItemSelectAll | 勾选一组条目   | (keys: string[], selected: boolean) |      |
-| selectedKeys    | 选中的条目     | string[]                            |      |
+`ChildContent` 模板会在左右两个面板中渲染，并接收 `TransferSidePanelContext<TransferItem>`。上下文提供当前面板的 `DataSource`、`Direction`、`SelectedKeys`、`TargetKeys`、`Disabled` 和 `DefaultContent`。自定义内容可通过 `SelectItemAsync` 更新选择状态。请参阅表格穿梭框和树穿梭框示例。
 
 ## 注意
 

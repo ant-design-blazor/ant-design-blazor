@@ -1,5 +1,77 @@
-﻿<h3>TreeTransfer</h3>
+<Transfer DataSource="_dataSource" TargetKeys="_targetKeys" SelectedKeys="_selectedKeys"
+          OnChange="HandleTransferChange" OnSelectChange="HandleSelectChange" ShowSelectAll="false">
+    <ChildContent Context="panel">
+        @if (panel.Direction == TransferDirection.Left)
+        {
+            <div style="padding: 8px;">
+                <Tree @key="GetTreeKey(panel)" TItem="string" BlockNode Checkable CheckStrictly DefaultExpandAll
+                      CheckedKeys="GetCheckedKeys(panel)"
+                      OnCheck="args => OnTreeNodeChecked(panel, args)">
+                    @foreach (var root in TreeItems)
+                    {
+                        <TreeNode TItem="string" Key="@root.Key" Title="@root.Title" DisableCheckbox="@panel.TargetKeys.Contains(root.Key)">
+                            @foreach (var child in root.Children)
+                            {
+                                <TreeNode TItem="string" Key="@child.Key" Title="@child.Title" DisableCheckbox="@panel.TargetKeys.Contains(child.Key)" />
+                            }
+                        </TreeNode>
+                    }
+                </Tree>
+            </div>
+        }
+        else
+        {
+            @panel.DefaultContent
+        }
+    </ChildContent>
+</Transfer>
 
 @code {
+    private static readonly TreeTransferItem[] TreeItems =
+    [
+        new("0-0", "0-0", []),
+        new("0-1", "0-1", [new("0-1-0", "0-1-0", []), new("0-1-1", "0-1-1", [])]),
+        new("0-2", "0-2", []),
+        new("0-3", "0-3", []),
+        new("0-4", "0-4", [])
+    ];
+    private static readonly List<TransferItem> _dataSource = Flatten(TreeItems)
+        .Select(item => new TransferItem { Key = item.Key, Title = item.Title })
+        .ToList();
+    private List<string> _targetKeys = [];
+    private List<string> _selectedKeys = [];
+    private string[] _checkedKeys = [];
 
+    private string[] GetCheckedKeys(AntDesign.Internal.TransferSidePanelContext<TransferItem> panel)
+    {
+        var checkedKeys = panel.SelectedKeys.Concat(panel.TargetKeys).ToArray();
+        if (!_checkedKeys.SequenceEqual(checkedKeys, StringComparer.Ordinal))
+            _checkedKeys = checkedKeys;
+        return _checkedKeys;
+    }
+
+    private static IEnumerable<TreeTransferItem> Flatten(IEnumerable<TreeTransferItem> items) =>
+        items.SelectMany(item => new[] { item }.Concat(Flatten(item.Children)));
+
+    private string GetTreeKey(AntDesign.Internal.TransferSidePanelContext<TransferItem> panel) =>
+        string.Join("|", panel.TargetKeys.OrderBy(key => key, StringComparer.Ordinal));
+
+    private Task OnTreeNodeChecked(AntDesign.Internal.TransferSidePanelContext<TransferItem> panel, TreeEventArgs<string> args)
+    {
+        // Ignore events from an obsolete panel snapshot while an item is being moved.
+        if (!panel.TargetKeys.SetEquals(_targetKeys))
+            return Task.CompletedTask;
+
+        var key = args.Node.Key;
+        return panel.TargetKeys.Contains(key)
+            ? Task.CompletedTask
+            : panel.SelectItemAsync(key, args.Node.Checked);
+    }
+
+    private void HandleTransferChange(TransferChangeArgs args) => _targetKeys = args.TargetKeys.ToList();
+
+    private void HandleSelectChange(TransferSelectChangeArgs args) =>
+        _selectedKeys = args.SourceSelectedKeys.Concat(args.TargetSelectedKeys).Distinct(StringComparer.Ordinal).ToList();
+
+    private sealed record TreeTransferItem(string Key, string Title, IReadOnlyList<TreeTransferItem> Children);
 }
