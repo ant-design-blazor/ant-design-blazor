@@ -27,6 +27,119 @@
                     .SetResult(new AntDesign.JsInterop.DomRect());  
     }
 
+    [Theory]
+    [InlineData(SelectMode.Default, false)]
+    [InlineData(SelectMode.Multiple, false)]
+    [InlineData(SelectMode.Tags, false)]
+    [InlineData(SelectMode.Default, true)]
+    [InlineData(SelectMode.Multiple, true)]
+    [InlineData(SelectMode.Tags, true)]
+    public void Loading_changes_the_builtin_suffix_and_preserves_the_custom_suffix(SelectMode mode, bool useCustomSuffix)
+    {
+        JSInterop.Mode = JSRuntimeMode.Loose;
+
+        RenderFragment customSuffix = @<span class="test-custom-suffix">Custom</span>;
+        var cut = Render<AntDesign.Select<string, string>>(
+            @<AntDesign.Select TItemValue="string" TItem="string" Mode="@mode" ShowArrowIcon
+                               SuffixIcon="@(useCustomSuffix ? customSuffix : null)">
+                <SelectOptions>
+                    <SelectOption TItemValue="string" TItem="string" Value="@("lucy")" Label="Lucy" />
+                </SelectOptions>
+            </AntDesign.Select>);
+
+        var idleSuffix = useCustomSuffix ? ".test-custom-suffix" : ".anticon-down";
+        var busySuffix = useCustomSuffix ? ".test-custom-suffix" : ".anticon-loading";
+
+        cut.Find($".ant-select-arrow {idleSuffix}");
+
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.Loading, true));
+        cut.Find(".ant-select-loading");
+        cut.Find($".ant-select-arrow {busySuffix}");
+
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.Loading, false));
+        cut.FindAll(".ant-select-loading").Should().BeEmpty();
+        cut.Find($".ant-select-arrow {idleSuffix}");
+    }
+
+    [Theory]
+    [InlineData(SelectMode.Default)]
+    [InlineData(SelectMode.Multiple)]
+    [InlineData(SelectMode.Tags)]
+    public async Task Loading_toggles_reuse_the_clear_click_listener(SelectMode mode)
+    {
+        JSInterop.Mode = JSRuntimeMode.Loose;
+        var choices = new[] { "Lucy" };
+        var clearCount = 0;
+        var selectionCleared = false;
+        var cut = RenderComponent<AntDesign.Select<string, string>>(parameters =>
+        {
+            parameters.Add(p => p.Mode, mode)
+                .Add(p => p.DataSource, choices)
+                .Add(p => p.AllowClear, true)
+                .Add(p => p.OnClearSelected, () => { clearCount++; });
+
+            if (mode == SelectMode.Default)
+                parameters.Add(p => p.Value, choices[0])
+                    .Add(p => p.ValueChanged, value => { selectionCleared = value is null; });
+            else
+                parameters.Add(p => p.Values, choices)
+                    .Add(p => p.ValuesChanged, values => { selectionCleared = values is null; });
+        });
+
+        bool HasVisibleClearButton() => cut.FindAll(".ant-select-clear")
+            .Any(element => element.GetAttribute("style")?.Contains("display: none", StringComparison.Ordinal) != true);
+
+        HasVisibleClearButton().Should().BeTrue();
+        for (var cycle = 0; cycle < 3; cycle++)
+        {
+            cut.SetParametersAndRender(parameters => parameters.Add(p => p.Loading, true));
+            cut.Find(".ant-select-arrow .anticon-loading");
+            HasVisibleClearButton().Should().BeFalse();
+
+            cut.SetParametersAndRender(parameters => parameters.Add(p => p.Loading, false));
+            HasVisibleClearButton().Should().BeTrue();
+        }
+
+        var clearHandlers = MockedDomEventListener.Invocations
+            .Where(invocation => invocation.Method.Name == nameof(IDomEventListener.AddExclusive)
+                && Equals(invocation.Arguments[1], "click")
+                && Equals(invocation.Arguments[3], true)
+                && Equals(invocation.Arguments[4], true))
+            .Select(invocation => (Func<JsonElement, Task>)invocation.Arguments[2]);
+        var clear = clearHandlers.Should().ContainSingle().Which;
+
+        await cut.InvokeAsync(() => clear(default));
+        clearCount.Should().Be(1);
+        selectionCleared.Should().BeTrue();
+    }
+
+    [Theory]
+    [InlineData(SelectMode.Multiple, false, false, false, true)]
+    [InlineData(SelectMode.Tags, false, false, false, true)]
+    [InlineData(SelectMode.Multiple, true, false, false, false)]
+    [InlineData(SelectMode.Multiple, false, true, false, false)]
+    [InlineData(SelectMode.Tags, false, false, true, false)]
+    [InlineData(SelectMode.Default, false, false, false, false)]
+    public void Loading_reserves_suffix_space_only_for_the_builtin_icon_without_existing_controls(
+        SelectMode mode, bool showArrow, bool allowClear, bool custom, bool reservesSpace)
+    {
+        JSInterop.Mode = JSRuntimeMode.Loose;
+        RenderFragment customSuffix = @<span>Custom</span>;
+        var cut = Render<AntDesign.Select<string, string>>(
+            @<AntDesign.Select TItemValue="string" TItem="string" Mode="@mode"
+                               ShowArrowIcon="@showArrow" AllowClear="@allowClear"
+                               SuffixIcon="@(custom ? customSuffix : null)" />);
+
+        const string loadingSelector = ".ant-select-selector-loading";
+        cut.FindAll(loadingSelector).Should().BeEmpty();
+
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.Loading, true));
+        cut.FindAll(loadingSelector).Should().HaveCount(reservesSpace ? 1 : 0);
+
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.Loading, false));
+        cut.FindAll(loadingSelector).Should().BeEmpty();
+    }
+
     [Fact]
     public void Render_enum_select() 
     {

@@ -86,7 +86,11 @@
     }
     else //ParentSelect.SelectMode != SelectMode.Default
     {
-      <div class="@Prefix-selector" style="@(ParentSelect.PrefixIcon is null?"":"padding-left: 4px;")">
+      var reserveLoadingSpace = Loading && !ShowArrowIcon && !ParentSelect.AllowClear && ParentSelect.SuffixIcon is null;
+      var selectorClass = reserveLoadingSpace ? $"{Prefix}-selector {Prefix}-selector-loading" : $"{Prefix}-selector";
+      var prefixPadding = reserveLoadingSpace ? "padding-inline-start: 4px;" : "padding-left: 4px;";
+
+      <div class="@selectorClass" style="@(ParentSelect.PrefixIcon is null ? "" : prefixPadding)">
         <div class="@Prefix-selection-overflow" @ref="@_overflow">
           @if (ParentSelect.PrefixIcon != null)
           {
@@ -255,7 +259,8 @@
             IsOverlayShow="@IsOverlayShow"
             OnClearClick="@OnClearClick" 
             ShowArrowIcon="@ShowArrowIcon" 
-            ShowSearchIcon="@ShowArrowIcon"/>
+            ShowSearchIcon="@ShowArrowIcon"
+            Loading="@Loading"/>
     }
 </div>
 

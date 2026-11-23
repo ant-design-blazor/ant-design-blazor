@@ -63,6 +63,20 @@
       padding-right: @font-size-sm + @control-padding-horizontal;
     }
 
+    &.@{select-prefix-cls} .@{select-prefix-cls}-selector.@{select-prefix-cls}-selector-loading {
+      padding-inline-end: @font-size-sm + @control-padding-horizontal;
+      // Reserve the space as soon as the loading icon is rendered.
+      transition-property: background-color, border-color, box-shadow, color;
+
+      .@{select-overflow-prefix-cls}-item-suffix {
+        display: flex;
+
+        .@{select-prefix-cls}-selection-search {
+          min-width: 0;
+        }
+      }
+    }
+
     // ======================== Selections ========================
     .@{select-prefix-cls}-selection-item {
       position: relative;
