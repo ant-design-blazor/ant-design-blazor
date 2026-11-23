@@ -67,14 +67,6 @@ namespace AntDesign.Docs.Pages
         {
             LocalizationService.LanguageChanged += OnLanguageChanged;
             NavigationManager.LocationChanged += OnLocationChanged;
-
-            if (Locale is "en-US" or "zh-CN")
-            {
-                // Ensure prerendered component pages use the locale from their URL before
-                // rendering localized labels. Router navigation can run after the first SSR pass.
-                LocalizationService.SetLanguage(CultureInfo.GetCultureInfo(Locale));
-            }
-
             await HandleNavigate(onInitialize: true);
         }
 
