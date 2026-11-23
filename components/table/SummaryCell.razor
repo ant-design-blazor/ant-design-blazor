@@ -2,19 +2,32 @@
 @using AntDesign.TableModels
 @inherits ColumnBase
 
-<td @attributes="AdditionalAttributes" class="@ClassMapper.Class" style="@FixedStyle @Style" colspan="@ColSpan">
-    @if (CellRender != null)
+@if (!Hidden)
+{
+    var columnIndex = SummaryContext?.Advance(ColSpan > 0 ? ColSpan : 1) ?? ColIndex;
+    var expandColumnIndex = Table.TreeMode ? Table.TreeExpandIconColumnIndex : Table.ExpandIconColumnIndex;
+    @if (Table.HasExpandTemplate && columnIndex == expandColumnIndex)
     {
-        var cellData = new CellData(RowData);
-        @CellRender(cellData)
+        <td class="ant-table-cell ant-table-row-expand-icon-cell"></td>
     }
-    else
-    {
-        @ChildContent
-    }
-</td>
+
+    <td @attributes="AdditionalAttributes" class="@ClassMapper.Class" style="@FixedStyle @Style" colspan="@ColSpan">
+        @if (CellRender != null)
+        {
+            var cellData = new CellData(RowData);
+            @CellRender(cellData)
+        }
+        else
+        {
+            @ChildContent
+        }
+    </td>
+}
 
 @code {
+
+    [CascadingParameter]
+    private SummaryRowContext SummaryContext { get; set; }
 
     /// <summary>
     /// Set the content of the cell.
