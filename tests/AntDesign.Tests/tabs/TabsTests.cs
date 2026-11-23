@@ -4,10 +4,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Bunit;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.JSInterop;
 using Moq;
@@ -17,7 +20,7 @@ namespace AntDesign.Tests.Tabs
 {
     public partial class TabsTests : AntDesignTestBase
     {
-        private IRenderedComponent<AntDesign.Tabs> CreateTabs(Action<RenderTreeBuilder> childContent)
+        private IRenderedComponent<AntDesign.Tabs> CreateTabs(Action<RenderTreeBuilder> childContent, bool draggable = false)
         {
             var jsRuntime = new Mock<IJSRuntime>();
             jsRuntime.Setup(u => u.InvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, It.IsAny<object[]>()))
@@ -35,10 +38,42 @@ namespace AntDesign.Tests.Tabs
             var cut = Context.RenderComponent<AntDesign.Tabs>(tabs => tabs
                 .Add(x => x.DefaultActiveKey, "2")
                 .Add(x => x.Id, "1")
+                .Add(x => x.Draggable, draggable)
                 .Add(b => b.ChildContent, b => childContent(b))
             );
 
             return cut;
+        }
+
+        [Fact]
+        public async Task Dragging_a_tab_keeps_its_panel_content_attached_to_its_key()
+        {
+            var cut = CreateTabs(p =>
+            {
+                CreateTabPanel("1")(p);
+                CreateTabPanel("2")(p);
+                CreateTabPanel("3")(p);
+            }, draggable: true);
+
+            cut.FindAll(".ant-tabs-tab").Single(x => x.TextContent.Trim() == "Tab 3").Click();
+            var panes = cut.FindComponents<TabPane>();
+            var source = panes.Single(x => x.Instance.Key == "3").Instance;
+            var target = panes.Single(x => x.Instance.Key == "1").Instance;
+            await cut.InvokeAsync(() =>
+            {
+                cut.Instance.HandleDragStart(new DragEventArgs { DataTransfer = new DataTransfer() }, source);
+                cut.Instance.HandleDrop(target);
+            });
+
+            var activePane = cut.Find(".ant-tabs-tabpane-active");
+            Assert.Equal("rc-tabs-3-panel-3", activePane.Id);
+            Assert.Equal("Content 3", activePane.TextContent.Trim());
+
+            cut.FindAll(".ant-tabs-tab").Single(x => x.TextContent.Trim() == "Tab 1").Click();
+
+            activePane = cut.Find(".ant-tabs-tabpane-active");
+            Assert.Equal("rc-tabs-1-panel-1", activePane.Id);
+            Assert.Equal("Content 1", activePane.TextContent.Trim());
         }
 
         private static RenderFragment CreateTabPanel(string key, Action<ComponentParameterCollectionBuilder<TabPane>>? configure = null)
