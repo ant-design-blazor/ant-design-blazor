@@ -9,8 +9,8 @@
     "name": "@ant-design-blazor/style-generator",
     "version": "0.1.0"
   },
-  "generatedAt": "599b251da933709d7b25fc9e9018ed7f4c093b96",
-  "sourcePath": "<antd-path>",
+  "generatedAt": "2026-11-22T06:14:47.927Z",
+  "sourcePath": "/Volumes/Data/GitHub/ant-design",
   "artifacts": {
     "ir": "style-ir.json",
     "components": "components.json",

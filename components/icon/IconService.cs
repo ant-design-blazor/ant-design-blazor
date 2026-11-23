@@ -92,9 +92,9 @@ namespace AntDesign
             var iconSvg = SetSvgRootAttributes(svg, svgAttributes);
 
             if (icon.Theme == IconThemeType.TwoTone
-                && (!string.IsNullOrWhiteSpace(icon.TwoToneColor) || !string.IsNullOrWhiteSpace(icon.TwoToneSecondaryColor)))
+                && (!string.IsNullOrWhiteSpace(icon.PrimaryColor) || !string.IsNullOrWhiteSpace(icon.SecondaryColor)))
             {
-                return GetTwoToneIconSvg(iconSvg, icon.TwoToneColor, icon.SecondaryColor);
+                return GetTwoToneIconSvg(iconSvg, icon.PrimaryColor, icon.SecondaryColor);
             }
 
             return iconSvg;

@@ -237,6 +237,7 @@ namespace AntDesign.Theming
         public string ActiveBg { get; set; }
         public string ActiveBorderColor { get; set; }
         public string ActiveShadow { get; set; }
+        public string AddonBg { get; set; }
         public string CellActiveWithRangeBg { get; set; }
         public string CellBgDisabled { get; set; }
         public double CellHeight { get; set; }
@@ -1235,6 +1236,7 @@ namespace AntDesign.Theming
             new ComponentTokenDefinition("date-picker", "activeBg", "--ant-date-picker-active-bg", "string", "string", "输入框激活状态时背景颜色", "Background color when the input box is activated", "#ffffff", false, true, false),
             new ComponentTokenDefinition("date-picker", "activeBorderColor", "--ant-date-picker-active-border-color", "string", "string", "激活态边框色", "Active border color", "#1677ff", false, true, false),
             new ComponentTokenDefinition("date-picker", "activeShadow", "--ant-date-picker-active-shadow", "string", "string", "激活态阴影", "Box-shadow when active", "0 0 0 2px rgba(5,145,255,0.1)", false, true, false),
+            new ComponentTokenDefinition("date-picker", "addonBg", "--ant-date-picker-addon-bg", "string", "string", "前/后置标签背景色", "Background color of addon", "rgba(0,0,0,0.02)", false, true, false),
             new ComponentTokenDefinition("date-picker", "cellActiveWithRangeBg", "--ant-date-picker-cell-active-with-range-bg", "string", "string", "选取范围内的单元格背景色", "Background color of cell in range", "#e6f4ff", false, true, false),
             new ComponentTokenDefinition("date-picker", "cellBgDisabled", "--ant-date-picker-cell-bg-disabled", "string", "string", "单元格禁用态背景色", "Background color of disabled cell", "rgba(0,0,0,0.04)", false, true, false),
             new ComponentTokenDefinition("date-picker", "cellHeight", "--ant-date-picker-cell-height", "number", "double", "单元格高度", "Height of cell", "24", false, true, false),

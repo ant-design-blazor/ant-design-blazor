@@ -28,19 +28,98 @@ const scopedAliases = new Map([
   ['alert:isClosable', 'Closable'],
   ['button:href', 'Url'],
   ['form:isRequired', 'Required'],
+  ['progress:railColor', 'TrailColor'],
+  ['drawer:open', 'Visible'],
+  ['modal:open', 'Visible'],
+  ['select:onOpenChange', 'OpenChanged'],
+  ['select:onChange', 'ValueChanged'],
+  ['select:popupStyle', 'DropdownStyle'],
+  ['table:render', 'CellRender'],
+  ['table:expandedRowRender', 'ExpandTemplate'],
+  ['tag:onChange', 'CheckedChanged'],
+]);
+
+// React has a separate TimePicker type, while the Blazor TimePicker inherits
+// the DatePicker parameter surface and is inventoried under that base type.
+const componentAliases = new Map([
+  ['timepicker', 'date-picker'],
+]);
+
+// Some component folders also declare private hook/overlay contracts that are
+// discovered by the canonical React type extractor. They are useful in the
+// source IR but are not props accepted by the public component. Restrict these
+// components to the declarations exported by their public entry point.
+const componentPublicDeclarations = new Map([
+  ['table', new Set(['TableProps', 'ColumnProps', 'ColumnGroupProps'])],
 ]);
 
 // Same-name properties can still expose a different subset or shape. Keep
 // these cases visible in the generated inventory instead of implying that a
 // casing match means full API parity.
 const scopedShapeNotes = new Map([
-  ['select:fetchOptions', 'React fetchOptions owns an asynchronous remote-search lifecycle; Blazor has caller-controlled DataSource and OnSearch but no asynchronous option-fetch contract yet.'],
+  ['tag:icon', 'React accepts any ReactNode; Blazor supports named Icon strings and IconTemplate RenderFragments.'],
+  ['tag:classNames', 'React accepts an object or a props callback; Blazor currently accepts the semantic slot dictionary only.'],
+  ['tag:styles', 'React accepts an object or a props callback; Blazor currently accepts the semantic slot dictionary only.'],
+  ['tag:options', 'React options accept string or number values and ReactNode labels; Blazor CheckableTagOption currently uses string values and string labels.'],
+  ['tag:defaultValue', 'React values support strings, numbers, and arrays of either; Blazor supports string values or IReadOnlyList<string>.'],
+  ['tag:onChange', 'CheckableTag.onChange maps to CheckedChanged; CheckableTagGroup uses ValueChanged or ValuesChanged depending on Multiple.'],
   ['dropdown:menu', 'Blazor DropdownMenuOptions supports data-driven items, groups, submenus, selection, activeKey, icons, state, and click callbacks; verify remaining React MenuProps fields separately.'],
   ['dropdown:getPopupContainer', 'Blazor accepts Func<ElementReference, ElementReference> to select the popup parent; the callback intent matches React, with Blazor DOM-reference types.'],
   ['dropdown:align', 'React accepts rc-trigger AlignType (points, offset, targetOffset, and overflow); Blazor currently exposes Placement and scalar offsets, so arbitrary alignment objects are not yet represented.'],
   ['dropdown:autoFocus', 'React focuses the popup menu when opened; Blazor does not yet provide equivalent popup focus management.'],
   ['button:classNames', 'React classNames accepts an object or a callback; Blazor exposes the object as ClassNames and the callback as ClassNamesFunc receiving the current Button instance.'],
   ['button:styles', 'React styles accepts an object or a callback; Blazor exposes the object as Styles and the callback as StylesFunc receiving the current Button instance.'],
+  ['select:classNames', 'React classNames accepts an object or a props callback; Blazor exposes the semantic dictionary as ClassNames and a ClassNamesFunc callback receiving the current Select instance.'],
+  ['select:styles', 'React styles accepts an object or a props callback; Blazor exposes the semantic dictionary as Styles and a StylesFunc callback receiving the current Select instance.'],
+  ['select:onChange', 'React onChange uses one callback whose value shape depends on mode; Blazor exposes ValueChanged for single mode and ValuesChanged for multiple/tags mode.'],
+  ['select:prefixCls', 'React prefixCls is supplied through ConfigProvider in Blazor; Select does not expose a per-instance prefix override.'],
+  ['select:direction', 'Blazor accepts a per-Select Direction override and inherits ConfigProvider direction when omitted.'],
+  ['select:popupStyle', 'React popupStyle is represented by Blazor DropdownStyle.'],
+  ['select:showScrollBar', 'rc-select virtual-list scrollbar rendering option; Blazor virtualization does not expose this presentation flag.'],
+  ['select:choiceTransitionName', 'rc-select internal choice animation override; Blazor uses the shared component motion tokens.'],
+  ['select:getInputElement', 'React custom input rendering callback; Blazor Select currently owns its input markup.'],
+  ['select:getRawInputElement', 'React custom raw input rendering callback; Blazor Select currently owns its input markup.'],
+  ['select:animation', 'Legacy rc-trigger animation API; Blazor uses the Overlay motion configuration.'],
+  ['select:transitionName', 'Legacy rc-trigger transition API; Blazor uses the Overlay motion configuration.'],
+  ['select:popupAlign', 'React rc-trigger alignment object is represented by Placement and overlay boundary adjustment settings in Blazor; arbitrary AlignType offsets are not exposed.'],
+  ['select:builtinPlacements', 'React rc-trigger placement map is represented by Blazor Placement; custom placement maps are not exposed.'],
+  ['select:showAction', 'React trigger activation list is represented by Blazor AutoFocus/Open and pointer events; a configurable activation list is not exposed.'],
+  ['select:components', 'React virtual-list component injection API has no direct Blazor extension point.'],
+  ['select:backfill', 'React combobox backfill behavior is not part of the Blazor Select modes.'],
+  ['select:listItemHeight', 'React virtual-list row height tuning is fixed to the component option height in Blazor.'],
+  ['table:sorter', 'React sorter accepts a boolean, comparator, or object with comparator and priority; Blazor splits these into Sortable, SorterCompare, and SorterMultiple.'],
+  ['table:sortOrder', 'React sortOrder is controlled state; Blazor currently exposes DefaultSortOrder for initial state and does not expose a controlled per-column sortOrder parameter.'],
+  ['table:filterDropdownProps', 'React filterDropdownProps configures rc-dropdown; Blazor exposes FilterDropdownOpen, FilterDropdownAutoClose, and GetPopupContainer separately, without the full DropdownProps object.'],
+  ['table:filteredValue', 'React filteredValue is a controlled list; Blazor supports DefaultFilteredValue for initialization and Filtered for the indicator, but not controlled per-column selected values.'],
+  ['table:onFilterDropdownOpenChange', 'React callback was folded into filterDropdownProps.onOpenChange; Blazor exposes FilterDropdownOpen state but no matching per-column open-change callback.'],
+  ['table:shouldCellUpdate', 'React provides a per-cell render predicate; Blazor uses component-level RerenderStrategy and has no per-cell predicate.'],
+  ['table:onCellClick', 'React click callback receives the record and mouse event; Blazor can attach cell attributes and handlers through OnCell, but does not expose this typed callback.'],
+  ['table:dropdownPrefixCls', 'React prefix customization is supplied through ConfigProvider in Blazor.'],
+  ['table:columns', 'React passes a data array of column configs; Blazor declares columns with Column child components or ColumnDefinitions templates.'],
+  ['table:pagination', 'React pagination config is represented by Blazor page parameters and PaginationTemplate; see the Table API mapping notes.'],
+  ['table:rowSelection', 'React rowSelection config is represented by Blazor Selection/SelectionColumn parameters and callbacks rather than one object parameter.'],
+  ['table:scroll', 'React scroll config is split into Blazor ScrollX, ScrollY, and ScrollToFirstRowOnChange.'],
+  ['table:prefixCls', 'React prefixCls is supplied through ConfigProvider in Blazor.'],
+  ['table:direction', 'React direction is inherited from ConfigProvider direction in Blazor.'],
+  ['table:components', 'React can replace internal table elements; Blazor Table has no equivalent component override API.'],
+  ['table:expandIcon', 'React accepts a custom expand icon renderer; Blazor exposes expansion content and column placement but no icon renderer parameter.'],
+  ['table:summary', 'React summary receives current page data; Blazor uses declarative SummaryRow components and does not pass the current data to a callback.'],
+  ['table:sticky', 'Blazor exposes StickyOffsetHeader; React sticky offsetScroll and getContainer settings have no matching parameters.'],
+  ['table:expandedRowKeys', 'React expandedRowKeys is controlled state; Blazor exposes DefaultExpandedRowKeys and OnExpandedRowsChange without a controlled key parameter.'],
+  ['table:expandedRowRender', 'React expandedRowRender maps to Blazor ExpandTemplate with RowData context.'],
+  ['table:expandRowByClick', 'Blazor currently expands rows through the expand control and does not expose expandRowByClick.'],
+  ['table:childrenColumnName', 'React selects tree children by property name; Blazor accepts a TreeChildren accessor function.'],
+  ['table:expandable', 'React expandable config is represented by Blazor expansion parameters and callbacks; see the Table API mapping notes.'],
+  ['table:caption', 'React caption is not currently rendered by Blazor Table.'],
+  ['table:tailor', 'Low-level rc-table implementation option; it is not part of the Ant Design Table documentation API.'],
+  ['table:getContainerWidth', 'Low-level rc-table measurement callback; it is not part of the Ant Design Table documentation API.'],
+  ['table:measureRowRender', 'Low-level rc-table measurement renderer; it is not part of the Ant Design Table documentation API.'],
+  ['table:render', 'React render maps to Blazor CellRender using a CellData context; callback argument shapes differ.'],
+  ['table:onCell', 'The callback intent matches, but React receives record/index and Blazor receives a CellData object.'],
+  ['table:onHeaderCell', 'The callback intent matches, but React receives a column and Blazor supplies a parameterless attribute factory.'],
+  ['table:footer', 'React footer is a callback receiving current page data; Blazor FooterTemplate has no data argument and Footer is string-valued.'],
+  ['table:rowClassName', 'React rowClassName receives record/index; Blazor RowClassName receives a RowData object.'],
+  ['table:loading', 'React accepts Spin props as well as a boolean; Blazor Loading currently accepts only a boolean.'],
 ]);
 
 const normalize = value => value.replace(/[^a-z0-9]/gi, '').toLowerCase();
@@ -62,6 +141,12 @@ export function mapReactApiToBlazor(reactApi, blazorApi) {
   const blazorByComponent = new Map(blazorApi.components.map(component => [normalize(component.component), component]));
   const componentRows = new Map();
   for (const declaration of reactApi.props) {
+    // Demo-local helpers may be declared inside a component's demo folder, but
+    // they are not part of the public component API. Keep them in the canonical
+    // React API IR; omit them only from this component-to-component mapping.
+    if (/(?:^|\/)demo\//i.test(declaration.sourceFile ?? '')) continue;
+    const publicDeclarations = componentPublicDeclarations.get(normalize(declaration.component));
+    if (publicDeclarations && !publicDeclarations.has(declaration.declaration)) continue;
     const row = componentRows.get(declaration.component) ?? { component: declaration.component, declarations: [], props: [] };
     row.declarations.push(declaration.declaration);
     for (const property of declaration.properties) {
@@ -71,7 +156,8 @@ export function mapReactApiToBlazor(reactApi, blazorApi) {
   }
 
   const components = [...componentRows.values()].map(row => {
-    const blazorComponent = blazorByComponent.get(normalize(row.component));
+    const targetComponent = componentAliases.get(normalize(row.component)) ?? row.component;
+    const blazorComponent = blazorByComponent.get(normalize(targetComponent));
     const props = row.props.map(property => {
       const mapping = findParameter(row.component, blazorComponent, property.name);
       return {
@@ -81,6 +167,7 @@ export function mapReactApiToBlazor(reactApi, blazorApi) {
         blazorComponent: blazorComponent?.component ?? null,
         blazorParameter: mapping.parameter?.name ?? null,
         blazorType: mapping.parameter?.type ?? null,
+        blazorReleaseVersion: mapping.parameter?.releaseVersion ?? null,
         status: blazorComponent ? mapping.status : 'missing-component',
         reason: blazorComponent ? mapping.reason : 'no-blazor-component',
         shapeNote: scopedShapeNotes.get(`${normalize(row.component)}:${property.name}`) ?? null,
@@ -120,6 +207,8 @@ if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(new URL(im
     summary: result.summary,
     aliases: Object.fromEntries(aliases),
     scopedAliases: Object.fromEntries(scopedAliases),
+    componentAliases: Object.fromEntries(componentAliases),
+    componentPublicDeclarations: Object.fromEntries([...componentPublicDeclarations].map(([component, declarations]) => [component, [...declarations]])),
     scopedShapeNotes: Object.fromEntries(scopedShapeNotes),
     components: result.components,
   };

@@ -1,0 +1,14 @@
+<Flex Gap="FlexGap.Small" Align="FlexAlign.Center" Wrap="FlexWrap.Wrap">
+    <Tag Closable CloseIcon="@TextCloseIcon">Tag 1</Tag>
+    <Tag Closable CloseIcon="@IconCloseIcon">Tag 2</Tag>
+</Flex>
+
+@code {
+    private RenderFragment TextCloseIcon => builder => builder.AddContent(0, "Close");
+    private RenderFragment IconCloseIcon => builder =>
+    {
+        builder.OpenComponent<Icon>(0);
+        builder.AddAttribute(1, nameof(AntDesign.Icon.Type), "close-circle");
+        builder.CloseComponent();
+    };
+}

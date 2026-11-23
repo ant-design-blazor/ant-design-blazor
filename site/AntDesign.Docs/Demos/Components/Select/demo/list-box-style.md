@@ -1,5 +1,7 @@
 ---
-order: 23
+order: 122
+debug: true
+extension: true
 title:
   zh-CN: 自定义下拉框样式
   en-US: Custom listbox style

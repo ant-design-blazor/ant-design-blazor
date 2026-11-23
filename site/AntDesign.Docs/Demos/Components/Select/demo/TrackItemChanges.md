@@ -1,5 +1,7 @@
 ---
-order: 5
+order: 115
+debug: true
+extension: true
 title:
   zh-CN: Track Item Changes
   en-US: Track Item Changes

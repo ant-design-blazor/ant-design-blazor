@@ -11,4 +11,4 @@ title:
 
 ## en-US
 
-Search the options while expanded. You can set AutoClearSearchValue = false to preserve the value of the search box.
+Search the options while expanded.

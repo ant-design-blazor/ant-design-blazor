@@ -1,0 +1,13 @@
+<Flex Vertical Gap="FlexGap.Medium" Align="FlexAlign.Start">
+    <Timeline Pending='@("Recording...")' Items="_items" />
+    <Timeline Pending='@("Recording...")' PendingDot="_pendingDot" Items="_items" />
+</Flex>
+
+@code {
+    private readonly IReadOnlyList<TimelineItemData> _items = new[]
+    {
+        new TimelineItemData { Content = "Create a services site 2015-09-01" },
+    };
+
+    private readonly RenderFragment _pendingDot = builder => builder.AddContent(0, "🔴");
+}

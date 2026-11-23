@@ -1,5 +1,5 @@
 ---
-order: 10
+order: 11
 title:
   zh-CN: 获得选项的文本
   en-US: Get value of selected item
@@ -13,6 +13,6 @@ The label of the selected item will be packed as an `string (JSON)` for passing 
 
 ## en-US
 
-As a default behavior, the `OnSelectedItemChanged` callback can only get the value of the selected item. The `LabelInValue` property can be used to get the label property of the selected item.
+As a default behavior, the onChange callback can only get the value of the selected item. The labelInValue prop can be used to get the label property of the selected item.
 
-The label of the selected item will be packed as an `string (JSON)` for passing to the `OnSelectedItemChanged` callback. This function is only available when the SelectOptions are created without a DataStore.
+The label of the selected item will be packed as an object for passing to the onChange callback.

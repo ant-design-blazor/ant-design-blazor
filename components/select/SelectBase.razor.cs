@@ -48,6 +48,10 @@ namespace AntDesign
         internal ElementReference _inputRef;
         protected bool _isInitialized;
 
+        protected bool IsRTLDirection => string.IsNullOrWhiteSpace(Direction)
+            ? RTL
+            : string.Equals(Direction, "rtl", StringComparison.OrdinalIgnoreCase);
+
         protected bool _isPrimitive;
 
         protected virtual bool IsSelectFixed() => true;
@@ -63,6 +67,10 @@ namespace AntDesign
 
         protected int _maxTagCountAsInt;
         protected string _prevSearchValue = string.Empty;
+
+        protected virtual bool ShouldAutoClearSearchValue => AutoClearSearchValue;
+        internal virtual RenderFragment SearchIconContent => null;
+        internal virtual Func<SelectOptionItem<TItemValue, TItem>, SelectOptionItem<TItemValue, TItem>, string, int> SearchFilterSort => FilterSort;
         protected string _searchValue = string.Empty;
 
         protected SelectContent<TItemValue, TItem> _selectContent;
@@ -117,9 +125,29 @@ namespace AntDesign
         [Parameter]
         public string RootClassName { get; set; }
 
+        /// <summary>Overrides the inherited text direction for this Select. Supports <c>ltr</c> and <c>rtl</c>.</summary>
+        [Parameter]
+        public string Direction { get; set; }
+
         /// <summary>Accessible label applied to the Select input.</summary>
         [Parameter]
         public string AriaLabel { get; set; }
+
+        /// <summary>Tab order for the Select search input.</summary>
+        [Parameter]
+        public int? TabIndex { get; set; }
+
+        /// <summary>Maximum number of characters accepted by the Select search input.</summary>
+        [Parameter]
+        public int? MaxLength { get; set; }
+
+        /// <summary>Callback invoked when the Select root receives a mouse down event.</summary>
+        [Parameter]
+        public EventCallback<MouseEventArgs> OnMouseDown { get; set; }
+
+        /// <summary>Callback invoked when the Select root is clicked.</summary>
+        [Parameter]
+        public EventCallback<MouseEventArgs> OnClick { get; set; }
 
         /// <summary>Title text for the selected value container.</summary>
         [Parameter]
@@ -169,15 +197,20 @@ namespace AntDesign
         [Parameter]
         public IReadOnlyDictionary<string, string> ClassNames { get; set; }
 
+        internal virtual IReadOnlyDictionary<string, string> ResolvedClassNames => ClassNames;
+
         /// <summary>
         /// Inline CSS for semantic parts of the selector. Nested popup slots use dotted keys such as <c>popup.root</c>.
         /// </summary>
         [Parameter]
         public IReadOnlyDictionary<string, string> Styles { get; set; }
 
+        internal virtual IReadOnlyDictionary<string, string> ResolvedStyles => Styles;
+
         internal string GetSemanticClass(string slot, string baseClass = null)
         {
-            if (ClassNames == null || !ClassNames.TryGetValue(slot, out var customClass) || string.IsNullOrWhiteSpace(customClass))
+            var classNames = ResolvedClassNames;
+            if (classNames == null || !classNames.TryGetValue(slot, out var customClass) || string.IsNullOrWhiteSpace(customClass))
             {
                 return baseClass;
             }
@@ -187,7 +220,8 @@ namespace AntDesign
 
         internal string GetSemanticStyle(string slot, string baseStyle = null)
         {
-            if (Styles == null || !Styles.TryGetValue(slot, out var semanticStyle) || string.IsNullOrWhiteSpace(semanticStyle))
+            var styles = ResolvedStyles;
+            if (styles == null || !styles.TryGetValue(slot, out var semanticStyle) || string.IsNullOrWhiteSpace(semanticStyle))
             {
                 return string.IsNullOrWhiteSpace(baseStyle) ? null : baseStyle;
             }
@@ -207,12 +241,41 @@ namespace AntDesign
         public TriggerBoundaryAdjustMode BoundaryAdjustMode { get; set; } = TriggerBoundaryAdjustMode.InView;
 
         /// <summary>
+        /// The autocomplete attribute applied to the Select input.
+        /// </summary>
+        [Parameter]
+        public string AutoComplete { get; set; } = "new-password";
+
+        /// <summary>
         /// Show clear button. Has no effect if <see cref="AntInputComponentBase{TValue}.Value"/> type default
         /// is also in the list of <see cref="SelectOption{TItemValue, TItem}"/>,
         /// unless used with <see cref="ValueOnClear"/>.
         /// </summary>
         [Parameter]
-        public bool AllowClear { get; set; }
+        public object AllowClear { get; set; }
+
+        private SelectAllowClearOptions AllowClearOptions => AllowClear as SelectAllowClearOptions;
+
+        internal bool IsAllowClearEnabled => AllowClear switch
+        {
+            bool enabled => enabled,
+            SelectAllowClearOptions options => options.Disabled != true,
+            _ => false
+        };
+
+        internal RenderFragment EffectiveClearIcon => ClearIcon
+            ?? AllowClearOptions?.ClearIcon;
+
+        internal string EffectiveClearLabel => AllowClearOptions?.Label ?? "Clear";
+
+        internal int? EffectiveClearTabIndex => AllowClearOptions?.TabIndex;
+
+        /// <summary>
+        /// Custom icon displayed by the clear button when <see cref="AllowClear"/> is enabled.
+        /// React's <c>allowClear.clearIcon</c> option is exposed as a separate RenderFragment.
+        /// </summary>
+        [Parameter]
+        public RenderFragment ClearIcon { get; set; }
 
         /// <summary>
         /// Whether the current search will be cleared on selecting an item.
@@ -303,10 +366,16 @@ namespace AntDesign
         public string Placeholder { get; set; }
 
         /// <summary>
-        /// Called when focus.
+        /// Called when the Select input receives focus.
         /// </summary>
         [Parameter]
-        public EventCallback OnFocus { get; set; }
+        public EventCallback<FocusEventArgs> OnFocus { get; set; }
+
+        /// <summary>
+        /// Called when the Select input loses focus.
+        /// </summary>
+        [Parameter]
+        public EventCallback<FocusEventArgs> OnBlur { get; set; }
 
         /// <summary>
         /// Callback invoked when a key is pressed while the Select input is focused.
@@ -368,6 +437,16 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public RenderFragment SuffixIcon { get; set; }
+
+        /// <summary>
+        /// Custom suffix content. React-compatible name for <see cref="SuffixIcon"/>.
+        /// </summary>
+        [Parameter]
+        public RenderFragment Suffix
+        {
+            get => SuffixIcon;
+            set => SuffixIcon = value;
+        }
 
         /// <summary>
         /// The custom prefix icon.
@@ -523,6 +602,12 @@ namespace AntDesign
         public EventCallback<SelectOptionItem<TItemValue, TItem>> OnDeselect { get; set; }
 
         /// <summary>
+        /// React-compatible callback invoked when the active option changes while the popup is open.
+        /// </summary>
+        [Parameter]
+        public EventCallback<TItemValue> OnActive { get; set; }
+
+        /// <summary>
         ///     Currently active (highlighted) option.
         ///     It does not have to be equal to selected option.
         /// </summary>
@@ -542,6 +627,10 @@ namespace AntDesign
                     if (_activeOption != null && !_activeOption.IsActive)
                     {
                         _activeOption.IsActive = true;
+                    }
+                    if (DropdownVisible && _activeOption != null && OnActive.HasDelegate)
+                    {
+                        _ = InvokeAsync(() => OnActive.InvokeAsync(_activeOption.Value));
                     }
                     _selectContent?.RefreshActiveDescendant();
                     if (UsesVirtualAccessibility)
@@ -617,9 +706,9 @@ namespace AntDesign
 
         internal virtual bool HasValueOrUnmatched => HasValue
             || (Mode == SelectMode.Default
-                && Value is string value
+                && CurrentValue is string value
                 && !string.IsNullOrEmpty(value)
-                && !SelectOptionItems.Any(item => EqualityComparer<TItemValue>.Default.Equals(item.Value, Value)));
+                && !SelectOptionItems.Any(item => EqualityComparer<TItemValue>.Default.Equals(item.Value, CurrentValue)));
 
         internal virtual string GetSelectedItemLabel(SelectOptionItem<TItemValue, TItem> option)
         {
@@ -651,54 +740,59 @@ namespace AntDesign
             get
             {
                 var selectOption = SelectOptionItems;
+                IEnumerable<SelectOptionItem<TItemValue, TItem>> sortedOptions = selectOption;
 
-                if (FilterSort != null && !string.IsNullOrEmpty(_searchValue))
+                var filterSort = SearchFilterSort;
+                if (filterSort != null && !string.IsNullOrEmpty(_searchValue))
                 {
-                    return selectOption.OrderBy(option => option, Comparer<SelectOptionItem<TItemValue, TItem>>.Create(
-                        (left, right) => FilterSort(left, right, _searchValue)));
+                    sortedOptions = selectOption.OrderBy(option => option, Comparer<SelectOptionItem<TItemValue, TItem>>.Create(
+                        (left, right) => filterSort(left, right, _searchValue)));
+                }
+                else if (SortByGroup == SortDirection.Ascending && SortByLabel == SortDirection.None)
+                {
+                    sortedOptions = selectOption.OrderBy(g => g.GroupName);
+                }
+                else if (SortByGroup == SortDirection.Descending && SortByLabel == SortDirection.None)
+                {
+                    sortedOptions = selectOption.OrderByDescending(g => g.GroupName);
+                }
+                else if (SortByGroup == SortDirection.None && SortByLabel == SortDirection.Ascending)
+                {
+                    sortedOptions = selectOption.OrderBy(l => l.Label);
+                }
+                else if (SortByGroup == SortDirection.None && SortByLabel == SortDirection.Descending)
+                {
+                    sortedOptions = selectOption.OrderByDescending(l => l.Label);
+                }
+                else if (SortByGroup == SortDirection.Ascending && SortByLabel == SortDirection.Ascending)
+                {
+                    sortedOptions = selectOption.OrderBy(g => g.GroupName).ThenBy(l => l.Label);
+                }
+                else if (SortByGroup == SortDirection.Ascending && SortByLabel == SortDirection.Descending)
+                {
+                    sortedOptions = selectOption.OrderBy(g => g.GroupName).OrderByDescending(l => l.Label);
+                }
+                else if (SortByGroup == SortDirection.Descending && SortByLabel == SortDirection.Ascending)
+                {
+                    sortedOptions = selectOption.OrderByDescending(g => g.GroupName).ThenBy(l => l.Label);
+                }
+                else if (SortByGroup == SortDirection.Descending && SortByLabel == SortDirection.Descending)
+                {
+                    sortedOptions = selectOption.OrderByDescending(g => g.GroupName).OrderByDescending(l => l.Label);
                 }
 
-                if (SortByGroup == SortDirection.Ascending && SortByLabel == SortDirection.None)
-                {
-                    return selectOption.OrderBy(g => g.GroupName);
-                }
+                return SetOptionRenderIndexes(sortedOptions);
+            }
+        }
 
-                if (SortByGroup == SortDirection.Descending && SortByLabel == SortDirection.None)
-                {
-                    return selectOption.OrderByDescending(g => g.GroupName);
-                }
-
-                if (SortByGroup == SortDirection.None && SortByLabel == SortDirection.Ascending)
-                {
-                    return selectOption.OrderBy(l => l.Label);
-                }
-
-                if (SortByGroup == SortDirection.None && SortByLabel == SortDirection.Descending)
-                {
-                    return selectOption.OrderByDescending(l => l.Label);
-                }
-
-                if (SortByGroup == SortDirection.Ascending && SortByLabel == SortDirection.Ascending)
-                {
-                    return selectOption.OrderBy(g => g.GroupName).ThenBy(l => l.Label);
-                }
-
-                if (SortByGroup == SortDirection.Ascending && SortByLabel == SortDirection.Descending)
-                {
-                    return selectOption.OrderBy(g => g.GroupName).OrderByDescending(l => l.Label);
-                }
-
-                if (SortByGroup == SortDirection.Descending && SortByLabel == SortDirection.Ascending)
-                {
-                    return selectOption.OrderByDescending(g => g.GroupName).ThenBy(l => l.Label);
-                }
-
-                if (SortByGroup == SortDirection.Descending && SortByLabel == SortDirection.Descending)
-                {
-                    return selectOption.OrderByDescending(g => g.GroupName).OrderByDescending(l => l.Label);
-                }
-
-                return selectOption;
+        private static IEnumerable<SelectOptionItem<TItemValue, TItem>> SetOptionRenderIndexes(
+            IEnumerable<SelectOptionItem<TItemValue, TItem>> options)
+        {
+            var index = 0;
+            foreach (var option in options)
+            {
+                option.RenderIndex = option.IsHidden ? -1 : index++;
+                yield return option;
             }
         }
 
@@ -752,7 +846,7 @@ namespace AntDesign
             }
         }
 
-        private bool _hasValueOnClear;
+        protected bool _hasValueOnClear;
         private TItemValue _valueOnClear;
 
         /// <summary>
@@ -796,6 +890,17 @@ namespace AntDesign
                 }
                 _labelName = value;
             }
+        }
+
+        /// <summary>
+        /// Legacy React-compatible alias for <see cref="LabelName"/>.
+        /// </summary>
+        [Obsolete("Use LabelName instead.")]
+        [Parameter]
+        public string OptionLabelProp
+        {
+            get => LabelName;
+            set => LabelName = value;
         }
 
         /// <summary>
@@ -1053,7 +1158,34 @@ namespace AntDesign
 
         internal bool IsDropdownShown()
         {
-            return _dropDown.IsOverlayShow();
+            // Treat the enter phase as open as well. In particular, the
+            // SelectContent input switches from the selected label to the
+            // search value based on this state; waiting for the popup to
+            // finish opening makes the label flash for one render.
+            return _isDropdownVisible || _dropDown?.IsOverlayShow() == true || _dropDown?.IsOverlayOpening() == true;
+        }
+
+        protected async Task OnOverlayBeforeVisibleChangeAsync(bool visible)
+        {
+            if (!visible)
+            {
+                return;
+            }
+
+            // Commit the open/focus state after the popup has its final
+            // placement but before the browser reveals it. This keeps the
+            // selected text and search input from changing in a visible frame.
+            if (!Open && !Focused)
+            {
+                await SetInputFocusAsync(refreshState: false);
+            }
+
+            SetClassMap();
+            // Queue the trigger-state render before Overlay.Show invokes the
+            // browser reveal. On Blazor Server the renderer sends this batch
+            // before the following JS interop call, so the popup can animate
+            // immediately without waiting for a full browser acknowledgement.
+            await InvokeAsync(StateHasChanged);
         }
 
         protected override void OnInitialized()
@@ -1094,6 +1226,7 @@ namespace AntDesign
                     await SetInputFocusAsync();
                 }
             }
+
         }
 
         protected async Task OnOverlayHide()
@@ -1103,7 +1236,7 @@ namespace AntDesign
                 return;
             }
 
-            if (!AutoClearSearchValue)
+            if (!ShouldAutoClearSearchValue)
             {
                 return;
             }
@@ -1248,7 +1381,7 @@ namespace AntDesign
 
                 if (IsSearchEnabled)
                 {
-                    if (AutoClearSearchValue && !string.IsNullOrWhiteSpace(_searchValue))
+                    if (ShouldAutoClearSearchValue && !string.IsNullOrWhiteSpace(_searchValue))
                     {
                         await ClearSearch();
                     }
@@ -1347,6 +1480,11 @@ namespace AntDesign
         /// </summary>
         protected virtual async Task OnInputClearClickAsync(MouseEventArgs _)
         {
+            await ClearInputAsync(_, focusInput: true);
+        }
+
+        protected async Task ClearInputAsync(MouseEventArgs args, bool focusInput)
+        {
             if (Mode == SelectMode.Default)
             {
                 await ClearDefaultMode();
@@ -1355,9 +1493,29 @@ namespace AntDesign
             {
                 await ClearMultipleMode();
             }
-            await OnClearSelected.InvokeAsync(_);
+            await OnClearSelected.InvokeAsync(args);
             await OnClear.InvokeAsync();
-            await SetInputFocusAsync();
+            if (Mode == SelectMode.Default
+                && !TypeDefaultExistsAsSelectOption
+                && !_hasValueOnClear
+                && EqualityComparer<TItemValue>.Default.Equals(CurrentValue, default))
+            {
+                // A value-change callback can re-enter the option synchronization
+                // path. Normalize once more after callbacks so a stale option cannot
+                // restore the clear icon while the value is already empty.
+                foreach (var option in SelectOptionItems.Where(item => item.IsSelected))
+                {
+                    option.IsSelected = false;
+                    option.IsHidden = false;
+                }
+                SelectedOptionItems.Clear();
+                LastValueBeforeReset = default;
+            }
+            SetClassMap();
+            if (focusInput)
+            {
+                await SetInputFocusAsync();
+            }
         }
 
         private async Task ClearMultipleMode()
@@ -1402,6 +1560,18 @@ namespace AntDesign
                 // SelectOptionItem. It is still a value the user can clear.
                 if (HasValueOrUnmatched)
                 {
+                    if (!TypeDefaultExistsAsSelectOption && !_hasValueOnClear)
+                    {
+                        // In a few update paths the option is selected without being
+                        // present in SelectedOptionItems. Do not leave that stale
+                        // selected flag behind when clearing the unmatched value.
+                        foreach (var selectedItem in SelectOptionItems.Where(item => item.IsSelected))
+                        {
+                            selectedItem.IsSelected = false;
+                            selectedItem.IsHidden = false;
+                        }
+                        OnDefaultValueCleared();
+                    }
                     CurrentValue = default;
                     await ClearSelectedAsync();
                 }
@@ -1413,13 +1583,20 @@ namespace AntDesign
             }
             if (!TypeDefaultExistsAsSelectOption && !_hasValueOnClear)
             {
-                var oldSelectedItem = SelectedOptionItems.First().Value;
-                oldSelectedItem.IsSelected = false;
-                oldSelectedItem.IsHidden = false;
+                // The selected-item map can lag behind option state when options are
+                // refreshed or a clear is initiated by an external value update.
+                // Clear every selected option so the rendered label and allow-clear
+                // state cannot survive after Value has been reset.
+                foreach (var oldSelectedItem in SelectOptionItems.Where(item => item.IsSelected))
+                {
+                    oldSelectedItem.IsSelected = false;
+                    oldSelectedItem.IsHidden = false;
+                }
 
                 ActiveOption = SelectOptionItems.FirstOrDefault();
                 SelectedOptionItems.Clear();
                 CurrentValue = default;
+                OnDefaultValueCleared();
                 await ClearSelectedAsync();
             }
             else if (_hasValueOnClear)
@@ -1461,21 +1638,24 @@ namespace AntDesign
 
         /// <summary>
         ///     Set the Focused property to true, change the
-        ///     style and set the Focus on the Input element via DOM. It also invoke the OnFocus Action.
+        ///     style and set the Focus on the Input element via DOM.
         /// </summary>
-        protected virtual async Task SetInputFocusAsync()
+        protected virtual async Task SetInputFocusAsync(bool refreshState = true)
         {
             // SetInputBlurAsync may sometimes not be invoked.
             if (!Focused)
             {
                 Focused = true;
-                SetClassMap();
 
                 // Publish the focused state before awaiting the browser focus
                 // interop. On Blazor Server, waiting for that round trip can
                 // let the popup render while its trigger still has the stale
                 // unfocused class, unlike React's synchronous focus update.
-                await InvokeAsync(StateHasChanged);
+                if (refreshState)
+                {
+                    SetClassMap();
+                    await InvokeAsync(StateHasChanged);
+                }
 
                 // The input may already have received native pointer focus
                 // while the Blazor Server focus event is still in flight.
@@ -1483,9 +1663,20 @@ namespace AntDesign
                 // overlay has measured its position.
                 await FocusAsync(_inputRef, preventScroll: true);
 
-                await OnFocus.InvokeAsync(Focused);
             }
         }
+
+        /// <summary>
+        /// Sets focus to the Select input. Use a component reference to call this method,
+        /// corresponding to React Select's <c>focus()</c> method.
+        /// </summary>
+        public virtual Task Focus() => FocusAsync(_inputRef);
+
+        /// <summary>
+        /// Removes focus from the Select input. Use a component reference to call this method,
+        /// corresponding to React Select's <c>blur()</c> method.
+        /// </summary>
+        public virtual Task Blur() => BlurAsync(_inputRef);
 
         /// <summary>
         ///     Inform the Overlay to update the position.
@@ -1565,6 +1756,10 @@ namespace AntDesign
         }
 
         protected abstract void SetClassMap();
+
+        protected virtual void OnDefaultValueCleared()
+        {
+        }
 
 
         bool IEqualityComparer<TItem>.Equals(TItem x, TItem y)
@@ -1700,32 +1895,34 @@ namespace AntDesign
         /// <summary>
         /// Method is called via EventCallBack if the Input element get the focus
         /// </summary>
-        protected async Task OnInputFocusAsync(FocusEventArgs _)
+        protected async Task OnInputFocusAsync(FocusEventArgs args)
         {
             if (!Focused)
             {
                 Focused = true;
                 SetClassMap();
             }
+            await OnFocus.InvokeAsync(args);
             await SetInputFocusAsync();
         }
 
         /// <summary>
         /// Method is called via EventCallBack if the Input element loses the focus
         /// </summary>
-        protected async Task OnInputBlurAsync(FocusEventArgs _)
+        protected async Task OnInputBlurAsync(FocusEventArgs args)
         {
             if (Focused)
             {
                 Focused = false;
                 SetClassMap();
             }
+            await OnBlur.InvokeAsync(args);
             await SetInputBlurAsync();
         }
 
         /// <summary>
         /// Check if Focused property is true;  Set the Focused property to false, change the
-        /// style and blures the Input element via DOM. It also invoke the OnBlur Action.
+        /// style and blures the Input element via DOM.
         /// </summary>
         /// <returns></returns>
         protected virtual async Task SetInputBlurAsync()

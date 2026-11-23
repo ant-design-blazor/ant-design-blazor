@@ -1,5 +1,7 @@
 ---
-order: 4
+order: 101
+debug: true
+extension: true
 title:
   zh-CN: Default - Toggle Datasource
   en-US: Default - Toggle Datasource

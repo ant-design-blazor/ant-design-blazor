@@ -1,0 +1,31 @@
+@using AntDesign.Theming
+
+<div style="display:flex; flex-wrap:wrap; gap:24px">
+    <div style="width:320px">
+        <Card Title="Default line width">
+            <Decoration><BorderBeam /></Decoration>
+            <ChildContent>Uses the default global lineWidth token from the current theme.</ChildContent>
+        </Card>
+    </div>
+    <ConfigProvider ThemeConfig="@_theme">
+        <div style="width:320px">
+            <Card Title="Custom line width">
+                <Decoration><BorderBeam /></Decoration>
+                <ChildContent>Override lineWidth from theme.token.</ChildContent>
+            </Card>
+        </div>
+    </ConfigProvider>
+</div>
+
+@code {
+    private static readonly ThemeConfig _theme = new()
+    {
+        Components =
+        {
+            ["BorderBeam"] = new Dictionary<string, string>
+            {
+                ["lineWidth"] = "3"
+            }
+        }
+    };
+}

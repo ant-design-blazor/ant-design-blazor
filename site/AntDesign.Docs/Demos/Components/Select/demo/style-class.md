@@ -1,8 +1,8 @@
 ---
-order: 38
+order: 26
 title:
   zh-CN: 语义节点样式
-  en-US: Semantic DOM styling
+  en-US: Custom semantic dom styling
 ---
 
 ## zh-CN
@@ -11,4 +11,4 @@ title:
 
 ## en-US
 
-Use `ClassNames` for the root and a `Styles` dictionary for prefix and suffix colors. The second example computes its styles with a C# function based on the filled variant, including a purple popup border.
+You can customize the semantic dom style of Select by passing objects/functions through classNames and styles.

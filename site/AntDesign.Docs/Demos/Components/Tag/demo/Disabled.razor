@@ -1,0 +1,37 @@
+<Flex Vertical Gap="FlexGap.Middle">
+    <Flex Gap="FlexGap.Small" Wrap="FlexWrap.Wrap">
+        <Tag Disabled>Basic Tag</Tag>
+        <Tag Disabled><a href="https://ant.design">Link Tag</a></Tag>
+        <Tag Disabled Href="https://ant.design">Href Tag</Tag>
+        <Tag Disabled Color="TagColor.Success" Icon="check-circle">Icon Tag</Tag>
+    </Flex>
+
+    <Flex Gap="FlexGap.Small" Wrap="FlexWrap.Wrap">
+        <Tag Disabled Color="TagColor.Red">Preset Color Red</Tag>
+        <Tag Disabled Color="@("#f50")">Custom Color #f50</Tag>
+        <Tag Disabled Color="@("#f50")" Variant="TagVariant.Solid">Solid Custom Color</Tag>
+        <Tag Disabled Color="TagColor.Success">Preset Status Success</Tag>
+    </Flex>
+
+    <Flex Gap="FlexGap.Small" Wrap="FlexWrap.Wrap">
+        <Tag Disabled Checkable Checked>Books</Tag>
+        <Tag Disabled Checkable>Movies</Tag>
+        <Tag Disabled Checkable Checked>Music</Tag>
+    </Flex>
+
+    <Flex Gap="FlexGap.Small" Wrap="FlexWrap.Wrap">
+        <Tag Disabled Closable>Closable Tag</Tag>
+        <Tag Disabled Closable Color="TagColor.Success" Icon="check-circle">Closable with Icon</Tag>
+        <Tag Disabled Closable CloseIcon="@CustomCloseIcon">Closable with Custom Icon</Tag>
+    </Flex>
+
+    <Flex Gap="FlexGap.Small" Wrap="FlexWrap.Wrap">
+        <Tag Disabled Variant="TagVariant.Filled">Borderless Basic</Tag>
+        <Tag Disabled Variant="TagVariant.Filled" Color="TagColor.Success" Icon="check-circle">Borderless with Icon</Tag>
+        <Tag Disabled Variant="TagVariant.Filled" Closable>Borderless Closable</Tag>
+    </Flex>
+</Flex>
+
+@code {
+    private RenderFragment CustomCloseIcon => builder => builder.AddContent(0, "×");
+}

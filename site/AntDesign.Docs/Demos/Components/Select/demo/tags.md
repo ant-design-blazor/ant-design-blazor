@@ -1,5 +1,5 @@
 ---
-order: 4
+order: 8
 title:
   zh-CN: 标签
   en-US: Tags
@@ -11,4 +11,4 @@ tags select，随意输入的内容（scroll the menu）
 
 ## en-US
 
-Select with tags, transform input to tag (scroll the menu)
+Allow user to select tags from list or input custom tag.

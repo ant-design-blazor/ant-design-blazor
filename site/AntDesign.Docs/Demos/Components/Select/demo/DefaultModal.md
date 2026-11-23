@@ -1,5 +1,7 @@
 ---
-order: 11
+order: 119
+debug: true
+extension: true
 title:
   zh-CN: Default - Show select in modal
   en-US: Default - Show select in modal

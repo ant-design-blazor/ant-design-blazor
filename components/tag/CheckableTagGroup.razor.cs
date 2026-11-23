@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using OneOf;
 
 namespace AntDesign
 {
@@ -17,6 +18,12 @@ namespace AntDesign
 
         /// <summary>Use multiple selection when true.</summary>
         [Parameter] public bool Multiple { get; set; }
+
+        /// <summary>Additional class applied to the group root.</summary>
+        [Parameter] public string RootClassName { get; set; }
+
+        /// <summary>Initial selection for uncontrolled single or multiple selection.</summary>
+        [Parameter] public OneOf<string, IReadOnlyList<string>> DefaultValue { get; set; }
 
         /// <summary>Selected value in single-selection mode.</summary>
         [Parameter] public string Value { get; set; }
@@ -39,10 +46,45 @@ namespace AntDesign
         /// <summary>Semantic inline styles keyed by root and item.</summary>
         [Parameter] public IReadOnlyDictionary<string, string> Styles { get; set; }
 
+        private string _uncontrolledValue;
+        private IReadOnlyList<string> _uncontrolledValues = new List<string>();
+        private bool _valueIsControlled;
+        private bool _valuesAreControlled;
+
+        private string CurrentValue => _valueIsControlled ? Value : _uncontrolledValue;
+        private IReadOnlyList<string> CurrentValues => _valuesAreControlled ? Values : _uncontrolledValues;
+
+        public override Task SetParametersAsync(ParameterView parameters)
+        {
+            _valueIsControlled = parameters.TryGetValue<string>(nameof(Value), out _);
+            _valuesAreControlled = parameters.TryGetValue<IReadOnlyList<string>>(nameof(Values), out _);
+            return base.SetParametersAsync(parameters);
+        }
+
+        protected override void OnInitialized()
+        {
+            if (DefaultValue.IsT0)
+            {
+                _uncontrolledValue = DefaultValue.AsT0;
+            }
+            else
+            {
+                _uncontrolledValues = DefaultValue.AsT1?.ToList() ?? new List<string>();
+            }
+        }
+
         private string SemanticClass(string slot, string baseClass)
         {
             var customClass = ClassNames != null && ClassNames.TryGetValue(slot, out var value) ? value : null;
-            var classes = string.Join(" ", new[] { baseClass, slot == "root" ? Class : null, customClass }.Where(x => !string.IsNullOrWhiteSpace(x)));
+            var classes = string.Join(" ", new[]
+            {
+                baseClass,
+                slot == "root" ? RootClassName : null,
+                slot == "root" ? Class : null,
+                slot == "root" && Disabled ? "ant-tag-checkable-group-disabled" : null,
+                slot == "root" && RTL ? "ant-tag-checkable-group-rtl" : null,
+                customClass
+            }.Where(x => !string.IsNullOrWhiteSpace(x)));
             return classes;
         }
 
@@ -73,16 +115,24 @@ namespace AntDesign
         {
             if (Multiple)
             {
-                var values = Values?.ToList() ?? new List<string>();
+                var values = CurrentValues?.ToList() ?? new List<string>();
                 if (checkedValue && !values.Contains(optionValue))
                     values.Add(optionValue);
                 else if (!checkedValue)
                     values.Remove(optionValue);
+
+                if (!_valuesAreControlled)
+                    _uncontrolledValues = values;
+
                 await ValuesChanged.InvokeAsync(values);
             }
             else
             {
-                await ValueChanged.InvokeAsync(checkedValue ? optionValue : null);
+                var value = checkedValue ? optionValue : null;
+                if (!_valueIsControlled)
+                    _uncontrolledValue = value;
+
+                await ValueChanged.InvokeAsync(value);
             }
         }
     }

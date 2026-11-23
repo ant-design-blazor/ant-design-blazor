@@ -12,6 +12,25 @@ export function csharpTokenType(type) {
   return mapped.length === 1 ? mapped[0] : `OneOf<${mapped.join(', ')}>`;
 }
 
+// React's token metadata is the source for the public documentation table.
+// Some runtime tokens (for example DatePicker's inherited `addonBg`) are
+// intentionally omitted from the component's TypeScript interface, but React
+// still publishes them in token-meta.json. Keep those documented rows when
+// merging the typed definitions with the docs metadata.
+export function mergeDocumentedComponentTokens(definitions, metadata) {
+  const merged = new Map(definitions.map(token => [token.name, token]));
+  for (const item of metadata) {
+    if (!item?.token || merged.has(item.token)) continue;
+    merged.set(item.token, {
+      name: item.token,
+      type: item.type ?? 'unknown',
+      ...(item.desc ? { description: item.desc } : {}),
+      ...(item.descEn ? { descriptionEn: item.descEn } : {}),
+    });
+  }
+  return [...merged.values()].sort((left, right) => left.name.localeCompare(right.name));
+}
+
 export function extractComponentTokenDefinitions(source) {
   const interfaces = parseInterfaces(source);
 

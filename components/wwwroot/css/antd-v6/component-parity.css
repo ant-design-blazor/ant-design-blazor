@@ -6,6 +6,12 @@
   align-items: center;
 }
 
+/* Blazor exposes Tag icon/content as semantic slots; preserve React's inline
+   icon-to-label spacing across the generated v6 theme snapshots. */
+.ant-tag > .ant-tag-icon + .ant-tag-content {
+  margin-inline-start: calc(8px - var(--ant-line-width));
+}
+
 .ant-menu-horizontal.ant-menu-root {
   background: var(--ant-color-bg-container);
 }
@@ -30,6 +36,12 @@
   display: none;
   width: 0;
   height: 0;
+}
+
+/* Field filters host Select popups in their own local container. Allow those
+   nested menus to extend beyond the outer filter panel. */
+.ant-dropdown .ant-table-filter-dropdown.ant-table-filter-dropdown-field-type {
+  overflow: visible;
 }
 
 .ant-list-vertical .ant-list-item-extra img {
@@ -236,4 +248,78 @@
 .ant-table.ant-table-css-var.ant-table-medium tfoot > tr > td {
   padding-block: var(--ant-table-cell-padding-block-md, 8px);
   padding-inline: var(--ant-table-cell-padding-inline-md, 8px);
+}
+.table-drag-sorting-instructions {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Grow Select dropdowns away from the trigger, including when auto-flipped. */
+.ant-select-dropdown-placement-bottom,
+.ant-select-dropdown-placement-bottomLeft,
+.ant-select-dropdown-placement-bottomRight {
+  --ant-select-motion-origin: 50% 0%;
+}
+
+.ant-select-dropdown-placement-top,
+.ant-select-dropdown-placement-topLeft,
+.ant-select-dropdown-placement-topRight {
+  --ant-select-motion-origin: 50% 100%;
+}
+
+/* Keep Select motion stable when auto placement flips during the opening frame. */
+.ant-select-dropdown.ant-slide-up-enter.ant-slide-up-enter-active.ant-select-dropdown-placement-bottomLeft,
+.ant-select-dropdown.ant-slide-up-appear.ant-slide-up-appear-active.ant-select-dropdown-placement-bottomLeft,
+.ant-select-dropdown.ant-slide-up-enter.ant-slide-up-enter-active.ant-select-dropdown-placement-bottomRight,
+.ant-select-dropdown.ant-slide-up-appear.ant-slide-up-appear-active.ant-select-dropdown-placement-bottomRight,
+.ant-select-dropdown.ant-slide-up-enter.ant-slide-up-enter-active.ant-select-dropdown-placement-bottom,
+.ant-select-dropdown.ant-slide-up-appear.ant-slide-up-appear-active.ant-select-dropdown-placement-bottom,
+.ant-select-dropdown.ant-slide-up-enter.ant-slide-up-enter-active.ant-select-dropdown-placement-topLeft,
+.ant-select-dropdown.ant-slide-up-appear.ant-slide-up-appear-active.ant-select-dropdown-placement-topLeft,
+.ant-select-dropdown.ant-slide-up-enter.ant-slide-up-enter-active.ant-select-dropdown-placement-topRight,
+.ant-select-dropdown.ant-slide-up-appear.ant-slide-up-appear-active.ant-select-dropdown-placement-topRight,
+.ant-select-dropdown.ant-slide-up-enter.ant-slide-up-enter-active.ant-select-dropdown-placement-top,
+.ant-select-dropdown.ant-slide-up-appear.ant-slide-up-appear-active.ant-select-dropdown-placement-top {
+  animation-name: antSelectSlideIn;
+}
+
+.ant-select-dropdown.ant-slide-up-leave.ant-slide-up-leave-active.ant-select-dropdown-placement-bottomLeft,
+.ant-select-dropdown.ant-slide-up-leave.ant-slide-up-leave-active.ant-select-dropdown-placement-bottomRight,
+.ant-select-dropdown.ant-slide-up-leave.ant-slide-up-leave-active.ant-select-dropdown-placement-bottom,
+.ant-select-dropdown.ant-slide-up-leave.ant-slide-up-leave-active.ant-select-dropdown-placement-topLeft,
+.ant-select-dropdown.ant-slide-up-leave.ant-slide-up-leave-active.ant-select-dropdown-placement-topRight,
+.ant-select-dropdown.ant-slide-up-leave.ant-slide-up-leave-active.ant-select-dropdown-placement-top,
+.ant-select-dropdown.ant-slide-down-leave.ant-slide-down-leave-active.ant-select-dropdown-placement-bottomLeft,
+.ant-select-dropdown.ant-slide-down-leave.ant-slide-down-leave-active.ant-select-dropdown-placement-bottomRight,
+.ant-select-dropdown.ant-slide-down-leave.ant-slide-down-leave-active.ant-select-dropdown-placement-bottom,
+.ant-select-dropdown.ant-slide-down-leave.ant-slide-down-leave-active.ant-select-dropdown-placement-topLeft,
+.ant-select-dropdown.ant-slide-down-leave.ant-slide-down-leave-active.ant-select-dropdown-placement-topRight,
+.ant-select-dropdown.ant-slide-down-leave.ant-slide-down-leave-active.ant-select-dropdown-placement-top {
+  animation-name: antSelectSlideOut;
+}
+
+@keyframes antSelectSlideIn {
+  0% { transform: scaleY(0.8); transform-origin: var(--ant-select-motion-origin, 50% 0%); opacity: 0; }
+  100% { transform: scaleY(1); transform-origin: var(--ant-select-motion-origin, 50% 0%); opacity: 1; }
+}
+
+@keyframes antSelectSlideOut {
+  0% { transform: scaleY(1); transform-origin: var(--ant-select-motion-origin, 50% 0%); opacity: 1; }
+  100% { transform: scaleY(0.8); transform-origin: var(--ant-select-motion-origin, 50% 0%); opacity: 0; }
+}
+
+/* Keep the beam path radius aligned with Size; custom asymmetric demos may override it. */
+.ant-theme .ant-border-beam {
+  border-radius: var(--ant-border-beam-border-radius, inherit);
+}
+
+.ant-theme .ant-border-beam::before {
+  offset-path: rect(0 auto auto 0 round var(--ant-border-beam-size, 100px));
 }

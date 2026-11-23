@@ -10,12 +10,19 @@
 else if (TryGetBezier(out var x1, out var y1, out var x2, out var y2))
 {
     <span class="design-token-motion-value">
-        <svg class="design-token-motion-curve" viewBox="0 0 100 100" role="img" aria-label="Cubic bezier motion curve @Value">
-            <path class="design-token-motion-grid" d="M25 0V100 M50 0V100 M75 0V100 M0 25H100 M0 50H100 M0 75H100" />
-            <path class="design-token-motion-control" d="@ControlPath(x1, y1, x2, y2)" />
+        <svg class="design-token-motion-curve" width="180" height="180" viewBox="0 0 180 180" role="img" aria-label="Cubic bezier motion curve @Value">
+            <title>Cubic Bezier Visualizer</title>
+            <rect width="100%" height="100%" fill="var(--ant-color-bg-container, #fff)" />
+            <defs>
+                <pattern id="@_patternId" width="36" height="36" patternUnits="userSpaceOnUse">
+                    <path d="M 0 0 H 36 M 0 0 V 36 M 36 0 V 36 M 0 36 H 36" stroke="var(--ant-color-border-secondary, #f0f0f0)" stroke-width="2" shape-rendering="crispEdges" />
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#@_patternId)" />
             <path class="design-token-motion-path" d="@CurvePath(x1, y1, x2, y2)" />
-            <circle class="design-token-motion-point-end" cx="@SvgNumber(x1 * 100)" cy="@SvgNumber(100 - y1 * 100)" r="3" />
-            <circle class="design-token-motion-point-start" cx="@SvgNumber(x2 * 100)" cy="@SvgNumber(100 - y2 * 100)" r="3" />
+            <path class="design-token-motion-control" d="@ControlPath(x1, y1, x2, y2)" />
+            <circle class="design-token-motion-point-end" cx="@SvgNumber(x1 * 180)" cy="@SvgNumber(180 - y1 * 180)" r="5" />
+            <circle class="design-token-motion-point-start" cx="@SvgNumber(x2 * 180)" cy="@SvgNumber(180 - y2 * 180)" r="5" />
         </svg>
         <code>@Value</code>
     </span>
@@ -30,11 +37,13 @@ else
     [Parameter] public string Value { get; set; } = string.Empty;
     [Parameter] public bool IsColor { get; set; }
 
+    private readonly string _patternId = $"design-token-motion-grid-{Guid.NewGuid():N}";
+
     private static string ControlPath(double x1, double y1, double x2, double y2) =>
-        $"M0 100L{SvgNumber(x1 * 100)} {SvgNumber(100 - y1 * 100)} M100 0L{SvgNumber(x2 * 100)} {SvgNumber(100 - y2 * 100)}";
+        $"M 0 180 L {SvgNumber(x1 * 180)} {SvgNumber(180 - y1 * 180)} L {SvgNumber(x2 * 180)} {SvgNumber(180 - y2 * 180)} L 180 0";
 
     private static string CurvePath(double x1, double y1, double x2, double y2) =>
-        $"M0 100 C{SvgNumber(x1 * 100)} {SvgNumber(100 - y1 * 100)}, {SvgNumber(x2 * 100)} {SvgNumber(100 - y2 * 100)}, 100 0";
+        $"M 0 180 C {SvgNumber(x1 * 180)} {SvgNumber(180 - y1 * 180)}, {SvgNumber(x2 * 180)} {SvgNumber(180 - y2 * 180)}, 180 0";
 
     private static string SvgNumber(double value) => value.ToString("0.###", CultureInfo.InvariantCulture);
 
@@ -51,10 +60,6 @@ else
             || !double.TryParse(match.Groups[3].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out x2)
             || !double.TryParse(match.Groups[4].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out y2)) return false;
 
-        x1 = Math.Clamp(x1, 0, 1);
-        y1 = Math.Clamp(y1, 0, 1);
-        x2 = Math.Clamp(x2, 0, 1);
-        y2 = Math.Clamp(y2, 0, 1);
         return true;
     }
 }

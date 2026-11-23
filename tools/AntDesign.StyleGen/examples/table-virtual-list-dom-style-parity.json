@@ -33,6 +33,7 @@
           "<!--!-->"
         ],
         "normalizeStyleAttributes": true,
+        "removeStyleProperties": ["--columns-count"],
         "sortAttributes": true,
         "sortClassTokens": true,
         "removeInterTagWhitespace": true

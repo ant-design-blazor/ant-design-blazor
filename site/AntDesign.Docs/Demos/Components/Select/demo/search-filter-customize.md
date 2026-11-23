@@ -1,5 +1,7 @@
 ---
-order: 2
+order: 109
+debug: true
+extension: true
 title:
   zh-CN: 使用自定义过滤器选择
   en-US: Select with custom filter

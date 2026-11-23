@@ -1,5 +1,5 @@
 ---
-order: 31
+order: 24
 title:
   zh-CN: 弹出位置
   en-US: Placement
@@ -11,4 +11,4 @@ title:
 
 ## en-US
 
-Choose among the four supported dropdown placements.
+You can manually specify the position of the popup via placement.

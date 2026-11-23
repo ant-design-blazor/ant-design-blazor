@@ -49,6 +49,8 @@ namespace AntDesign.Select.Internal
             }
         }
 
+        internal int RenderIndex { get; set; } = -1;
+
         private string _label = string.Empty;
 
         public string Label
@@ -75,6 +77,9 @@ namespace AntDesign.Select.Internal
                 }
             }
         }
+
+        /// <summary>The native title attribute rendered on the option.</summary>
+        public string Title { get; set; }
 
         public RenderFragment LabelTemplate { get; set; }
 
@@ -104,6 +109,12 @@ namespace AntDesign.Select.Internal
                 }
             }
         }
+
+        /// <summary>Additional class name for the rendered option group header.</summary>
+        public string GroupClassName { get; set; }
+
+        /// <summary>Native title attribute for the rendered option group header.</summary>
+        public string GroupTitle { get; set; }
 
         private bool _isSelected;
 

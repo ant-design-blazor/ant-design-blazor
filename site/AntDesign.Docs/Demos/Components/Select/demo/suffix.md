@@ -1,8 +1,8 @@
 ---
-order: 20
+order: 15
 title:
   zh-CN: 后缀图标
-  en-US: Suffix
+  en-US: Prefix and Suffix
 ---
 
 ## zh-CN
@@ -11,4 +11,4 @@ title:
 
 ## en-US
 
-Basic Usage.
+Custom prefix and suffixIcon.

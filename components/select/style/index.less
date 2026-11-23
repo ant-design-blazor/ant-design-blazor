@@ -208,22 +208,51 @@
     outline: none;
     box-shadow: @box-shadow-base;
 
+    // Anchor the vertical scale motion to the trigger-facing edge. The final
+    // placement class is used so auto-flipped dropdowns animate in the right direction.
+    &-placement-bottom,
+    &-placement-bottomLeft,
+    &-placement-bottomRight {
+      --ant-select-motion-origin: 50% 0%;
+    }
+
+    &-placement-top,
+    &-placement-topLeft,
+    &-placement-topRight {
+      --ant-select-motion-origin: 50% 100%;
+    }
+
+    // Keep the motion name stable while the placement changes during the
+    // opening frame. A class-only direction switch must not restart the
+    // animation and flash the dropdown.
+    &.@{ant-prefix}-slide-up-enter.@{ant-prefix}-slide-up-enter-active&-placement-bottom,
     &.@{ant-prefix}-slide-up-enter.@{ant-prefix}-slide-up-enter-active&-placement-bottomLeft,
-    &.@{ant-prefix}-slide-up-appear.@{ant-prefix}-slide-up-appear-active&-placement-bottomLeft {
-      animation-name: antSlideUpIn;
-    }
-
+    &.@{ant-prefix}-slide-up-enter.@{ant-prefix}-slide-up-enter-active&-placement-bottomRight,
+    &.@{ant-prefix}-slide-up-enter.@{ant-prefix}-slide-up-enter-active&-placement-top,
     &.@{ant-prefix}-slide-up-enter.@{ant-prefix}-slide-up-enter-active&-placement-topLeft,
-    &.@{ant-prefix}-slide-up-appear.@{ant-prefix}-slide-up-appear-active&-placement-topLeft {
-      animation-name: antSlideDownIn;
+    &.@{ant-prefix}-slide-up-enter.@{ant-prefix}-slide-up-enter-active&-placement-topRight,
+    &.@{ant-prefix}-slide-up-appear.@{ant-prefix}-slide-up-appear-active&-placement-bottom,
+    &.@{ant-prefix}-slide-up-appear.@{ant-prefix}-slide-up-appear-active&-placement-bottomLeft,
+    &.@{ant-prefix}-slide-up-appear.@{ant-prefix}-slide-up-appear-active&-placement-bottomRight,
+    &.@{ant-prefix}-slide-up-appear.@{ant-prefix}-slide-up-appear-active&-placement-top,
+    &.@{ant-prefix}-slide-up-appear.@{ant-prefix}-slide-up-appear-active&-placement-topLeft,
+    &.@{ant-prefix}-slide-up-appear.@{ant-prefix}-slide-up-appear-active&-placement-topRight {
+      animation-name: antSelectSlideIn;
     }
 
-    &.@{ant-prefix}-slide-up-leave.@{ant-prefix}-slide-up-leave-active&-placement-bottomLeft {
-      animation-name: antSlideUpOut;
-    }
-
-    &.@{ant-prefix}-slide-up-leave.@{ant-prefix}-slide-up-leave-active&-placement-topLeft {
-      animation-name: antSlideDownOut;
+    &.@{ant-prefix}-slide-up-leave.@{ant-prefix}-slide-up-leave-active&-placement-bottom,
+    &.@{ant-prefix}-slide-up-leave.@{ant-prefix}-slide-up-leave-active&-placement-bottomLeft,
+    &.@{ant-prefix}-slide-up-leave.@{ant-prefix}-slide-up-leave-active&-placement-bottomRight,
+    &.@{ant-prefix}-slide-up-leave.@{ant-prefix}-slide-up-leave-active&-placement-top,
+    &.@{ant-prefix}-slide-up-leave.@{ant-prefix}-slide-up-leave-active&-placement-topLeft,
+    &.@{ant-prefix}-slide-up-leave.@{ant-prefix}-slide-up-leave-active&-placement-topRight,
+    &.@{ant-prefix}-slide-down-leave.@{ant-prefix}-slide-down-leave-active&-placement-bottom,
+    &.@{ant-prefix}-slide-down-leave.@{ant-prefix}-slide-down-leave-active&-placement-bottomLeft,
+    &.@{ant-prefix}-slide-down-leave.@{ant-prefix}-slide-down-leave-active&-placement-bottomRight,
+    &.@{ant-prefix}-slide-down-leave.@{ant-prefix}-slide-down-leave-active&-placement-top,
+    &.@{ant-prefix}-slide-down-leave.@{ant-prefix}-slide-down-leave-active&-placement-topLeft,
+    &.@{ant-prefix}-slide-down-leave.@{ant-prefix}-slide-down-leave-active&-placement-topRight {
+      animation-name: antSelectSlideOut;
     }
 
     &-hidden {
@@ -232,6 +261,34 @@
 
     &-empty {
       color: @disabled-color;
+    }
+  }
+
+  @keyframes antSelectSlideIn {
+    0% {
+      transform: scaleY(0.8);
+      transform-origin: var(--ant-select-motion-origin, 50% 0%);
+      opacity: 0;
+    }
+
+    100% {
+      transform: scaleY(1);
+      transform-origin: var(--ant-select-motion-origin, 50% 0%);
+      opacity: 1;
+    }
+  }
+
+  @keyframes antSelectSlideOut {
+    0% {
+      transform: scaleY(1);
+      transform-origin: var(--ant-select-motion-origin, 50% 0%);
+      opacity: 1;
+    }
+
+    100% {
+      transform: scaleY(0.8);
+      transform-origin: var(--ant-select-motion-origin, 50% 0%);
+      opacity: 0;
     }
   }
 

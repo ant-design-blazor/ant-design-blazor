@@ -1,0 +1,40 @@
+@using AntDesign.Docs.Services
+
+<Popover Visible="@_popoverVisible" OnVisibleChange="OnPopoverVisibleChange" ContentTemplate="@ResultPanel" Trigger="@(new[] { Trigger.Focus })" Placement="Placement.BottomRight" PopupWidthMode="content" PopupMaxWidth="calc(100vw - 32px)" OverlayClassName="docs-search-overlay">
+    <div id="search-box" class="docs-search-box">
+        <Icon Type="search" Class="docs-search-icon" />
+        <input id="docs-search-input" class="docs-search-input" value="@_query" @oninput="OnSearchInput" @onfocus="OnSearchFocus" @onblur="OnSearchBlur" @onkeydown="OnSearchKeyDown" placeholder="@Placeholder" aria-label="@Placeholder" autocomplete="off" />
+        @if (string.IsNullOrWhiteSpace(_query) && !_focused)
+        {
+            <span class="docs-search-shortcut" aria-hidden="true">⌘ K</span>
+        }
+    </div>
+</Popover>
+
+@code {
+    private RenderFragment ResultPanel => @<div class="docs-search-popover" @onmousedown:preventDefault="true">
+        @if (_results.Count == 0)
+        {
+            <div class="docs-search-empty"><Icon Type="inbox" /><span>@EmptyText</span></div>
+        }
+        else
+        {
+            <dl class="docs-search-group">
+                @foreach (var group in _results.GroupBy(item => item.PageTitle))
+                {
+                    <dt>@group.Key</dt>
+                    @foreach (var result in group)
+                    {
+                        <dd>
+                            <a class="docs-search-result" data-active="@(_activeIndex >= 0 && _results[_activeIndex] == result ? "true" : null)" href="@result.Url">
+                                @SearchIcon(result.Type)
+                                <h4>@Highlight(result.Title)</h4>
+                                <p>@Highlight(result.Description)</p>
+                            </a>
+                        </dd>
+                    }
+                }
+            </dl>
+        }
+    </div>;
+}

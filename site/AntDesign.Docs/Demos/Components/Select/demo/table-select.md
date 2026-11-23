@@ -1,5 +1,7 @@
 ---
-order: 23
+order: 102
+debug: true
+extension: true
 title:
   zh-CN: 列表选择器
   en-US: Table Select

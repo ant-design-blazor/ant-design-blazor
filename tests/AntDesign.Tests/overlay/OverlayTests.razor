@@ -10,4 +10,29 @@
 
         Assert.NotNull(overlay);
     }
+
+    [Theory]
+    [InlineData(true, false, true, false, "left: 12px;right: unset;top: 34px;bottom: unset;")]
+    [InlineData(false, true, false, true, "left: unset;right: 12px;top: unset;bottom: 34px;")]
+    public void OverlayPosition_ClearsUnselectedEdges(
+        bool useLeft,
+        bool useRight,
+        bool useTop,
+        bool useBottom,
+        string expected)
+    {
+        var position = new AntDesign.Core.JsInterop.Modules.Components.OverlayPosition
+        {
+            Left = 12,
+            Right = 12,
+            Top = 34,
+            Bottom = 34,
+            UseLeft = useLeft,
+            UseRight = useRight,
+            UseTop = useTop,
+            UseBottom = useBottom,
+        };
+
+        Assert.Equal(expected, position.LeftCss + position.RightCss + position.TopCss + position.BottomCss);
+    }
 }

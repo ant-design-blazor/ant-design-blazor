@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using AntDesign.Icons;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using OneOf;
 
 namespace AntDesign
 {
@@ -20,6 +21,38 @@ namespace AntDesign
     [Documentation(DocumentationCategory.Components, DocumentationType.General, "https://gw.alipayobjects.com/zos/alicdn/rrwbSt3FQ/Icon.svg", Title = "Icon", SubTitle = "图标")]
     public partial class Icon : AntDomComponentBase
     {
+        public override Task SetParametersAsync(ParameterView parameters)
+        {
+            Dictionary<string, object> convertedParameters = null;
+            foreach (var parameter in parameters)
+            {
+                if (parameter.Name == nameof(TwoToneColor) && (parameter.Value is string || parameter.Value == null))
+                {
+                    convertedParameters ??= new Dictionary<string, object>();
+                    OneOf<string, string[]> color = (string)parameter.Value;
+                    convertedParameters[parameter.Name] = color;
+                }
+                else if (convertedParameters != null)
+                {
+                    convertedParameters[parameter.Name] = parameter.Value;
+                }
+            }
+
+            if (convertedParameters != null)
+            {
+                foreach (var parameter in parameters)
+                {
+                    if (!convertedParameters.ContainsKey(parameter.Name))
+                    {
+                        convertedParameters[parameter.Name] = parameter.Value;
+                    }
+                }
+                parameters = ParameterView.FromDictionary(convertedParameters);
+            }
+
+            return base.SetParametersAsync(parameters);
+        }
+
         /// <summary>
         /// Alternative text for the icon
         /// </summary>
@@ -70,12 +103,22 @@ namespace AntDesign
         /// Specify the primary color when using the TwoTone theme. Other themes ignore this parameter.
         /// </summary>
         [Parameter]
-        public string TwoToneColor
+        public OneOf<string, string[]> TwoToneColor
         {
             get => _primaryColor;
             set
             {
-                _primaryColor = string.IsNullOrWhiteSpace(value) ? null : value;
+                value.Switch(
+                    primary =>
+                    {
+                        _primaryColor = string.IsNullOrWhiteSpace(primary) ? null : primary;
+                        _pairedSecondaryColor = null;
+                    },
+                    colors =>
+                    {
+                        _primaryColor = colors?.Length > 0 && !string.IsNullOrWhiteSpace(colors[0]) ? colors[0] : null;
+                        _pairedSecondaryColor = colors?.Length > 1 && !string.IsNullOrWhiteSpace(colors[1]) ? colors[1] : null;
+                    });
                 Theme = IconThemeType.TwoTone;
             }
         }
@@ -162,12 +205,16 @@ namespace AntDesign
         [Inject]
         public IconService IconService { get; set; }
 
+        internal string PrimaryColor => _primaryColor;
+
         internal string SecondaryColor => !string.IsNullOrWhiteSpace(TwoToneSecondaryColor)
             ? TwoToneSecondaryColor
+            : !string.IsNullOrWhiteSpace(_pairedSecondaryColor) ? _pairedSecondaryColor
             : !string.IsNullOrWhiteSpace(_primaryColor) ? Colors.ColorPalette.Generate(_primaryColor)[0] : null;
 
         protected string _svgImg;
         private string _primaryColor;
+        private string _pairedSecondaryColor;
 
         protected Dictionary<string, object> _attributes = new();
 

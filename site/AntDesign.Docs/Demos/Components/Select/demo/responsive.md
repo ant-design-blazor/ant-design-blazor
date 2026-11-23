@@ -1,5 +1,5 @@
 ---
-order: 25
+order: 21
 title:
   zh-CN: 响应式 maxTagCount
   en-US: Responsive maxTagCount

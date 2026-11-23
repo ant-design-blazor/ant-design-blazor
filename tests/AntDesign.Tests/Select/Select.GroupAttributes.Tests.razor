@@ -1,0 +1,94 @@
+@using AntDesign.Core.JsInterop.Modules.Components
+@inherits AntDesignTestBase
+@using AntDesign.Internal
+@code {
+    private sealed class GroupOption
+    {
+        public string? Label { get; set; }
+        public string? Value { get; set; }
+        public string? Role { get; set; }
+        public string? CssClass { get; set; }
+        public string? Hint { get; set; }
+        public IEnumerable<GroupOption>? Children { get; set; }
+    }
+
+    public Select_GroupAttributes_Tests()
+    {
+        JSInterop.Mode = JSRuntimeMode.Loose;
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());
+        JSInterop.Setup<AntDesign.JsInterop.HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
+            .SetResult(new AntDesign.JsInterop.HtmlElement());
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition { Placement = Placement.BottomLeft, ZIndex = 5000 });
+        JSInterop.Setup<string>(JSInteropConstants.OverlayComponentHelper.PrepareOverlayWidthForShow, _ => true)
+            .SetResult("200");
+    }
+
+    [Fact]
+    public void Nested_groups_render_class_and_title_from_group_records()
+    {
+        var options = new[]
+        {
+            new GroupOption
+            {
+                Label = "People",
+                CssClass = "people-group",
+                Hint = "People in the organization",
+                Children = new[]
+                {
+                    new GroupOption { Label = "Lucy", Value = "lucy" },
+                    new GroupOption { Label = "Jack", Value = "jack" }
+                }
+            }
+        };
+        var fieldNames = new SelectFieldNames
+        {
+            Label = nameof(GroupOption.Label),
+            Value = nameof(GroupOption.Value),
+            Options = nameof(GroupOption.Children),
+            GroupLabel = nameof(GroupOption.Label),
+            GroupClassName = nameof(GroupOption.CssClass),
+            GroupTitle = nameof(GroupOption.Hint)
+        };
+
+        var cut = Render<Select<string, GroupOption>>(@<Select TItemValue="string" TItem="GroupOption" DataSource="options" FieldNames="fieldNames" />);
+        Assert.Equal("people-group", cut.Instance.SelectOptionItems[0].GroupClassName);
+        Assert.Equal("People in the organization", cut.Instance.SelectOptionItems[0].GroupTitle);
+        var groupCut = Render<AntDesign.Select.Internal.SelectOptionGroup<string, GroupOption>>(
+            @<CascadingValue Value="cut.Instance"><AntDesign.Select.Internal.SelectOptionGroup TItemValue="string" TItem="GroupOption" /></CascadingValue>);
+
+        var group = Assert.Single(groupCut.FindAll(".ant-select-item-group"));
+        Assert.Equal("ant-select-item ant-select-item-group people-group", group.GetAttribute("class"));
+        Assert.Equal("People in the organization", group.GetAttribute("title"));
+        Assert.Equal("People", group.TextContent.Trim());
+    }
+
+    [Fact]
+    public void Flat_groups_render_class_and_title_from_first_group_option()
+    {
+        var options = new[]
+        {
+            new GroupOption { Label = "Lucy", Value = "lucy", Role = "People", CssClass = "people-group", Hint = "People in the organization" },
+            new GroupOption { Label = "Jack", Value = "jack", Role = "People", CssClass = "ignored-later-class", Hint = "ignored later title" }
+        };
+        var fieldNames = new SelectFieldNames
+        {
+            Label = nameof(GroupOption.Label),
+            Value = nameof(GroupOption.Value),
+            GroupClassName = nameof(GroupOption.CssClass),
+            GroupTitle = nameof(GroupOption.Hint)
+        };
+
+        var cut = Render<Select<string, GroupOption>>(@<Select TItemValue="string" TItem="GroupOption" DataSource="options" FieldNames="fieldNames" GroupName="@nameof(GroupOption.Role)" />);
+        Assert.Equal("people-group", cut.Instance.SelectOptionItems[0].GroupClassName);
+        Assert.Equal("People in the organization", cut.Instance.SelectOptionItems[0].GroupTitle);
+        var groupCut = Render<AntDesign.Select.Internal.SelectOptionGroup<string, GroupOption>>(
+            @<CascadingValue Value="cut.Instance"><AntDesign.Select.Internal.SelectOptionGroup TItemValue="string" TItem="GroupOption" /></CascadingValue>);
+
+        var group = Assert.Single(groupCut.FindAll(".ant-select-item-group"));
+        Assert.Equal("ant-select-item ant-select-item-group people-group", group.GetAttribute("class"));
+        Assert.Equal("People in the organization", group.GetAttribute("title"));
+        Assert.Equal("People", group.TextContent.Trim());
+    }
+}

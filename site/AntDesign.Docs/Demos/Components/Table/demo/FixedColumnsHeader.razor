@@ -16,6 +16,14 @@
     </ColumnDefinitions>
 </Table>
 
+<style>
+    #components-table-demo-fixed-columns-header .ant-table-container .ant-table-body,
+    #components-table-demo-fixed-columns-header .ant-table-container .ant-table-content {
+        scrollbar-width: thin;
+        scrollbar-color: #eaeaea transparent;
+    }
+</style>
+
 @code {
     private readonly Row[] _rows = Enumerable.Range(0, 100)
         .Select(index => new Row(index.ToString(), $"Edward King {index}", 32, $"London, Park Lane no. {index}"))

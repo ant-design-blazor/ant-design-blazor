@@ -43,6 +43,21 @@ namespace AntDesign.Tests.Avatar
         public void ItShouldSetSizeProperlyWithString(string size, string expectedClass, string expectedStyle)
             => ItShouldSetSizeProperly(size, expectedClass, expectedStyle);
 
+        [Fact]
+        public void ItShouldForwardUnmatchedAttributesToAvatarRoot()
+        {
+            var systemUnderTest = RenderComponent<AntDesign.Avatar>(parameters => parameters
+                .AddUnmatched("aria-label", "Contributor: Ant Design contributor")
+                .AddUnmatched("draggable", "false")
+                .Add(x => x.Src, "https://example.com/avatar.png")
+                .Add(x => x.Alt, "Contributor: Ant Design contributor"));
+
+            var avatar = systemUnderTest.Find(".ant-avatar");
+            avatar.GetAttribute("aria-label").Should().Be("Contributor: Ant Design contributor");
+            avatar.GetAttribute("draggable").Should().Be("false");
+            systemUnderTest.Find("img").GetAttribute("alt").Should().Be("Contributor: Ant Design contributor");
+        }
+
         [Theory]
         [InlineData(AvatarShape.Square, "ant-avatar-square")]
         [InlineData(AvatarShape.Circle, "ant-avatar-circle")]

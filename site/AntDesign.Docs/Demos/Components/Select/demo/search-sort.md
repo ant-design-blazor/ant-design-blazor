@@ -1,8 +1,8 @@
 ---
-order: 6
+order: 7
 title:
   zh-CN: 搜索并排序
-  en-US: Search and sort
+  en-US: Search with sort
 ---
 
 ## zh-CN
@@ -11,4 +11,4 @@ title:
 
 ## en-US
 
-Search the options; `FilterSort` sorts matching labels case-insensitively, corresponding to React's `showSearch.filterSort`.
+Search the options with sorting.

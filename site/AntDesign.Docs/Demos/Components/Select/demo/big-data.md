@@ -1,5 +1,5 @@
 ---
-order: 23
+order: 22
 title:
   zh-CN: 大数据
   en-US: Big Data
@@ -11,4 +11,4 @@ Select 默认启用虚拟化，与 React 版本一致。在需要渲染全部选
 
 ## en-US
 
-Select virtualization is enabled by default to match the React version. Set `EnableVirtualization=false` when every option must be rendered directly. This feature requires .NET 5 or higher.
+Select use virtual scroll which get better performance, turn off it by setting `virtual={false}`.

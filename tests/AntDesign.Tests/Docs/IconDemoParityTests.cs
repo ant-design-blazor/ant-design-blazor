@@ -101,34 +101,36 @@ public sealed class IconDemoParityTests : DocumentationTestBase
     }
 
     [Fact]
-    public void Blazor_extra_retains_dynamic_color_changes_without_changing_the_React_demo()
+    public void Two_tone_extension_retains_dynamic_color_changes_inside_the_React_demo()
     {
-        var cut = RenderComponent<IconDemos.TwoToneColor>();
+        var cut = RenderComponent<IconDemos.Twotone>();
         var initial = cut.FindAll(".anticon-check-circle").Select(icon => icon.InnerHtml).ToArray();
-        Assert.Equal(6, initial.Length);
-        Assert.Equal(new[] { "#333", "#E6E6E6", "#333" }, cut.FindAll(".anticon-check-circle")[0]
+        Assert.Equal(7, initial.Length);
+        Assert.Equal(new[] { "#52c41a", "#f6ffed", "#52c41a" }, cut.FindAll(".anticon-check-circle")[0]
             .QuerySelectorAll("path").Select(path => path.GetAttribute("fill")));
         Assert.Equal(new[] { "#333", "#E6E6E6", "#333" }, cut.FindAll(".anticon-check-circle")[1]
             .QuerySelectorAll("path").Select(path => path.GetAttribute("fill")));
         cut.Find("button").Click();
         var changed = cut.FindAll(".anticon-check-circle").Select(icon => icon.InnerHtml).ToArray();
-        Assert.Equal(6, changed.Length);
-        Assert.Equal(initial[0], changed[0]);
+        Assert.Equal(7, changed.Length);
+        Assert.NotEqual(initial[0], changed[0]);
         Assert.Equal(initial[1], changed[1]);
-        Assert.NotEqual(initial[2], changed[2]);
+        Assert.Equal(initial[2], changed[2]);
+        Assert.NotEqual(initial[3], changed[3]);
         Assert.NotEqual(initial[4], changed[4]);
+        Assert.NotEqual(initial[6], changed[6]);
         var icons = cut.FindAll(".anticon-check-circle");
         Assert.Equal(new[] { "#333", "#E6E6E6", "#333" },
-            icons[0].QuerySelectorAll("path").Select(path => path.GetAttribute("fill")));
-        Assert.Equal(new[] { "#333", "#E6E6E6", "#333" },
             icons[1].QuerySelectorAll("path").Select(path => path.GetAttribute("fill")));
-        Assert.Equal(new[] { "#f759ab", "#fff0f5", "#f759ab" },
+        Assert.Equal(new[] { "#333", "#E6E6E6", "#333" },
             icons[2].QuerySelectorAll("path").Select(path => path.GetAttribute("fill")));
         Assert.Equal(new[] { "#f759ab", "#fff0f5", "#f759ab" },
             icons[3].QuerySelectorAll("path").Select(path => path.GetAttribute("fill")));
-        Assert.Equal(new[] { "#f759ab", "#1677ff", "#f759ab" },
+        Assert.Equal(new[] { "#f759ab", "#fff0f5", "#f759ab" },
             icons[4].QuerySelectorAll("path").Select(path => path.GetAttribute("fill")));
         Assert.Equal(new[] { "#f759ab", "#1677ff", "#f759ab" },
             icons[5].QuerySelectorAll("path").Select(path => path.GetAttribute("fill")));
+        Assert.Equal(new[] { "#f759ab", "#1677ff", "#f759ab" },
+            icons[6].QuerySelectorAll("path").Select(path => path.GetAttribute("fill")));
     }
 }

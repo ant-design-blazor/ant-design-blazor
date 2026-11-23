@@ -263,12 +263,68 @@ export async function applyAction(page, side, action, timeoutMs) {
   const selector = action[`${side}Selector`] ?? action.selector;
   const getVisibleTarget = async () => {
     const candidates = await page.$$(selector);
+    const portalMatch = action[`${side}PortalMatch`] ?? action.portalMatch;
+    if (portalMatch === 'aria-controls') {
+      const triggerSelector = action[`${side}PortalTriggerSelector`] ?? action.portalTriggerSelector;
+      const portalSelector = action[`${side}PortalSelector`] ?? action.portalSelector ?? '.ant-select-dropdown';
+      if (!triggerSelector) throw new Error(`${side}PortalTriggerSelector is required when portalMatch is aria-controls`);
+      const portal = await page.evaluate(({ triggerSelector, portalSelector }) => {
+        const trigger = document.querySelector(triggerSelector);
+        const input = trigger?.matches('[role="combobox"], [aria-controls], [aria-owns]')
+          ? trigger
+          : trigger?.querySelector('[role="combobox"], [aria-controls], [aria-owns]');
+        const popupId = input?.getAttribute('aria-controls') || input?.getAttribute('aria-owns');
+        return popupId ? document.getElementById(popupId)?.closest(portalSelector) ?? null : null;
+      }, { triggerSelector, portalSelector });
+      if (portal) {
+        const associatedCandidates = [];
+        for (const candidate of candidates) {
+          if (await candidate.evaluate((element, portalElement, selector) => element.closest(selector) === portalElement, portal, portalSelector)) {
+            associatedCandidates.push(candidate);
+          }
+        }
+        candidates.splice(0, candidates.length, ...associatedCandidates);
+      } else {
+        // React Select only adds aria-controls while its active option is
+        // mounted. During transitions (or before the first active option),
+        // identify the open popup nearest the requested trigger instead of
+        // accidentally clicking an identical option in another demo.
+        const distances = await Promise.all(candidates.map((candidate) => candidate.evaluate((element, { triggerSelector, portalSelector }) => {
+          const trigger = document.querySelector(triggerSelector);
+          const root = trigger?.closest('.ant-select') ?? trigger;
+          const popup = element.closest(portalSelector);
+          if (!root || !popup) return 1e9;
+          const popupStyle = getComputedStyle(popup);
+          const popupRect = popup.getBoundingClientRect();
+          const triggerRect = root.getBoundingClientRect();
+          if (popupStyle.display === 'none' || popupStyle.visibility === 'hidden'
+            || Number(popupStyle.opacity) === 0 || popupRect.width === 0 || popupRect.height === 0) {
+            return 1e9;
+          }
+          const horizontalDistance = Math.max(0, triggerRect.left - popupRect.right, popupRect.left - triggerRect.right);
+          const verticalDistance = Math.min(Math.abs(popupRect.top - triggerRect.bottom), Math.abs(popupRect.bottom - triggerRect.top));
+          return horizontalDistance < 24 && verticalDistance < 80 ? verticalDistance + horizontalDistance : 1e9;
+        }, { triggerSelector, portalSelector })));
+        const ordered = candidates.map((candidate, index) => ({ candidate, distance: distances[index] }))
+          .filter(({ distance }) => distance < 1e9)
+          .sort((a, b) => a.distance - b.distance)
+          .map(({ candidate }) => candidate);
+        candidates.splice(0, candidates.length, ...ordered);
+        if (!candidates.length) throw new Error(`${side} could not resolve the visible portal from ${triggerSelector}`);
+      }
+    }
     for (const candidate of candidates) {
       const visible = await candidate.evaluate((element) => {
-        const style = getComputedStyle(element);
         const rect = element.getBoundingClientRect();
-        return style.display !== 'none' && style.visibility !== 'hidden'
-          && Number(style.opacity) > 0 && rect.width > 0 && rect.height > 0
+        let ancestor = element;
+        while (ancestor && ancestor !== document.documentElement) {
+          const style = getComputedStyle(ancestor);
+          if (style.display === 'none' || style.visibility === 'hidden' || Number(style.opacity) === 0) return false;
+          ancestor = ancestor.parentElement;
+        }
+        return (typeof element.checkVisibility !== 'function'
+            || element.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true }))
+          && rect.width > 0 && rect.height > 0
           && rect.bottom > 0 && rect.right > 0 && rect.top < innerHeight && rect.left < innerWidth;
       });
       if (visible) return candidate;
@@ -286,8 +342,12 @@ export async function applyAction(page, side, action, timeoutMs) {
         // while hidden or offscreen. Resolve the first actually visible match
         // before clicking instead of timing out on an earlier stale portal.
         const target = await getVisibleTarget();
-        await target.evaluate((element) => element.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'instant' }));
-        await target.click({ timeout: timeoutMs });
+        const point = await target.evaluate((element) => {
+          element.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'instant' });
+          const rect = element.getBoundingClientRect();
+          return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+        });
+        await page.mouse.click(point.x, point.y);
       } else {
         // Long component docs often place the target thousands of pixels below
         // the viewport and use smooth scrolling. Puppeteer's locator can wait
@@ -518,8 +578,14 @@ export async function applyAction(page, side, action, timeoutMs) {
       await page.focus(selector);
       break;
     case 'fill':
-      if (action.visible) await (await getVisibleTarget()).fill(action.value ?? '', { timeout: timeoutMs });
-      else await page.locator(selector).fill(action.value ?? '', { timeout: timeoutMs });
+      if (action.visible) {
+        const target = await getVisibleTarget();
+        await target.evaluate((element) => {
+          element.focus();
+          if (typeof element.select === 'function') element.select();
+        });
+        await target.type(action.value ?? '');
+      } else await page.locator(selector).fill(action.value ?? '', { timeout: timeoutMs });
       break;
     case 'typeText':
       await page.waitForSelector(selector, { timeout: timeoutMs });
@@ -527,7 +593,11 @@ export async function applyAction(page, side, action, timeoutMs) {
       await page.keyboard.type(action.value ?? '', { delay: action.delayMs ?? 0 });
       break;
     case 'press':
-      if (action.visible) await (await getVisibleTarget()).press(action.key, { timeout: timeoutMs });
+      if (action.visible) {
+        const target = await getVisibleTarget();
+        await target.focus();
+        await page.keyboard.press(action.key);
+      }
       else {
         await page.waitForSelector(selector, { timeout: timeoutMs });
         await page.focus(selector);

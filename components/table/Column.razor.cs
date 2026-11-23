@@ -78,6 +78,29 @@ namespace AntDesign
         public bool FilterDropdownAutoClose { get; set; } = true;
 
         /// <summary>
+        /// Whether to apply the selected filters when the dropdown closes.
+        /// This affects the default filter dropdown; custom dropdowns can call
+        /// <see cref="TableFilterDropdownContext.FilterClose"/> explicitly;
+        /// confirmation remains controlled by the custom dropdown.
+        /// </summary>
+        /// <default value="true" />
+        [Parameter]
+        public bool FilterOnClose { get; set; } = true;
+
+        /// <summary>
+        /// Default selected filter values, applied when the column is initialized.
+        /// </summary>
+        [Parameter]
+        public IEnumerable<TData> DefaultFilteredValue { get; set; }
+
+        /// <summary>
+        /// Whether Reset restores <see cref="DefaultFilteredValue"/> instead of clearing the pending selection.
+        /// </summary>
+        /// <default value="false" />
+        [Parameter]
+        public bool FilterResetToDefaultFilteredValue { get; set; }
+
+        /// <summary>
         /// Use @bind-Field to bind to a property of TItem, we recommend using <see cref="PropertyColumn{TItem, TProp}"/> instead
         /// </summary>
         [Parameter]
@@ -158,6 +181,10 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public SortDirection[] SortDirections { get; set; }
+
+        /// <summary>Renders a custom sorter icon. The context is null when the column is not sorted.</summary>
+        [Parameter]
+        public RenderFragment<SortDirection?> SortIcon { get; set; }
 
         /// <summary>
         /// Default sort direction
@@ -334,9 +361,13 @@ namespace AntDesign
 
         private bool _filterOpened;
 
+        private Dropdown _filterDropdownRef;
+
         private bool _hasFilterSelected;
 
         private string[] _selectedFilterValues;
+
+        private bool _defaultFilteredValuesInitialized;
 
         private RenderFragment _renderDefaultFilterDropdown;
 
@@ -552,9 +583,31 @@ namespace AntDesign
                     }
                 }
 
+                var initializeDefaultFilteredValues = !_defaultFilteredValuesInitialized;
+                if (initializeDefaultFilteredValues)
+                {
+                    if (DefaultFilteredValue != null)
+                    {
+                        var defaultValues = DefaultFilteredValue.Select(value => value?.ToString()).ToHashSet(StringComparer.Ordinal);
+                        foreach (var filter in GetFilterOptions())
+                        {
+                            filter.Selected = defaultValues.Contains(filter.Value?.ToString());
+                        }
+                    }
+
+                    _defaultFilteredValuesInitialized = true;
+                }
+
                 FilterModel = _filterable && GetFilterOptions().Any(x => x.Selected) ?
                     new FilterModel<TData>(this, GetFieldExpression, FieldName, OnFilter, GetFilterOptions().Where(x => x.Selected).ToList(), _columnFilterType, _fieldFilterType) :
                     null;
+
+                if (initializeDefaultFilteredValues && DefaultFilteredValue != null)
+                {
+                    _selectedFilterValues = GetSelectedFilterValues();
+                    _hasFilterSelected = _selectedFilterValues.Length > 0;
+                    Table?.ColumnFilterChange();
+                }
             }
         }
 
@@ -687,7 +740,8 @@ namespace AntDesign
                 filter.Selected = !filter.Selected;
             }
 
-            _selectedFilterValues = GetFilterOptions().Where(x => x.Selected).Select(x => x.Value?.ToString()).ToArray();
+            _selectedFilterValues = GetSelectedFilterValues();
+            _filterDropdownRef?.RefreshPopupContent();
             StateHasChanged();
         }
 
@@ -707,6 +761,7 @@ namespace AntDesign
             }
 
             _selectedFilterValues = GetSelectedFilterValues();
+            _filterDropdownRef?.RefreshPopupContent();
         }
 
         private bool AreAllFiltersSelected => GetFilterOptions().Any() && GetFilterOptions().All(x => x.Selected);
@@ -721,6 +776,7 @@ namespace AntDesign
             }
 
             _selectedFilterValues = GetSelectedFilterValues();
+            _filterDropdownRef?.RefreshPopupContent();
         }
 
         private bool FilterMatchesSearch(TableFilter filter)
@@ -753,17 +809,60 @@ namespace AntDesign
             Table?.ColumnFilterChange();
         }
 
+        private void CloseFilterDropdown()
+        {
+            if (!_filterOpened)
+            {
+                return;
+            }
+
+            if (FilterOnClose && FilterDropdown is null)
+            {
+                FilterConfirm();
+                return;
+            }
+
+            _filterOpened = false;
+        }
+
         private void ResetFilters()
         {
+            var defaultValues = FilterResetToDefaultFilteredValue
+                ? DefaultFilteredValue?.Select(value => value?.ToString()).ToHashSet(StringComparer.Ordinal)
+                : null;
+
             if (_columnFilterType == TableFilterType.List)
             {
-                foreach (var filter in GetFilterOptions()) filter.Selected = false;
+                foreach (var filter in GetFilterOptions())
+                {
+                    filter.Selected = defaultValues?.Contains(filter.Value?.ToString()) == true;
+                }
             }
             else
             {
                 ResetFieldFilters();
             }
-            FilterConfirm(true);
+
+            _selectedFilterValues = GetSelectedFilterValues();
+            _filterSearchValue = string.Empty;
+            _filterDropdownRef?.RefreshPopupContent();
+            StateHasChanged();
+        }
+
+        private bool IsFilterResetDisabled
+        {
+            get
+            {
+                var selectedValues = (_selectedFilterValues ?? GetSelectedFilterValues()).ToHashSet(StringComparer.Ordinal);
+                if (FilterResetToDefaultFilteredValue)
+                {
+                    var defaultValues = DefaultFilteredValue?.Select(value => value?.ToString()).ToHashSet(StringComparer.Ordinal)
+                        ?? new HashSet<string>(StringComparer.Ordinal);
+                    return selectedValues.SetEquals(defaultValues);
+                }
+
+                return selectedValues.Count == 0;
+            }
         }
 
         private void AddFilter()
@@ -864,9 +963,14 @@ namespace AntDesign
 
         private void FilterDropdownOnVisibleChange(bool visible)
         {
+            if (!visible)
+            {
+                CloseFilterDropdown();
+                return;
+            }
+
 #if NET5_0_OR_GREATER
-            if (!visible ||
-                _filterInputRef is not AntDomComponentBase baseDomComponent ||
+            if (_filterInputRef is not AntDomComponentBase baseDomComponent ||
                 baseDomComponent.GetType().GetGenericTypeDefinition() != typeof(Input<>) ||
                 baseDomComponent.Ref.Context == null) return;
 

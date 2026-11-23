@@ -80,6 +80,12 @@ namespace AntDesign
         public string Width { get; set; }
 
         /// <summary>
+        /// Minimum width for the column. Like React Table's minWidth, this is effective with automatic table layout.
+        /// </summary>
+        [Parameter]
+        public int? MinWidth { get; set; }
+
+        /// <summary>
         /// Style for the header cell
         /// </summary>
         [Parameter]
@@ -267,7 +273,7 @@ namespace AntDesign
             }
         }
 
-        internal virtual bool RequiresColGroup => Width != null || GetEffectiveFixed(this) != null || AppendExpandColumn;
+        internal virtual bool RequiresColGroup => Width != null || MinWidth.HasValue || GetEffectiveFixed(this) != null || AppendExpandColumn;
 
         protected bool RowExpandable => Table.RowExpandable(RowData);
 

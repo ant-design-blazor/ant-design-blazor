@@ -12,30 +12,46 @@ Vertical display timeline.
 - When a series of information needs to be ordered by time (ascending or descending).
 - When you need a timeline to make a visual connection.
 
-
 ## API
 
-Timeline
+### Timeline
 
-| Property | Description | Type | Default Value |
+| Property | Description | Type | Default |
 | --- | --- | --- | --- |
-| Pending | Set the last ghost node's existence or its content | RenderFragment        | -         |
-| PendingDot   | Set the dot of the last ghost node when pending is true| RenderFragment  |-    |
-| Reverse | reverse nodes or not | boolean         |-       |
-| Orientation | Set the timeline direction | TimelineOrientation (`Vertical`, `Horizontal`) | `Vertical` |
-| TitleSpan | Set title span space (number, CSS length, or percentage) | `OneOf<double, string>` | `12` |
-| Variant | Set the timeline node style | TimelineVariant (`Outlined`, `Filled`) | `Outlined` |
-| ClassNames | Semantic class names for root and timeline item slots | `IReadOnlyDictionary<string, string>` | - |
-| Styles | Semantic inline styles for root and timeline item slots | `IReadOnlyDictionary<string, string>` | - |
-| Items | Data source for the timeline nodes | `IReadOnlyList<TimelineItemData>` | - |
-| Mode |By sending `alternate` the timeline will distribute the nodes to the `left` and `right`.| string  | -  |
+| Items | Data-driven timeline nodes. Use this or `TimelineItem` children. | `IReadOnlyList<TimelineItemData>` | - |
+| Mode | Places nodes at the start, end, or alternately on both sides. `Left` maps to React `start`; `Right` maps to React `end`. | `TimelineMode?` (`Left`, `Right`, `Alternate`) | `Left` |
+| Orientation | Timeline direction. | `TimelineOrientation` (`Vertical`, `Horizontal`) | `Vertical` |
+| Reverse | Reverses the node order. | `bool` | `false` |
+| Variant | Visual style of the nodes. | `TimelineVariant` (`Outlined`, `Filled`) | `Outlined` |
+| TitleSpan | Spacing reserved for item titles; accepts a number, CSS length, or percentage. | `OneOf<double, string>` | `12` |
+| Pending | Legacy ghost node content. Prefer an item with `Loading` and `Content`. | `OneOf<string, RenderFragment>` | - |
+| PendingDot | Legacy dot for the `Pending` node. Prefer an item's `Icon`. | `RenderFragment` | Loading icon |
+| ClassNames | Classes keyed by semantic slot. Blazor accepts a slot dictionary. | `IReadOnlyDictionary<string, string>` | - |
+| Styles | Inline styles keyed by semantic slot. Blazor accepts a slot dictionary. | `IReadOnlyDictionary<string, string>` | - |
+| ChildContent | `TimelineItem` child components. | `RenderFragment` | - |
 
-Timeline.Item
-Node of timeline
+React v6 uses `items` with `content`, `loading`, `icon`, `title`, and `placement`. Blazor exposes these through `TimelineItemData` below. `Pending` and `PendingDot` remain for compatibility with the earlier API.
 
-| Property | Description | Type | Default Value |
-| --- | --- | --- | --- |
-| Color | Set the circle's color blue, red, green, gray or other custom colors | string,         | -         |
-| Dot   | Customize timeline dot| string         |
-| Position | Customize node position `left`,`right`| string         |-       |
-| Label |Set the label | RenderFragment  | -  |
+### TimelineItemData
+
+| Property | Description | Type |
+| --- | --- | --- |
+| Content | Plain text node content. | `string` |
+| ContentContent | Rich node content; takes precedence over `Content`. | `RenderFragment` |
+| Title | Plain text title. | `string` |
+| TitleContent | Rich title; takes precedence over `Title`. | `RenderFragment` |
+| Loading | Shows the loading icon for this node. | `bool` |
+| Icon | Custom node icon. | `RenderFragment` |
+| Color | Named or custom node color. | `OneOf<TimelineDotColor, string>` |
+| Placement | Overrides the node's placement within the timeline mode. | `TimelineMode?` |
+| Class / Style | Additional class and inline style for the node. | `string` |
+
+### TimelineItem
+
+| Property | Description | Type |
+| --- | --- | --- |
+| ChildContent | Node content. | `RenderFragment` |
+| Label | Plain text title. | `string` |
+| Dot | Custom node dot; use `TimelineItemData.Icon` with `Items`. | `RenderFragment` |
+| Color | Named or custom node color. | `OneOf<TimelineDotColor, string>` |
+| Placement | Overrides placement within the timeline mode. | `TimelineMode?` |

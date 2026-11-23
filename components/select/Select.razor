@@ -13,19 +13,21 @@
 {
         RenderFragment SelectOptionsRender()
         {
-            return @<ForeachLoop Items=@SortedSelectOptionItems.Where(option => !option.IsHidden).ToList() ChildContent="optionRender(EffectiveOptionRender)" />;
+            return @<ForeachLoop Items=@SortedSelectOptionItems.Where(option => !option.IsHidden).ToList() ChildContent="optionRender(EffectiveItemTemplate, OptionRender)" />;
         }
 
 
-     Func<RenderFragment<TItem>, RenderFragment<SelectOptionItem<TItemValue, TItem>>> optionRender = 
-        itemTemplate => option =>
-        @<CascadingValue Value=@itemTemplate Name="ItemTemplate">
+     Func<RenderFragment<TItem>, RenderFragment<SelectOptionRenderInfo<TItemValue, TItem>>, RenderFragment<SelectOptionItem<TItemValue, TItem>>> optionRender =
+        (itemTemplate, optionTemplate) => option =>
+        @<CascadingValue Value="@itemTemplate" Name="ItemTemplate">
+            <CascadingValue Value="@optionTemplate" Name="OptionTemplate">
             <CascadingValue Value="@option" Name="Model">
             <CascadingValue Value="@option.InternalId" Name="InternalId">
                 <SelectOption @key="@option.InternalId"
                     TItemValue="TItemValue"
                     TItem="TItem">
                 </SelectOption>
+            </CascadingValue>
             </CascadingValue>
             </CascadingValue>
         </CascadingValue>;
@@ -68,7 +70,7 @@
                             <div class="ant-select-dropdown-list-holder-inner" style="@VirtualListInnerStyle">
                                 @foreach (var option in GetVirtualWindowOptions())
                                 {
-                                    @optionRender(EffectiveOptionRender)(option)
+                                    @optionRender(EffectiveItemTemplate, OptionRender)(option)
                                 }
                             </div>
                         </div>
@@ -81,26 +83,32 @@
                       {
                         @if (CustomTagSelectOptionItem != null)
                         {
-                            <CascadingValue Value="@EffectiveOptionRender" Name="ItemTemplate">
+                            <CascadingValue Value="@EffectiveItemTemplate" Name="ItemTemplate">
+                                <CascadingValue Value="@OptionRender" Name="OptionTemplate">
                                 <CascadingValue Value="@CustomTagSelectOptionItem" Name="Model">
                                     <SelectOption @key="@CustomTagSelectOptionItem.InternalId"
                                                   TItemValue="TItemValue"
                                                   TItem="TItem">
                                     </SelectOption>
                                 </CascadingValue>
+                                </CascadingValue>
                             </CascadingValue>
                         }
-                        @SelectOptions
+                        <CascadingValue Value="@OptionRender" Name="OptionTemplate">
+                            @SelectOptions
+                        </CascadingValue>
                         @if (AddedTags != null)
                         {
                             foreach (var selectOption in AddedTags)
                             {
-                                <CascadingValue Value="@EffectiveOptionRender" Name="ItemTemplate">
+                                <CascadingValue Value="@EffectiveItemTemplate" Name="ItemTemplate">
+                                    <CascadingValue Value="@OptionRender" Name="OptionTemplate">
                                     <CascadingValue Value="@selectOption" Name="Model">
                                         <SelectOption @key="@selectOption.InternalId"
                                                       TItemValue="TItemValue"
                                                       TItem="TItem">
                                         </SelectOption>
+                                    </CascadingValue>
                                     </CascadingValue>
                                 </CascadingValue>
                             }
@@ -112,8 +120,10 @@
                       }
                       else
                       {
-                          <CascadingValue Value="@EffectiveOptionRender" Name="ItemTemplate">
+                          <CascadingValue Value="@EffectiveItemTemplate" Name="ItemTemplate">
+                              <CascadingValue Value="@OptionRender" Name="OptionTemplate">
                               <SelectOptionGroup TItemValue="TItemValue" TItem="TItem" />
+                              </CascadingValue>
                           </CascadingValue>
                       }
                     </div>

@@ -25,5 +25,12 @@ namespace AntDesign.Select.Internal
                 .Add("ant-select-item")
                 .Add(ClassNamePrefix);
         }
+
+        protected string GetGroupClass(SelectOptionItem<TItemValue, TItem> option)
+        {
+            return string.IsNullOrWhiteSpace(option.GroupClassName)
+                ? ClassMapper.Class
+                : $"{ClassMapper.Class} {option.GroupClassName}";
+        }
     }
 }

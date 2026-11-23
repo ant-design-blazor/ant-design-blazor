@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AntDesign.Filters;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
@@ -12,11 +13,18 @@ namespace AntDesign
 {
     public interface ITable
     {
+        /// <summary>
+        /// Gets the root wrapper element of the table.
+        /// </summary>
+        ElementReference NativeElement { get; }
+
         string GetSemanticClass(string slot, string baseClass = null);
 
         string GetSemanticStyle(string slot, string baseStyle = null);
 
         internal TableColumnDefaults Column { get; }
+
+        internal System.Func<ElementReference, ElementReference> GetPopupContainer { get; }
 
         void ReloadData();
 
@@ -27,6 +35,16 @@ namespace AntDesign
         void ResetData();
 
         QueryModel GetQueryModel();
+
+        /// <summary>
+        /// Scrolls the table to a row or vertical offset.
+        /// </summary>
+        Task ScrollTo(int index);
+
+        /// <summary>
+        /// Scrolls the table to a row or vertical offset.
+        /// </summary>
+        Task ScrollTo(TableScrollToOptions options);
 
         void SetSelection(ICollection<string> keys);
 
@@ -65,6 +83,14 @@ namespace AntDesign
         internal int TreeExpandIconColumnIndex { get; }
 
         internal bool HasExpandTemplate { get; }
+
+        internal bool ShouldShowExpandAll { get; }
+
+        internal bool AreCurrentPageRowsExpanded { get; }
+
+        internal bool CanExpandCurrentPage { get; }
+
+        internal Task ToggleExpandAllAsync();
 
         internal SortDirection[] SortDirections { get; }
 

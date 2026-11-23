@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.Json;
 using System.Threading.Tasks;
+using AntDesign.Theming;
 using AntDesign.Core.JsInterop.Modules.Components;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
@@ -30,6 +31,9 @@ namespace AntDesign.Internal
         /// </summary>
         [CascadingParameter(Name = "Trigger")]
         public OverlayTrigger Trigger { get; set; }
+
+        [CascadingParameter(Name = "AntDesignThemeConfig")]
+        private ThemeConfig CascadedThemeConfig { get; set; }
 
         [Parameter]
         public RenderFragment ChildContent { get; set; }
@@ -110,6 +114,9 @@ namespace AntDesign.Internal
         [Parameter]
         public bool HiddenMode { get; set; } = false;
 
+        [Parameter]
+        public AntDesign.Placement RequestedPlacement { get; set; }
+
         [Inject]
         private IDomEventListener DomEventListener { get; set; }
 
@@ -140,6 +147,8 @@ namespace AntDesign.Internal
         // replaces the inline width and causes the popup to grow mid-animation.
         private string _overlayMeasuredWidthStyle = string.Empty;
         private string _overlayInheritedTokenStyle = string.Empty;
+        private ThemeConfig _lastThemeConfig;
+        private AntDesign.Placement? _lastRequestedPlacement;
 
         private string _overlayCls = "";
 
@@ -154,6 +163,12 @@ namespace AntDesign.Internal
             return false;
         }
 
+        internal void RefreshOverlayContent()
+        {
+            _shouldRender = true;
+            StateHasChanged();
+        }
+
         protected override void OnInitialized()
         {
             _overlayCls = Trigger.GetOverlayHiddenClass();
@@ -162,6 +177,36 @@ namespace AntDesign.Internal
 
         protected override async Task OnParametersSetAsync()
         {
+            var placementChanged = _lastRequestedPlacement.HasValue
+                && _lastRequestedPlacement.Value != RequestedPlacement;
+            _lastRequestedPlacement = RequestedPlacement;
+
+            if (Trigger is not null && Trigger.Placement != RequestedPlacement)
+            {
+                Trigger.Placement = RequestedPlacement;
+            }
+
+            if (placementChanged)
+            {
+                Trigger.CheckPlacementChanged();
+                Trigger.ChangePlacementForShow(PlacementType.Create(Trigger.PlacementWithRTL));
+            }
+
+            if (!ReferenceEquals(_lastThemeConfig, CascadedThemeConfig))
+            {
+                _lastThemeConfig = CascadedThemeConfig;
+                if (_afterFirstRender && _hasAddOverlayToBody && _isOverlayShow
+                    && Ref.Id is not null && Trigger?.Ref.Id is not null)
+                {
+                    // Portaled overlays keep a snapshot of the scoped CSS
+                    // variables in their inline style. Refresh that snapshot
+                    // when the cascading theme changes so an already-open
+                    // popup follows its ConfigProvider.
+                    _overlayInheritedTokenStyle = await JsInvokeAsync<string>(
+                        JSInteropConstants.OverlayComponentHelper.GetInheritedAntDesignTokenStyle, Trigger.Ref);
+                }
+            }
+
             // A controlled overlay can be requested as visible on its first render.
             // Defer opening until after the trigger and overlay have element refs;
             // otherwise AddOverlayToBody exits before positioning and the popup
@@ -174,7 +219,11 @@ namespace AntDesign.Internal
             {
                 await Hide(true);
             }
-
+            else if (placementChanged && _afterFirstRender && _isOverlayShow
+                && _hasAddOverlayToBody && Ref.Id is not null && Trigger?.Ref.Id is not null)
+            {
+                await UpdatePosition(_overlayLeft, _overlayTop);
+            }
             _preVisible = Trigger.Visible;
             await base.OnParametersSetAsync();
         }
@@ -275,13 +324,20 @@ namespace AntDesign.Internal
 
             await AddOverlayToBody(overlayLeft, overlayTop);
             if (transitionId != _visibilityTransitionId) return;
+            // Let components synchronize their trigger state against the final
+            // placement while the popup is still hidden. If this render happens
+            // after reveal, placement and trigger content can change in a
+            // visible frame and flash, especially when the popup flips sides.
+            await Trigger.OnBeforeVisibleChange.InvokeAsync(true);
+            if (transitionId != _visibilityTransitionId) return;
             if (!string.IsNullOrWhiteSpace(Trigger.EffectivePopupWidthMode) && Ref.Id is not null)
             {
                 // Keep the popup hidden until its width has been measured and
                 // committed, then start the enter motion from the final box.
                 // The JS pointer path uses the same gate.
                 await JsInvokeAsync(JSInteropConstants.OverlayComponentHelper.RevealOverlayForShow,
-                    Ref, Trigger.GetOverlayHiddenClass(), Trigger.GetOverlayEnterClass(), OverlayDisplayStyle);
+                    Ref, Trigger.GetOverlayHiddenClass(), Trigger.GetOverlayEnterClass(), OverlayDisplayStyle,
+                    Trigger.GetPlacementClass());
             }
             if (transitionId != _visibilityTransitionId) return;
             _isOverlayShow = true;
@@ -348,7 +404,27 @@ namespace AntDesign.Internal
 
             _isWaitForOverlayFirstRender = false;
 
+            // Scrolling can make the client-side overlay flip after it was
+            // opened. Recalculate synchronously before building the leave
+            // class: the scroll observer updates on animation frames, so its
+            // cached placement may still describe the previous direction if
+            // the popup is closed immediately after scrolling.
+            if (Ref.Id is not null && Trigger is not null)
+            {
+                await UpdatePosition();
+            }
+
             _overlayCls = Trigger.GetOverlayLeaveClass();
+
+            // Apply the live placement class before the leave render is queued.
+            // The position observer may have flipped the popup while the page
+            // scrolled, and the close keyframe/origin is selected from this
+            // class by Select's placement-specific motion styles.
+            if (Ref.Id is not null)
+            {
+                await JsInvokeAsync(JSInteropConstants.OverlayComponentHelper.SetPlacementClass,
+                    Ref, Trigger.GetPlacementClass());
+            }
 
             await Trigger.OnOverlayHiding.InvokeAsync(true);
             if (transitionId != _visibilityTransitionId) return;
@@ -437,6 +513,11 @@ namespace AntDesign.Internal
             return _isOverlayShow && !_isOverlayHiding;
         }
 
+        internal bool IsOpening()
+        {
+            return _isOverlayDuringShowing && !_isOverlayHiding;
+        }
+
         /// <summary>
         /// Returns true while the popup is stably open. During its leave
         /// transition, it is treated as closed so a click can reopen it.
@@ -494,13 +575,17 @@ namespace AntDesign.Internal
                 }
             }
 
-            if (Trigger.CheckPlacementChanged() || !_hasAddOverlayToBody)
+            // Re-read scoped tokens every time positioning runs, including
+            // when this popup was portaled previously and is being reopened
+            // after the surrounding ConfigProvider changed its theme.
+            if (Trigger?.Ref.Id is not null)
             {
-                // Keep token overrides from the trigger's scoped ConfigProvider
-                // available after the popup is portaled outside that subtree.
                 _overlayInheritedTokenStyle = await JsInvokeAsync<string>(
                     JSInteropConstants.OverlayComponentHelper.GetInheritedAntDesignTokenStyle, Trigger.Ref);
+            }
 
+            if (Trigger.CheckPlacementChanged() || !_hasAddOverlayToBody)
+            {
                 bool triggerIsWrappedInDiv = Trigger.IsTriggerWrappedInDiv;
                 _recurenceGuard++;
 
@@ -543,7 +628,7 @@ namespace AntDesign.Internal
             _recurenceGuard = 0;
         }
 
-        internal async Task BindImmediateOpenAsync(string clickIgnoreSelector, string openClass,
+        internal async Task BindImmediateOpenAsync(string clickIgnoreSelector,
             string widthMode, string width, string maxWidth)
         {
             if (Ref.Id is null || Trigger?.Ref.Id is null)
@@ -556,11 +641,8 @@ namespace AntDesign.Internal
                 Ref,
                 Ref.Id,
                 Trigger.GetOverlayHiddenClass(),
-                Trigger.GetOverlayEnterClass(),
-                OverlayDisplayStyle,
                 Trigger.Disabled,
                 clickIgnoreSelector,
-                openClass,
                 Trigger.PlacementWithRTL,
                 Trigger.EffectivePopupContainer,
                 Trigger.BoundaryAdjustMode,

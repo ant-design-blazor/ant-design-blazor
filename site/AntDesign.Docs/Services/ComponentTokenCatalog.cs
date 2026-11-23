@@ -12,7 +12,7 @@ public static class ComponentTokenCatalog
 
     public static IReadOnlyList<GlobalTokenDefinition> GetGlobal(string component)
     {
-        var key = (component ?? string.Empty).Replace("-", "").ToLowerInvariant();
+        var key = NormalizeComponentKey(component);
         return GeneratedComponentGlobalTokens.All.TryGetValue(key, out var names)
             ? names.Where(GlobalTokens.ContainsKey).Select(name => GlobalTokens[name]).ToArray()
             : Array.Empty<GlobalTokenDefinition>();
@@ -22,13 +22,29 @@ public static class ComponentTokenCatalog
     {
         if (string.IsNullOrWhiteSpace(component)) return Array.Empty<ComponentTokenDefinition>();
 
-        var normalizedComponent = string.Equals(component, "qrcode", StringComparison.OrdinalIgnoreCase)
-            ? "qr-code"
-            : component;
+        var normalizedName = component.Replace("-", string.Empty).ToLowerInvariant();
+        var normalizedComponent = normalizedName switch
+        {
+            "qrcode" => "qr-code",
+            "autocomplete" => "select",
+            "timepicker" => "date-picker",
+            _ => component
+        };
 
         return GeneratedComponentTokens.All
             .Where(token => token.Documented && !token.Reserved && string.Equals(token.Component, normalizedComponent, StringComparison.OrdinalIgnoreCase))
             .OrderBy(token => token.Name, StringComparer.Ordinal)
             .ToArray();
+    }
+
+    private static string NormalizeComponentKey(string component)
+    {
+        var key = (component ?? string.Empty).Replace("-", "").ToLowerInvariant();
+        return key switch
+        {
+            "autocomplete" => "select",
+            "timepicker" => "datepicker",
+            _ => key
+        };
     }
 }

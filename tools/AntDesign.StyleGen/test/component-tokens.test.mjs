@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { csharpTokenType, extractComponentTokenDefinitions, extractExcludedComponentTokenNames } from '../src/component-tokens.mjs';
+import { csharpTokenType, extractComponentTokenDefinitions, extractExcludedComponentTokenNames, mergeDocumentedComponentTokens } from '../src/component-tokens.mjs';
 
 test('C# property and documentation types use one shared mapping without changing React source types', () => {
   for (const [source, expected] of [
@@ -75,6 +75,24 @@ test('honors Exclude and Omit utility types in inherited component tokens', () =
   assert.deepEqual([...extractExcludedComponentTokenNames(`
     interface ComponentToken extends Exclude<SharedComponentToken, 'addonBg' | 'colorBg'> {}
   `)], ['addonBg', 'colorBg']);
+});
+
+test('keeps React documented tokens even when the component type excludes an inherited token', () => {
+  const definitions = extractComponentTokenDefinitions(`
+    interface SharedComponentToken {
+      addonBg: string;
+      activeBg: string;
+    }
+    interface ComponentToken extends Exclude<SharedComponentToken, 'addonBg'> {}
+  `);
+  const merged = mergeDocumentedComponentTokens(definitions, [
+    { token: 'addonBg', type: 'string', desc: '前/后置标签背景色', descEn: 'Background color of addon' },
+  ]);
+
+  assert.deepEqual(merged, [
+    { name: 'activeBg', type: 'string' },
+    { name: 'addonBg', type: 'string', description: '前/后置标签背景色', descriptionEn: 'Background color of addon' },
+  ]);
 });
 
 test('extracts bilingual token descriptions and deprecation metadata', () => {

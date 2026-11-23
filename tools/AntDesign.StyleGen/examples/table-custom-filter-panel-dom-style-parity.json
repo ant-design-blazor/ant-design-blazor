@@ -126,7 +126,7 @@
         },
         {
           "path": "body.highlight",
-          "selector": ".ant-table-tbody mark.highlight",
+          "selector": ".ant-table-tbody mark",
           "minimumCount": 0
         }
       ],
@@ -135,7 +135,12 @@
           "id": "default"
         },
         {
-          "id": "open-name-search-filter",
+          "id": "filter-name-john-keeps-popup-open-keyboard",
+          "semanticMinimumCounts": {
+            "body.row": 1,
+            "body.cell": 3,
+            "body.highlight": 1
+          },
           "actions": [
             {
               "type": "click",
@@ -148,23 +153,10 @@
               "blazorTriggerSelector": "#components-table-demo-custom-filter-panel .ant-table-thead th:first-child .ant-table-filter-trigger",
               "portalSelector": ".ant-table-filter-dropdown",
               "maxDistance": 100
-            }
-          ]
-        },
-        {
-          "id": "search-name-john",
-          "actions": [
-            {
-              "type": "click",
-              "reactSelector": "#table-demo-custom-filter-panel .ant-table-thead th:first-child .ant-table-filter-trigger",
-              "blazorSelector": "#components-table-demo-custom-filter-panel .ant-table-thead th:first-child .ant-table-filter-trigger"
             },
             {
-              "type": "waitForPortal",
-              "reactTriggerSelector": "#table-demo-custom-filter-panel .ant-table-thead th:first-child .ant-table-filter-trigger",
-              "blazorTriggerSelector": "#components-table-demo-custom-filter-panel .ant-table-thead th:first-child .ant-table-filter-trigger",
-              "portalSelector": ".ant-table-filter-dropdown",
-              "maxDistance": 100
+              "type": "wait",
+              "milliseconds": 350
             },
             {
               "type": "fill",
@@ -174,16 +166,20 @@
               "visible": true
             },
             {
+              "type": "focus",
+              "reactSelector": ".ant-table-filter-dropdown .ant-space-item:nth-child(3) .ant-btn",
+              "blazorSelector": ".ant-table-filter-dropdown .ant-space-item:nth-child(3) .ant-btn"
+            },
+            {
               "type": "press",
-              "reactSelector": ".ant-table-filter-dropdown input[placeholder=\"Search name\"]",
-              "blazorSelector": ".ant-table-filter-dropdown input[placeholder=\"Search name\"]",
               "key": "Enter",
-              "visible": true
+              "reactSelector": ".ant-table-filter-dropdown .ant-space-item:nth-child(3) .ant-btn",
+              "blazorSelector": ".ant-table-filter-dropdown .ant-space-item:nth-child(3) .ant-btn"
             },
             {
               "type": "waitForSelector",
-              "reactSelector": "#table-demo-custom-filter-panel .ant-table-tbody mark.highlight",
-              "blazorSelector": "#components-table-demo-custom-filter-panel .ant-table-tbody mark.highlight"
+              "reactSelector": ".ant-table-filter-dropdown",
+              "blazorSelector": ".ant-table-filter-dropdown"
             }
           ]
         }

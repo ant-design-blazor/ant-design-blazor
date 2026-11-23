@@ -1,5 +1,7 @@
 ---
-order: 35
+order: 100
+debug: true
+extension: true
 title:
   zh-CN: 组件 Token
   en-US: Component Token

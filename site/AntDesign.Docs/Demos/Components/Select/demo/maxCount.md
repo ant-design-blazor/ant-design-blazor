@@ -1,5 +1,5 @@
 ---
-order: 34
+order: 25
 title:
   zh-CN: 最大选择数量
   en-US: Max Count
@@ -11,4 +11,4 @@ title:
 
 ## en-US
 
-Use `MaxCount` to limit the number of selected items in multiple or tags mode. Selected items can still be removed.
+You can set the maxCount prop to control the max number of items can be selected. When the limit is exceeded, the options will become disabled.

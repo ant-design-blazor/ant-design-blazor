@@ -1,5 +1,7 @@
 ---
-order: 37
+order: 118
+debug: true
+extension: true
 title:
   zh-CN: 受控下拉面板
   en-US: Controlled Dropdown Panel

@@ -192,6 +192,7 @@ namespace AntDesign
 
             if (shouldInvokeChange)
             {
+                RequestScrollToFirstRow();
                 ReloadAndInvokeChange();
 
                 StateHasChanged();

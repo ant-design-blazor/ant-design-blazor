@@ -10,8 +10,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <base href="~/" />
   <link rel="icon" href="logo.png" type="image/x-icon">
-  <link rel="preconnect" href="https://C9UTAZSOWW-dsn.algolia.net" crossorigin />
-  <link rel="stylesheet" href="@("https://fastly.jsdelivr.net/npm/@docsearch/css@3")" />
   <link id="docs-theme-v6" href="_content/AntDesign/css/antd-v6/light.css" rel="stylesheet">
   <link href="_content/Cropper.Blazor/cropper.min.css" rel="stylesheet">
   <link href="~/_content/AntDesign.Docs/css/docs-layout.css" asp-append-version="true" rel="stylesheet">
@@ -38,7 +36,17 @@
         Prism.highlightAll();
     }
 
-    window.DocSearchInit = window.DocSearchInit || function(){};
+    document.addEventListener('keydown', function (event) {
+      var target = event.target;
+      var input = document.getElementById('docs-search-input');
+      var typing = target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable);
+      if (input && ((event.key.toLowerCase() === 'k' && (event.metaKey || event.ctrlKey)) || (event.key === '/' && !typing))) {
+        event.preventDefault();
+        input.focus();
+      }
+      if (input && target === input && (event.key === 'ArrowDown' || event.key === 'ArrowUp')) event.preventDefault();
+    }, true);
+
   </script>
 
   <script>var require = { paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs' } }</script>
@@ -62,8 +70,6 @@
     }
   </script>
 
-  <script src="@("https://fastly.jsdelivr.net/npm/@docsearch/js@3")"></script>
-  <script src="_content/AntDesign.Docs/js/docsearch.js"></script>
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.js?features=ResizeObserver"></script>
   <script antblazor-js></script>
   <script src="_framework/blazor.server.js"></script>

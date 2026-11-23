@@ -35,6 +35,8 @@ export class eventHelper {
         obj.clientX = args.clientX;
         obj.clientY = args.clientY;
       }
+      obj.__antImmediateOpenTriggerClick = (args.composedPath?.() ?? []).some(target =>
+        target instanceof Element && target.hasAttribute('data-ant-immediate-open-click'));
       const cache = new Set();
       const json = JSON.stringify(obj, (k, v) => {
         if (typeof v === 'object' && v !== null) {

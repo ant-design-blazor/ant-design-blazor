@@ -147,7 +147,16 @@ export class infoHelper {
   static isFixedPosition(element) {
     let node = this.get(element);
     while (node && node.nodeName.toLowerCase() !== 'body') {
-      if (window.getComputedStyle(node).getPropertyValue('position').toLowerCase() === 'fixed') { return true; }
+      const style = window.getComputedStyle(node);
+      const position = style.getPropertyValue('position').toLowerCase();
+      if (position === 'fixed') { return true; }
+      // A sticky header behaves like a fixed trigger once it reaches its
+      // inset. Body-portaled overlays must then use viewport coordinates,
+      // otherwise the page scroll offset moves the popup away from the header.
+      if (position === 'sticky' || position === '-webkit-sticky') {
+        const stickyTop = Number.parseFloat(style.getPropertyValue('top'));
+        if (Number.isFinite(stickyTop) && node.getBoundingClientRect().top <= stickyTop + 1) { return true; }
+      }
       node = node.parentNode;
     }
     return false;

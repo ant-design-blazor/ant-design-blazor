@@ -761,7 +761,7 @@ namespace AntDesign
                 .If($"ant-select-lg", () => Size == InputSize.Large)
                 .If($"ant-select-sm", () => Size == InputSize.Small)
                 .If($"ant-select-disabled", () => Disabled)
-                .If("ant-select-allow-clear", () => AllowClear)
+                .If("ant-select-allow-clear", () => IsAllowClearEnabled)
                 .If($"{selectCls}-in-form-item ", () => FormItem != null)
                 .If($"{selectCls}-has-feedback", () => FormItem?.HasFeedback == true)
                 .GetIf(() => $"{selectCls}-status-{GetValidationStatus().ToString().ToLowerInvariant()}", () => GetValidationStatus() != FormValidateStatus.Default)

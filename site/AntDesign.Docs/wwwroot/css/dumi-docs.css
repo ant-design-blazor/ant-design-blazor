@@ -107,22 +107,24 @@ html {
 }
 
 .docs-component-overview-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  align-items: start;
-  gap: var(--ant-margin-lg, 24px);
+  position: relative;
 }
 
 .docs-component-overview-content {
   min-width: 0;
 }
 
+.docs-component-overview-content > .markdown > p:first-child {
+  margin-block: 0;
+}
+
 .docs-component-overview .docs-component-overview-ad {
-  float: none;
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-end: 0;
   width: min(300px, 100%);
   max-width: 100%;
   min-width: 0;
-  justify-self: start;
   font-size: var(--ant-font-size-sm, 12px);
   line-height: var(--ant-line-height, 1.5714285714285714);
 }
@@ -152,11 +154,18 @@ html {
   height: auto;
 }
 
-/* Use the actual article width, not the viewport (which includes the sidebars).
-   The metadata keeps at least 556px before the ad may sit beside it. */
+/* Reserve room beside the introduction for the ad on wide documentation
+   columns. The ad is out of flow so its height cannot push the first section
+   down; hide it when the article column is too narrow to fit both areas. */
 @container (min-width: 880px) {
-  .docs-component-overview-layout {
-    grid-template-columns: minmax(0, 1fr) 300px;
+  .docs-component-overview-content {
+    width: calc(100% - 324px);
+  }
+}
+
+@container (max-width: 879px) {
+  .docs-component-overview .docs-component-overview-ad {
+    display: none;
   }
 }
 
@@ -249,4 +258,92 @@ html {
 .markdown a:not(.ant-btn):hover,
 .code-box-demo a:not(.ant-btn):hover {
   color: var(--ant-color-link-hover, #69b1ff);
+}
+
+/* Keep the docs search aligned with the React header and SearchResult slots. */
+#header #search-box.docs-search-box {
+  flex: 1 1 auto !important;
+  max-width: 220px;
+  height: 32px;
+  margin: 0 16px 0 0 !important;
+  border-radius: 20px;
+  background: transparent;
+}
+
+/* HeaderMenu has a more specific legacy search rule; keep this input pill
+   consistent with React after that header stylesheet is loaded. */
+#header.adb-docs-header-root #search-box.docs-search-box {
+  width: auto;
+  max-width: 220px;
+  border-radius: 20px;
+  background: transparent;
+}
+
+#header.adb-docs-header-root #search-box.docs-search-box:focus-within {
+  background: transparent;
+}
+
+#header #search-box.docs-search-box .docs-search-input {
+  height: 32px;
+  padding-inline-start: 32px;
+  border: 0;
+  border-radius: 20px;
+  background: transparent;
+  line-height: 32px;
+}
+
+#header #search-box.docs-search-box .docs-search-input:focus {
+  background: transparent;
+  box-shadow: none;
+}
+
+#header #search-box.docs-search-box .docs-search-icon {
+  width: 14px;
+}
+
+.docs-search-overlay.ant-popover {
+  margin-top: -6px;
+}
+
+.docs-search-overlay .ant-popover-container {
+  position: relative;
+}
+
+.docs-search-overlay .ant-popover-container::before {
+  position: absolute;
+  z-index: 1;
+  top: 4px;
+  inset-inline-end: 112px;
+  width: 0;
+  height: 0;
+  border: 8px solid transparent;
+  border-bottom-color: var(--ant-color-bg-elevated, #fff);
+  content: '';
+  pointer-events: none;
+}
+
+.docs-search-popover::before {
+  content: none;
+}
+
+.docs-search-popover > .docs-search-group {
+  margin: 2px 0;
+}
+
+.docs-search-group > dt {
+  background: var(--ant-control-item-bg-active, #e6f4ff);
+}
+
+.docs-search-group > dt + dd,
+.docs-search-group > dd + dt {
+  margin-top: 2px;
+}
+
+.docs-search-empty > .anticon {
+  margin-inline-end: 8px;
+  font-size: 48px;
+}
+
+[data-theme="dark"] .docs-search-overlay .ant-popover-container::before {
+  border-bottom-color: var(--ant-color-bg-elevated, #1f1f1f);
 }

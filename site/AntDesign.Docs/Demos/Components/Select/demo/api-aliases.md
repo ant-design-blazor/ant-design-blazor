@@ -1,5 +1,7 @@
 ---
-order: 28
+order: 103
+debug: true
+extension: true
 title:
   zh-CN: React API 名称
   en-US: React API names

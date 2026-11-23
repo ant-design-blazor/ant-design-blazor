@@ -80,6 +80,23 @@ describe ('Overlay maps test', () => {
 });
 
 describe('Overlay placement class update', () => {
+  it('exposes the current placement after the client positioner flips it', () => {
+    const overlay = Object.create(Overlay.prototype) as Overlay;
+    Object.assign(overlay, { placement: Placement.TopLeft });
+    const previousRegistryEntry = overlayHelper.overlayRegistry['current-placement-test'];
+    overlayHelper.overlayRegistry['current-placement-test'] = overlay;
+
+    try {
+      expect(overlayHelper.getCurrentPlacement('current-placement-test')).to.equal(Placement.TopLeft);
+    } finally {
+      if (previousRegistryEntry) {
+        overlayHelper.overlayRegistry['current-placement-test'] = previousRegistryEntry;
+      } else {
+        delete overlayHelper.overlayRegistry['current-placement-test'];
+      }
+    }
+  });
+
   it('replaces a final placement class without passing an empty token to DOMTokenList.replace', () => {
     const overlay = document.createElement('div');
     overlay.className = 'ant-select-dropdown ant-select-placement-bottomLeft';
@@ -109,6 +126,58 @@ describe('Overlay placement class update', () => {
     instance.applyPlacement();
 
     expect(overlay.classList.contains('ant-select-placement-topRight')).to.equal(true);
+  });
+});
+
+describe('Overlay page scroll handling for local containers', () => {
+  it('observes document scrolling and removes the listener when disposed', () => {
+    const overlayElement = document.createElement('div') as HTMLDivElement;
+    const container = document.createElement('div');
+    const trigger = document.createElement('div');
+    const overlay: any = Object.create(Overlay.prototype);
+    Object.assign(overlay, {
+      blazorId: 'local-container-scroll-test',
+      overlay: overlayElement,
+      container,
+      trigger,
+      isContainerBody: false,
+      scrollableContainers: [],
+      positionMonitorFrame: 0
+    });
+
+    const addWindowListener = sinon.spy(window, 'addEventListener');
+    const removeWindowListener = sinon.spy(window, 'removeEventListener');
+    const stubs = [
+      sinon.stub(resizeObserver, 'create'),
+      sinon.stub(resizeObserver, 'observe'),
+      sinon.stub(resizeObserver, 'dispose'),
+      sinon.stub(mutationObserver, 'create'),
+      sinon.stub(mutationObserver, 'observe'),
+      sinon.stub(mutationObserver, 'dispose')
+    ];
+
+    try {
+      overlay.observe();
+      expect(addWindowListener.calledWith('scroll', overlay.scrollListener)).to.equal(true);
+
+      overlay.dispose();
+      expect(removeWindowListener.calledWith('scroll', overlay.scrollListener)).to.equal(true);
+    } finally {
+      stubs.forEach(stub => stub.restore());
+      addWindowListener.restore();
+      removeWindowListener.restore();
+    }
+  });
+
+  it('recalculates a locally mounted popup when the page or container scrolls', () => {
+    const overlay: any = Object.create(Overlay.prototype);
+    overlay.isContainerBody = false;
+    overlay.overlayPreset = undefined;
+    overlay.calculatePosition = sinon.stub();
+
+    overlay.onScroll();
+
+    expect(overlay.calculatePosition.calledOnceWithExactly(true, false, undefined)).to.equal(true);
   });
 });
 
@@ -151,6 +220,39 @@ describe('Overlay configuration reuse', () => {
       expect(overlay.style.getPropertyPriority('transition')).to.equal('');
       expect(overlay.style.visibility).to.equal('');
       expect(overlay.classList.contains('ant-overlay-enter')).to.equal(true);
+    } finally {
+      if (originalRequestAnimationFrame) {
+        Object.defineProperty(globalThis, 'requestAnimationFrame', originalRequestAnimationFrame);
+      } else {
+        delete (globalThis as any).requestAnimationFrame;
+      }
+      overlay.remove();
+    }
+  });
+
+  it('applies the fitted placement before revealing a flipped popup', async () => {
+    const overlay = document.createElement('div');
+    overlay.classList.add('ant-select-dropdown', 'ant-select-dropdown-placement-bottomLeft', 'ant-select-dropdown-hidden');
+    document.body.appendChild(overlay);
+
+    const originalRequestAnimationFrame = Object.getOwnPropertyDescriptor(globalThis, 'requestAnimationFrame');
+    Object.defineProperty(globalThis, 'requestAnimationFrame', { configurable: true, value: callback => {
+      callback(0);
+      return 1;
+    } });
+    try {
+      await overlayHelper.revealMeasuredOverlay(
+        overlay,
+        'ant-select-dropdown-hidden',
+        'ant-slide-down-enter',
+        'block',
+        'ant-select-dropdown-placement-topLeft'
+      );
+
+      expect(overlay.classList.contains('ant-select-dropdown-placement-bottomLeft')).to.equal(false);
+      expect(overlay.classList.contains('ant-select-dropdown-placement-topLeft')).to.equal(true);
+      expect(overlay.classList.contains('ant-slide-down-enter')).to.equal(true);
+      expect(overlay.style.visibility).to.equal('');
     } finally {
       if (originalRequestAnimationFrame) {
         Object.defineProperty(globalThis, 'requestAnimationFrame', originalRequestAnimationFrame);
@@ -244,7 +346,7 @@ describe('Overlay configuration reuse', () => {
     (overlay as any).onMotionEnd({ target: overlayElement } as unknown as Event);
 
     expect([...overlayElement.classList]).to.deep.equal(['ant-select-dropdown']);
-    expect((overlay as any).calculatePosition.calledOnceWith(true, false, undefined)).to.equal(true);
+    expect((overlay as any).calculatePosition.called).to.equal(false);
   });
 
   it('matches the overlay context and updates placement without replacing the instance', () => {
@@ -318,6 +420,50 @@ describe('Overlay configuration reuse', () => {
         overlayHelper.overlayRegistry['immediate-open-test'] = previousRegistryEntry;
       } else {
         delete overlayHelper.overlayRegistry['immediate-open-test'];
+      }
+    }
+  });
+
+  it('reuses the immediate-open placement before revealing the popup', () => {
+    const trigger = document.createElement('div');
+    const overlayElement = document.createElement('div') as HTMLDivElement;
+    const container = document.createElement('div');
+    const position = { top: 12, left: 24, zIndex: 1050, placement: Placement.TopLeft };
+    overlayElement.setAttribute('data-ant-immediate-positioned', '');
+    const previousOverlay = {
+      sanitizedPosition: position,
+      matchesContext: sinon.stub().returns(true),
+      updateOffsets: sinon.stub(),
+      updatePlacement: sinon.stub(),
+      calculatePosition: sinon.stub(),
+      dispose: sinon.stub()
+    };
+    const previousRegistryEntry = overlayHelper.overlayRegistry['immediate-position-test'];
+    overlayHelper.overlayRegistry['immediate-position-test'] = previousOverlay as any;
+    const getElement = sinon.stub(domInfoHelper, 'get').callsFake((selector: string) => {
+      if (selector === 'overlay') return overlayElement;
+      if (selector === 'container') return container;
+      if (selector === 'trigger') return trigger;
+      return null;
+    });
+
+    try {
+      const result = overlayHelper.addOverlayToContainer(
+        'immediate-position-test', 'overlay', 'trigger', Placement.BottomLeft,
+        'container', TriggerBoundyAdjustMode.InView, false, 'ant-select',
+        4, 4, undefined, false
+      );
+
+      expect(result).to.equal(position);
+      expect(previousOverlay.updateOffsets.called).to.equal(false);
+      expect(previousOverlay.updatePlacement.called).to.equal(false);
+      expect(previousOverlay.calculatePosition.called).to.equal(false);
+    } finally {
+      getElement.restore();
+      if (previousRegistryEntry) {
+        overlayHelper.overlayRegistry['immediate-position-test'] = previousRegistryEntry;
+      } else {
+        delete overlayHelper.overlayRegistry['immediate-position-test'];
       }
     }
   });
@@ -429,7 +575,10 @@ describe('Overlay configuration reuse', () => {
     const enteringPosition = { ...(overlay as any).calculatePosition(false) };
 
     // The popup's client rect changes while scale animation runs, but its
-    // untransformed layout box and anchor coordinates have not changed.
+    // untransformed layout box and anchor coordinates have not changed. Once
+    // enter motion begins, observers must keep the precomputed placement so
+    // boundary adjustment cannot flip the popup mid-animation.
+    overlayElement.classList.add('ant-slide-up-enter-active');
     scale = 0.98;
     expect((overlay as any).calculatePosition(false)).to.deep.equal(enteringPosition);
 

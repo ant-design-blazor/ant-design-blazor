@@ -6,8 +6,7 @@
         LabelName="@nameof(SearchOption.Label)"
         ValueName="@nameof(SearchOption.Value)"
         Placeholder="Search to Select"
-        EnableSearch
-        FilterSort="@CompareOptions"
+        ShowSearch="@searchOptions"
         Style="width: 200px" />
 
 @code {
@@ -21,6 +20,11 @@
         new() { Value = "5", Label = "Resolved" },
         new() { Value = "6", Label = "Cancelled" }
     ];
+
+    private readonly SelectShowSearchOptions<string, SearchOption> searchOptions = new()
+    {
+        FilterSort = CompareOptions
+    };
 
     private static int CompareOptions(
         SelectOptionItem<string, SearchOption> left,

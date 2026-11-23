@@ -6,6 +6,7 @@ test('extracts Blazor parameters with extra attributes and custom accessors', ()
   const parameters = extractParameters(`
     [Parameter]
     [Obsolete]
+    [PublicApi("1.6.3")]
     public int Count
     {
       get => _count;
@@ -16,5 +17,7 @@ test('extracts Blazor parameters with extra attributes and custom accessors', ()
   `);
   assert.deepEqual(parameters.map(parameter => parameter.name), ['Count', 'Attributes']);
   assert.equal(parameters[0].type, 'int');
+  assert.equal(parameters[0].releaseVersion, '1.6.3');
   assert.equal(parameters[1].type, 'Dictionary<string, object>');
+  assert.equal(parameters[1].releaseVersion, null);
 });

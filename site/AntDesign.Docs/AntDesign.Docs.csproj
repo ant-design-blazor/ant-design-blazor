@@ -3,7 +3,21 @@
   <PropertyGroup>
     <TargetFrameworks>net6.0;net7.0;net8.0;net9.0;net10.0;net11.0</TargetFrameworks>
     <LangVersion>latest</LangVersion>
+    <LatestReleaseVersion Condition="'$(LatestReleaseVersion)' == ''"></LatestReleaseVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <CompilerVisibleProperty Include="LatestReleaseVersion" />
+  </ItemGroup>
+
+  <Target Name="ResolveLatestReleaseVersion" BeforeTargets="GenerateMSBuildEditorConfigFileCore" Condition="'$(LatestReleaseVersion)' == ''">
+    <Exec Command="git -C &quot;$(MSBuildProjectDirectory)\..\..&quot; describe --tags --abbrev=0" ConsoleToMSBuild="true" IgnoreExitCode="true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="LatestReleaseVersion" />
+    </Exec>
+    <PropertyGroup>
+      <LatestReleaseVersion Condition="'$(LatestReleaseVersion)' == ''">0.0.0</LatestReleaseVersion>
+    </PropertyGroup>
+  </Target>
 
   <ItemGroup>
     <PackageReference Include="AntDesign.Charts" Version="0.5.5" />

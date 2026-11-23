@@ -1,14 +1,14 @@
 ---
-order: 36
+order: 13
 title:
   zh-CN: 自定义分词
   en-US: Custom tokenization
 ---
 
-## 自定义分词
+## zh-CN
 
-`Tokenize` 回调可以根据输入内容自定义提交时机和拆分规则。此示例在输入以分号结尾时提交其中的标签。
+输入内容尚未满足分词规则时返回原字符串；遇到逗号后按规则拆分，并保留双引号内的逗号。
 
-## Custom tokenization
+## en-US
 
-The `Tokenize` callback lets you define when and how search text becomes tags. This example commits values when the input ends in a semicolon.
+Return the input unchanged until it matches your tokenization rule. This example splits on commas while preserving commas inside double quotes.

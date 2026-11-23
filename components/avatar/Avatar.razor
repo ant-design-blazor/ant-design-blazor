@@ -3,7 +3,7 @@
 
 @if (Position == null || (Position == "shown" && !Overflow) || (Position == "hidden" && Overflow))
 {
-    <span class="@ClassMapper.Class" style="@(string.IsNullOrWhiteSpace(AvatarStyle) ? null : AvatarStyle)" id="@Id" @ref="Ref">
+    <span @attributes="AdditionalAttributes" class="@ClassMapper.Class" style="@(string.IsNullOrWhiteSpace(AvatarStyle) ? null : AvatarStyle)" id="@Id" @ref="Ref">
         @if (_hasIcon)
         {
             <Icon Type="@Icon" />

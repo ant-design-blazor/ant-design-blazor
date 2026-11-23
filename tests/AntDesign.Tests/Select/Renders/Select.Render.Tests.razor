@@ -100,13 +100,6 @@
     [Fact]
     public async Task Clear_unmatched_selected_value_through_the_clear_icon()
     {
-        Func<JsonElement, Task> clearHandler = null;
-        MockedDomEventListener
-            .Setup(listener => listener.AddExclusive<JsonElement>(
-                It.IsAny<object>(), "click", It.IsAny<Func<JsonElement, Task>>(), true, true, null))
-            .Callback<object, string, Func<JsonElement, Task>, bool, bool, string>(
-                (_, _, callback, _, _, _) => clearHandler = callback);
-
         string selectedValue = "a1";
         var valueChanged = EventCallback.Factory.Create<string>(this, value => selectedValue = value);
         var cut = Render(@<Select TItemValue="string" TItem="string"
@@ -117,9 +110,7 @@
         </Select>);
 
         Assert.NotNull(cut.Find(".ant-select-clear"));
-        Assert.NotNull(clearHandler);
-
-        await cut.InvokeAsync(() => clearHandler(default));
+        await cut.Find("button.ant-select-clear").ClickAsync(new MouseEventArgs());
 
         Assert.Null(selectedValue);
     }
@@ -286,8 +277,28 @@
         Assert.Equal("BUTTON", clear.TagName);
         Assert.Equal("button", clear.GetAttribute("type"));
         Assert.Equal("Clear", clear.GetAttribute("aria-label"));
+        Assert.Null(clear.GetAttribute("tabindex"));
         Assert.NotNull(clear.QuerySelector(".anticon-close-circle"));
         Assert.Contains("ant-select-allow-clear", cut.Find(".ant-select").ClassList);
+    }
+
+    [Fact]
+    public async Task AllowClear_removes_the_clear_state_after_clearing_the_value()
+    {
+        var cut = Render(@<Select TItemValue="string" TItem="string" DefaultValue='@("one")' AllowClear>
+            <SelectOptions>
+                <SelectOption TItemValue="string" TItem="string" Value='@("one")' Label="One" />
+            </SelectOptions>
+        </Select>);
+
+        await cut.Find("button.ant-select-clear").ClickAsync(new MouseEventArgs());
+
+        Assert.Empty(cut.FindAll(".ant-select-selection-item"));
+        var select = cut.FindComponent<Select<string, string>>().Instance;
+        Assert.Null(select.Value);
+        Assert.False(select.HasValueOrUnmatched);
+        Assert.DoesNotContain("ant-select-allow-clear", cut.Find(".ant-select").ClassList);
+        Assert.Empty(cut.FindAll("button.ant-select-clear"));
     }
 
     [Fact]

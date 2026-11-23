@@ -12,14 +12,18 @@
       role="@(SelectParent.UsesVirtualAccessibility ? null : "option")"
       aria-selected="@(SelectParent.UsesVirtualAccessibility ? null : IsSelected.ToString().ToLowerInvariant())"
       aria-disabled="@IsDisabled.ToString().ToLowerInvariant()"
-      title="@InternalLabel"
+      title="@(Title ?? Model?.Title ?? InternalLabel)"
       style="@SelectParent.GetSemanticStyle("popup.listItem", InnerStyle)"
       @onmousedown:preventDefault="true"
       @onclick="@OnClick"
       @onclick:stopPropagation
       @onmouseenter="@OnMouseEnter">
     <div class="@ClassPrefix-content">
-        @if (ChildContent != null)
+        @if (OptionTemplate != null)
+        {
+            @OptionTemplate(new SelectOptionRenderInfo<TItemValue, TItem> { Option = Model, Index = Model.RenderIndex })
+        }
+        else if (ChildContent != null)
         {
             @ChildContent(Model.Item)
         }

@@ -13,18 +13,25 @@
     var hasMatchingOption = ParentSelect.SelectOptionItems.Any(option =>
         EqualityComparer<TItemValue>.Default.Equals(option.Value, ParentSelect.Value));
     var rawValueText = canRenderRawValue && !hasMatchingOption ? Convert.ToString(ParentSelect.Value) : null;
-    var hasUnmatchedValue = !ParentSelect.HasValue && !string.IsNullOrEmpty(rawValueText);
-    var canShowUnmatchedValue = !IsOverlayShow || string.IsNullOrEmpty(renderedInputString);
-    var showPlaceholder = !ParentSelect.HasValue && !hasUnmatchedValue;
     var selectedItem = ParentSelect.GetOrderedSelectedItems().FirstOrDefault();
+    var hasUnmatchedValue = string.IsNullOrEmpty(ParentSelect.SelectionTitle)
+        && selectedItem == null
+        && !ParentSelect.HasValue
+        && !string.IsNullOrEmpty(rawValueText);
+    var canShowUnmatchedValue = !IsOverlayShow || string.IsNullOrEmpty(renderedInputString);
+    var showPlaceholder = string.IsNullOrEmpty(ParentSelect.SelectionTitle)
+        && !ParentSelect.HasValue
+        && !hasUnmatchedValue;
     var contentTitle = hasUnmatchedValue && ParentLabelTemplate == null ? rawValueText : selectedItem?.Label;
     contentTitle ??= ParentSelect.SelectionTitle;
-    var contentClass = $"{Prefix}-content{(ParentSelect.Mode == SelectMode.Default && (ParentSelect.HasValue || hasUnmatchedValue) ? $" {Prefix}-content-has-value" : string.Empty)}{(ParentSelect.Mode == SelectMode.Default && !string.IsNullOrEmpty(renderedInputString) ? $" {Prefix}-content-has-search-value" : string.Empty)}";
+    var contentClass = $"{Prefix}-content{(ParentSelect.Mode == SelectMode.Default && (ParentSelect.HasValue || hasUnmatchedValue || !string.IsNullOrEmpty(ParentSelect.SelectionTitle)) ? $" {Prefix}-content-has-value" : string.Empty)}{(ParentSelect.Mode == SelectMode.Default && !string.IsNullOrEmpty(renderedInputString) ? $" {Prefix}-content-has-search-value" : string.Empty)}";
     var placeholderStyle = !string.IsNullOrEmpty(renderedInputString) ? "visibility: hidden;" : null;
 }
 <div class="@ParentSelect.GetSemanticClass("root", ParentSelect.GetRootClass(ParentSelect.CurrentClassMapper.Class))"
      style="@ParentSelect.GetSemanticStyle("root", ParentSelect.Style)"
      @ref="@Ref"
+     @onmousedown="@OnMouseDown"
+     @onclick="@OnClick"
      >
     @if (ParentSelect.Mode == SelectMode.Default)
     {
@@ -37,7 +44,7 @@
       <div class="@ParentSelect.GetSemanticClass("content", contentClass)" title="@contentTitle" style="@ParentSelect.GetSemanticStyle("content")">
         @if (canShowUnmatchedValue && hasUnmatchedValue)
         {
-          @if (ParentLabelTemplate != null)
+          @if (ParentLabelTemplate != null && selectedItem != null)
           {
             <CascadingValue Value="this" Name="SelectContent">
               <CascadingValue Value="default(SelectOptionItem<TItemValue, TItem>)" Name="SelectOption">
@@ -53,6 +60,10 @@
         @if (showPlaceholder)
         {
           <div class="@ParentSelect.GetSemanticClass("placeholder", $"{Prefix}-placeholder")" style="@ParentSelect.GetSemanticStyle("placeholder", placeholderStyle)">@Placeholder</div>
+        }
+        else if (!string.IsNullOrEmpty(ParentSelect.SelectionTitle))
+        {
+          @contentTitle
         }
         else if (selectedItem != null)
         {
@@ -77,10 +88,12 @@
                value="@(renderedInputString ?? string.Empty)"
                id="@ParentSelect.Id"
                type="text"
+               tabindex="@TabIndex"
+               maxlength="@MaxLength"
                readonly="@(!ParentSelect.IsSearchEnabled)"
                role="combobox"
                class="@ParentSelect.GetSemanticClass("input", $"{Prefix}-input")"
-               autocomplete="new-password"
+               autocomplete="@ParentSelect.AutoComplete"
                aria-owns="@(IsOverlayShow ? ParentSelect.ListboxId : null)"
                aria-controls="@(IsOverlayShow ? ParentSelect.ListboxId : null)"
                aria-activedescendant="@(IsOverlayShow ? ParentSelect.ActiveOptionId : null)"
@@ -97,10 +110,11 @@
             TItemValue="TItemValue" 
             SuffixIcon="@ParentSelect.SuffixIcon"
             IsOverlayShow="@IsOverlayShow"
-            ShowClearIcon="@(!ParentSelect.Disabled && ParentSelect.AllowClear && ParentSelect.HasValueOrUnmatched)"
+            ShowClearIcon="@(!ParentSelect.Disabled && ParentSelect.IsAllowClearEnabled && ParentSelect.HasValueOrUnmatched)"
             OnClearClick="@OnClearClick" 
             ShowArrowIcon="@ShowArrowIcon" 
             ShowSearchIcon="@ShowArrowIcon"
+            SearchIcon="@SearchIcon"
             Loading="@Loading"/>
     }
     else //ParentSelect.SelectMode != SelectMode.Default
@@ -298,10 +312,12 @@
                    disabled="@ParentSelect.Disabled"
                    id="@ParentSelect.Id"
                    type="text"
+                   tabindex="@TabIndex"
+                   maxlength="@MaxLength"
                    readonly="@(!ParentSelect.IsSearchEnabled)"
                    role="combobox"
                    class="@ParentSelect.GetSemanticClass("input", $"{Prefix}-input")"
-                   autocomplete="new-password"
+                   autocomplete="@ParentSelect.AutoComplete"
                    aria-owns="@(IsOverlayShow ? ParentSelect.ListboxId : null)"
                    aria-controls="@(IsOverlayShow ? ParentSelect.ListboxId : null)"
                    aria-activedescendant="@(IsOverlayShow ? ParentSelect.ActiveOptionId : null)"
@@ -318,10 +334,11 @@
             TItemValue="TItemValue" 
             SuffixIcon="@ParentSelect.SuffixIcon"
             IsOverlayShow="@IsOverlayShow"
-            ShowClearIcon="@(!ParentSelect.Disabled && ParentSelect.AllowClear && ParentSelect.HasValueOrUnmatched)"
+            ShowClearIcon="@(!ParentSelect.Disabled && ParentSelect.IsAllowClearEnabled && ParentSelect.HasValueOrUnmatched)"
             OnClearClick="@OnClearClick" 
             ShowArrowIcon="@ShowArrowIcon" 
             ShowSearchIcon="@ShowArrowIcon"
+            SearchIcon="@SearchIcon"
             Loading="@Loading"/>
     }
 </div>

@@ -25,7 +25,8 @@
         ],
         "removeCommentMarkers": ["<!--!-->"],
         "sortClassTokens": true,
-        "removeInterTagWhitespace": true
+        "removeInterTagWhitespace": true,
+        "removeStyleProperties": ["--columns-count"]
       }
     }
   },

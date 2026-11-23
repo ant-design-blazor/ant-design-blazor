@@ -1,8 +1,8 @@
 ---
-order: 30
+order: 2
 title:
   zh-CN: 自定义搜索过滤
-  en-US: Customize search filtering
+  en-US: Custom Search
 ---
 
 ## zh-CN
@@ -11,4 +11,4 @@ title:
 
 ## en-US
 
-Use `FilterExpression` to customize how the search text matches options.
+Customize search using filterOption.

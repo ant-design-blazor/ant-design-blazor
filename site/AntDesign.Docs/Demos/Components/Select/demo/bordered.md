@@ -1,5 +1,7 @@
 ---
-order: 23
+order: 107
+debug: true
+extension: true
 title:
   zh-CN: 无边框
   en-US: Bordered-less

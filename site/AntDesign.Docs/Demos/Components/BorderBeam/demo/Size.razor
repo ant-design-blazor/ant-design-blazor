@@ -1,0 +1,20 @@
+<div style="display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:32px; max-width:960px">
+    <div>
+        <Card Title="100px">
+            <Decoration><BorderBeam /></Decoration>
+            <ChildContent><div style="min-height:112px; display:flex; align-items:center">Uses the default 100px visible beam segment.</div></ChildContent>
+        </Card>
+    </div>
+    <div>
+        <Card Title="56px">
+            <Decoration><BorderBeam Size="56px" /></Decoration>
+            <ChildContent><div style="min-height:112px; display:flex; align-items:center">Keeps the highlight shorter for dense card groups.</div></ChildContent>
+        </Card>
+    </div>
+    <div style="grid-column:1 / -1">
+        <Card Title="160px">
+            <Decoration><BorderBeam Size="160px" /></Decoration>
+            <ChildContent><div style="min-height:192px; display:flex; align-items:center">Creates a longer highlight for wider feature panels.</div></ChildContent>
+        </Card>
+    </div>
+</div>

@@ -6,7 +6,7 @@
 
 @typeparam TItem
 
-<div class="@GetSemanticClass("root", _wrapperClassMapper.Class)" style="@GetComponentStyle("Table", GetSemanticStyle("root", Style))" @ref="Ref">
+<div class="@GetSemanticClass("root", GetRootClass())" style="@GetComponentStyle("Table", GetSemanticStyle("root", Style))" @ref="Ref">
     <Spin Spinning="Loading">
         @if (ShowTopPagination)
         {
@@ -60,7 +60,7 @@
                                 @if (IsVirtualEnabled)
                                 {
                                     <div class="@GetSemanticClass("body.wrapper", "ant-table-tbody-virtual ant-table-tbody")" style="@GetSemanticStyle("body.wrapper", "position: relative;")">
-                                        <div class="ant-table-tbody-virtual-holder" @ref="_tableBodyRef" style="@($"max-height: {(CssSizeLength)ScrollY}; overflow: {(UseClientVirtualWindow ? "hidden" : ShouldWindowVirtualItems(_showItems) ? "auto" : "hidden")}; overflow-anchor: none;")">
+                                        <div class="ant-table-tbody-virtual-holder" @ref="_tableBodyRef" @onscroll="OnScroll" style="@($"max-height: {(CssSizeLength)ScrollY}; overflow: {(UseClientVirtualWindow ? "hidden" : ShouldWindowVirtualItems(_showItems) ? "auto" : "hidden")}; overflow-anchor: none;")">
                                             @if (UseClientVirtualWindow)
                                             {
                                                 <div style="@($"height: {ClientVirtualContentHeight}; position: relative; overflow: hidden;")">
@@ -94,7 +94,7 @@
                                 }
                                 else
                                 {
-                                    <div class="ant-table-body" @ref="_tableBodyRef" style="@GetSplitBodyStyle()">
+                                    <div class="ant-table-body" @ref="_tableBodyRef" @onscroll="OnScroll" style="@GetSplitBodyStyle()">
                                         <table style="@(ScrollX != null ? $"width: {(CssSizeLength)ScrollX}; min-width: 100%; {TableLayoutStyle}" : TableLayoutStyle)" @ref="_tableRef">
                                             @colGroup(this, false)
                                             <tbody class="@GetSemanticClass("body.wrapper", "ant-table-tbody")" style="@GetSemanticStyle("body.wrapper")">
@@ -127,7 +127,7 @@
                             }
                             else if (ScrollX != null)
                             {
-                                <div class="@GetSemanticClass("content", "ant-table-content")" @ref="_tableBodyRef" style="@GetSemanticStyle("content", $"overflow: auto hidden;{(ScrollBarWidth == null ? "" : $" --scrollbar-width: {(CssSizeLength)_scrollBarWidth};")}")">
+                                <div class="@GetSemanticClass("content", "ant-table-content")" @ref="_tableBodyRef" @onscroll="OnScroll" style="@GetSemanticStyle("content", $"overflow: auto hidden;{(ScrollBarWidth == null ? "" : $" --scrollbar-width: {(CssSizeLength)_scrollBarWidth};")}")">
                                     <table style="width: @((CssSizeLength)ScrollX); min-width: 100%; @TableLayoutStyle" @ref="_tableRef">
                                         @colGroup(this, true)
                                         @header()
@@ -148,7 +148,7 @@
                             }
                             else
                             {
-                                <div class="@GetSemanticClass("content", "ant-table-content")" @ref="_tableBodyRef" style="@GetSemanticStyle("content", AutoHeight ? "overflow-y: scroll;" : null)">
+                                <div class="@GetSemanticClass("content", "ant-table-content")" @ref="_tableBodyRef" @onscroll="OnScroll" style="@GetSemanticStyle("content", AutoHeight ? "overflow-y: scroll;" : null)">
                                     <table style="@TableLayoutWithScrollbar" @ref="_tableRef">
                                         @colGroup(this, true)
                                         @header()

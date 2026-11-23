@@ -1,5 +1,7 @@
 ---
-order: 0
+order: 120
+debug: true
+extension: true
 title:
   zh-CN: 简单的封装
   en-US: Simple encapsulation

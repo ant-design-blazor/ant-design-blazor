@@ -9,8 +9,8 @@
         Style="width: 100%;">
     <OptionRender Context="option">
         <Space>
-            <span role="img" aria-label="@option.Label">@option.Emoji</span>
-            <span>@option.Label (@option.Description)</span>
+            <span role="img" aria-label="@option.Option.Label">@option.Option.Item.Emoji</span>
+            <span>@option.Option.Item.Label (@option.Option.Item.Description)</span>
         </Space>
     </OptionRender>
 </Select>

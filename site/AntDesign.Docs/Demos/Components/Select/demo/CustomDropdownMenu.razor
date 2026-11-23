@@ -5,7 +5,6 @@
         ValueName="@nameof(Person.Id)"
         LabelName="@nameof(Person.Name)"
         Placeholder="custom dropdown render"
-        OnSelectedItemChanged="OnSelectedItemChangedHandler"
         Style="width: 300px;">
     <DropdownRender Context="originNode">
         <div>
@@ -21,12 +20,6 @@
         </div>
     </DropdownRender>
 </Select>
-<br />
-<br />
-<p>
-    Selected Value: @_selectedValue <br />
-    Selected Item Name: @_selectedItem?.Name
-</p>
 
 @code
 {
@@ -38,7 +31,6 @@
 
     List<Person> _list;
     int? _selectedValue;
-    Person _selectedItem;
     string _name = string.Empty;
 
     protected override void OnInitialized()
@@ -48,11 +40,6 @@
             new Person {Id = 1, Name = "Jack"},
             new Person {Id = 2, Name = "Lucy"}
         };
-    }
-
-    private void OnSelectedItemChangedHandler(Person value)
-    {
-        _selectedItem = value;
     }
 
     private void AddItem(MouseEventArgs args)

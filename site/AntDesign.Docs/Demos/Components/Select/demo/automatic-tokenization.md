@@ -1,5 +1,5 @@
 ---
-order: 11
+order: 12
 title:
   zh-CN: 自动分词
   en-US: Automatic tokenization
@@ -11,4 +11,4 @@ title:
 
 ## en-US
 
-Try to copy `Lucy,Jack` to the input. Only available in tags and multiple mode.
+Try to copy Lucy,Jack and paste to the input. Only available in tags and multiple mode.

@@ -1,5 +1,5 @@
 ---
-order: 21
+order: 16
 title:
   zh-CN: 扩展菜单
   en-US: Custom dropdown
@@ -11,4 +11,4 @@ title:
 
 ## en-US
 
-Customize the dropdown menu via `DropdownRender`.
+Customize the dropdown menu via popupRender. If you want to close the dropdown after clicking the custom content, you need to control open prop, here is an codesandbox.

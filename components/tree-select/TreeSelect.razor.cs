@@ -11,6 +11,7 @@ using AntDesign.Core.Extensions;
 using AntDesign.JsInterop;
 using AntDesign.Select.Internal;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using OneOf;
 
 namespace AntDesign
@@ -123,12 +124,6 @@ namespace AntDesign
         /// Whether to check the checkbox when user click the tree node.  
         /// </summary>
         [Parameter] public bool CheckOnClickNode { get; set; } = true;
-
-        /// <summary>
-        /// Callback executed when the component looses focus
-        /// </summary>
-        [Parameter]
-        public Action OnBlur { get; set; }
 
         /// <summary>
         /// Get or set the template to render the title of the tree node
@@ -532,7 +527,7 @@ namespace AntDesign
 
                 await JsInvokeAsync(JSInteropConstants.Blur, _inputRef);
 
-                OnBlur?.Invoke();
+                await OnBlur.InvokeAsync(new FocusEventArgs());
             }
         }
 
@@ -746,7 +741,7 @@ namespace AntDesign
                 .If($"{ClassPrefix}-disabled", () => Disabled)
                 .If($"{ClassPrefix}-rtl", () => RTL)
                 .GetIf(() => $"{ClassPrefix}-status-{status}", () => status is not null)
-                .If($"{ClassPrefix}-allow-clear", () => AllowClear)
+                .If($"{ClassPrefix}-allow-clear", () => IsAllowClearEnabled)
                 ;
         }
 

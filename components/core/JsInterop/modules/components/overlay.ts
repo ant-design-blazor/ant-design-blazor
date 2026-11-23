@@ -261,6 +261,10 @@ export class Overlay {
       && this.triggerPrefixCls === triggerPrefixCls;
   }
 
+  getCurrentPlacement(): Placement {
+    return this.placement;
+  }
+
   updatePlacement(placement: Placement, arrowPointAtCenter: boolean) {
     const effectivePlacement = arrowPointAtCenter
       ? Overlay.arrowCenterPlacementMatch.get(placement)
@@ -471,10 +475,8 @@ export class Overlay {
       characterDataOldValue: false
     });
     
-    if (this.isContainerBody) {
-      window.addEventListener("scroll", this.scrollListener);
-    }
-    else {
+    window.addEventListener("scroll", this.scrollListener);
+    if (!this.isContainerBody) {
       this.container.addEventListener("scroll", this.scrollListener);
     }
 
@@ -485,6 +487,14 @@ export class Overlay {
   }  
 
   private onScroll() {
+    // A popup mounted in a local container uses that container's coordinate
+    // space. Document scrolling moves both the trigger and container in the
+    // viewport, so recompute their relative position when either scrolls.
+    if (!this.isContainerBody) {
+      this.calculatePosition(true, false, this.overlayPreset);
+      return;
+    }
+
     if (this.isTriggerFixed && this.scrollableContainers.length==0) {
       if (this.lastScrollPosition !== window.pageYOffset) {
         const diff = window.pageYOffset - this.lastScrollPosition; //positive -> down, negative -> up        
@@ -509,8 +519,16 @@ export class Overlay {
 
   private onMotionEnd(event: Event) {
     if (event.target === this.overlay && this.overlay.offsetParent) {
+      // Some popup content also transitions while the enter animation is
+      // running. A transitionend can arrive first; removing the enter classes
+      // then drops the animation fill state for a frame and makes the popup
+      // flash. Wait until every CSS animation on the popup has finished before
+      // clearing its motion classes. Position was measured before reveal;
+      // recalculating here can flip placement after the animation and flash.
+      const hasRunningAnimation = this.overlay.getAnimations?.().some(animation => animation.playState === "running");
+      if (hasRunningAnimation) return;
+
       this.removeEnterMotionClasses();
-      this.calculatePosition(true, false, this.overlayPreset);
     }
   }
 
@@ -563,10 +581,8 @@ export class Overlay {
       this.container.removeChild(this.overlay);
     }
 
-    if (this.isContainerBody) {      
-      window.removeEventListener("scroll", this.scrollListener);
-    }
-    else {
+    window.removeEventListener("scroll", this.scrollListener);
+    if (!this.isContainerBody) {
       this.container.removeEventListener("scroll", this.scrollListener);
     }
 
@@ -583,6 +599,18 @@ export class Overlay {
     //check if hidden, if yes, no need to recalculate (only if not first time)
     if (!firstTime && !this.overlay.offsetParent) {      
       return;
+    }
+    // Select and other overlays measure their final placement before the enter
+    // animation starts. Resize/scroll observers can fire while the popup is
+    // animating (for example, its contents finish rendering); re-running the
+    // boundary adjustment in that frame can switch the placement class and
+    // visibly jump the popup. Keep the measured coordinates until the enter
+    // motion settles, then the observers can resume normal alignment.
+    const isEntering = Array.from(this.overlay.classList).some(className =>
+      className.endsWith('-enter') || className.endsWith('-enter-active'));
+    const hasRunningAnimation = this.overlay.getAnimations?.().some(animation => animation.playState === "running") ?? false;
+    if (!firstTime && isEntering && hasRunningAnimation && this.sanitizedPosition) {
+      return this.sanitizedPosition;
     }
     //trigger no longer visible, hide
     // Fixed-position elements have no offsetParent in the browser even while
@@ -1264,6 +1292,9 @@ export class Overlay {
    * area of the overlay visible and picks the calculation with largest area.
    */
   private adjustHorizontalToContainerBoundaries() {
+    if (this.triggerPrefixCls === "ant-dropdown") {
+      console.debug("overlay-horizontal-check", JSON.stringify({ placement: this.placement, boundary: this.containerBoundarySize, bodyBoundary: this.bodyBoundarySize, position: this.position, trigger: this.triggerPosition, containerBody: this.isContainerBody, container: this.container.getBoundingClientRect().toJSON(), triggerRect: this.trigger.getBoundingClientRect().toJSON(), overlay: { width: this.getOverlayWidth(), height: this.getOverlayHeight() }, scroll: { x: window.pageXOffset, y: window.pageYOffset, htmlY: document.documentElement.scrollTop, bodyY: document.body.scrollTop } }));
+    }
     if (!this.overlayFitsContainer("horizontal", this.position.left, this.position.right)) {
       const positionCache: overlayPosition = { ...this.position };
       const selectedPositionCache = this.selectedHorizontalPosition;

@@ -1,0 +1,17 @@
+<div style="display:flex; flex-wrap:wrap; gap:16px">
+    @foreach (var duration in new[] { 3, 6, 12 })
+    {
+        var title = duration == 3 ? "Fast" : duration == 6 ? "Default" : "Slow";
+        var description = duration == 3
+            ? "A quick loop for temporary highlights and active modules."
+            : duration == 6
+                ? "The original pacing for most emphasized containers."
+                : "A calmer loop for persistent panels and ambient surfaces.";
+        <div style="width:220px" @key="duration">
+            <Card Title="@title">
+                <Decoration><BorderBeam Duration="duration" /></Decoration>
+                <ChildContent>@description</ChildContent>
+            </Card>
+        </div>
+    }
+</div>

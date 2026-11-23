@@ -1,5 +1,7 @@
 ---
-order: 9
+order: 108
+debug: true
+extension: true
 title:
   zh-CN: 搜索框
   en-US: Search Box

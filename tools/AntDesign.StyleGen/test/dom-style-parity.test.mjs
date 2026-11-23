@@ -367,6 +367,14 @@ test('compiled v6 Select CSS styles the migrated trigger, tags, and clear button
   assert.ok(css.includes('--ant-select-multi-item-height'));
 });
 
+test('Select dropdown motion grows from the trigger-facing edge for both placements', async () => {
+  const css = await readFile(new URL('../../../components/wwwroot/css/antd-v6/component-parity.css', import.meta.url), 'utf8');
+  assert.match(css, /\.ant-select-dropdown-placement-bottomLeft[^}]*--ant-select-motion-origin:\s*50% 0%/);
+  assert.match(css, /\.ant-select-dropdown-placement-topLeft[^}]*--ant-select-motion-origin:\s*50% 100%/);
+  assert.match(css, /@keyframes antSelectSlideIn\s*\{[^}]*transform-origin:\s*var\(--ant-select-motion-origin, 50% 0%\)/s);
+  assert.doesNotMatch(css, /@keyframes antSelectSlide(?:In|Out)[\s\S]*?transform-origin:\s*50% 50%/);
+});
+
 test('v6 theme parity restores the React icon flex box after legacy docs CSS', async () => {
   const css = await readFile(new URL('../../../components/wwwroot/css/antd-v6/component-parity.css', import.meta.url), 'utf8');
   assert.match(css, /\.ant-theme\s+\.anticon\s*\{[^}]*display:\s*inline-flex;[^}]*align-items:\s*center;/s);
@@ -414,6 +422,14 @@ test('removes only explicitly declared framework style properties', () => {
   }), '<div style="color: red;"></div>');
   assert.equal(normalizeRuntimeHtml('<div style="--columns-count: 8; color: red;"></div>'),
     '<div style="--columns-count: 8; color: red;"></div>');
+  assert.equal(normalizeRuntimeHtml('<div class="ant-table" style="--columns-count: 8; width: 120px;"></div>', {
+    normalizeStyleAttributes: true,
+    removeStyleProperties: ['--columns-count'],
+  }), '<div class="ant-table" style="width:120px"></div>');
+  assert.equal(normalizeRuntimeHtml('<div style="--columns-count: 8;"></div>', {
+    normalizeStyleAttributes: true,
+    removeStyleProperties: ['--columns-count'],
+  }), '<div></div>');
 });
 
 test('normalizes only CSS declaration separator whitespace when explicitly requested', () => {

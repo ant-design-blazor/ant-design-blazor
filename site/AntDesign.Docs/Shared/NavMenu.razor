@@ -23,11 +23,23 @@
                 if (menu.Type == "menuItem")
                 {
                         <MenuItem RouterLink="@DemoService.GetLocalizedUrl(context.LocalizationService.CurrentCulture.Name, menu.Url)" RouterMatch="@NavLinkMatch.All">
-                            <span>@menu.Title</span>
-                            @if (context.LocalizationService.CurrentCulture.Name == "zh-CN" && menu.SubTitle != null)
-                            {
-                                <span class="chinese">@menu.SubTitle</span>
-                            }
+                            <span class="docs-nav-menu-item-content">
+                                <span class="docs-nav-menu-item-title">
+                                    @menu.Title
+                                    @if (context.LocalizationService.CurrentCulture.Name == "zh-CN" && menu.SubTitle != null)
+                                    {
+                                        <span class="chinese">@menu.SubTitle</span>
+                                    }
+                                </span>
+                                @if (!string.IsNullOrWhiteSpace(menu.Version))
+                                {
+                                    <Tag Color="TagColor.Green" Class="docs-nav-menu-version">@($"v{menu.Version}")</Tag>
+                                }
+                                @if (menu.IsUpdated)
+                                {
+                                    <Tag Color="TagColor.Blue" Class="docs-nav-menu-update">@(context.LocalizationService.CurrentCulture.Name == "zh-CN" ? "更新" : "Update")</Tag>
+                                }
+                            </span>
                         </MenuItem>
                 }
                 else if (menu.Type == "subMenu")
@@ -64,6 +76,9 @@
             ["minHeight"] = "100%", ["paddingBottom"] = 48, ["transition"] = "all 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86)",
             ["fontFamily"] = "Avenir, AlibabaSans, -apple-system, 'system-ui', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif",
             ["&.ant-menu-inline .ant-menu-submenu-title h4, &.ant-menu-inline > .ant-menu-item, &.ant-menu-inline .ant-menu-item a"] = new System.Collections.Generic.Dictionary<string, object> { ["overflow"] = "hidden", ["fontSize"] = 14, ["textOverflow"] = "ellipsis" },
+            ["& .docs-nav-menu-item-content"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "flex", ["alignItems"] = "center", ["justifyContent"] = "space-between", ["gap"] = 8, ["width"] = "100%", ["minWidth"] = 0 },
+            ["& .docs-nav-menu-item-title"] = new System.Collections.Generic.Dictionary<string, object> { ["minWidth"] = 0, ["overflow"] = "hidden", ["textOverflow"] = "ellipsis", ["whiteSpace"] = "nowrap" },
+            ["& .docs-nav-menu-item-content .ant-tag"] = new System.Collections.Generic.Dictionary<string, object> { ["flexShrink"] = 0, ["marginInlineEnd"] = 0, ["paddingInline"] = 6, ["fontSize"] = 12, ["lineHeight"] = "18px", ["height"] = 18 },
             ["&.ant-menu-inline > .ant-menu-item-group > .ant-menu-item-group-title"] = new System.Collections.Generic.Dictionary<string, object>
             {
                 ["marginTop"] = 16, ["marginBottom"] = 16, ["fontSize"] = 13,

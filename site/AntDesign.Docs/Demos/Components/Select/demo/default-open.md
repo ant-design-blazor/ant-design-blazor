@@ -1,5 +1,7 @@
 ---
-order: 39
+order: 106
+debug: true
+extension: true
 title:
   zh-CN: 默认展开
   en-US: Default Open

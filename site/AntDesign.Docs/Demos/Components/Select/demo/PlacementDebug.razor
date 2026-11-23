@@ -11,7 +11,7 @@
     </Space>
     <Select TItemValue="int" TItem="OptionItem" Open="_open" OpenChanged="value => _open = value"
             Style="width:120px" Placement="@GetPlacement()" DataSource="_options"
-            ItemValue="item => item.Value" ItemLabel="item => item.Label" DropdownMatchSelectWidth="@("200px")" />
+            ItemValue="item => item.Value" ItemLabel="item => item.Label" PopupMatchSelectWidth="@(200d)" />
 </div>
 
 @code {

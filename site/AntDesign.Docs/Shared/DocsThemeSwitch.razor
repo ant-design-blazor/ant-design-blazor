@@ -28,13 +28,12 @@
 }
 else
 {
-    <CascadingValue Value="@PopupContainerSelector" Name="PopupContainerSelector">
-        <Dropdown @ref="_dropdown" @bind-Visible="_dropdownVisible" ComplexAutoCloseAndVisible Class="docs-theme-switch-trigger" OverlayClassName="docs-theme-switch-popup" Trigger="new[] { Trigger.Hover }" Placement="Placement.BottomRight" AutoAdjustOverflow="false" BoundaryAdjustMode="TriggerBoundaryAdjustMode.None" Arrow HiddenMode>
+        <Popover @bind-Visible="_popoverVisible" ComplexAutoCloseAndVisible Class="docs-theme-switch-trigger" OverlayClassName="docs-theme-switch-popup" PopupContainerSelector="@PopupContainerSelector" PopupWidthMode="content" PopupMaxWidth="calc(100vw - 16px)" Trigger="new[] { Trigger.Hover }" Placement="Placement.BottomRight" BoundaryAdjustMode="TriggerBoundaryAdjustMode.InView" Arrow ArrowPointAtCenter>
             <ChildContent>
-                <Button Class="header-theme-button" Type="ButtonType.Text" Icon="bg-colors" Title="Theme icon" AriaLabel="Theme settings" />
+                <Button Class="docs-theme-switch-button" Type="ButtonType.Text" Icon="bg-colors" Title="Theme settings" AriaLabel="Theme settings" />
             </ChildContent>
-            <Overlay>
-                <Menu Selectable="false" AutoCloseDropdown="false">
+            <ContentTemplate>
+                <Menu Selectable="false">
                 <MenuItem Key="auto" Icon="sync" Extra="@ActiveIndicator(_themeMode == "auto")" OnClick="@(()=>ChangeAppearance("auto"))">
                     @Localizer["app.theme.switch.auto"]
                 </MenuItem>
@@ -60,31 +59,31 @@ else
                     @Localizer["app.theme.switch.editor"]
                 </MenuItem>
                 </Menu>
-            </Overlay>
-        </Dropdown>
-    </CascadingValue>
+            </ContentTemplate>
+        </Popover>
 }
 
 <style>
-    .docs-theme-switch-popup.ant-dropdown { max-width: calc(100vw - 16px); }
-    .docs-theme-switch-popup.ant-dropdown { margin-top: 7px; }
+    .docs-theme-switch-popup.ant-popover { max-width: calc(100vw - 16px); }
+    .docs-theme-switch-popup.ant-popover { margin-top: 7px; }
     .docs-theme-switch-popup .docs-theme-active-indicator { width: 6px; height: 6px; display: inline-block; border-radius: 50%; background: var(--ant-color-primary, #1677ff); }
-    #header .header-theme-button{width:32px;height:32px;padding:0}
+    .docs-theme-switch-trigger{width:32px;height:32px;margin:0}
+    .docs-theme-switch-button{width:32px;height:32px;padding:0}
 </style>
 
 @code {
     [Parameter] public bool Inline { get; set; }
-    [Parameter] public string PopupContainerSelector { get; set; } = ".header-desktop-utilities";
+    [Parameter] public string PopupContainerSelector { get; set; } = "body";
 
     private async Task OpenThemeGenerator()
     {
-        await CloseDropdownAsync();
+        await ClosePopoverAsync();
         await JS.InvokeVoidAsync("open", "https://ant.design/theme-editor", "_blank");
     }
 
     private async Task OpenThemeEditor()
     {
-        await CloseDropdownAsync();
+        await ClosePopoverAsync();
         await JS.InvokeVoidAsync("open", $"/{System.Globalization.CultureInfo.CurrentUICulture.Name}/docs/customize-theme", "_self");
     }
 

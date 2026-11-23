@@ -1,0 +1,15 @@
+<Select TItemValue="string"
+        TItem="string"
+        DataSource="@options"
+        Placeholder="Select a value"
+        AllowClear="@allowClear"
+        Style="width: 240px" />
+
+@code {
+    private readonly string[] options = ["Lucy", "Jack", "Yiminghe"];
+    private readonly SelectAllowClearOptions allowClear = new()
+    {
+        Label = "Clear selected value",
+        TabIndex = 0
+    };
+}

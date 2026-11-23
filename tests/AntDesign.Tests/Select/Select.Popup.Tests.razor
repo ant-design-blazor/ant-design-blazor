@@ -1,6 +1,25 @@
 @using AntDesign.Core.JsInterop.Modules.Components
+@using Microsoft.AspNetCore.Components
 @inherits AntDesignTestBase
 @code {
+    private sealed record TestOption(string Value, string Label);
+
+    private static IReadOnlyDictionary<string, string> GetSelectClassNames(Select<string, string> select)
+        => new Dictionary<string, string>
+        {
+            ["root"] = "callback-root",
+            ["popup.root"] = "callback-popup",
+            ["popup.list"] = "callback-list"
+        };
+
+    private static IReadOnlyDictionary<string, string> GetSelectStyles(Select<string, string> select)
+        => new Dictionary<string, string>
+        {
+            ["root"] = "outline:1px solid purple",
+            ["popup.root"] = "border-color:purple",
+            ["popup.list"] = "color:purple"
+        };
+
     public Select_Popup_Tests()
     {
         // Geometry is asserted against the actual browser separately. These
@@ -33,6 +52,146 @@
         Assert.NotNull(cut.Find(".ant-select-dropdown-list.custom-list > .ant-select-dropdown-list-holder > div > .ant-select-dropdown-list-holder-inner"));
         Assert.Contains("outline:1px solid orange", cut.Find(".custom-list").GetAttribute("style"));
         Assert.Contains("color:purple", cut.Find(".custom-option").GetAttribute("style"));
+    }
+
+    [Fact]
+    public void Semantic_class_and_style_callbacks_apply_to_root_and_popup_slots()
+    {
+        JSInterop.Setup<string>(JSInteropConstants.OverlayComponentHelper.PrepareOverlayWidthForShow, _ => true).SetResult("120");
+        var cut = Render(@<Select TItemValue="string" TItem="string"
+                                  ClassNamesFunc="GetSelectClassNames" StylesFunc="GetSelectStyles">
+            <SelectOptions><SelectOption TItemValue="string" TItem="string" Value='@("lucy")' Label="Lucy" /></SelectOptions>
+        </Select>);
+        var select = cut.FindComponent<Select<string, string>>().Instance;
+
+        Assert.Contains("callback-root", cut.Find(".ant-select").GetAttribute("class"));
+        Assert.Contains("outline:1px solid purple", cut.Find(".ant-select").GetAttribute("style"));
+        Assert.Contains("callback-popup", select.GetSemanticClass("popup.root"));
+        Assert.Contains("border-color:purple", select.GetSemanticStyle("popup.root"));
+        Assert.Contains("callback-list", select.GetSemanticClass("popup.list"));
+        Assert.Contains("color:purple", select.GetSemanticStyle("popup.list"));
+    }
+
+    [Fact]
+    public void PopupMatchSelectWidth_accepts_a_numeric_minimum_width()
+    {
+        var cut = Render(@<Select TItemValue="string" TItem="string" PopupMatchSelectWidth="@(200d)">
+            <SelectOptions><SelectOption TItemValue="string" TItem="string" Value='@("lucy")' Label="Lucy" /></SelectOptions>
+        </Select>);
+
+        var trigger = cut.FindComponent<AntDesign.Internal.OverlayTrigger>().Instance;
+        Assert.Equal("min-width", trigger.ImmediateOpenWidthMode);
+        Assert.Equal("200px", trigger.ImmediateOpenWidth);
+    }
+
+    [Fact]
+    public void OptionRender_receives_the_option_and_visible_sorted_index()
+    {
+        var options = new[]
+        {
+            new TestOption("second", "second"),
+            new TestOption("first", "first"),
+            new TestOption("third", "third")
+        };
+        var cut = Render(@<Select TItemValue="string" TItem="TestOption" DataSource="options"
+                                  ValueName="@nameof(TestOption.Value)" LabelName="@nameof(TestOption.Label)"
+                                  SortByLabel="SortDirection.Ascending">
+            <OptionRender Context="renderInfo">
+                <span data-option-index="@renderInfo.Index">@renderInfo.Option.Item.Label</span>
+            </OptionRender>
+        </Select>);
+
+        var renderedOptions = cut.FindAll(".ant-select-item-option [data-option-index]");
+        Assert.Equal(new[] { "first", "second", "third" }, renderedOptions.Select(option => option.TextContent));
+        Assert.Equal(new[] { "0", "1", "2" }, renderedOptions.Select(option => option.GetAttribute("data-option-index")));
+    }
+
+    [Fact]
+    public async Task TokenSeparators_accepts_a_custom_tokenizer_function()
+    {
+        var tokenizedInputs = new List<string>();
+        Func<string, IEnumerable<string>> tokenizer = input =>
+        {
+            tokenizedInputs.Add(input);
+            return input.Contains(':') ? new[] { "alpha" } : new[] { input };
+        };
+        var cut = Render<Select<string, string>>(@<Select TItemValue="string" TItem="string" Mode="SelectMode.Tags" EnableSearch SearchDebounceMilliseconds="0"
+                                                   TokenSeparators="tokenizer">
+            <SelectOptions>
+                <SelectOption TItemValue="string" TItem="string" Value='@("alpha")' Label="Alpha" />
+                <SelectOption TItemValue="string" TItem="string" Value='@("beta")' Label="Beta" />
+            </SelectOptions>
+        </Select>);
+        Assert.True(cut.Instance.TokenSeparators.IsT1);
+
+        var input = cut.Find("input");
+        await input.InputAsync(new ChangeEventArgs { Value = "unfinished" });
+        Assert.Empty(cut.Instance.SelectedOptionItems);
+
+        await input.InputAsync(new ChangeEventArgs { Value = "custom:alpha" });
+
+        Assert.Contains("custom:alpha", tokenizedInputs);
+        Assert.Equal(new[] { "alpha" }, cut.Instance.SelectedOptionItems.Select(item => item.Key));
+    }
+
+    [Fact]
+    public async Task PopupMatchSelectWidth_false_disables_virtual_accessibility()
+    {
+        var cut = Render(@<Select Id="unvirtualized-width" TItemValue="string" TItem="string" PopupMatchSelectWidth="@false">
+            <SelectOptions>
+                @for (var index = 0; index < 12; index++)
+                {
+                    var value = index.ToString();
+                    <SelectOption TItemValue="string" TItem="string" Value="value" Label="@($"Option {value}")" />
+                }
+            </SelectOptions>
+        </Select>);
+
+        Assert.Equal(12, cut.FindAll(".ant-select-item-option[role=option]").Count);
+        Assert.NotNull(cut.Find(".ant-select-dropdown-list-holder-inner[role=listbox]"));
+    }
+
+    [Fact]
+    public void AllowClear_options_render_label_tab_index_and_custom_icon()
+    {
+        RenderFragment clearIcon = builder => builder.AddContent(0, "custom-clear");
+        var allowClear = new SelectAllowClearOptions
+        {
+            ClearIcon = clearIcon,
+            Label = "Clear selected value",
+            TabIndex = -1
+        };
+
+        var cut = Render<Select<string, string>>(@<Select TItemValue="string" TItem="string"
+                                                           Value='@("lucy")'
+                                                           AllowClear="allowClear">
+            <SelectOptions>
+                <SelectOption TItemValue="string" TItem="string" Value='@("lucy")' Label="Lucy" />
+            </SelectOptions>
+        </Select>);
+
+        var clearButton = cut.Find("button.ant-select-clear");
+        Assert.Equal("button", clearButton.GetAttribute("type"));
+        Assert.Equal("Clear selected value", clearButton.GetAttribute("aria-label"));
+        Assert.Equal("-1", clearButton.GetAttribute("tabindex"));
+        Assert.Equal("custom-clear", clearButton.TextContent.Trim());
+    }
+
+    [Fact]
+    public async Task OnActive_reports_the_highlighted_option_value_while_popup_is_open()
+    {
+        var activeValues = new List<string>();
+        var cut = Render<Select<string, string>>(@<Select TItemValue="string" TItem="string" Open OnActive="@(EventCallback.Factory.Create<string>(this, value => activeValues.Add(value)))">
+            <SelectOptions>
+                <SelectOption TItemValue="string" TItem="string" Value='@("one")' Label="One" />
+                <SelectOption TItemValue="string" TItem="string" Value='@("two")' Label="Two" />
+            </SelectOptions>
+        </Select>);
+
+        activeValues.Clear();
+        await cut.InvokeAsync(() => cut.Instance.ActiveOption = cut.Instance.SelectOptionItems[1]);
+
+        Assert.Equal(new[] { "two" }, activeValues);
     }
 
     [Theory]
@@ -369,5 +528,74 @@
         Assert.Equal("Zero", cut.Find("[id='" + cut.Find("input").GetAttribute("aria-activedescendant") + "']").GetAttribute("aria-label"));
         Assert.Equal("true", cut.Find("[role=option][aria-label=Disabled]").GetAttribute("aria-selected"));
         Assert.Equal("true", cut.Find("[role=option][aria-label=Disabled]").GetAttribute("aria-disabled"));
+    }
+
+    [Fact]
+    public async Task Focus_and_blur_callbacks_receive_the_native_focus_events()
+    {
+        JSInterop.SetupVoid("AntDesign.interop.domManipulationHelper.focus", _ => true);
+        FocusEventArgs receivedFocus = null;
+        FocusEventArgs receivedBlur = null;
+        var cut = Render<Select<string, string>>(@<Select TItemValue="string" TItem="string"
+            OnFocus="@(args => receivedFocus = args)" OnBlur="@(args => receivedBlur = args)">
+            <SelectOptions>
+                <SelectOption TItemValue="string" TItem="string" Value='@("one")' Label="One" />
+            </SelectOptions>
+        </Select>);
+        var content = cut.FindComponent<AntDesign.Select.Internal.SelectContent<string, string>>().Instance;
+        var focusEvent = new FocusEventArgs();
+        var blurEvent = new FocusEventArgs();
+
+        await cut.InvokeAsync(async () =>
+        {
+            await content.OnFocus.InvokeAsync(focusEvent);
+            await content.OnBlur.InvokeAsync(blurEvent);
+        });
+
+        Assert.Same(focusEvent, receivedFocus);
+        Assert.Same(blurEvent, receivedBlur);
+    }
+
+    [Fact]
+    public async Task ShowSearch_config_invokes_its_on_search_callback()
+    {
+        var searchValues = new List<string>();
+        var showSearch = new SelectShowSearchOptions { OnSearch = value => searchValues.Add(value) };
+        var cut = Render<Select<string, string>>(@<Select TItemValue="string" TItem="string"
+            ShowSearch="showSearch" SearchDebounceMilliseconds="0">
+            <SelectOptions>
+                <SelectOption TItemValue="string" TItem="string" Value='@("lucy")' Label="Lucy" />
+            </SelectOptions>
+        </Select>);
+
+        await cut.Find("input.ant-select-input").InputAsync(new ChangeEventArgs { Value = "lu" });
+
+        Assert.Contains("lu", searchValues);
+    }
+
+    [Fact]
+    public async Task ShowSearch_filter_option_receives_search_value_and_option()
+    {
+        var filterCalls = new List<string>();
+        var showSearch = new SelectShowSearchOptions<string, string>
+        {
+            FilterOption = (searchValue, option) =>
+            {
+                filterCalls.Add($"{searchValue}:{option.Label}:{option.Item}");
+                return option.Label.Contains(searchValue, StringComparison.OrdinalIgnoreCase);
+            }
+        };
+        var cut = Render<Select<string, string>>(@<Select TItemValue="string" TItem="string"
+            ShowSearch="showSearch" SearchDebounceMilliseconds="0">
+            <SelectOptions>
+                <SelectOption TItemValue="string" TItem="string" Value='@("lucy")' Label="Lucy" />
+                <SelectOption TItemValue="string" TItem="string" Value='@("jack")' Label="Jack" />
+            </SelectOptions>
+        </Select>);
+
+        await cut.Find("input.ant-select-input").InputAsync(new ChangeEventArgs { Value = "lu" });
+
+        Assert.Contains("lu:Lucy:lucy", filterCalls);
+        Assert.Contains("lu:Jack:jack", filterCalls);
     }
 }

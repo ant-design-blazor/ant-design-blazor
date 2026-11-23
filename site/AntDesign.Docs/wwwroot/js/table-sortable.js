@@ -3,7 +3,7 @@ const HANDLE_SELECTOR = 'td:first-child > .ant-btn-icon-only';
 const TRANSITION = 'transform 200ms ease';
 
 export function initializeTableSortable(root, dotNet, handleOnly) {
-  if (!root) return;
+  if (!root || root.__tableSortableDispose) return false;
 
   let drag = null;
   const originalStyles = new WeakMap();
@@ -190,6 +190,8 @@ export function initializeTableSortable(root, dotNet, handleOnly) {
     document.removeEventListener('pointercancel', onPointerUp);
     delete root.__tableSortableDispose;
   };
+
+  return true;
 }
 
 export function disposeTableSortable(root) {

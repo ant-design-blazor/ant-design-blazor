@@ -1,7 +1,7 @@
 @namespace AntDesign
 @inherits AntDomComponentBase
 
-<span class="@IconClass" style="@(!string.IsNullOrWhiteSpace(Style) ? Style : null)" id="@Id" tabindex="@IconTabIndex" @ref="Ref" @attributes="_attributes" @onclick:stopPropagation="StopPropagation" @onkeydown="OnKeyDown">
+<span class="@IconClass" style="@(!string.IsNullOrWhiteSpace(Style) ? Style : null)" id="@Id" tabindex="@IconTabIndex" @ref="Ref" @attributes="GetAdditionalAttributes(_attributes)" @onclick:stopPropagation="StopPropagation" @onkeydown="OnKeyDown">
     @if (ComponentTemplate != null)
     {
         @ComponentTemplate(ComponentAttributes)

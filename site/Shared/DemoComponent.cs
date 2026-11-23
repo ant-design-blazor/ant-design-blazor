@@ -27,6 +27,10 @@ namespace AntDesign.Docs
 
         public string Cover { get; set; }
 
+        public string Version { get; set; }
+
+        public bool IsUpdated { get; set; }
+
         public List<DemoItem> DemoList { get; set; }
     }
 
@@ -37,6 +41,8 @@ namespace AntDesign.Docs
         public string Name { get; set; }
 
         public string Title { get; set; }
+
+        public string Version { get; set; }
 
         public string Description { get; set; }
 
@@ -58,6 +64,9 @@ namespace AntDesign.Docs
         public string Link { get; set; }
 
         public bool? Docs { get; set; }
+
+        /// <summary>Blazor-specific demo that is kept outside the React-aligned example sequence.</summary>
+        public bool Extension { get; set; }
 
         public bool Debug { get; set; }
 

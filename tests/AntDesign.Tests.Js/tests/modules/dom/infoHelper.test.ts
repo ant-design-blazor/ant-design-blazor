@@ -22,6 +22,20 @@ describe('domInfoHelper', () => {
     expect(pos).to.haveOwnProperty("y");
   });
 
+  it('isFixedPosition should treat a sticky element at its inset as viewport positioned', () => {
+    const testedElement = domInit.addElementToBody('<div id="stickyTrigger" style="position: sticky; top: 0;">Sticky trigger</div>');
+    testedElement.getBoundingClientRect = () => ({ top: 0 } as DOMRect);
+
+    expect(infoHelper.isFixedPosition(testedElement)).to.be.true;
+  });
+
+  it('isFixedPosition should not treat a sticky element before its inset as fixed', () => {
+    const testedElement = domInit.addElementToBody('<div id="unstuckTrigger" style="position: sticky; top: 0;">Unstuck trigger</div>');
+    testedElement.getBoundingClientRect = () => ({ top: 24 } as DOMRect);
+
+    expect(infoHelper.isFixedPosition(testedElement)).to.be.false;
+  });
+
   it('getInfo should handle elements with auto margins without crashing', () => {
     //arrange
     const testedElement = domInit.addElementToBody('<div id="autoMarginTest" style="margin: auto; width: 100px;">Test element</div>');

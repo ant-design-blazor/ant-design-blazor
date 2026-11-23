@@ -15,17 +15,18 @@
                             VisibleChanged="OpenChanged"
                             Disabled="Disabled"
                             Placement="@Placement"
+                            Direction="@Direction"
                             Trigger="new[] { Trigger.Click }"
                             DestroyOnHidden="@DestroyPopupOnHidden"
                             ClickIgnoreSelector="@($".{ClassPrefix}-selection-item-remove, .{ClassPrefix}-clear, .ant-tag-close-icon")"
                             HiddenMode
-                            ImmediateOpenOnPointerDown
-                            ImmediateOpenClass="@(ClassPrefix + "-open")"
                             ImmediateOpenWidthMode="@ImmediatePopupWidthMode"
                             ImmediateOpenWidth="@ImmediatePopupWidth"
                             ImmediateOpenMaxWidth="@ImmediatePopupMaxWidth"
+                            ImmediateOpenOnPointerDown
                             ComplexAutoCloseAndVisible
                             BoundaryAdjustMode="@BoundaryAdjustMode"
+                            OnBeforeVisibleChange="@OnOverlayBeforeVisibleChangeAsync"
                             OnMouseEnter="@(() => { OnMouseEnter?.Invoke(); })"
                             OnMouseLeave="@(() => { OnMouseLeave?.Invoke(); })"
                             OnVisibleChange="@OnOverlayVisibleChangeAsync"
@@ -37,8 +38,7 @@
                             UseCssZIndex
                             OverlayStyle="@(GetSemanticStyle("popup.root", _dropdownStyle))"
                             GetPopupContainer="@GetPopupContainer"
-                            OverlayEnterCls="ant-slide-up-enter ant-slide-up-enter-active ant-slide-up"
-                            OverlayLeaveCls="ant-slide-up-leave ant-slide-up-leave-active ant-slide-up">
+                            OverlayEnterCls="ant-slide-up-enter ant-slide-up-enter-active ant-slide-up">
                 <Overlay>
                     <div>
                         @if (DropdownRender != null)
@@ -85,15 +85,20 @@
                                                    TagRender="@TagRender"
                                                    SearchValue="@_searchValue"
                                                    SearchDebounceMilliseconds="@SearchDebounceMilliseconds"
-                                                   IsOverlayShow="@_dropDown.IsOverlayShow()"
+                                                   IsOverlayShow="@IsDropdownShown()"
                                                    MaxTagCount="@_maxTagCountAsInt"
                                                    OnInput="@OnInputAsync"
                                                    OnKeyUp="@OnKeyUpAsync"
                                                    OnKeyDown="@OnKeyDownAsync"
                                                    OnFocus="@OnInputFocusAsync"
                                                    OnBlur="@OnInputBlurAsync"
+                                                   OnMouseDown="@OnMouseDown"
+                                                   OnClick="@OnClick"
+                                                   TabIndex="@TabIndex"
+                                                   MaxLength="@MaxLength"
                                                    OnClearClick="@OnInputClearClickAsync"
                                                    OnRemoveSelected="@OnRemoveSelectedAsync"
+                                                   SearchIcon="@SearchIconContent"
                                                    Placeholder="@Placeholder" />
                                 </CascadingValue>
                             </CascadingValue>

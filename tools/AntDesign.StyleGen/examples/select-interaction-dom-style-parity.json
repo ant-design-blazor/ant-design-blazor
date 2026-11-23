@@ -90,7 +90,7 @@
           "actions": [
             { "type": "click", "reactSelector": "#select-demo-multiple .ant-select:not(.ant-select-disabled) input", "blazorSelector": "#components-select-demo-multiple .ant-select:not(.ant-select-disabled) input", "coordinateClick": true },
             { "type": "waitForSelectOptions", "reactSelector": "#select-demo-multiple .ant-select:not(.ant-select-disabled)", "blazorSelector": "#components-select-demo-multiple .ant-select:not(.ant-select-disabled)", "visibleLabels": ["d13"] },
-            { "type": "click", "reactSelector": ".ant-select-dropdown .ant-select-item-option[title='d13']", "blazorSelector": ".ant-select-dropdown .ant-select-item-option[title='d13']", "visible": true },
+            { "type": "click", "reactSelector": ".ant-select-dropdown .ant-select-item-option[title='d13']", "blazorSelector": ".ant-select-dropdown .ant-select-item-option[title='d13']", "visible": true, "portalMatch": "aria-controls", "portalSelector": ".ant-select-dropdown", "reactPortalTriggerSelector": "#select-demo-multiple .ant-select:not(.ant-select-disabled)", "blazorPortalTriggerSelector": "#components-select-demo-multiple .ant-select:not(.ant-select-disabled)" },
             { "type": "waitForSelector", "reactSelector": "#select-demo-multiple .ant-select-selection-item[title='d13']", "blazorSelector": "#components-select-demo-multiple .ant-select-selection-item[title='d13']" },
             { "type": "wait", "milliseconds": 3200 }
           ]

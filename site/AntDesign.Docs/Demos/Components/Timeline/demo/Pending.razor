@@ -1,0 +1,21 @@
+<Flex Vertical Gap="FlexGap.Medium" Align="FlexAlign.Start">
+    <Timeline Items="_items" Reverse="_reverse" />
+    <Button Type="ButtonType.Primary" OnClick="ToggleReverse">Toggle Reverse</Button>
+</Flex>
+
+@code {
+    private bool _reverse;
+
+    private readonly IReadOnlyList<TimelineItemData> _items = new[]
+    {
+        new TimelineItemData { Content = "Create a services site 2015-09-01" },
+        new TimelineItemData { Content = "Solve initial network problems 2015-09-01" },
+        new TimelineItemData { Content = "Technical testing 2015-09-01" },
+        new TimelineItemData { Loading = true, Content = "Recording..." },
+    };
+
+    private void ToggleReverse()
+    {
+        _reverse = !_reverse;
+    }
+}

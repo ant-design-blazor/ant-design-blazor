@@ -11,4 +11,4 @@ title:
 
 ## en-US
 
-Use `Variant` to choose an outlined, filled, borderless, or underlined selector. When omitted, the legacy `Bordered` parameter is honored.
+Variants of Select, there are four variants: `outlined` `filled` `borderless` and `underlined`.

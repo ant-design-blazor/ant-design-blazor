@@ -43,6 +43,8 @@ namespace AntDesign
     [Documentation(DocumentationCategory.Components, DocumentationType.Navigation, "https://gw.alipayobjects.com/zos/alicdn/eedWN59yJ/Dropdown.svg", Title = "Dropdown", SubTitle = "下拉菜单")]
     public partial class Dropdown : OverlayTrigger
     {
+        internal void RefreshPopupContent() => _overlay?.RefreshOverlayContent();
+
         /// <summary>
         /// Data-driven menu configuration, matching React's <c>menu</c> prop.
         /// Explicit <see cref="OverlayTrigger.Overlay"/> content remains available

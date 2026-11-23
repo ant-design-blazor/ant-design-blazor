@@ -1,5 +1,5 @@
 ---
-order: 24
+order: 19
 title:
   zh-CN: 自定义选择标签
   en-US: Custom Tag Render
@@ -13,4 +13,4 @@ title:
 
 ## en-US
 
-Allows for custom rendering of tags
+Allows for custom rendering of tags.

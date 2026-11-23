@@ -1,4 +1,3 @@
-@import '../template/Layout/Header/DocSearch.less';
 
 [data-theme='dark'] {
   /* Change autocomplete styles in WebKit */
@@ -268,36 +267,6 @@
     border-bottom: 2em solid @component-background;
   }
 
-  .algolia-autocomplete {
-    .ds-dropdown-menu {
-      [class^='ds-dataset-'] {
-        background: @popover-background;
-        .algolia-docsearch-suggestion {
-          background: @popover-background;
-        }
-      }
-      .ds-suggestion.ds-cursor {
-        .algolia-docsearch-suggestion:not(.suggestion-layout-simple) {
-          .algolia-docsearch-suggestion--content {
-            background-color: fade(@white, 8%);
-          }
-        }
-      }
-    }
-    .algolia-docsearch-suggestion--category-header {
-      color: rgba(255, 255, 255, 0.65);
-      border-bottom: 1px solid @border-color-split;
-    }
-    .algolia-docsearch-suggestion--subcategory-column::before {
-      background: @border-color-split;
-    }
-    .algolia-docsearch-suggestion--content {
-      &::before {
-        background: @border-color-split;
-      }
-    }
-  }
-
   .token.comment,
   .token.quote {
     color: #b6b18b;
@@ -373,21 +342,4 @@
     }
   }
 
-  // customization DocSearch Modal component in dark mode
-  #antd_algolia_search_modal {
-    .customDocSearch();
-
-    // additional style reset in dark mode
-    --docsearch-key-gradient: @background-color-light;
-    --docsearch-logo-color: @white;
-
-    .DocSearch-Modal,
-    .DocSearch-Commands-Key {
-      box-shadow: none;
-    }
-
-    .DocSearch-Hit a {
-      box-shadow: none;
-    }
-  }
 }

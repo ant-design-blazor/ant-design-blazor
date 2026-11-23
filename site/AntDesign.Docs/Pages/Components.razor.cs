@@ -68,6 +68,8 @@ namespace AntDesign.Docs.Pages
 
         private List<DemoItem> _demos = [];
 
+        private List<DemoItem> _extensionDemos = [];
+
         private (string Name, string Title)[] _anchors = [];
 
         private string _currentPageName;
@@ -192,8 +194,9 @@ namespace AntDesign.Docs.Pages
             if (pageName != _currentPageName || version != _demoLoadVersion)
                 return Task.CompletedTask;
 
-            _anchors = showDemos.Select(x => (x.Name, x.Title)).ToArray();
-            _demos = showDemos;
+            _anchors = showDemos.Where(x => !x.Extension).Select(x => (x.Name, x.Title)).ToArray();
+            _demos = showDemos.Where(x => !x.Extension).ToList();
+            _extensionDemos = showDemos.Where(x => x.Extension).ToList();
             _filePaths = new() { _filePath };
             foreach (var item in showDemos)
             {

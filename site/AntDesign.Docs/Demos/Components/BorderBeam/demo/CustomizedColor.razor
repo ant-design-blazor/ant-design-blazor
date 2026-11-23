@@ -1,0 +1,52 @@
+<div style="max-width:480px; display:flex; flex-direction:column; gap:16px;">
+    <Segmented TValue="string" Options="@_paletteOptions" Block @bind-Value="_selectedPalette" />
+    <Card Title="@CurrentPalette.Name" Style="max-width:480px">
+        <Decoration>
+            <BorderBeam Color="@(OneOf.OneOf<string, IReadOnlyList<BorderBeamGradientStop>>.FromT1(CurrentPalette.Color))" LineWidth="2px" Size="140px" Duration="6" />
+        </Decoration>
+        <ChildContent><div style="display:flex; flex-direction:column; gap:16px">
+            <span>@CurrentPalette.Description</span>
+            <div style="display:flex; flex-wrap:wrap; gap:8px">
+                @foreach (var stop in CurrentPalette.Color)
+                {
+                    <Tag Color="@stop.Color" Variant="TagVariant.Filled">@stop.Color · @stop.Percent%</Tag>
+                }
+            </div>
+            <span>Stop positions use the public 0–100 input range.</span>
+        </div></ChildContent>
+    </Card>
+</div>
+
+@code {
+    private string _selectedPalette = "ocean";
+
+    private Palette CurrentPalette => Palettes.First(item => item.Key == _selectedPalette);
+
+    private static readonly SegmentedOption<string>[] _paletteOptions =
+    [
+        new("ocean", "Ocean"),
+        new("sunset", "Sunset"),
+        new("aurora", "Aurora"),
+        new("forest", "Forest"),
+        new("ember", "Ember"),
+        new("nebula", "Nebula")
+    ];
+
+    private static readonly Palette[] Palettes =
+    [
+        new("ocean", "Ocean", "Dashboard", "A calm blue-green accent for data views and cloud tooling.",
+            [new() { Color = "#1677ff", Percent = 0 }, new() { Color = "#36cfc9", Percent = 52 }, new() { Color = "#95de64", Percent = 100 }]),
+        new("sunset", "Sunset", "Upgrade", "A warm highlight for featured cards and marketing blocks.",
+            [new() { Color = "#ff7a45", Percent = 0 }, new() { Color = "#ff4d4f", Percent = 49 }, new() { Color = "#ff85c0", Percent = 100 }]),
+        new("aurora", "Aurora", "AI", "A vivid cool-toned beam for assistants and automation panels.",
+            [new() { Color = "#7c3aed", Percent = 0 }, new() { Color = "#06b6d4", Percent = 57 }, new() { Color = "#67e8f9", Percent = 100 }]),
+        new("forest", "Forest", "Recommendation", "A bright natural palette for recommendations and growth surfaces.",
+            [new() { Color = "#22c55e", Percent = 0 }, new() { Color = "#a3e635", Percent = 54 }, new() { Color = "#facc15", Percent = 100 }]),
+        new("ember", "Ember", "Alert", "A warm gradient for important alerts and launch cards.",
+            [new() { Color = "#fa541c", Percent = 0 }, new() { Color = "#ff7875", Percent = 46 }, new() { Color = "#ffd666", Percent = 100 }]),
+        new("nebula", "Nebula", "Labs", "A purple-pink mix for experimental modules.",
+            [new() { Color = "#2f54eb", Percent = 0 }, new() { Color = "#722ed1", Percent = 44 }, new() { Color = "#ff85c0", Percent = 100 }])
+    ];
+
+    private sealed record Palette(string Key, string Name, string Usage, string Description, IReadOnlyList<BorderBeamGradientStop> Color);
+}

@@ -18,6 +18,30 @@
             var renderDemos = _demos.Where(demo => !(SemanticComponentKey == "select" &&
                 string.Equals(demo.Name, "_semantic", StringComparison.OrdinalIgnoreCase)) &&
                 !(isIconPage && string.Equals(demo.Name, "List", StringComparison.OrdinalIgnoreCase))).ToList();
+            var demoColumnSplit = (renderDemos.Count + 1) / 2;
+            var firstDemoColumn = renderDemos.Take(demoColumnSplit).ToList();
+            var secondDemoColumn = renderDemos.Skip(demoColumnSplit).ToList();
+            var responsiveDemos = new List<DemoItem>(renderDemos.Count);
+            for (var index = 0; index < demoColumnSplit; index++)
+            {
+                responsiveDemos.Add(firstDemoColumn[index]);
+                if (index < secondDemoColumn.Count)
+                {
+                    responsiveDemos.Add(secondDemoColumn[index]);
+                }
+            }
+            var extensionColumnSplit = (_extensionDemos.Count + 1) / 2;
+            var firstExtensionColumn = _extensionDemos.Take(extensionColumnSplit).ToList();
+            var secondExtensionColumn = _extensionDemos.Skip(extensionColumnSplit).ToList();
+            var responsiveExtensionDemos = new List<DemoItem>(_extensionDemos.Count);
+            for (var index = 0; index < extensionColumnSplit; index++)
+            {
+                responsiveExtensionDemos.Add(firstExtensionColumn[index]);
+                if (index < secondExtensionColumn.Count)
+                {
+                    responsiveExtensionDemos.Add(secondExtensionColumn[index]);
+                }
+            }
 
             if (_anchors.Any())
             {
@@ -117,7 +141,7 @@
                     <AntDesign.Docs.Demos.Components.Icon.demo.List />
                 }
 
-                @if (renderDemos.Any())
+                @if (renderDemos.Any() || _extensionDemos.Any())
                 {
                     <h2 id="Examples" data-scrollama-index="1">
                         @Localizer["app.component.examples"]
@@ -149,7 +173,7 @@
                 <Row Class="@_styles["demoGridRow"]">
                     @if (_demoComponent.Cols == 1 || _expanded)
                     {
-                        foreach (var demo in renderDemos)
+                        foreach (var demo in _demoComponent.Cols == 1 ? renderDemos : responsiveDemos)
                         {
                             <AntDesign.Col Span="24" Class="@($"code-boxes-col-1-1 {_styles["demoGridColumn"]}")">
                                 <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="demo.ComponentId" ComponentName="@_demoComponent.Title"></CodeBox>
@@ -158,14 +182,65 @@
                     }
                     else
                     {
-                        @foreach (var demo in renderDemos)
-                        {
-                            <AntDesign.Col Lg="12" Md="24" Sm="24" Class="@($"code-boxes-col-2-1 {_styles["demoGridColumn"]}")">
-                                <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="demo.ComponentId" ComponentName="@_demoComponent.Title"></CodeBox>
-                            </AntDesign.Col>
-                        }
+                        <AntDesign.Col Lg="12" Md="24" Sm="24" Class="@_styles["demoGridColumnStack"]">
+                            @for (var index = 0; index < firstDemoColumn.Count; index++)
+                            {
+                                var demo = firstDemoColumn[index];
+                                <div class="adb-docs-demo-card" style="order: @(index * 2)">
+                                    <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="demo.ComponentId" ComponentName="@_demoComponent.Title"></CodeBox>
+                                </div>
+                            }
+                        </AntDesign.Col>
+                        <AntDesign.Col Lg="12" Md="24" Sm="24" Class="@_styles["demoGridColumnStack"]">
+                            @for (var index = 0; index < secondDemoColumn.Count; index++)
+                            {
+                                var demo = secondDemoColumn[index];
+                                <div class="adb-docs-demo-card" style="order: @(index * 2 + 1)">
+                                    <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="demo.ComponentId" ComponentName="@_demoComponent.Title"></CodeBox>
+                                </div>
+                            }
+                        </AntDesign.Col>
                     }
                 </Row>
+            }
+
+            @if (_extensionDemos.Any())
+            {
+                <details class="docs-extension-demos">
+                    <summary>@Localizer["app.component.examples.extensions"] (@_extensionDemos.Count)</summary>
+                    <Row Class="@_styles["demoGridRow"]">
+                        @if (_demoComponent.Cols == 1 || _expanded)
+                        {
+                            foreach (var demo in _demoComponent.Cols == 1 ? _extensionDemos : responsiveExtensionDemos)
+                            {
+                                <AntDesign.Col Span="24" Class="@($"code-boxes-col-1-1 {_styles["demoGridColumn"]}")">
+                                    <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="demo.ComponentId" ComponentName="@_demoComponent.Title"></CodeBox>
+                                </AntDesign.Col>
+                            }
+                        }
+                        else
+                        {
+                            <AntDesign.Col Lg="12" Md="24" Sm="24" Class="@_styles["demoGridColumnStack"]">
+                                @for (var index = 0; index < firstExtensionColumn.Count; index++)
+                                {
+                                    var demo = firstExtensionColumn[index];
+                                    <div class="adb-docs-demo-card" style="order: @(index * 2)">
+                                        <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="demo.ComponentId" ComponentName="@_demoComponent.Title"></CodeBox>
+                                    </div>
+                                }
+                            </AntDesign.Col>
+                            <AntDesign.Col Lg="12" Md="24" Sm="24" Class="@_styles["demoGridColumnStack"]">
+                                @for (var index = 0; index < secondExtensionColumn.Count; index++)
+                                {
+                                    var demo = secondExtensionColumn[index];
+                                    <div class="adb-docs-demo-card" style="order: @(index * 2 + 1)">
+                                        <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="demo.ComponentId" ComponentName="@_demoComponent.Title"></CodeBox>
+                                    </div>
+                                }
+                            </AntDesign.Col>
+                        }
+                    </Row>
+                </details>
             }
            
             <section class="markdown api-container">
@@ -197,7 +272,7 @@
                 <ComponentTokenDocumentation Component="@SemanticComponentKey" Language="@CurrentLanguage" />
             }
 
-            <section class="markdown api-container">
+            <section id="Faq" class="markdown api-container">
                 @((MarkupString)_demoComponent.Faq)
             </section>
 
@@ -213,6 +288,21 @@
 <style>
     html {
         scroll-behavior: smooth;
+    }
+    .docs-extension-demos {
+        margin: 24px 0;
+    }
+    .docs-extension-demos > summary {
+        cursor: pointer;
+        color: var(--ant-color-text-secondary);
+        padding: 12px 16px;
+        border: 1px solid var(--ant-color-border-secondary);
+        border-radius: var(--ant-border-radius);
+        background: var(--ant-color-fill-quaternary);
+        list-style-position: inside;
+    }
+    .docs-extension-demos[open] > summary {
+        margin-bottom: 16px;
     }
     .main-container-component [id] {
         scroll-margin-top: 80px;
@@ -260,7 +350,9 @@
             ["& .code-boxes-col-2-1"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "inline-block", ["verticalAlign"] = "top" },
             ["@media only screen and (max-width: 992px)"] = new System.Collections.Generic.Dictionary<string, object>
             {
-                ["& .code-boxes-col-2-1, & .code-boxes-col-1-1"] = new System.Collections.Generic.Dictionary<string, object> { ["float"] = "none", ["width"] = "100%" }
+                ["& .code-boxes-col-2-1, & .code-boxes-col-1-1"] = new System.Collections.Generic.Dictionary<string, object> { ["float"] = "none", ["width"] = "100%" },
+                ["& .adb-docs-component-page-demo-grid-column-stack"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "contents", ["paddingLeft"] = 0, ["paddingRight"] = 0 },
+                ["& .adb-docs-demo-card"] = new System.Collections.Generic.Dictionary<string, object> { ["width"] = "100%" }
             },
             ["& .markdown.api-container hr"] = new System.Collections.Generic.Dictionary<string, object> { ["margin"] = "12px 0" },
             ["& .markdown.api-container > table"] = new System.Collections.Generic.Dictionary<string, object>
@@ -355,6 +447,7 @@
         },
         ["demoGridRow"] = new System.Collections.Generic.Dictionary<string, object> { ["marginLeft"] = -8, ["marginRight"] = -8 },
         ["demoGridColumn"] = new System.Collections.Generic.Dictionary<string, object> { ["paddingLeft"] = 8, ["paddingRight"] = 8 },
+        ["demoGridColumnStack"] = new System.Collections.Generic.Dictionary<string, object> { ["paddingLeft"] = 8, ["paddingRight"] = 8, ["display"] = "flex", ["flexDirection"] = "column" },
         ["carbonAd"] = new System.Collections.Generic.Dictionary<string, object> { ["float"] = "right" }
     });
 }

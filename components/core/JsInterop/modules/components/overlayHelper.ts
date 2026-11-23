@@ -59,7 +59,7 @@ function prepareOverlayInContainer(overlay: HTMLElement, trigger: HTMLElement, c
   }
 }
 
-type ImmediateOpenWidthMode = 'match-trigger' | 'content' | 'content-only' | 'custom' | '';
+type ImmediateOpenWidthMode = 'match-trigger' | 'content' | 'content-only' | 'min-width' | 'custom' | '';
 
 export class overlayHelper {
   static overlayRegistry: { [key: string]: Overlay} = {};
@@ -74,6 +74,30 @@ export class overlayHelper {
 
   static getInheritedAntDesignTokenStyle(triggerSelector: string): string {
     return getInheritedAntDesignTokenStyle(triggerSelector);
+  }
+
+  static getCurrentPlacement(blazorId: string): Placement | null {
+    return this.overlayRegistry[blazorId]?.getCurrentPlacement() ?? null;
+  }
+
+  static setPlacementClass(overlaySelector: string, placementClass: string): void {
+    const overlay = domInfoHelper.get(overlaySelector) as HTMLElement;
+    if (!overlay || !placementClass) return;
+    this.applyPlacementClass(overlay, placementClass);
+  }
+
+  private static applyPlacementClass(overlay: HTMLElement, placementClass: string): void {
+    const placementMarker = '-placement-';
+    const placementMarkerIndex = placementClass.indexOf(placementMarker);
+    if (placementMarkerIndex < 0) return;
+
+    const placementPrefix = placementClass.slice(0, placementMarkerIndex + placementMarker.length);
+    const currentPlacement = Array.from(overlay.classList).find(className => className.startsWith(placementPrefix));
+    if (currentPlacement && currentPlacement !== placementClass) {
+      overlay.classList.replace(currentPlacement, placementClass);
+    } else if (!currentPlacement) {
+      overlay.classList.add(placementClass);
+    }
   }
 
   private static clearPendingOverlayRebuild(blazorId: string) {
@@ -116,6 +140,44 @@ export class overlayHelper {
 
     return maxMotionTime(styles.animationDuration, styles.animationDelay) > 0
       || maxMotionTime(styles.transitionDuration, styles.transitionDelay) > 0;
+  }
+
+  private static calculatePositionBeforeReveal(
+    overlay: Overlay,
+    element: HTMLElement,
+    overlayPresets?: domTypes.position
+  ): overlayPosition {
+    const hiddenClasses = Array.from(element.classList).filter(className => className.endsWith('-hidden'));
+    const computedDisplay = window.getComputedStyle(element).display;
+    const wasHidden = computedDisplay === 'none' || hiddenClasses.length > 0;
+    const display = element.style.getPropertyValue('display');
+    const displayPriority = element.style.getPropertyPriority('display');
+    const visibility = element.style.getPropertyValue('visibility');
+    const visibilityPriority = element.style.getPropertyPriority('visibility');
+
+    if (wasHidden) {
+      hiddenClasses.forEach(className => element.classList.remove(className));
+      element.style.setProperty('display', 'block', 'important');
+      element.style.setProperty('visibility', 'hidden', 'important');
+      element.getBoundingClientRect();
+
+      // The first pass uses the cached container bounds to move a hidden
+      // popup away from its off-screen staging position. The second pass then
+      // reads the real container bounds without the temporary scrollbar that
+      // the staging position would otherwise create.
+      overlay.calculatePosition(true, true, overlayPresets);
+      const position = overlay.calculatePosition(true, false, overlayPresets);
+
+      hiddenClasses.forEach(className => element.classList.add(className));
+      if (display) element.style.setProperty('display', display, displayPriority);
+      else element.style.removeProperty('display');
+      if (visibility) element.style.setProperty('visibility', visibility, visibilityPriority);
+      else element.style.removeProperty('visibility');
+
+      return position;
+    }
+
+    return overlay.calculatePosition(false, false, overlayPresets);
   }
 
   private static deferOverlayRebuildUntilMotionEnds(blazorId: string, element: HTMLElement, rebuild: () => void) {
@@ -165,11 +227,8 @@ export class overlayHelper {
     overlaySelector: string,
     blazorId: string,
     hiddenClass: string,
-    enterClass: string,
-    overlayDisplayStyle: string,
     disabled: boolean,
     clickIgnoreSelector: string,
-    openClass: string,
     placement: Placement,
     containerSelector: string | HTMLElement,
     triggerBoundyAdjustMode: TriggerBoundyAdjustMode,
@@ -196,6 +255,18 @@ export class overlayHelper {
       const target = event.target as Element | null;
       if (clickIgnoreSelector && target?.closest(clickIgnoreSelector)) return;
 
+      // The matching document click is dispatched separately from the
+      // Blazor trigger callback. Mark this trigger so outside-click handling
+      // can ignore only that event, even when the server callbacks arrive out
+      // of order.
+      const clickToken = `${performance.now()}-${Math.random()}`;
+      trigger.setAttribute('data-ant-immediate-open-click', clickToken);
+      window.setTimeout(() => {
+        if (trigger.getAttribute('data-ant-immediate-open-click') === clickToken) {
+          trigger.removeAttribute('data-ant-immediate-open-click');
+        }
+      }, 1000);
+
       // Position and portal the already-rendered popup locally before the
       // Blazor Server click callback completes. Otherwise a server round trip
       // is required before the popup reaches its final position, which is
@@ -219,16 +290,16 @@ export class overlayHelper {
         offsetCssExpression,
         arrowPointAtCenter
       );
-      // Keep the popup invisible for one layout frame after its final width
-      // and position have been applied. This prevents the browser from
-      // painting the intrinsic width first and then growing it when the
-      // measured width is committed.
-      void this.revealMeasuredOverlay(overlay, hiddenClass, enterClass, overlayDisplayStyle);
-      const stateRoot = selectRoot ?? trigger;
-      if (openClass) stateRoot.classList.add(openClass);
-      stateRoot.querySelectorAll<HTMLElement>('[role="combobox"]').forEach(input => {
-        input.setAttribute('aria-expanded', 'true');
-      });
+      // addOverlayToContainer measures and applies the final placement while
+      // the popup is hidden. Keep that measurement for the managed Show path:
+      // measuring again after the pointer callback can choose another side
+      // while the trigger and popup are being rendered by Blazor.
+      overlay.setAttribute('data-ant-immediate-positioned', '');
+      // Keep the popup hidden until the Blazor open callback has synchronized
+      // the trigger (including Select's input value and any flipped placement).
+      // The managed Overlay.Show path reveals it after OnBeforeVisibleChange;
+      // revealing here on the next frame races that state update and makes the
+      // popup briefly show stale text or the requested side before it flips.
     };
 
     trigger.addEventListener('pointerdown', event => {
@@ -247,9 +318,16 @@ export class overlayHelper {
     overlay: HTMLElement,
     hiddenClass: string,
     enterClass: string,
-    displayStyle: string
+    displayStyle: string,
+    placementClass = ''
   ): Promise<void> {
     if (!overlay) return;
+
+    // Blazor can rerender the trigger after the browser-side measurement and
+    // restore the requested placement class. Reapply the fitted placement
+    // while the popup is still hidden so it never paints in the wrong
+    // direction for a frame when the popup had to flip.
+    if (placementClass) this.applyPlacementClass(overlay, placementClass);
 
     if (hiddenClass) overlay.classList.remove(hiddenClass);
     overlay.style.display = displayStyle || 'inline-flex';
@@ -307,11 +385,13 @@ export class overlayHelper {
     // and borders are added a second time by content-box sizing and the popup
     // grows on its first visible frame.
     overlay.style.boxSizing = 'border-box';
-    // A fixed match-trigger/custom width already determines the popup's
-    // border-box width, so a second min-width constraint is redundant. Keep
-    // the trigger minimum only for content sizing, where the measured popup
-    // may otherwise be narrower than its trigger.
-    overlay.style.minWidth = mode === 'content' ? `${triggerWidth}px` : '0px';
+    // Keep the trigger width as the minimum for match-trigger as well as
+    // content sizing. This is redundant for the former, but avoids an
+    // undersized first frame if consumer styles temporarily override width.
+    const requestedMinimum = mode === 'min-width' ? Number.parseFloat(width) || 0 : 0;
+    overlay.style.minWidth = mode === 'match-trigger' || mode === 'content' || mode === 'min-width'
+      ? `${Math.max(triggerWidth, requestedMinimum)}px`
+      : '0px';
     overlay.style.maxWidth = maxWidth && maxWidth.toLowerCase() !== 'auto' ? maxWidth : '';
 
     if (mode === 'match-trigger') {
@@ -407,15 +487,18 @@ export class overlayHelper {
     overlaySelector: string,
     hiddenClass: string,
     enterClass: string,
-    displayStyle: string
+    displayStyle: string,
+    placementClass = ''
   ): Promise<void> {
     const overlay = domInfoHelper.get(overlaySelector) as HTMLElement;
     if (!overlay) return;
 
     if ((!hiddenClass || !overlay.classList.contains(hiddenClass)) && getComputedStyle(overlay).visibility !== 'hidden') {
+      overlay.removeAttribute('data-ant-immediate-positioned');
       return;
     }
-    await this.revealMeasuredOverlay(overlay, hiddenClass, enterClass, displayStyle);
+    await this.revealMeasuredOverlay(overlay, hiddenClass, enterClass, displayStyle, placementClass);
+    overlay.removeAttribute('data-ant-immediate-positioned');
   }
 
   static addOverlayToContainer(blazorId: string, 
@@ -429,7 +512,6 @@ export class overlayHelper {
     const triggerElement = domInfoHelper.get(triggerSelector) as HTMLElement;    
     if (!overlayElement || !containerElement || !triggerElement) return null;
     if (!Overlay.isValidPlacement(placement)) return null;
-
     const previousOverlay = this.overlayRegistry[blazorId];
     if (previousOverlay) {
       const verticalResolvedOffset = resolveOffset(overlayElement, verticalOffset, offsetCssExpression);
@@ -443,6 +525,23 @@ export class overlayHelper {
         triggerPrefixCls
       )) {
         this.clearPendingOverlayRebuild(blazorId);
+        // The Select fast-open path has already measured and applied the
+        // final placement before starting the enter motion. Blazor's follow-up
+        // render can arrive while that motion is running; measuring again at
+        // that point can choose a different side because the popup is now
+        // visible (and may have a transient transformed box). Keep the first
+        // placement stable for the entire entrance to avoid a visible flip.
+        if (this.isEnterMotionRunning(overlayElement)) {
+          return previousOverlay.sanitizedPosition;
+        }
+
+        if (overlayElement.hasAttribute('data-ant-immediate-positioned')) {
+          // The pointerdown fast path already measured this popup with its
+          // final width and the original, untransformed box. Reusing that
+          // result avoids a second boundary decision during the same opening.
+          return previousOverlay.sanitizedPosition;
+        }
+
         // Immediate-open triggers create the positioning observer on pointerdown,
         // before the Blazor Server callback returns. Reuse it on the ensuing
         // render so the entering popup keeps its DOM, observers, and animation.
@@ -451,12 +550,7 @@ export class overlayHelper {
         const overlayPresets = overlayTop != null || overlayLeft != null
           ? { x: overlayLeft, y: overlayTop }
           : undefined;
-        setTimeout(() => {
-          if (this.overlayRegistry[blazorId] === previousOverlay) {
-            previousOverlay.calculatePosition(true, false, overlayPresets);
-          }
-        }, 10);
-        return previousOverlay.calculatePosition(false, false, overlayPresets);
+        return this.calculatePositionBeforeReveal(previousOverlay, overlayElement, overlayPresets);
       }
 
       if (this.isEnterMotionRunning(overlayElement)) {
@@ -518,11 +612,12 @@ export class overlayHelper {
     //register object in store, so it can be retrieved during update/dispose
     this.overlayRegistry[blazorId] = overlay;
 
-    setTimeout(() => {
-      // We need to calculate the position again to ensure that the overlay is correctly placed. Needs to be optimized twice to once
-      overlay.calculatePosition(true, false, overlayPresets);
-    }, 10);
-    return overlay.calculatePosition(false, true, overlayPresets);
+    // First place the hidden popup using cached container bounds, then
+    // calculate again after it has left the off-screen staging position.
+    // This keeps temporary staging scrollbars from changing the fitted
+    // direction on a later visible frame.
+    overlay.calculatePosition(true, true, overlayPresets);
+    return overlay.calculatePosition(true, false, overlayPresets);
   }
 
 
@@ -567,6 +662,9 @@ export class overlayHelper {
         resolveOffset(overlayElement, verticalOffset, offsetCssExpression),
         resolveOffset(overlayElement, horizontalOffset, offsetCssExpression)
       );
+      // Keep an existing overlay instance in sync when its requested
+      // placement changes while mounted (for example Select's placement demo).
+      overlay.updatePlacement(placement, arrowPointAtCenter);
       let overlayPresets: domTypes.position;
       if (overlayTop || overlayLeft) {
         overlayPresets = { x: overlayLeft, y: overlayTop };

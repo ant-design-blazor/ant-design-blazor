@@ -1,5 +1,6 @@
 ---
 order: 0
+version: 6.0.0
 title:
   zh-CN: 基础用法
   en-US: Basic

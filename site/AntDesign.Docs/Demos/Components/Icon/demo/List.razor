@@ -130,7 +130,14 @@ else
         {
             ["display"] = "grid",
             ["gridGap"] = "var(--ant-margin, 16px)",
-            ["gridTemplateColumns"] = "repeat(auto-fill, minmax(120px, 1fr))",
+            // React uses six fixed columns on desktop. Below the docs
+            // navigation breakpoint, reduce the column count so labels remain
+            // readable in the narrow article pane.
+            ["gridTemplateColumns"] = "repeat(6, minmax(0, 1fr))",
+            ["@media only screen and (max-width: 992px)"] = new Dictionary<string, object>
+            {
+                ["gridTemplateColumns"] = "repeat(auto-fill, minmax(77px, 1fr))"
+            },
             ["margin"] = "var(--ant-margin, 16px) 0",
             ["padding"] = 0,
             ["direction"] = "ltr",
@@ -151,7 +158,6 @@ else
             ["width"] = "100%",
             ["minWidth"] = 0,
             ["minHeight"] = 100,
-            ["overflow"] = "hidden",
             ["color"] = "#555",
             ["textAlign"] = "center",
             ["listStyle"] = "none",

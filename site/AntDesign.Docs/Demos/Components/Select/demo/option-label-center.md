@@ -1,5 +1,7 @@
 ---
-order: 37
+order: 105
+debug: true
+extension: true
 title:
   zh-CN: 居中选项标签
   en-US: Centered option labels

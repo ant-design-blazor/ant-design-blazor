@@ -44,18 +44,39 @@ namespace AntDesign
 
     public partial class Select<TItemValue, TItem> : SelectBase<TItemValue, TItem>
     {
+        private IReadOnlyDictionary<string, string> _resolvedClassNames;
+        private IReadOnlyDictionary<string, string> _resolvedStyles;
+
+        /// <summary>
+        /// Computes semantic classes from the current Select instance. This is the Blazor callback form of React's function-valued <c>classNames</c>.
+        /// </summary>
+        [Parameter]
+        public Func<Select<TItemValue, TItem>, IReadOnlyDictionary<string, string>> ClassNamesFunc { get; set; }
+
+        /// <summary>
+        /// Computes semantic inline styles from the current Select instance. This is the Blazor callback form of React's function-valued <c>styles</c>.
+        /// </summary>
+        [Parameter]
+        public Func<Select<TItemValue, TItem>, IReadOnlyDictionary<string, string>> StylesFunc { get; set; }
+
+        internal override IReadOnlyDictionary<string, string> ResolvedClassNames => _resolvedClassNames;
+        internal override IReadOnlyDictionary<string, string> ResolvedStyles => _resolvedStyles;
+
         protected override string ImmediatePopupWidthMode => DropdownMatchSelectWidth.IsT0
             ? (DropdownMatchSelectWidth.AsT0 ? "match-trigger" : "content")
-            : "custom";
+            : DropdownMatchSelectWidth.IsT1 ? "min-width" : "custom";
         protected override string ImmediatePopupWidth => DropdownMatchSelectWidth.IsT1
-            ? DropdownMatchSelectWidth.AsT1
-            : string.Empty;
+            ? $"{DropdownMatchSelectWidth.AsT1.ToString("0.###", CultureInfo.InvariantCulture)}px"
+            : DropdownMatchSelectWidth.IsT2 ? DropdownMatchSelectWidth.AsT2 : string.Empty;
         protected override string ImmediatePopupMaxWidth => DropdownMaxWidth;
 
         #region Parameters
 
         private Func<TItem, object> _getNestedOptions;
         private Func<TItem, string> _getGroupLabel;
+        private Func<TItem, string> _getGroupClassName;
+        private Func<TItem, string> _getGroupTitle;
+        private Func<TItem, string> _getTitle;
 
         /// <summary>
         /// Maps React-compatible option fields, including nested option groups.
@@ -71,12 +92,33 @@ namespace AntDesign
 
                 LabelName = value.Label;
                 ValueName = value.Value;
-                _getNestedOptions = string.IsNullOrWhiteSpace(value.Options)
+                _getTitle = string.IsNullOrWhiteSpace(value.Title)
                     ? null
-                    : PathHelper.GetDelegate<TItem, object>(value.Options);
+                    : PathHelper.GetDelegate<TItem, string>(value.Title);
+                _getNestedOptions = null;
+                if (!string.IsNullOrWhiteSpace(value.Options))
+                {
+                    try
+                    {
+                        _getNestedOptions = PathHelper.GetDelegate<TItem, object>(value.Options);
+                    }
+                    catch (ArgumentException) when (string.Equals(value.Options, "options", StringComparison.Ordinal))
+                    {
+                        // React's default field map includes `options`, while
+                        // flat Blazor option records often have no such
+                        // property. Treat only the missing default as a flat
+                        // data source; preserve errors for explicit bad maps.
+                    }
+                }
                 _getGroupLabel = string.IsNullOrWhiteSpace(value.GroupLabel)
                     ? null
                     : PathHelper.GetDelegate<TItem, string>(value.GroupLabel);
+                _getGroupClassName = string.IsNullOrWhiteSpace(value.GroupClassName)
+                    ? null
+                    : PathHelper.GetDelegate<TItem, string>(value.GroupClassName);
+                _getGroupTitle = string.IsNullOrWhiteSpace(value.GroupTitle)
+                    ? null
+                    : PathHelper.GetDelegate<TItem, string>(value.GroupTitle);
             }
         }
 
@@ -86,9 +128,33 @@ namespace AntDesign
         /// Enables search, or supplies React v6 search settings such as <c>optionFilterProp</c>.
         /// </summary>
         [Parameter]
-        public OneOf<bool?, SelectShowSearchOptions> ShowSearch { get; set; }
+        public object ShowSearch { get; set; }
 
-        internal override bool? SearchEnabledOverride => ShowSearch.IsT0 ? ShowSearch.AsT0 : true;
+        private SelectShowSearchOptions ShowSearchOptions => ShowSearch switch
+        {
+            SelectShowSearchOptions options => options,
+            OneOf<bool?, SelectShowSearchOptions> legacy when legacy.IsT1 => legacy.AsT1,
+            _ => null
+        };
+
+        internal override bool? SearchEnabledOverride => ShowSearch switch
+        {
+            bool enabled => enabled,
+            SelectShowSearchOptions => true,
+            OneOf<bool?, SelectShowSearchOptions> legacy when legacy.IsT0 => legacy.AsT0,
+            OneOf<bool?, SelectShowSearchOptions> => true,
+            _ => null
+        };
+        protected override bool ShouldAutoClearSearchValue => ShowSearchOptions?.AutoClearSearchValue
+            ?? AutoClearSearchValue;
+        internal override RenderFragment SearchIconContent => ShowSearchOptions?.SearchIcon;
+        internal override Func<SelectOptionItem<TItemValue, TItem>, SelectOptionItem<TItemValue, TItem>, string, int> SearchFilterSort =>
+            ShowSearchOptions is SelectShowSearchOptions<TItemValue, TItem> typedOptions
+                ? typedOptions.FilterSort ?? FilterSort
+                : FilterSort;
+        private string EffectiveControlledSearchValue => ShowSearchOptions?.SearchValue != null
+            ? ShowSearchOptions.SearchValue
+            : SearchValue;
 
         /// <summary>
         /// Legacy border toggle retained for backward compatibility. Use <see cref="Variant"/> to select the selector style.
@@ -194,8 +260,9 @@ namespace AntDesign
         public IEqualityComparer<TItem> DataSourceEqualityComparer { get; set; }
 
         /// <summary>
-        /// Activates the first item that is not deactivated.
+        /// Whether to activate the first enabled option when the dropdown opens.
         /// </summary>
+        /// <default value="true"/>
         [Parameter]
         public bool DefaultActiveFirstOption
         {
@@ -230,17 +297,18 @@ namespace AntDesign
         /// <summary>
         /// Controls the dropdown width. <c>true</c> matches the Select trigger width;
         /// <c>false</c> fits the widest dropdown item while keeping the trigger width as a minimum;
-        /// a <c>string</c> sets an explicit width (for example, <c>250px</c>).
+        /// a <c>number</c> sets the popup's minimum width in pixels; a <c>string</c>
+        /// sets an explicit CSS width (for example, <c>250px</c>).
         /// </summary>
         /// <default value="true"/>
         [Parameter]
-        public OneOf<bool, string> DropdownMatchSelectWidth { get; set; } = true;
+        public OneOf<bool, double, string> DropdownMatchSelectWidth { get; set; } = true;
 
         /// <summary>
         /// Controls whether the popup matches the Select width. React-compatible name for <see cref="DropdownMatchSelectWidth"/>.
         /// </summary>
         [Parameter]
-        public OneOf<bool, string> PopupMatchSelectWidth
+        public OneOf<bool, double, string> PopupMatchSelectWidth
         {
             get => DropdownMatchSelectWidth;
             set => DropdownMatchSelectWidth = value;
@@ -284,25 +352,20 @@ namespace AntDesign
         public RenderFragment<TItem> ItemTemplate { get; set; }
 
         /// <summary>
-        /// Customize how each option is rendered in the dropdown. React-compatible name for <see cref="ItemTemplate"/>.
-        /// The template receives the option's source item.
+        /// Customize how each dropdown option is rendered. The context exposes
+        /// the option and its zero-based index in the visible, sorted list,
+        /// matching React Select's <c>optionRender(option, { index })</c>.
         /// </summary>
         [Parameter]
-        public RenderFragment<TItem> OptionRender { get; set; }
+        public RenderFragment<SelectOptionRenderInfo<TItemValue, TItem>> OptionRender { get; set; }
 
-        internal RenderFragment<TItem> EffectiveOptionRender => OptionRender ?? ItemTemplate;
+        internal RenderFragment<TItem> EffectiveItemTemplate => ItemTemplate;
 
         /// <summary>
         /// Specify content to show when no result matches.
         /// </summary>
         [Parameter]
         public RenderFragment NotFoundContent { get; set; }
-
-        /// <summary>
-        /// Called when blur.
-        /// </summary>
-        [Parameter]
-        public Action OnBlur { get; set; }
 
         /// <summary>
         /// Called when custom tag is created.
@@ -319,14 +382,17 @@ namespace AntDesign
         public Action OnDataSourceChanged { get; set; }
 
         /// <summary>
-        /// Called when the dropdown visibility changes.
+        /// Called when the dropdown visibility changes. Use <see cref="OnOpenChange"/> instead.
         /// </summary>
+        [Obsolete("Use OnOpenChange instead.")]
         [Parameter]
         public Action<bool> OnDropdownVisibleChange { get; set; }
 
         /// <summary>
-        /// Callback function that is fired when input changed.
+        /// Callback fired when the search input changes. Configure this callback in
+        /// <see cref="ShowSearch"/> instead.
         /// </summary>
+        [Obsolete("Configure OnSearch in ShowSearch instead.")]
         [Parameter]
         public Action<string> OnSearch { get; set; }
 
@@ -378,11 +444,15 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Define what characters will be treated as token separators for newly created tags.
-        /// Useful when creating new tags using only keyboard.
+        /// Define token separators for newly created tags. Pass a character array for
+        /// delimiter-based tokenization or a callback to parse the current input, matching
+        /// React Select v6.
         /// </summary>
         [Parameter]
-        public char[] TokenSeparators { get; set; }
+        public OneOf<char[], Func<string, IEnumerable<string>>> TokenSeparators { get; set; }
+
+        private char[] TokenSeparatorCharacters => TokenSeparators.IsT0 ? TokenSeparators.AsT0 : null;
+        private Func<string, IEnumerable<string>> TokenSeparatorTokenizer => TokenSeparators.IsT1 ? TokenSeparators.AsT1 : Tokenize;
 
 #if NET5_0_OR_GREATER
         /// <summary>
@@ -489,8 +559,8 @@ namespace AntDesign
         [Parameter]
         public OneOf<string, string[]> OptionFilterProp { get; set; } = "value";
 
-        internal OneOf<string, string[]> EffectiveOptionFilterProp => ShowSearch.IsT1
-            ? ShowSearch.AsT1.OptionFilterProp
+        internal OneOf<string, string[]> EffectiveOptionFilterProp => ShowSearchOptions != null
+            ? ShowSearchOptions.OptionFilterProp
             : OptionFilterProp;
 
         /// <summary>
@@ -501,9 +571,30 @@ namespace AntDesign
         [Parameter]
         public bool? FilterOption { get; set; } = true;
 
-        internal bool EffectiveFilterOption => ShowSearch.IsT1
-            ? ShowSearch.AsT1.FilterOption ?? FilterOption != false
+        internal bool EffectiveFilterOption => ShowSearchOptions != null
+            ? GetShowSearchFilterOptionEnabled() ?? ShowSearchOptions.FilterOption ?? FilterOption != false
             : FilterOption != false;
+
+        private bool? GetShowSearchFilterOptionEnabled()
+        {
+            if (ShowSearchOptions is SelectShowSearchOptions<TItemValue, TItem> typedOptions)
+            {
+                if (typedOptions.FilterOptionEnabled.HasValue)
+                {
+                    return typedOptions.FilterOptionEnabled;
+                }
+
+                return typedOptions.FilterOption != null ? true : null;
+            }
+
+            return null;
+        }
+
+        private Func<string, SelectOptionItem<TItemValue, TItem>, bool> ShowSearchFilterPredicate =>
+            ShowSearchOptions is SelectShowSearchOptions<TItemValue, TItem> typedOptions
+                && typedOptions.FilterOption != null
+                    ? typedOptions.FilterOption
+                    : null;
 
         #endregion Parameters
 
@@ -514,7 +605,7 @@ namespace AntDesign
         /// </summary>
         internal bool IsGroupingEnabled
         {
-            get => !string.IsNullOrWhiteSpace(GroupName);
+            get => !string.IsNullOrWhiteSpace(GroupName) || _getNestedOptions != null;
         }
 
         internal override bool HasSelectOptions => SelectOptions != null;
@@ -528,7 +619,9 @@ namespace AntDesign
                 // React Select uses the accessibility listbox/proxy whenever
                 // virtualization is enabled, even for short option lists.
                 // The visual list only needs a recycled window for larger sets.
-                return EnableVirtualization && !IsGroupingEnabled;
+                return EnableVirtualization
+                       && !(DropdownMatchSelectWidth.IsT0 && !DropdownMatchSelectWidth.AsT0)
+                       && !IsGroupingEnabled;
 #else
                 return false;
 #endif
@@ -626,11 +719,12 @@ namespace AntDesign
         private bool _afterFirstRender;
         private bool _optionsHasInitialized;
         private bool _defaultValueApplied;
+        private bool _defaultValueWasCleared;
         private bool _defaultActiveFirstOptionApplied;
         private bool _waitingForStateChange;
         private bool _isValueEnum;
         private bool _isToken;
-        private bool _defaultActiveFirstOption;
+        private bool _defaultActiveFirstOption = true;
 
         private string _groupName = string.Empty;
 
@@ -709,14 +803,18 @@ namespace AntDesign
 
         protected override async Task OnParametersSetAsync()
         {
-            var controlledSearchValue = SearchValueChanged.HasDelegate || SearchValue != null;
-            var searchValueChanged = !_hasSearchValueParameter || !string.Equals(_lastSearchValueParameter, SearchValue, StringComparison.Ordinal);
+            _resolvedClassNames = ClassNamesFunc?.Invoke(this) ?? ClassNames;
+            _resolvedStyles = StylesFunc?.Invoke(this) ?? Styles;
+
+            var effectiveSearchValue = EffectiveControlledSearchValue;
+            var controlledSearchValue = SearchValueChanged.HasDelegate || effectiveSearchValue != null;
+            var searchValueChanged = !_hasSearchValueParameter || !string.Equals(_lastSearchValueParameter, effectiveSearchValue, StringComparison.Ordinal);
             _hasSearchValueParameter = true;
-            _lastSearchValueParameter = SearchValue;
+            _lastSearchValueParameter = effectiveSearchValue;
             if (controlledSearchValue && searchValueChanged)
             {
                 _prevSearchValue = _searchValue;
-                _searchValue = SearchValue ?? string.Empty;
+                _searchValue = effectiveSearchValue ?? string.Empty;
             }
 
             var virtualAccessibilityChanged = _lastVirtualAccessibility != UsesVirtualAccessibility;
@@ -880,9 +978,9 @@ namespace AntDesign
 
             if (firstRender)
             {
-                _defaultValueApplied = !(_defaultValueIsNotNull || _defaultValuesHasItems);
+                _defaultValueApplied = _defaultValueWasCleared || !(_defaultValueIsNotNull || _defaultValuesHasItems);
 
-                _defaultActiveFirstOptionApplied = !(_defaultActiveFirstOption && SelectedOptionItems.Count == 0);
+                _defaultActiveFirstOptionApplied = _defaultValueWasCleared || !(_defaultActiveFirstOption && SelectedOptionItems.Count == 0);
             }
             if (!_defaultValueApplied || !_defaultActiveFirstOptionApplied)
             {
@@ -953,6 +1051,7 @@ namespace AntDesign
                 await JsInvokeAsync(JSInteropConstants.SelectHelper.ShowScrollbar, _scrollableSelectDiv);
                 _virtualScrollbarFlashedForOpen = true;
             }
+
         }
 
         protected override void Dispose(bool disposing)
@@ -1040,6 +1139,8 @@ namespace AntDesign
 
                 var disabled = false;
                 var groupName = sourceOption.GroupName;
+                var groupClassName = sourceOption.GroupClassName;
+                var groupTitle = sourceOption.GroupTitle;
                 var label = _getLabel == null ? GetLabel(item) : _getLabel(item);
 
                 bool isSelected = false;
@@ -1055,14 +1156,21 @@ namespace AntDesign
                     disabled = _getDisabled(item);
 
                 if (string.IsNullOrWhiteSpace(groupName) && !string.IsNullOrWhiteSpace(GroupName))
+                {
                     groupName = _getGroup(item);
+                    groupClassName = _getGroupClassName?.Invoke(item);
+                    groupTitle = _getGroupTitle?.Invoke(item);
+                }
 
                 if (!exists)
                 {
                     var newItem = new SelectOptionItem<TItemValue, TItem>
                     {
                         Label = label,
+                        Title = _getTitle?.Invoke(item),
                         GroupName = groupName,
+                        GroupClassName = groupClassName,
+                        GroupTitle = groupTitle,
                         IsDisabled = disabled,
                         HasExplicitDisabled = _getDisabledValue?.Invoke(item) != null,
                         Item = item,
@@ -1082,9 +1190,12 @@ namespace AntDesign
                 else if (exists && !IgnoreItemChanges)
                 {
                     updateSelectOption.Label = label;
+                    updateSelectOption.Title = _getTitle?.Invoke(item);
                     updateSelectOption.IsDisabled = disabled;
                     updateSelectOption.HasExplicitDisabled = _getDisabledValue?.Invoke(item) != null;
                     updateSelectOption.GroupName = groupName;
+                    updateSelectOption.GroupClassName = groupClassName;
+                    updateSelectOption.GroupTitle = groupTitle;
                     updateSelectOption.IsHidden = isSelected && HideSelected;
                     SelectOptionItems.Add(updateSelectOption);
                     if (isSelected)
@@ -1115,7 +1226,11 @@ namespace AntDesign
             }
         }
 
-        private IEnumerable<(TItem Item, string GroupName)> FlattenDataSource(IEnumerable<TItem> items, string parentGroup = null)
+        private IEnumerable<(TItem Item, string GroupName, string GroupClassName, string GroupTitle)> FlattenDataSource(
+            IEnumerable<TItem> items,
+            string parentGroup = null,
+            string parentGroupClassName = null,
+            string parentGroupTitle = null)
         {
             foreach (var item in items ?? Enumerable.Empty<TItem>())
             {
@@ -1123,13 +1238,19 @@ namespace AntDesign
                 {
                     var groupLabel = _getGroupLabel?.Invoke(item);
                     var childGroup = string.IsNullOrWhiteSpace(groupLabel) ? parentGroup : groupLabel;
+                    var groupClassName = _getGroupClassName?.Invoke(item);
+                    if (string.IsNullOrWhiteSpace(groupClassName))
+                        groupClassName = parentGroupClassName;
+                    var groupTitle = _getGroupTitle?.Invoke(item);
+                    if (string.IsNullOrWhiteSpace(groupTitle))
+                        groupTitle = parentGroupTitle;
                     var children = nestedOptions.Cast<object>().OfType<TItem>();
-                    foreach (var child in FlattenDataSource(children, childGroup))
+                    foreach (var child in FlattenDataSource(children, childGroup, groupClassName, groupTitle))
                         yield return child;
                     continue;
                 }
 
-                yield return (item, parentGroup);
+                yield return (item, parentGroup, parentGroupClassName, parentGroupTitle);
             }
         }
 
@@ -1151,16 +1272,23 @@ namespace AntDesign
                 .If($"{ClassPrefix}-multiple", () => Mode != SelectMode.Default)
                 .If($"{ClassPrefix}-in-form-item ", () => FormItem != null)
                 .If($"{ClassPrefix}-has-feedback", () => FormItem?.HasFeedback == true)
-                .If($"{ClassPrefix}-allow-clear", () => !Disabled && AllowClear && HasValueOrUnmatched)
+                .If($"{ClassPrefix}-allow-clear", () => !Disabled && IsAllowClearEnabled && HasValueOrUnmatched)
                 .If($"{ClassPrefix}-show-arrow", () => ShowArrowIcon)
                 .If($"{ClassPrefix}-disabled", () => Disabled)
                 .If($"{ClassPrefix}-loading", () => Loading)
-                .If($"{ClassPrefix}-open", () => _isDropdownVisible || (_dropDown?.IsOverlayShow() ?? false))
+                .If($"{ClassPrefix}-open", () => _isDropdownVisible || (_dropDown?.IsOverlayShow() ?? false) || (_dropDown?.IsOverlayOpening() ?? false))
                 .If($"{ClassPrefix}-show-search", () => IsSearchEnabled)
-                .If($"{ClassPrefix}-rtl", () => RTL)
+                .If($"{ClassPrefix}-rtl", () => IsRTLDirection)
                 .GetIf(() => $"{ClassPrefix}-status-{status}", () => status is not null)
 
                 ;
+        }
+
+        protected override void OnDefaultValueCleared()
+        {
+            _defaultValueWasCleared = true;
+            _defaultValueApplied = true;
+            _defaultActiveFirstOptionApplied = true;
         }
 
         private string? GetValidationStatus()
@@ -1194,7 +1322,9 @@ namespace AntDesign
             // preview). Its native focus event also drives the focused style.
             if (visible && !Open && !Focused)
             {
-                await SetInputFocusAsync();
+                // The pre-visible callback normally focuses before reveal;
+                // retain this fallback for visibility changes from custom triggers.
+                await SetInputFocusAsync(refreshState: false);
             }
 
             OnDropdownVisibleChange?.Invoke(visible);
@@ -1206,7 +1336,6 @@ namespace AntDesign
             // including when Select is used without an Open binding.
             SetClassMap();
             await InvokeAsync(StateHasChanged);
-
             if (visible)
             {
                 OnOverlayShow();
@@ -1238,6 +1367,7 @@ namespace AntDesign
             }
         }
 
+
         /// <summary>
         /// Scrolls to the item via JavaScript.
         /// </summary>
@@ -1265,50 +1395,17 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// If DefaultActiveFirstItem is True, the first item which is not IsDisabled(True) is set as selected.
-        /// If there is no item it falls back to the clear method.
+        /// If DefaultActiveFirstOption is true, highlight the first enabled option without selecting it.
         /// </summary>
-        private async Task SetDefaultActiveFirstItemAsync()
+        private Task SetDefaultActiveFirstItemAsync()
         {
-            if (SelectOptionItems.Any())
+            ActiveOption = SortedSelectOptionItems.FirstOrDefault(x => !x.IsDisabled);
+            if (ActiveOption != null)
             {
-                var firstEnabled = SortedSelectOptionItems.FirstOrDefault(x => !x.IsDisabled);
-
-                if (firstEnabled != null)
-                {
-                    firstEnabled.IsSelected = true;
-
-                    if (HideSelected)
-                        firstEnabled.IsHidden = true;
-                    SelectedOptionItems[firstEnabled.Value] = firstEnabled;
-
-                    if (Mode == SelectMode.Default)
-                    {
-                        Value = firstEnabled.Value;
-                        firstEnabled.IsSelected = true;
-                        await ValueChanged.InvokeAsync(firstEnabled.Value);
-
-                        if (!ValueChanged.HasDelegate)
-                            await InvokeStateHasChangedAsync();
-                    }
-                    else
-                    {
-                        InvokeValuesChanged();
-
-                        if (!ValuesChanged.HasDelegate)
-                            await InvokeStateHasChangedAsync();
-                    }
-                }
-                else
-                {
-                    await ClearSelectedAsync();
-                }
-            }
-            else
-            {
-                await ClearSelectedAsync();
+                _waitingForStateChange = true;
             }
             _defaultActiveFirstOptionApplied = true;
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -1474,9 +1571,24 @@ namespace AntDesign
             if (!_optionsHasInitialized) // This is important because otherwise the initial value is overwritten by the EventCallback of ValueChanged and would be NULL.
                 return;
 
+            // An option can finish registering after an uncontrolled DefaultValue has
+            // already been cleared. Ignore that stale initialization callback, while
+            // still accepting a new user/parent value once Value has actually changed.
+            if (_defaultValueWasCleared
+                && !TypeDefaultExistsAsSelectOption
+                && !_hasValueOnClear
+                && !EqualityComparer<TItemValue>.Default.Equals(value, Value))
+            {
+                return;
+            }
+            if (_defaultValueWasCleared && !EqualityComparer<TItemValue>.Default.Equals(value, default))
+            {
+                _defaultValueWasCleared = false;
+            }
+
             if (!_isValueEnum && !TypeDefaultExistsAsSelectOption && EqualityComparer<TItemValue>.Default.Equals(value, default))
             {
-                await InvokeAsync(() => OnInputClearClickAsync(new()));
+                await InvokeAsync(() => ClearInputAsync(new(), focusInput: false));
                 return;
             }
 
@@ -1489,7 +1601,7 @@ namespace AntDesign
                     LastValueBeforeReset = value;
                 }
 
-                if (!AllowClear)
+                if (!IsAllowClearEnabled)
                 {
                     await TrySetDefaultValueAsync();
                 }
@@ -1504,7 +1616,7 @@ namespace AntDesign
 
                     if (!SelectedOptionItems.Any())
                     {
-                        await InvokeAsync(() => OnInputClearClickAsync(new()));
+                        await InvokeAsync(() => ClearInputAsync(new(), focusInput: false));
                     }
                 }
                 return;
@@ -1581,19 +1693,26 @@ namespace AntDesign
             IEnumerable<string> customTokens = null;
             _prevSearchValue = _searchValue;
             if (_isToken)
-                _searchValue = e.Value?.ToString().TrimEnd(TokenSeparators);
+                _searchValue = e.Value?.ToString().TrimEnd(TokenSeparatorCharacters);
             else
             {
                 _searchValue = e.Value?.ToString();
 
-                if (TokenSeparators is not null && TokenSeparators.Length > 0)
+                if (TokenSeparatorCharacters is { Length: > 0 })
                 {
-                    containsToken = TokenSeparators.Any(t => _searchValue.Contains(t));
+                    containsToken = TokenSeparatorCharacters.Any(t => _searchValue.Contains(t));
                 }
 
-                if (Tokenize is not null && Mode is SelectMode.Tags or SelectMode.Multiple)
+                if (TokenSeparatorTokenizer is not null && Mode is SelectMode.Tags or SelectMode.Multiple)
                 {
-                    customTokens = Tokenize(_searchValue ?? string.Empty)?.Where(token => !string.IsNullOrWhiteSpace(token)).ToArray();
+                    var tokenizedInput = _searchValue ?? string.Empty;
+                    var parsedTokens = TokenSeparatorTokenizer(tokenizedInput)?.ToArray();
+                    var isUnchangedInput = parsedTokens is { Length: 1 }
+                        && string.Equals(parsedTokens[0], tokenizedInput, StringComparison.Ordinal);
+                    if (parsedTokens is { Length: > 0 } && !isUnchangedInput)
+                    {
+                        customTokens = parsedTokens.Where(token => !string.IsNullOrWhiteSpace(token)).ToArray();
+                    }
                     containsToken |= customTokens?.Any() == true;
                 }
             }
@@ -1636,6 +1755,10 @@ namespace AntDesign
                 }
             }
             OnSearch?.Invoke(_searchValue);
+            if (ShowSearchOptions != null)
+            {
+                ShowSearchOptions.OnSearch?.Invoke(_searchValue);
+            }
             await SearchValueChanged.InvokeAsync(_searchValue);
             // The portaled Overlay owns its own render tree. Updating option
             // children alone leaves its list/empty-state fragment stale.
@@ -1644,7 +1767,7 @@ namespace AntDesign
 
         private async Task TokenizeSearchedPhrase(string searchValue)
         {
-            await TokenizeValuesAsync(searchValue.Split(TokenSeparators));
+            await TokenizeValuesAsync(searchValue.Split(TokenSeparatorCharacters));
         }
 
         private async Task TokenizeValuesAsync(IEnumerable<string> values)
@@ -1712,14 +1835,7 @@ namespace AntDesign
                     bool matches = false;
                     try
                     {
-                        if (FilterExpression != null)
-                        {
-                            matches = FilterExpression(item, searchValue);
-                        }
-                        else
-                        {
-                            matches = MatchesOptionFilter(item, searchValue);
-                        }
+                        matches = MatchesSearchOption(item, searchValue);
                     }
                     catch
                     {
@@ -1803,6 +1919,18 @@ namespace AntDesign
             return false;
         }
 
+        private bool MatchesSearchOption(SelectOptionItem<TItemValue, TItem> option, string searchValue)
+        {
+            if (ShowSearchFilterPredicate != null)
+            {
+                return ShowSearchFilterPredicate(searchValue, option);
+            }
+
+            return FilterExpression != null
+                ? FilterExpression(option, searchValue)
+                : MatchesOptionFilter(option, searchValue);
+        }
+
         private void FilterTagsOptionItems(string searchValue)
         {
             SelectOptionItem<TItemValue, TItem> activeCanditate = null;
@@ -1822,14 +1950,7 @@ namespace AntDesign
                     bool matches = false;
                     try
                     {
-                        if (FilterExpression != null)
-                        {
-                            matches = FilterExpression(item, searchValue);
-                        }
-                        else
-                        {
-                            matches = MatchesOptionFilter(item, searchValue);
-                        }
+                        matches = MatchesSearchOption(item, searchValue);
                     }
                     catch
                     {
@@ -2235,7 +2356,7 @@ namespace AntDesign
             }
 
             if (key == "BACKSPACE" && string.IsNullOrEmpty(_searchValue) &&
-                (IsSearchEnabled || AllowClear))
+                (IsSearchEnabled || IsAllowClearEnabled))
             {
                 // Don't remove selected items if IME composition is in progress
                 if (_selectContent?.IsComposing == true)
@@ -2287,9 +2408,9 @@ namespace AntDesign
             {
                 await CloseAsync();
             }
-            else if (TokenSeparators is not null && TokenSeparators.Length > 0)
+            else if (TokenSeparatorCharacters is { Length: > 0 })
             {
-                _isToken = TokenSeparators.Contains(e.Key[0]);
+                _isToken = TokenSeparatorCharacters.Contains(e.Key[0]);
             }
         }
 
@@ -2297,7 +2418,7 @@ namespace AntDesign
 
         /// <summary>
         /// Check if Focused property is true;  Set the Focused property to false, change the
-        /// style and blures the Input element via DOM. It also invoke the OnBlur Action.
+        /// style and blures the Input element via DOM.
         /// </summary>
         /// <returns></returns>
         protected override async Task SetInputBlurAsync()
@@ -2309,7 +2430,6 @@ namespace AntDesign
 
                 await JsInvokeAsync(JSInteropConstants.Blur, _inputRef);
 
-                OnBlur?.Invoke();
             }
         }
 

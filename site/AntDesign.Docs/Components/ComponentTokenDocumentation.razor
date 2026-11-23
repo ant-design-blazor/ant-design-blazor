@@ -8,6 +8,20 @@
 
 <section class="markdown api-container component-token-documentation" id="design-token">
     <h2>@(IsChinese ? "Design Token" : "Design Token")</h2>
+    @if (tokens.Count == 0 && globalTokens.Count == 0
+        && !string.Equals(Component, "icon", StringComparison.OrdinalIgnoreCase))
+    {
+        <p>
+            @if (IsChinese)
+            {
+                <text>React v6 未为此组件定义专属 Design Token。组件仍使用 Ant Design 的共享全局主题；可在<a href="/@Language/docs/customize-theme#global-token-reference">定制主题</a>中查看和自定义全局 Token。</text>
+            }
+            else
+            {
+                <text>React v6 does not define component-specific Design Tokens for this component. It still uses the shared Ant Design theme; see <a href="/@Language/docs/customize-theme#global-token-reference">Customize Theme</a> to review and customize global tokens.</text>
+            }
+        </p>
+    }
     @if (tokens.Count > 0)
     {
         <h3>@(IsChinese ? "组件 Token" : "Component Token")</h3>
@@ -39,11 +53,11 @@
                         <td class="api-description">
                             @if (IsChinese)
                             {
-                                @(string.IsNullOrWhiteSpace(token.Description) ? token.Name : token.Description)
+                                @token.Description
                             }
                             else
                             {
-                                @(string.IsNullOrWhiteSpace(token.DescriptionEn) ? token.Name : token.DescriptionEn)
+                                @token.DescriptionEn
                             }
                             @if (token.Deprecated)
                             {
@@ -57,14 +71,6 @@
                 }
             </tbody>
         </table>
-    }
-    else if (globalTokens.Count == 0 && IsChinese)
-    {
-        <p>此组件没有独立的组件级 Design Token；尺寸、颜色和状态由全局 Design Token 与组件默认样式提供。</p>
-    }
-    else if (globalTokens.Count == 0)
-    {
-        <p>This component has no component-specific Design Tokens; its dimensions, colors, and states inherit from global Design Tokens and component defaults.</p>
     }
     @if (globalTokens.Count > 0)
     {
@@ -101,12 +107,11 @@
         .design-token-color-value, .design-token-motion-value { display: inline-flex; align-items: center; gap: 8px; max-width: 100%; }
         .design-token-color-swatch { display: inline-block; flex: 0 0 10px; width: 10px; height: 10px; border-radius: 50%; box-shadow: 0 0 0 1px rgb(0 0 0 / 10%); }
         .design-token-motion-value { align-items: flex-start; flex-direction: column; }
-        .design-token-motion-curve { display: block; flex: 0 0 160px; width: 160px; height: 160px; overflow: visible; background: var(--ant-color-bg-container, #fff); border: 1px solid var(--ant-color-border-secondary, #f0f0f0); }
-        .design-token-motion-grid { fill: none; stroke: var(--ant-color-border-secondary, #f0f0f0); stroke-width: 1; }
-        .design-token-motion-control { fill: none; stroke: var(--ant-color-primary, #1677ff); stroke-width: 1; stroke-dasharray: 2 2; }
-        .design-token-motion-path { fill: none; stroke: var(--ant-color-primary, #1677ff); stroke-width: 2.5; }
-        .design-token-motion-point-start { fill: var(--ant-color-success, #52c41a); }
-        .design-token-motion-point-end { fill: var(--ant-color-error, #ff4d4f); }
+        .design-token-motion-curve { display: block; flex: 0 0 180px; width: 180px; height: 180px; overflow: visible; }
+        .design-token-motion-control { fill: none; stroke: var(--ant-color-primary-active, #0958d9); stroke-width: 2; stroke-dasharray: 4 2; }
+        .design-token-motion-path { fill: none; stroke: var(--ant-color-primary, #1677ff); stroke-width: 4; }
+        .design-token-motion-point-start { fill: var(--ant-green-6, #52c41a); }
+        .design-token-motion-point-end { fill: var(--ant-red-6, #f5222d); }
     </style>
 </section>
 

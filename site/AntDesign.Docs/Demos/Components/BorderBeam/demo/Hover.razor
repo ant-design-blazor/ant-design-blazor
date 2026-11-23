@@ -1,0 +1,12 @@
+<div style="width:360px">
+    <Card Class="border-beam-hover-card" Title="Hover over the card">
+        <Decoration><BorderBeam Class="border-beam-hover-effect" /></Decoration>
+        <ChildContent>The border beam appears when the pointer moves over this card.</ChildContent>
+    </Card>
+</div>
+<style>
+.border-beam-hover-effect { opacity: 0; transition: opacity .2s; }
+.border-beam-hover-effect::before { animation-play-state: paused; }
+.border-beam-hover-card:hover .border-beam-hover-effect { opacity: 1; }
+.border-beam-hover-card:hover .border-beam-hover-effect::before { animation-play-state: running; }
+</style>

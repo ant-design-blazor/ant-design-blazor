@@ -1,5 +1,5 @@
 ---
-order: 19
+order: 23
 title:
   zh-CN: 状态
   en-US: Status
@@ -11,4 +11,4 @@ title:
 
 ## en-US
 
-Use `Status` to set the validation state. When omitted, Select inherits the status from its containing `FormItem`.
+Add status to Select with status, which could be error or warning.

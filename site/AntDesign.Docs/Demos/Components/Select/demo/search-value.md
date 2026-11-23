@@ -1,5 +1,7 @@
 ---
-order: 16
+order: 110
+debug: true
+extension: true
 title:
   zh-CN: 受控搜索值
   en-US: Controlled search value

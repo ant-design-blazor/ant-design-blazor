@@ -25,6 +25,7 @@
   "app.content.component-source": "在 GitHub 上查看组件源码",
   "app.content.contributors": "文档贡献者",
   "app.component.examples": "代码演示",
+  "app.component.examples.extensions": "Blazor 扩展示例",
   "app.component.examples.expand": "展开全部代码",
   "app.component.examples.collapse": "收起全部代码",
   "app.component.examples.visible": "显示调试专用演示",

@@ -11,4 +11,4 @@ title:
 
 ## en-US
 
-Use `ShowSearch` options to search both the option label and `OtherField`, matching React's `showSearch={{ optionFilterProp: ['label', 'otherField'] }}`.
+Use optionFilterProp for multi-field search.

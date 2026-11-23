@@ -27,6 +27,7 @@ export function extractParameters(source) {
       name: match.groups.name,
       type: match.groups.type.trim().replace(/\s+/g, ' '),
       optional: true,
+      releaseVersion: match[0].match(/\[\s*PublicApi(?:Attribute)?\s*\(\s*"([^"]+)"\s*\)\s*\]/)?.[1] ?? null,
     });
   }
   return parameters;

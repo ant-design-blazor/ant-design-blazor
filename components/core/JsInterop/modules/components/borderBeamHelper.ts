@@ -7,8 +7,10 @@ export class borderBeamHelper {
       .map(value => `${-(parseFloat(value) || 0)}px`).join(' ');
     // No DOM reparenting: the host owns the decoration in Blazor's render tree.
     Array.from(host.children).forEach(child => {
-      if (child instanceof HTMLElement && child.classList.contains('ant-border-beam'))
-        child.style.setProperty('--ant-border-beam-inset-offset', inset);
+      if (child instanceof HTMLElement && child.classList.contains('ant-border-beam')) {
+        if (!child.style.getPropertyValue('--ant-border-beam-inset-offset'))
+          child.style.setProperty('--ant-border-beam-inset-offset', inset);
+      }
     });
   }
 }

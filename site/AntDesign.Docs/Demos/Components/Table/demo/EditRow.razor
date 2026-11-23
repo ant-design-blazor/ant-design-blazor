@@ -1,101 +1,137 @@
-﻿<Table DataSource="listOfData" TItem="ItemData" RowClassName="@(_=>"editable-row")" Bordered TableLayout="fixed">
-    <ChildContent Context="data">
-        <Column TData="string" Title="Name">
-            @if (!editCache[data.Id].edit)
+<Table TItem="ItemData" DataSource="_data" RowKey="row => row.Key" RowClassName="@(_ => "editable-row")" Bordered
+       OnPageIndexChange="OnPageIndexChange">
+    <PropertyColumn Property="row => row.Name" Title="name" Width="25%">
+        @if (IsEditing(context))
+        {
+            <Input TValue="string" @bind-Value="_editing.Name" />
+            @if (_validationMessage == "Please Input name!")
             {
-                @data.Name
+                <div class="ant-form-item-explain-error">@_validationMessage</div>
             }
-            else
+        }
+        else
+        {
+            @context.Name
+        }
+    </PropertyColumn>
+    <PropertyColumn Property="row => row.Age" Title="age" Width="15%">
+        @if (IsEditing(context))
+        {
+            <InputNumber TValue="int" DefaultValue="_editing.Age" OnChange="AgeChanged" />
+            @if (_validationMessage == "Please Input age!")
             {
-                <Input @bind-Value="editCache[data.Id].data.Name" />
+                <div class="ant-form-item-explain-error">@_validationMessage</div>
             }
-        </Column>
-        <Column TData="string" Title="Age">
-            @if (!editCache[data.Id].edit)
+        }
+        else
+        {
+            @context.Age
+        }
+    </PropertyColumn>
+    <PropertyColumn Property="row => row.Address" Title="address" Width="40%">
+        @if (IsEditing(context))
+        {
+            <Input TValue="string" @bind-Value="_editing.Address" />
+            @if (_validationMessage == "Please Input address!")
             {
-                @data.Age
+                <div class="ant-form-item-explain-error">@_validationMessage</div>
             }
-            else
-            {
-                <Input @bind-Value="editCache[data.Id].data.Age" />
-            }
-        </Column>
-        <Column TData="string" Title="Address">
-            @if (!editCache[data.Id].edit)
-            {
-                @data.Address
-            }
-            else
-            {
-                <Input @bind-Value="editCache[data.Id].data.Address" />
-            }
-        </Column>
-        <ActionColumn Title="Action">
-            @if (!editCache[data.Id].edit)
-            {
-                <a @onclick="() => startEdit(data.Id)">Edit</a>
-            }
-            else
-            {
-                <a @onclick="() => saveEdit(data.Id)" class="save">Save</a>
-                <Popconfirm Title="Sure to cancel?"
-                        OnConfirm="() => cancelEdit(data.Id)"
-                        OkText="Yes"
-                        CancelText="No">
-                    <a>Cancel</a>
-                </Popconfirm>
-            }
-        </ActionColumn>
-    </ChildContent>
+        }
+        else
+        {
+            @context.Address
+        }
+    </PropertyColumn>
+    <ActionColumn Title="operation">
+        @if (IsEditing(context))
+        {
+            <a @onclick="Save">Save</a>
+            <span style="margin-inline-end: 8px;"></span>
+            <Popconfirm Title="Sure to cancel?" OnConfirm="Cancel" OkText="Yes" CancelText="No">
+                <a>Cancel</a>
+            </Popconfirm>
+        }
+        else
+        {
+            <a aria-disabled="@(_editingKey is not null)" class="@(_editingKey is not null ? "ant-typography-disabled" : null)"
+               @onclick="() => StartEdit(context)">Edit</a>
+        }
+    </ActionColumn>
 </Table>
 
 <style>
-    .save {
-        margin-right: 8px;
-    }
+    .editable-row { position: relative; }
+    .ant-form-item-explain-error { position: absolute; top: 100%; font-size: var(--ant-font-size-sm, 12px); }
 </style>
 
-@code{
+@code {
+    private readonly List<ItemData> _data = Enumerable.Range(0, 100)
+        .Select(index => new ItemData(index.ToString(), $"Edward {index}", 32, $"London Park no. {index}"))
+        .ToList();
+    private string _editingKey;
+    private ItemData _editing;
+    private string _validationMessage;
 
-    record ItemData
+    private bool IsEditing(ItemData row) => row.Key == _editingKey;
+
+    private void StartEdit(ItemData row)
     {
-        public string Id { get; set; }
+        if (_editingKey is not null) return;
+        _editingKey = row.Key;
+        _editing = new ItemData(row.Key, row.Name, row.Age, row.Address);
+        _validationMessage = null;
+    }
+
+    private void Save()
+    {
+        if (_editing is null) return;
+        if (string.IsNullOrWhiteSpace(_editing.Name))
+        {
+            _validationMessage = "Please Input name!";
+            return;
+        }
+        if (_editing.Age <= 0)
+        {
+            _validationMessage = "Please Input age!";
+            return;
+        }
+        if (string.IsNullOrWhiteSpace(_editing.Address))
+        {
+            _validationMessage = "Please Input address!";
+            return;
+        }
+
+        var index = _data.FindIndex(item => item.Key == _editingKey);
+        if (index >= 0) _data[index] = _editing;
+        _editingKey = null;
+        _editing = null;
+        _validationMessage = null;
+    }
+
+    private void AgeChanged(int value) => _editing.Age = value;
+
+    private void Cancel()
+    {
+        _editingKey = null;
+        _editing = null;
+        _validationMessage = null;
+    }
+
+    private void OnPageIndexChange(PaginationEventArgs _) => Cancel();
+
+    private sealed class ItemData
+    {
+        public ItemData(string key, string name, int age, string address)
+        {
+            Key = key;
+            Name = name;
+            Age = age;
+            Address = address;
+        }
+
+        public string Key { get; }
         public string Name { get; set; }
         public int Age { get; set; }
         public string Address { get; set; }
-    };
-
-    IDictionary<string, (bool edit, ItemData data)> editCache = new Dictionary<string, (bool edit, ItemData data)>();
-    List<ItemData> listOfData = new();
-
-    int i = 0;
-    string editId;
-
-    void startEdit(string id)
-    {
-        var data = editCache[id];
-        editCache[id] = (true, data.data with { }); // add a copy in cache
-    }
-
-    void cancelEdit(string id)
-    {
-        var data = listOfData.FirstOrDefault(item => item.Id == id);
-        editCache[id] = (false, data); // recovery
-    }
-
-    void saveEdit(string id)
-    {
-        var index = listOfData.FindIndex(item => item.Id == id);
-        listOfData[index] = editCache[id].data; // apply the copy to data source
-        editCache[id] = (false, listOfData[index]); // don't affect rows in editing
-    }
-
-    protected override void OnInitialized()
-    {
-        listOfData = Enumerable.Range(0, 100).Select(i => new ItemData { Id = $"{i}", Name = $"Edrward {i}", Age = 32, Address = $"London Park no. {i}" }).ToList();
-        listOfData.ForEach(item =>
-        {
-            editCache[item.Id] = (false, item);
-        });
     }
 }

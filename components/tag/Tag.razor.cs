@@ -40,7 +40,28 @@ namespace AntDesign
         /// </summary>
         /// <default value="false" />
         [Parameter]
-        public bool Closable { get; set; }
+        public bool? Closable { get; set; }
+
+        /// <summary>Custom close icon content. Supplying it also enables the close control unless <see cref="Closable"/> is explicitly false.</summary>
+        [Parameter]
+        public RenderFragment CloseIcon { get; set; }
+
+        /// <summary>URL that turns the tag root into an anchor element.</summary>
+        [Parameter]
+        public string Href { get; set; }
+
+        /// <summary>Target browsing context when <see cref="Href"/> is set.</summary>
+        [Parameter]
+        public string Target { get; set; }
+
+        /// <summary>Additional class applied to the tag root, matching React's <c>rootClassName</c>.</summary>
+        [Parameter]
+        public string RootClassName { get; set; }
+
+        /// <summary>Deprecated compatibility alias. Use <see cref="Variant"/> instead.</summary>
+        [Parameter]
+        [Obsolete("Use Variant instead")]
+        public bool? Bordered { get; set; }
 
         /// <summary>
         /// Whether the Tag can be checked
@@ -72,6 +93,8 @@ namespace AntDesign
         [Parameter] public TagVariant? Variant { get; set; }
 
         private TagVariant ResolvedVariant => Variant ?? (_isPresetColor && _colorMap[_presetColor].EndsWith("-inverse", StringComparison.Ordinal) ? TagVariant.Solid : TagVariant.Filled);
+
+        internal bool ShowCloseIcon => Closable ?? CloseIcon != null;
 
         /// <summary>
         /// Callback executed when Tag is checked/unchecked
@@ -138,10 +161,6 @@ namespace AntDesign
         [Parameter]
         public IReadOnlyDictionary<string, string> Styles { get; set; }
 
-        /// <summary>Additional attributes applied to the Tag root element.</summary>
-        [Parameter(CaptureUnmatchedValues = true)]
-        public IReadOnlyDictionary<string, object> AdditionalAttributes { get; set; }
-
         [Parameter]
         [Obsolete("Parameter is not used and does not affect functionality")]
         public bool NoAnimation { get; set; }
@@ -164,6 +183,10 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public EventCallback OnClick { get; set; }
+
+        /// <summary>Callback invoked for key presses on the Tag root.</summary>
+        [Parameter]
+        public EventCallback<KeyboardEventArgs> OnKeyDown { get; set; }
 
         /// <summary>
         /// Whether the Tag is closed or not
@@ -267,8 +290,10 @@ namespace AntDesign
             this.ClassMapper.Add(StylePrefix)
                 .Get(() => $"{StylePrefix}-{ResolvedVariant.ToString().ToLowerInvariant()}")
                 .Add(GetSemanticValue(ClassNames, "root"))
+                .Add(RootClassName)
                 .If($"{StylePrefix}-has-color", () => !_isPresetColor)
-                .If($"{StylePrefix}-hidden", () => !Visible)
+                .If($"{StylePrefix}-hidden", () => !Visible || _closed)
+                .If($"{StylePrefix}-disabled", () => Disabled)
                 .GetIf(() => $"{StylePrefix}-{_colorMap[_presetColor]}", () => _isPresetColor)
                 .GetIf(() => $"{StylePrefix}-{_colorMap[_presetColor].Replace("-inverse", string.Empty)}", () => _isPresetColor && _colorMap[_presetColor].EndsWith("-inverse", StringComparison.Ordinal))
                 .If($"{StylePrefix}-checkable", () => Checkable)
@@ -305,14 +330,15 @@ namespace AntDesign
 
         private string GetStyle()
         {
-            var styleBuilder = new StringBuilder().AppendIfNotNullOrEmpty(Style);
-            if (!_isPresetColor)
+            var styleBuilder = new StringBuilder();
+            if (!_isPresetColor && !Disabled)
             {
                 styleBuilder.Append($"background-color: {(ResolvedVariant == TagVariant.Solid ? _customColor : AntDesign.Colors.ThemeColorMath.WithHslLightness(_customColor, .95))};");
                 if (ResolvedVariant != TagVariant.Solid) styleBuilder.Append($"color:{_customColor};");
                 if (ResolvedVariant == TagVariant.Outlined) styleBuilder.Append($"border-color:{_customColor};");
             }
 
+            styleBuilder.AppendIfNotNullOrEmpty(Style);
             return SemanticStyle("root", styleBuilder.Length > 0 ? styleBuilder.ToString() : null);
         }
 
@@ -332,6 +358,11 @@ namespace AntDesign
 
         private async Task CloseTag(MouseEventArgs e)
         {
+            if (Disabled)
+            {
+                return;
+            }
+
             var closeEvent = new CloseEventArgs<MouseEventArgs>(e);
 
             if (OnClosing.HasDelegate)
@@ -344,12 +375,12 @@ namespace AntDesign
                 return;
             }
 
-            this._closed = true;
-
             if (OnClose.HasDelegate)
             {
                 await this.OnClose.InvokeAsync(e);
             }
+
+            this._closed = true;
         }
 
         private Task CloseTagFromKeyboard(KeyboardEventArgs e)
@@ -372,14 +403,17 @@ namespace AntDesign
             }
         }
 
-        private Task HandleCheckableKeyDown(KeyboardEventArgs e)
+        private async Task HandleKeyDown(KeyboardEventArgs e)
         {
-            if (!Checkable || Disabled || e.Key is not ("Enter" or " "))
+            if (OnKeyDown.HasDelegate)
             {
-                return Task.CompletedTask;
+                await OnKeyDown.InvokeAsync(e);
             }
 
-            return UpdateCheckedStatus();
+            if (Checkable && !Disabled && e.Key == " ")
+            {
+                await UpdateCheckedStatus();
+            }
         }
     }
 }

@@ -1,5 +1,7 @@
 ---
-order: 23
+order: 114
+debug: true
+extension: true
 title:
   zh-CN: 弹出位置
   en-US: Placement

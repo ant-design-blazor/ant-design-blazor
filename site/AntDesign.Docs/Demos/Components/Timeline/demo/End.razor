@@ -1,0 +1,16 @@
+<Timeline Mode="TimelineMode.Right" Items="_items" />
+
+@code {
+    private readonly IReadOnlyList<TimelineItemData> _items = new[]
+    {
+        new TimelineItemData { Content = "Create a services site 2015-09-01" },
+        new TimelineItemData { Content = "Solve initial network problems 2015-09-01" },
+        new TimelineItemData
+        {
+            Icon = @<Icon Type="@IconType.Outline.ClockCircle" />,
+            Color = TimelineDotColor.Red,
+            Content = "Technical testing 2015-09-01",
+        },
+        new TimelineItemData { Content = "Network problems being solved 2015-09-01" },
+    };
+}

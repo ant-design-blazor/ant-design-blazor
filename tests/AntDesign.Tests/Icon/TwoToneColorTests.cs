@@ -110,6 +110,31 @@ public sealed class TwoToneColorTests : AntDesignTestBase
     }
 
     [Fact]
+    public void Runtime_icon_accepts_react_two_tone_primary_and_secondary_pair()
+    {
+        var cut = RenderComponent<AntDesign.Icon>(p => p
+            .Add(x => x.Type, "check-circle")
+            .Add(x => x.TwoToneColor, new[] { "#123456", "#abcdef" }));
+
+        Assert.Contains("fill=\"#123456\"", cut.Markup);
+        Assert.Contains("fill=\"#abcdef\"", cut.Markup);
+        Assert.Equal(IconThemeType.TwoTone, cut.Instance.Theme);
+        Assert.Empty(JSInterop.Invocations);
+    }
+
+    [Fact]
+    public void Runtime_icon_calculates_secondary_for_a_single_color_array()
+    {
+        var cut = RenderComponent<AntDesign.Icon>(p => p
+            .Add(x => x.Type, "check-circle")
+            .Add(x => x.TwoToneColor, new[] { "#52c41a" }));
+
+        Assert.Contains("fill=\"#52c41a\"", cut.Markup);
+        Assert.Contains("fill=\"#f6ffed\"", cut.Markup);
+        Assert.Empty(JSInterop.Invocations);
+    }
+
+    [Fact]
     public void Generated_icon_uses_an_explicit_primary_secondary_pair()
     {
         var cut = RenderComponent<CheckCircleTwoTone>(p => p.Add(x => x.TwoToneColor, new[] { "#123456", "#abcdef" }));
@@ -143,7 +168,7 @@ public sealed class TwoToneColorTests : AntDesignTestBase
     }
 
     private static string[] GetOriginalFills()
-        => Regex.Matches(IconService.GetIconImg("check-circle", IconThemeType.TwoTone), "fill=\"([^\"]+)\"")
+        => Regex.Matches(IconService.GetIconImg("check-circle", IconThemeType.TwoTone), "<path\\b[^>]*\\bfill=\"([^\"]+)\"")
             .Select(match => match.Groups[1].Value)
             .ToArray();
 }

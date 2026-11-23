@@ -8,7 +8,7 @@ import { createArtifact, createBaseline, readBaseline, sha256, writeBaseline } f
 import { compareArtifactSets, compareCss } from './style-diff.mjs';
 import { generateReactCssBaseline } from './react-css-baseline.mjs';
 import { generateIconCategoriesSource, syncAntDesignIconCategories } from './icon-categories.mjs';
-import { csharpTokenType, extractComponentTokenDefinitions, extractExcludedComponentTokenNames } from './component-tokens.mjs';
+import { csharpTokenType, extractComponentTokenDefinitions, mergeDocumentedComponentTokens } from './component-tokens.mjs';
 import { syncGlobalTokenDocs } from './global-token-docs.mjs';
 import { collectComponentGlobalTokens, renderComponentGlobalTokenCatalog } from './component-global-tokens.mjs';
 import { renderSeedTokenDefaults } from './seed-token-defaults.mjs';
@@ -130,7 +130,6 @@ async function discoverComponents(componentsPath, root) {
     // style generators in index.ts instead of a separate token.ts file.
     const tokenFile = existsSync(candidateTokenFile) ? candidateTokenFile : stylePath;
     const tokenDefinitions = tokenFile ? await discoverTokenDefinitions(tokenFile) : [];
-    const excludedTokenNames = tokenFile ? [...extractExcludedComponentTokenNames(await readFile(tokenFile, 'utf8'))] : [];
     const hasTokenSource = tokenDefinitions.length > 0;
     const tokenRelativePath = hasTokenSource ? relative(root, tokenFile).replaceAll('\\', '/') : null;
     const docsPath = join(componentPath, 'index.en-US.md');
@@ -143,7 +142,6 @@ async function discoverComponents(componentsPath, root) {
       hasTokenSource,
       hasTokenTable: /<ComponentTokenTable\b/.test(docsSource),
       tokenDefinitions,
-      excludedTokenNames,
     });
   }
   return components.sort((left, right) => left.name.localeCompare(right.name));
@@ -228,17 +226,7 @@ async function sync(args) {
   }));
   const tokens = components.flatMap((component) => {
     const metadata = componentTokenMetadata.get(normalizeTokenOwner(component.name)) ?? [];
-    const definitions = [...component.tokenDefinitions];
-    for (const item of metadata) {
-      if (!component.excludedTokenNames.includes(item.token) && !definitions.some((definition) => definition.name === item.token)) {
-        definitions.push({
-          name: item.token,
-          type: item.type ?? 'unknown',
-          description: item.desc,
-          descriptionEn: item.descEn,
-        });
-      }
-    }
+    const definitions = mergeDocumentedComponentTokens(component.tokenDefinitions, metadata);
     if (definitions.length === 0) definitions.push({ name: 'componentToken', type: 'unknown' });
     return definitions.map(({ name, type, description, descriptionEn, deprecated }) => {
       const docsDefinition = metadata.find((item) => item.token === name);

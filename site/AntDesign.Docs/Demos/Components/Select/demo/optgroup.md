@@ -1,5 +1,5 @@
 ---
-order: 6
+order: 9
 title:
   zh-CN: 分组
   en-US: Option Group
@@ -11,4 +11,4 @@ Entries can be grouped using a group indicator. The parameter `GroupName` is use
 
 ## en-US
 
-Entries can be grouped using a group indicator. The parameter `GroupName` is used for this. It is recommended to sort the entries when using the `GroupName` parameter `(SortByLabel | SortByGroup)`. Otherwise there may be problems with keyboard navigation.
+Using OptGroup to group the options.

@@ -1,5 +1,7 @@
 ---
-order: 4
+order: 113
+debug: true
+extension: true
 title:
   zh-CN: Item Templates
   en-US: Item Templates

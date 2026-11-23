@@ -20,10 +20,10 @@ namespace AntDesign.Docs.Shared
         private string _themeMode = "light";
         private bool _compact;
         private bool _happyWorkEnabled;
-        private bool _dropdownVisible;
+        private bool _popoverVisible;
         private bool _initialized;
-        private Dropdown _dropdown;
         private IJSObjectReference _happyWorkModule;
+        private IJSObjectReference _themeModule;
         private DotNetObjectReference<DocsThemeSwitch> _selfReference;
 
         private string ThemeFileUrl => $"_content/AntDesign/css/antd-v6/{(_compact ? $"{_appearance}-compact" : _appearance)}.css";
@@ -34,6 +34,7 @@ namespace AntDesign.Docs.Shared
 
             _initialized = true;
             _happyWorkModule = await JS.InvokeAsync<IJSObjectReference>("import", "./_content/AntDesign.Docs/js/happy-work.js");
+            _themeModule = await JS.InvokeAsync<IJSObjectReference>("import", "./_content/AntDesign.Docs/js/docs-theme.js");
             var savedTheme = await JS.InvokeAsync<string>("localStorage.getItem", ThemeStorageKey);
             _happyWorkEnabled = await JS.InvokeAsync<string>("localStorage.getItem", HappyWorkStorageKey) == "true";
             if (!string.IsNullOrWhiteSpace(savedTheme))
@@ -54,7 +55,7 @@ namespace AntDesign.Docs.Shared
 
         private async Task ChangeAppearance(string appearance)
         {
-            await CloseDropdownAsync();
+            await ClosePopoverAsync();
             _themeMode = appearance;
             _appearance = appearance == "dark" ? "dark" : appearance == "auto"
                 ? await _happyWorkModule.InvokeAsync<string>("getSystemAppearance")
@@ -64,14 +65,14 @@ namespace AntDesign.Docs.Shared
 
         private async Task ToggleCompact()
         {
-            await CloseDropdownAsync();
+            await ClosePopoverAsync();
             _compact = !_compact;
             await SaveAndApplyThemeAsync();
         }
 
         private async Task ToggleHappyWork()
         {
-            await CloseDropdownAsync();
+            await ClosePopoverAsync();
             _happyWorkEnabled = !_happyWorkEnabled;
             await JS.InvokeVoidAsync("localStorage.setItem", HappyWorkStorageKey, _happyWorkEnabled ? "true" : "false");
             await _happyWorkModule.InvokeVoidAsync("setEnabled", _happyWorkEnabled);
@@ -84,26 +85,36 @@ namespace AntDesign.Docs.Shared
             await ApplyThemeAsync();
         }
 
-        private async Task CloseDropdownAsync()
+        private Task ClosePopoverAsync()
         {
-            if (_dropdown != null)
-            {
-                await _dropdown.Close();
-            }
+            _popoverVisible = false;
+            return Task.CompletedTask;
         }
 
         private async Task ApplyThemeAsync()
         {
-            if (SiteTheme != null) await SiteTheme.ApplyAsync(_appearance, _compact);
             await JS.InvokeVoidAsync(JSInteropConstants.SetDomAttribute, "html", new Dictionary<string, string>
             {
                 ["data-theme"] = _appearance == "dark" ? "dark" : "default",
                 ["data-theme-compact"] = _compact ? "true" : "false"
             });
-            await JS.InvokeVoidAsync(JSInteropConstants.SetDomAttribute, "#docs-theme-v6", new Dictionary<string, string>
+
+            if (_themeModule != null)
             {
-                ["href"] = ThemeFileUrl
-            });
+                await JS.InvokeAsync<bool>("window.setDocsThemeStylesheet", ThemeFileUrl);
+            }
+            else
+            {
+                await JS.InvokeVoidAsync(JSInteropConstants.SetDomAttribute, "#docs-theme-v6", new Dictionary<string, string>
+                {
+                    ["href"] = ThemeFileUrl
+                });
+            }
+
+            // Publish the new ConfigProvider theme only after the matching
+            // generated stylesheet has loaded. Open body-portaled overlays
+            // then re-read tokens from their triggers in the new theme.
+            if (SiteTheme != null) await SiteTheme.ApplyAsync(_appearance, _compact);
         }
 
         [JSInvokable]
@@ -122,6 +133,14 @@ namespace AntDesign.Docs.Shared
                 {
                     await _happyWorkModule.InvokeVoidAsync("stopWatchingSystemAppearance");
                     await _happyWorkModule.DisposeAsync();
+                }
+                catch (JSDisconnectedException) { }
+            }
+            if (_themeModule != null)
+            {
+                try
+                {
+                    await _themeModule.DisposeAsync();
                 }
                 catch (JSDisconnectedException) { }
             }

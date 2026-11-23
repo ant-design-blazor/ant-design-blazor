@@ -73,7 +73,11 @@ else if (IsColGroup)
 
     if (Width != null)
     {
-        <col style="width: @((CssSizeLength)Width);">
+        <col style="width: @((CssSizeLength)Width);@(MinWidth.HasValue ? $" min-width: {MinWidth.Value}px;" : null)">
+    }
+    else if (MinWidth.HasValue)
+    {
+        <col style="min-width: @(MinWidth.Value)px;">
     }
     else if (Table.ScrollX == "max-content"
         || ((Table.ScrollY != null || Table.IsSticky) && IsHeaderColGroup)
@@ -86,11 +90,22 @@ else if (IsHeader && HeaderColSpan != 0)
 {
     @if (AppendExpandColumn)
     {
-        <th class="@Table.GetSemanticClass("header.cell", ExpandIconCellClass)" style="@Table.GetSemanticStyle("header.cell", ExpandIconCellStyle)"></th>
+        <th class="@Table.GetSemanticClass("header.cell", ExpandIconCellClass)" style="@Table.GetSemanticStyle("header.cell", ExpandIconCellStyle)">
+            @if (Table.ShouldShowExpandAll)
+            {
+                <button type="button"
+                        class="ant-table-row-expand-icon @(Table.AreCurrentPageRowsExpanded ? "ant-table-row-expand-icon-expanded" : "ant-table-row-expand-icon-collapsed")"
+                        aria-label="@(Table.AreCurrentPageRowsExpanded ? "Collapse all rows" : "Expand all rows")"
+                        aria-expanded="@(Table.AreCurrentPageRowsExpanded ? "true" : "false")"
+                        disabled="@(!Table.CanExpandCurrentPage)"
+                        @onclick="HandleExpandAllClick"
+                        @onclick:stopPropagation></button>
+            }
+        </th>
     }
 
     var headerCellAttributes = OnHeaderCell?.Invoke() ?? new Dictionary<string, object>();
-    var headerStyle = $"{FixedStyle}{HeaderStyle}".Trim();
+    var headerStyle = $"{FixedStyle}{HeaderStyle}{(MinWidth.HasValue ? $"min-width: {MinWidth.Value}px;" : null)}".Trim();
     if (Sortable)
     {
         headerCellAttributes.TryAdd("aria-description", Table.Locale.Sortable);
@@ -178,7 +193,7 @@ else if (IsBody && (Table.IsVirtual || (RowSpan != 0 && ColSpan != 0 && IsCellVi
             var cellData = new CellData<TData>(RowData, default, Format);
 
             var title = Context.HeaderColumns.LastOrDefault(x => x.ColIndex <= ColIndex && x.ColIndex + x.HeaderColSpan > ColIndex)?.Title;
-            var cellStyle = $"{FixedStyle}{Style}".Trim();
+            var cellStyle = $"{FixedStyle}{Style}{(MinWidth.HasValue ? $"min-width: {MinWidth.Value}px;" : null)}".Trim();
             var fieldText = string.Empty;
 
             @if (!RowData.IsGrouping)
@@ -222,6 +237,8 @@ else if (IsBody && (Table.IsVirtual || (RowSpan != 0 && ColSpan != 0 && IsCellVi
 @code
 {
     Dictionary<string, object> _currentCellAttributes;
+
+    Task HandleExpandAllClick() => Table.ToggleExpandAllAsync();
 
     string GetBodyCellStyle(string baseStyle, bool hidden = false)
     {
@@ -412,6 +429,11 @@ else if (IsBody && (Table.IsVirtual || (RowSpan != 0 && ColSpan != 0 && IsCellVi
 
     RenderFragment SorterIcon()
     {
+        if (SortIcon != null)
+        {
+            return SortIcon(_sortDirection == SortDirection.None ? null : _sortDirection);
+        }
+
         bool hasDescendingSorter = SortDirection.Descending.IsIn(SortDirections);
         bool hasAscendingSorter = SortDirection.Ascending.IsIn(SortDirections);
 
@@ -498,10 +520,10 @@ else if (IsBody && (Table.IsVirtual || (RowSpan != 0 && ColSpan != 0 && IsCellVi
             @ColumnTitleWithClass()
         }
 
-        <Dropdown Trigger="new[] { Trigger.Click }" Visible="_filterOpened" Placement="Placement.BottomRight" OverlayClassName="ant-table-css-var" OnMaskClick="() => { if (_filterOpened && !_preventClose) FilterConfirm(); }" VisibleChanged="FilterDropdownOnVisibleChange">
+        <Dropdown @ref="_filterDropdownRef" Trigger="new[] { Trigger.Click }" Visible="_filterOpened" CloseOnOutsideClick="@FilterDropdownAutoClose" Placement="Placement.BottomRight" OverlayClassName="ant-table-css-var" GetPopupContainer="@Table?.GetPopupContainer" OnMaskClick="CloseFilterDropdown" VisibleChanged="FilterDropdownOnVisibleChange">
             <Unbound>
                 <span @ref="context.Current" role="button" tabindex="-1" class="ant-dropdown-trigger ant-table-filter-trigger@((_filterOpened ? " ant-dropdown-open" : "") + (IsFiltered ? " active" : ""))"
-                      @onclick="() => { if (_filterOpened) FilterConfirm(); else _filterOpened = true; }">
+                      @onclick="() => { if (_filterOpened) CloseFilterDropdown(); else _filterOpened = true; }">
                     @if (FilterIcon is not null)
                     {
                         @FilterIcon(IsFiltered)
@@ -513,7 +535,7 @@ else if (IsBody && (Table.IsVirtual || (RowSpan != 0 && ColSpan != 0 && IsCellVi
                 </span>
             </Unbound>
             <Overlay>
-                <div class="ant-table-filter-dropdown" role="presentation">
+                <div class="ant-table-filter-dropdown@(_fieldFilterType is not null ? " ant-table-filter-dropdown-field-type" : string.Empty)" role="presentation">
                     @if (FilterDropdown != null)
                     {
                         @FilterDropdown(new(() => { _filterOpened = false; _preventClose = false; }, () => { _preventClose = true; }))
@@ -573,7 +595,7 @@ else if (IsBody && (Table.IsVirtual || (RowSpan != 0 && ColSpan != 0 && IsCellVi
                         <div>
                             <Space Style="margin-bottom:10px">
                                 <SpaceItem>
-                                    <Select Value="filter.FilterCondition" TItemValue="TableFilterCondition" TItem="TableFilterCondition" ValueChanged="value => SetFilterCondition(filter,value)" PopupContainerSelector="@("#popup-container-for-" + Id)" BoundaryAdjustMode="@TriggerBoundaryAdjustMode.None">
+                                    <Select Value="filter.FilterCondition" TItemValue="TableFilterCondition" TItem="TableFilterCondition" ValueChanged="value => SetFilterCondition(filter,value)" GetPopupContainer="@Table?.GetPopupContainer" PopupContainerSelector="@("#popup-container-for-" + Id)" BoundaryAdjustMode="@TriggerBoundaryAdjustMode.None">
                                         <SelectOptions>
                                             <SelectOption TItem="TableFilterCondition" TItemValue="TableFilterCondition" Value="@TableFilterCondition.And" Label="@Table?.Locale.FilterOptions.And"></SelectOption>
                                             <SelectOption TItem="TableFilterCondition" TItemValue="TableFilterCondition" Value="@TableFilterCondition.Or" Label="@Table?.Locale.FilterOptions.Or"></SelectOption>
@@ -585,7 +607,7 @@ else if (IsBody && (Table.IsVirtual || (RowSpan != 0 && ColSpan != 0 && IsCellVi
                     }
                     <Space Style="width:100%;">
                         <SpaceItem Style="flex:auto">
-                            <Select Value="filter.FilterCompareOperator" TItemValue="TableFilterCompareOperator" TItem="TableFilterCompareOperator" Style="width: 100%; overflow: visible" ValueChanged="value => SetFilterCompareOperator(filter,value)" PopupContainerSelector="@("#popup-container-for-" + Id)" BoundaryAdjustMode="@TriggerBoundaryAdjustMode.None" DropdownMatchSelectWidth="false">
+                            <Select Value="filter.FilterCompareOperator" TItemValue="TableFilterCompareOperator" TItem="TableFilterCompareOperator" Style="width: 100%; overflow: visible" ValueChanged="value => SetFilterCompareOperator(filter,value)" GetPopupContainer="@Table?.GetPopupContainer" PopupContainerSelector="@("#popup-container-for-" + Id)" BoundaryAdjustMode="@TriggerBoundaryAdjustMode.None" DropdownMatchSelectWidth="false">
                                 <SelectOptions>
                                     @foreach (TableFilterCompareOperator compareOperator in _fieldFilterType.SupportedCompareOperators)
                                     {
@@ -621,7 +643,7 @@ else if (IsBody && (Table.IsVirtual || (RowSpan != 0 && ColSpan != 0 && IsCellVi
         }
 
         <div class="ant-table-filter-dropdown-btns">
-            <Button Size="@ButtonSize.Small" Type="@ButtonType.Link" OnClick="ResetFilters">
+            <Button Size="@ButtonSize.Small" Type="@ButtonType.Link" Disabled="@IsFilterResetDisabled" OnClick="ResetFilters">
                 @Table?.Locale.FilterReset
             </Button>
             @if (_columnFilterType == TableFilterType.FieldType && FilterMultiple)

@@ -9,13 +9,13 @@ namespace AntDesign.Core.JsInterop.Modules.Components
     public class OverlayPosition
     {
         public decimal? Top { get; set; }
-        public string TopCss => UseTop ? $"top: " + GetAsString(Top) : string.Empty;
+        public string TopCss => $"top: " + GetAsString(UseTop ? Top : null);
         public decimal? Bottom { get; set; }
-        public string BottomCss => UseBottom ? $"bottom: " + GetAsString(Bottom) : string.Empty;
+        public string BottomCss => $"bottom: " + GetAsString(UseBottom ? Bottom : null);
         public decimal? Left { get; set; }
-        public string LeftCss => UseLeft ? $"left: " + GetAsString(Left) : string.Empty;
+        public string LeftCss => $"left: " + GetAsString(UseLeft ? Left : null);
         public decimal? Right { get; set; }
-        public string RightCss => UseRight ? $"right: " + GetAsString(Right) : string.Empty;
+        public string RightCss => $"right: " + GetAsString(UseRight ? Right : null);
         public string PositionCss => ZIndexCss + FixedCss + LeftCss + RightCss + TopCss + BottomCss;
         public string PositionCssWithoutZIndex => FixedCss + LeftCss + RightCss + TopCss + BottomCss;
 

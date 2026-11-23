@@ -123,6 +123,7 @@ export function normalizeRuntimeHtml(html, policy = {}) {
         const separator = declaration.indexOf(':');
         if (separator < 0) return declaration.trim();
         const property = declaration.slice(0, separator).trim();
+        if (removeStyleProperties.has(property)) return '';
         let propertyValue = declaration.slice(separator + 1).trim();
         if (roundPixelValues !== null) {
           const factor = 10 ** roundPixelValues;
@@ -133,6 +134,7 @@ export function normalizeRuntimeHtml(html, policy = {}) {
         }
         return `${property}:${propertyValue}`;
       }).filter(Boolean).join(';');
+      if (!normalized) return '';
       return ` ${name}=${quote}${normalized}${quote}`;
     }
 

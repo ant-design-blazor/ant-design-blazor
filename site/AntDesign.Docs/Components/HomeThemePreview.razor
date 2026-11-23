@@ -1,14 +1,23 @@
 @using AntDesign
 @using AntDesign.Docs.Services
 @using AntDesign.Theming
+@using System.Net.Http.Json
+@using System.Text.Json.Serialization
+@inject HttpClient HttpClient
 
 <style id="home-theme-preview-style">@((MarkupString)_styles.CssText)</style>
-<section class="@GetClass("home-theme-preview", "root")">
-    <div class="@GetClass("home-theme-heading", "heading")">
-        <div class="@_styles["headingTitle"]"><h1 class="ant-typography">@Localizer["app.home.theme-title"]</h1></div>
-        <p>@Localizer["app.home.theme-description"]</p>
-    </div>
-    <div class="@_styles["wrapper"]">
+<div class="@GetClass("home-theme-preview", "root")">
+    <div class="@_styles["groupContainer"]"></div>
+    <div class="@_styles["groupMask"]">
+      <div class="@_styles["typographyWrapper"]">
+        <div class="@GetClass("home-theme-heading", "heading", SelectedTheme.DarkBackground ? "headingDark" : string.Empty)">
+            <div class="@_styles["headingTitle"]"><h1 class="ant-typography" style="font-weight:900">@Localizer["app.home.theme-title"]</h1></div>
+            <p>@Localizer["app.home.theme-description"]</p>
+        </div>
+      </div>
+      <div class="@_styles["groupChildren"]">
+       <div class="@_styles["themeContainer"]">
+        <div class="@_styles["wrapper"]">
         <div class="@GetClass("home-theme-controls", "controls")">
             <Segmented TValue="string" Class="@GetClass("home-theme-tabs", "previewTabs", SelectedTheme.DarkBackground ? "tabsDark" : string.Empty)" @bind-Value="PreviewMode">
                 <SegmentedItem Value="@("components")" Label="Components" Class="@GetTabItemClass()" />
@@ -54,31 +63,33 @@
         <ChildContent>
         <div class="@GetClass("home-theme-components", "components")">
             <div class="@GetClass("home-theme-preview-column", "previewColumn")">
-                <div class="@GetClass("home-theme-control-grid", "controlGrid")">
-                    <div class="@_styles["controlRow"]">
-                        <Input TValue="string" @bind-Value="_previewEmail" Placeholder="hi@example.com" />
-                        <Select Mode="SelectMode.Multiple" MaxTagCount="AntDesign.Select.ResponsiveTag.Responsive" TItemValue="string" TItem="string" @bind-Values="_selectedFoods" Placeholder="Select one">
-                            <SelectOptions>
-                                <SelectOption TItemValue="string" TItem="string" Value="@("apple")" Label="Apple" />
-                                <SelectOption TItemValue="string" TItem="string" Value="@("banana")" Label="Banana" />
-                                <SelectOption TItemValue="string" TItem="string" Value="@("orange")" Label="Orange" />
-                                <SelectOption TItemValue="string" TItem="string" Value="@("watermelon")" Label="Watermelon" />
-                            </SelectOptions>
-                        </Select>
+                <div class="@_styles["leftContent"]">
+                    <div class="@GetClass("home-theme-control-grid", "controlGrid")">
+                        <div class="@_styles["controlRow"]">
+                            <Input TValue="string" @bind-Value="_previewEmail" Placeholder="hi@example.com" />
+                            <Select Mode="SelectMode.Multiple" MaxTagCount="AntDesign.Select.ResponsiveTag.Responsive" TItemValue="string" TItem="string" @bind-Values="_selectedFoods" Placeholder="Select one">
+                                <SelectOptions>
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("apple")" Label="Apple" />
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("banana")" Label="Banana" />
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("orange")" Label="Orange" />
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("watermelon")" Label="Watermelon" />
+                                </SelectOptions>
+                            </Select>
+                        </div>
+                        <div class="@_styles["controlRowSecond"]">
+                            <ColorPicker Value="@_previewColor" ValueChanged="OnPreviewColorChanged" ShowText />
+                            <div class="@GetClass("home-theme-compact", "compact")"><SpaceCompact><SpaceCompactItem Position="SpaceCompactItemPosition.First"><Button>Dropdown</Button></SpaceCompactItem><SpaceCompactItem Position="SpaceCompactItemPosition.Last"><Dropdown><Unbound Context="trigger"><Button RefBack="@trigger" Icon="down" AriaLabel="Open dropdown" /></Unbound><Overlay><Menu>@for (var index = 0; index < 5; index++) { var itemIndex = index; <MenuItem Key="@($"opt{itemIndex}")">Option @itemIndex</MenuItem> }</Menu></Overlay></Dropdown></SpaceCompactItem></SpaceCompact></div>
+                            <DatePicker TValue="DateTime?" @bind-Value="_previewDate" Placeholder="@("Select Date")" />
+                        </div>
                     </div>
-                    <div class="@_styles["controlRowSecond"]">
-                        <ColorPicker Value="@_previewColor" ValueChanged="OnPreviewColorChanged" ShowText />
-                        <div class="@GetClass("home-theme-compact", "compact")"><SpaceCompact><SpaceCompactItem Position="SpaceCompactItemPosition.First"><Button>Dropdown</Button></SpaceCompactItem><SpaceCompactItem Position="SpaceCompactItemPosition.Last"><Dropdown><Unbound Context="trigger"><Button RefBack="@trigger" Icon="down" AriaLabel="Open dropdown" /></Unbound><Overlay><Menu>@for (var index = 0; index < 5; index++) { var itemIndex = index; <MenuItem Key="@($"opt{itemIndex}")">Option @itemIndex</MenuItem> }</Menu></Overlay></Dropdown></SpaceCompactItem></SpaceCompact></div>
-                        <DatePicker TValue="DateTime?" @bind-Value="_previewDate" Placeholder="@("Select Date")" />
+                    <div class="@GetClass("home-theme-options", "options")">
+                        <CheckboxGroup TValue="string" Options="@(new[] { "Apple", "Pear" })" @bind-Value="_checkedFruits" />
+                        <RadioGroup TValue="string" Options="@(new[] { "Apple", "Pear" })" @bind-Value="_selectedFruit" />
+                        <Switch @bind-Checked="_notifications" />
+                        <Progress Type="ProgressType.Circle" Percent="25" Width="20" ShowInfo="false" />
                     </div>
+                    <div class="@GetClass("home-theme-steps", "steps")"><Steps Current="1" Status="StepsStatus.Error"><Step Title="Finished" /><Step Title="In Process" /><Step Title="Waiting" /></Steps></div>
                 </div>
-                <div class="@GetClass("home-theme-options", "options")">
-                    <CheckboxGroup TValue="string" Options="@(new[] { "Apple", "Pear" })" @bind-Value="_checkedFruits" />
-                    <RadioGroup TValue="string" Options="@(new[] { "Apple", "Pear" })" @bind-Value="_selectedFruit" />
-                    <Switch @bind-Checked="_notifications" />
-                    <Progress Type="ProgressType.Circle" Percent="25" Width="20" ShowInfo="false" />
-                </div>
-                <div class="@GetClass("home-theme-steps", "steps")"><Steps Current="1" Status="StepsStatus.Error"><Step Title="Finished" /><Step Title="In Process" /><Step Title="Waiting" /></Steps></div>
                 <div class="@GetClass("home-theme-progress-list", "progressList")">
                     <Progress Percent="50" Status="ProgressStatus.Active" />
                     <Progress Percent="70" Status="ProgressStatus.Exception" />
@@ -94,14 +105,33 @@
                 </div>
                 <Card Variant="CardVariant.Borderless" Class="@GetClass("home-theme-segments", "segments")" BodyStyle="padding:8px"><Segmented TValue="string" Block Labels="@(new[] { "1D", "7D", "1M", "1Y", "All" })" @bind-Value="_activePeriod" /><Segmented TValue="string" Block Style="margin-block-start:8px" @bind-Value="_activeChannel"><SegmentedItem Value="@("Chats")" Label="Chats" Icon="@IconType.Outline.Message" /><SegmentedItem Value="@("Emails")" Label="Emails" Icon="@IconType.Outline.Mail" /></Segmented></Card>
             </div>
-            <div class="@GetClass("home-theme-preview-column", "previewColumn", "centerColumn")">
+            <div class="@GetClass("home-theme-preview-column", "previewColumn")">
                 <div class="@GetClass("home-theme-verify", "verify")">
-                    <div class="@GetClass("home-theme-contributors", "contributors")"><AvatarGroup><Avatar Src="https://github.com/ant-design.png?size=48" /><Avatar Src="https://github.com/afc163.png?size=48" /><Avatar Src="https://github.com/benjycui.png?size=48" /><Avatar Src="https://github.com/yesmeck.png?size=48" /><Avatar Src="https://github.com/zombieJ.png?size=48" /><Avatar>+5</Avatar></AvatarGroup></div>
-                    <strong>Verify account</strong><small>We've sent a code to a***@@gmail.com</small>
+                    <AvatarGroup Class="@GetClass("home-theme-contributors", "contributors")">
+                        @if (_contributorsLoading)
+                        {
+                            @for (var index = 0; index < 6; index++)
+                            {
+                                <SkeletonElement Type="SkeletonElementType.Avatar" Active Size="SkeletonElementSize.Large" Style="width:46px;height:46px" />
+                            }
+                        }
+                        else
+                        {
+                            @foreach (var contributor in _contributors)
+                            {
+                                <Avatar AdditionalAttributes="@GetContributorAvatarAttributes(contributor.Login)" Size="@("46px")" Src="@contributor.AvatarUrl" Alt="@($"Contributor: {contributor.Login}")" />
+                            }
+                        }
+                        <Avatar AdditionalAttributes="@NonDraggableAvatarAttributes" Size="@("46px")"><span style="display:flex;width:100%;height:100%;align-items:center;justify-content:center">+5</span></Avatar>
+                    </AvatarGroup>
+                    <strong>Verify account</strong><small>We've sent a code to a****@@gmail.com</small>
                     <div class="@GetClass("home-theme-otp", "otp")"><InputOTP Size="InputSize.Large" Length="6" DefaultValue="4320" Variant="InputVariant.Filled" /></div>
-                    <small>@_verificationMessage <Button Type="ButtonType.Link" OnClick="ResendVerification">Resend</Button></small>
+                    <small>@_verificationMessage <a href="#" @onclick="ResendVerification" @onclick:preventDefault="true">Resend</a></small>
                 </div>
-                <div class="@GetClass("home-theme-button-pairs", "buttonPairs")"><Button Type="ButtonType.Primary" OnClick="PrimaryButtonClicked">Primary button</Button><Button Danger OnClick="DangerButtonClicked">Danger button</Button><Button Type="ButtonType.Dashed" Shape="ButtonShape.Round" OnClick="OutlinedButtonClicked">Outlined button</Button><Button Danger Shape="ButtonShape.Round" OnClick="RoundButtonClicked">Round button</Button></div>
+                <Flex Direction="FlexDirection.Vertical" Gap="FlexGap.Large">
+                    <Flex Justify="FlexJustify.Center" Gap="FlexGap.Middle"><Button Type="ButtonType.Primary" OnClick="PrimaryButtonClicked">Primary button</Button><Button Danger OnClick="DangerButtonClicked">Danger button</Button></Flex>
+                    <Flex Justify="FlexJustify.Center" Gap="FlexGap.Middle"><Button Type="ButtonType.Dashed" Shape="ButtonShape.Round" OnClick="OutlinedButtonClicked">Outlined button</Button><Button Danger Shape="ButtonShape.Round" OnClick="RoundButtonClicked">Round button</Button></Flex>
+                </Flex>
                 @if (_buttonFeedback is not null) { <Alert Type="AlertType.Info" Message="@_buttonFeedback" ShowIcon Closable OnClose="() => _buttonFeedback = null" /> }
                 <Card Variant="CardVariant.Borderless" Class="@_styles["profile"]"><Avatar Shape="AvatarShape.Square" Size="@("60px")" Src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg" /><div><Title Level="5">Ant Design</Title><Text Type="TextElementType.Secondary">@@ant-design</Text><p>Building the future of UI for web &amp; mobile.</p></div></Card>
                 @if (_notificationVisible) { <div class="ant-notification-notice-pure-panel" style="width:100%"><NotificationItem Config="@PreviewNotification" PurePanel OnClose="CloseNotification" /></div> }
@@ -125,51 +155,71 @@
     }
     else
     {
-        <Layout Class="@GetClass("home-theme-dashboard", "dashboard")">
-            <Header Class="@_styles["dashboardHeader"]">
-                <div class="@_styles["dashboardLogo"]"><img src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg" alt="Ant Design" /><strong>Ant Design</strong></div>
-                <div>♧　?　<Avatar Icon="@IconType.Outline.User" Size="AvatarSize.Small" /></div>
+        <Layout Class="@GetClass("home-theme-dashboard", "dashboard", GetDashboardMenuTheme() == MenuTheme.Dark ? "dashboardDark" : string.Empty)">
+            <Header Class="@GetClass("home-theme-dashboard-header", "dashboardHeader", GetDashboardMenuTheme() == MenuTheme.Dark ? "dashboardHeaderDark" : string.Empty)">
+                <div class="@_styles["dashboardLogo"]"><span><img src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg" alt="Ant Design logo" draggable="false" /></span><h1>Ant Design</h1></div>
+                <Space Size="SpaceSize.Middle" Class="@_styles["dashboardMenu"]"><Icon Type="@IconType.Outline.Bell" /><Icon Type="@IconType.Outline.QuestionCircle" /><img class="@_styles["dashboardAvatar"]" src="@SelectedTheme.Icon" alt="@SelectedTheme.Name" title="@SelectedTheme.Name" draggable="false" /></Space>
             </Header>
             <Layout>
-                <Sider Width="176" Theme="@GetDashboardSiderTheme()">
-                    <Menu Mode="MenuMode.Inline" Theme="@GetDashboardMenuTheme()" DefaultSelectedKeys="@(new[] { "Themes" })" DefaultOpenKeys="@(new[] { "Design" })">
-                        <MenuItem Key="Overview">Overview</MenuItem>
-                        <SubMenu Key="Design" Title="Design"><MenuItem Key="Themes">Themes</MenuItem><MenuItem Key="Tokens">Tokens</MenuItem></SubMenu>
-                        <MenuItem Key="Employees">Employees</MenuItem><MenuItem Key="Reports">Reports</MenuItem>
+                <Sider Width="200" Theme="@GetDashboardSiderTheme()">
+                    <Menu Mode="MenuMode.Inline" Theme="@GetDashboardMenuTheme()" DefaultSelectedKeys="@(new[] { "Themes" })" DefaultOpenKeys="@(new[] { "Design" })" Style="height:100%;border-inline-end:0">
+                        <SubMenu Key="Design" Title="Design" Icon="@IconType.Outline.Folder">
+                            <MenuItem Key="Design Values">Design Values</MenuItem><MenuItem Key="Global Styles">Global Styles</MenuItem><MenuItem Key="Themes">Themes</MenuItem><MenuItem Key="DesignPatterns">Design Patterns</MenuItem>
+                        </SubMenu>
+                        <MenuItem Key="Development" Icon="@IconType.Outline.Folder">Development</MenuItem>
                     </Menu>
                 </Sider>
                 <Layout Class="@_styles["dashboardMain"]">
-                    <Breadcrumb Class="@_styles["dashboardBreadcrumb"]"><BreadcrumbItem>⌂</BreadcrumbItem><BreadcrumbItem>Design</BreadcrumbItem><BreadcrumbItem>Themes</BreadcrumbItem></Breadcrumb>
+                    <Breadcrumb Class="@_styles["dashboardBreadcrumb"]">
+                        <BreadcrumbItem><ChildContent><Icon Type="@IconType.Outline.Home" /></ChildContent></BreadcrumbItem>
+                        <BreadcrumbItem><ChildContent>Design</ChildContent><Overlay><Menu><MenuItem Key="Design Values">Design Values</MenuItem><MenuItem Key="Global Styles">Global Styles</MenuItem><MenuItem Key="Themes">Themes</MenuItem><MenuItem Key="DesignPatterns">Design Patterns</MenuItem></Menu></Overlay></BreadcrumbItem>
+                        <BreadcrumbItem><ChildContent>Themes</ChildContent></BreadcrumbItem>
+                    </Breadcrumb>
                     <Content>
-                        <div class="@_styles["dashboardToolbar"]">
-                            <Segmented TValue="string" Labels="@(new[] { "Overview", "Sales", "Expenses" })" @bind-Value="_dashboardSection" />
-                            <div><Button Shape="ButtonShape.Circle" Icon="@IconType.Outline.Reload" OnClick="ResetDashboard" /><Select TItemValue="string" TItem="string" @bind-Value="_dashboardRange" Style="width: 130px"><SelectOptions><SelectOption TItemValue="string" TItem="string" Value="@("monthly")" Label="Monthly" /><SelectOption TItemValue="string" TItem="string" Value="@("quarterly")" Label="Quarterly" /></SelectOptions></Select><Button Type="ButtonType.Primary" Icon="@IconType.Outline.Download" OnClick="DownloadDashboard">Download</Button></div>
-                        </div>
-                        <Row Gutter="16" Class="@_styles["dashboardKpis"]">
-                            <GridCol Xs="24" Sm="12" Lg="6"><Card><Statistic Title="Total Revenue" Value="128450" Prefix="$" /><Tag Color="TagColor.Green">↑ 12.8%</Tag></Card></GridCol>
-                            <GridCol Xs="24" Sm="12" Lg="6"><Card><Statistic Title="Active Users" Value="8942" /><Tag Color="TagColor.Green">↑ 8.2%</Tag></Card></GridCol>
-                            <GridCol Xs="24" Sm="12" Lg="6"><Card><Statistic Title="New Customers" Value="1268" /><Tag Color="TagColor.Red">↓ 2.4%</Tag></Card></GridCol>
-                            <GridCol Xs="24" Sm="12" Lg="6"><Card><Statistic Title="Conversion Rate" Value="6.84" Precision="2" Suffix="%" /><Tag Color="TagColor.Green">↑ 1.6%</Tag></Card></GridCol>
+                        <div class="@_styles["dashboardShell"]">
+                        <Flex Class="@_styles["dashboardToolbar"]" Justify="FlexJustify.SpaceBetween" Align="FlexAlign.Center" Wrap="FlexWrap.Wrap" Gap="FlexGap.Middle">
+                            <Segmented TValue="string" Class="@_styles["dashboardTabs"]" Labels="@(new[] { "Overview", "Sales", "Expenses" })" @bind-Value="_dashboardSection" />
+                            <Space><Button Shape="ButtonShape.Circle" Icon="@IconType.Outline.Reload" /><Select TItemValue="string" TItem="string" Value="@("monthly")" Style="width: 144px"><SelectOptions><SelectOption TItemValue="string" TItem="string" Value="@("monthly")" Label="Monthly" /></SelectOptions></Select><Button Type="ButtonType.Primary" Icon="@IconType.Outline.Download">Download</Button></Space>
+                        </Flex>
+                        <Row Gutter="(16,16)" Class="@_styles["dashboardKpis"]">
+                            @foreach (var metric in DashboardMetrics)
+                            {
+                                <GridCol Xs="24" Sm="12" Lg="6"><Card><Text Type="TextElementType.Secondary">@metric.Title</Text><div class="@_styles["dashboardStatValue"]"><Statistic TValue="string" Value="@metric.Value" /><Tag Class="@_styles["dashboardStatTrend"]" Color="@(metric.IsDown ? TagColor.Red : TagColor.Green)" Icon="@(metric.IsDown ? IconType.Outline.ArrowDown : IconType.Outline.ArrowUp)">@metric.Trend%</Tag></div></Card></GridCol>
+                            }
                         </Row>
-                        <Card Class="@_styles["dashboardTable"]">
-                            <div class="@_styles["dashboardTableHeader"]"><Title Level="4">All Employees</Title><Tag>@FilteredDashboardEmployees.Count()</Tag><Input TValue="string" @bind-Value="_dashboardSearch" BindOnInput Placeholder="Search..." /></div>
-                            <div class="@_styles["dashboardTableActions"]"><Button Icon="@IconType.Outline.Filter" OnClick="ShowFilterFeedback">Filter</Button><Button Icon="@IconType.Outline.SortAscending" OnClick="ToggleDashboardSort">Sort</Button><Button Icon="@IconType.Outline.ColumnHeight" OnClick="ShowColumnFeedback">Columns</Button></div>
-                            @if (_dashboardFeedback is not null) { <Alert Type="AlertType.Info" Message="@_dashboardFeedback" ShowIcon Closable OnClose="() => _dashboardFeedback = null" /> }
-                            <Table TItem="DashboardEmployee" DataSource="FilteredDashboardEmployees" PageSize="5">
-                                <PropertyColumn Property="employee => employee.Name" Title="Name" />
+                        <Card Class="@_styles["dashboardTableCard"]" TitleTemplate="@DashboardTableTitle">
+                            <Extra><Input TValue="string" Prefix="@SearchPrefix" Placeholder="Search..." /></Extra>
+                            <ChildContent>
+                            <Flex Class="@_styles["dashboardTableActions"]" Justify="FlexJustify.SpaceBetween" Align="FlexAlign.Center" Wrap="FlexWrap.Wrap" Gap="FlexGap.Middle"><Space Wrap><Button Icon="@IconType.Outline.Filter">Filter</Button><Button Icon="@IconType.Outline.SortAscending">Sort</Button><Button Icon="@IconType.Outline.ColumnHeight">Columns</Button></Space></Flex>
+                            <Table TItem="DashboardEmployee" DataSource="DashboardEmployees" HidePagination ScrollX="900px" ScrollY="220px" Size="TableSize.Medium">
+                                <PropertyColumn Property="employee => employee.Id" Title="Worker ID" Width="150px"><Text Strong>@context.Id</Text></PropertyColumn>
+                                <PropertyColumn Property="employee => employee.Member" Title="Member">
+                                    <Flex Align="FlexAlign.Center" Gap="FlexGap.Middle" Class="@DashboardEmployeeClass">
+                                        <Avatar Size="AvatarSize.Large" Style="@($"background:{context.Avatar}")" />
+                                        <div class="@DashboardEmployeeMetaClass">
+                                            <Text Strong>@context.Member</Text><br />
+                                            <Text Type="TextElementType.Secondary">@context.Email</Text>
+                                        </div>
+                                    </Flex>
+                                </PropertyColumn>
                                 <PropertyColumn Property="employee => employee.Role" Title="Role" />
-                                <PropertyColumn Property="employee => employee.Department" Title="Department" />
-                                <PropertyColumn Property="employee => employee.Status" Title="Status" />
+                                <PropertyColumn Property="employee => employee.Type" Title="Worker Type" Width="160px" />
+                                <Column Title="Actions" TData="string" Width="148px" Align="ColumnAlign.Right"><Space Size="SpaceSize.Small"><Button Shape="ButtonShape.Circle" Icon="@IconType.Outline.Eye" /><Button Shape="ButtonShape.Circle" Icon="@IconType.Outline.Edit" /><Button Danger Shape="ButtonShape.Circle" Icon="@IconType.Outline.Delete" /></Space></Column>
                             </Table>
+                            </ChildContent>
                         </Card>
+                        </div>
                     </Content>
                 </Layout>
             </Layout>
         </Layout>
     }
     </ConfigProvider>
+        </div>
+       </div>
+      </div>
     </div>
-</section>
+</div>
 
 @code {
     [Inject] private Microsoft.Extensions.Localization.IStringLocalizer Localizer { get; set; } = default!;
@@ -195,7 +245,27 @@
     private DateTime? _previewDate;
     private decimal _rating = 3M;
     private string _verificationMessage = "Didn't receive a code?";
-    private string? _confirmMessage, _buttonFeedback, _signupFeedback, _dashboardFeedback;
+    private bool _contributorsLoading = true;
+    private IReadOnlyList<ContributorAvatar> _contributors = Array.Empty<ContributorAvatar>();
+    private static readonly string[] FallbackContributorAvatars =
+    {
+        "https://avatars.githubusercontent.com/u/507615?v=4",
+        "https://avatars.githubusercontent.com/u/5378891?v=4",
+        "https://avatars.githubusercontent.com/u/49217418?v=4",
+        "https://avatars.githubusercontent.com/u/117748716?v=4",
+        "https://avatars.githubusercontent.com/u/59312002?v=4",
+        "https://avatars.githubusercontent.com/u/82765353?v=4"
+    };
+    private static readonly string[] ContributorBotExcludes =
+    {
+        "ant-design-bot", "github-actions", "copilot", "renovate", "dependabot",
+        "gemini-code-assist", "dependabot-preview", "depfu"
+    };
+    private static readonly IReadOnlyDictionary<string, object> NonDraggableAvatarAttributes = new Dictionary<string, object>
+    {
+        ["draggable"] = "false"
+    };
+    private string? _confirmMessage, _buttonFeedback, _signupFeedback;
     private bool _dialogVisible = true;
     private bool _notificationVisible = true;
     private IReadOnlyDictionary<string, string> _mainCardStyles => new Dictionary<string, string> { ["root"] = $"background-color:{(SelectedTheme.DarkBackground ? "lab(14% 0 0)" : "transparent")};backdrop-filter:blur(12px);box-shadow:0 4px 12px rgba(0,0,0,.08),0 12px 32px rgba(0,0,0,.08)", ["body"] = "padding:0" };
@@ -212,22 +282,6 @@
         OnCancel = args => { CloseDialog(); return Task.CompletedTask; }
     };
     private RenderFragment ModalPreviewFooter => @<Template><Button OnClick="CloseDialog">Cancel</Button><Button Type="ButtonType.Primary" OnClick="ConfirmDialog">OK</Button></Template>;
-    private string _dashboardSearch = string.Empty;
-    private string _dashboardRange = "monthly";
-    private bool _dashboardSortDescending;
-    private IEnumerable<DashboardEmployee> FilteredDashboardEmployees
-    {
-        get
-        {
-            var filtered = DashboardEmployees.Where(employee => string.IsNullOrWhiteSpace(_dashboardSearch)
-                || employee.Name.Contains(_dashboardSearch, StringComparison.OrdinalIgnoreCase)
-                || employee.Role.Contains(_dashboardSearch, StringComparison.OrdinalIgnoreCase)
-                || employee.Department.Contains(_dashboardSearch, StringComparison.OrdinalIgnoreCase));
-            return _dashboardSortDescending
-                ? filtered.OrderByDescending(employee => employee.Name)
-                : filtered.OrderBy(employee => employee.Name);
-        }
-    }
 
     private Task OnPreviewColorChanged(string value)
     {
@@ -248,30 +302,31 @@
     private void StartAccountCreation() => _signupFeedback = "Account creation started";
     private void SelectGoogleSignIn() => _signupFeedback = "Google sign-in selected";
     private void SelectAppleSignIn() => _signupFeedback = "Apple sign-in selected";
-    private void DownloadDashboard() => _dashboardFeedback = "Download requested";
-    private void ShowFilterFeedback() => _dashboardFeedback = "Filter options are ready";
-    private void ShowColumnFeedback() => _dashboardFeedback = "Column settings are ready";
-    private void ToggleDashboardSort() => _dashboardSortDescending = !_dashboardSortDescending;
-    private void ResetDashboard()
-    {
-        _dashboardSearch = string.Empty;
-        _dashboardRange = "monthly";
-        _dashboardSortDescending = false;
-        _dashboardFeedback = "Dashboard reset";
-    }
     private MenuTheme GetDashboardMenuTheme() => _selected is "dark" or "geek" ? MenuTheme.Dark : MenuTheme.Light;
     private SiderTheme GetDashboardSiderTheme() => _selected is "dark" or "geek" ? SiderTheme.Dark : SiderTheme.Light;
 
-    private static readonly DashboardEmployee[] DashboardEmployees =
+    private static readonly DashboardMetric[] DashboardMetrics =
     {
-        new("Olivia Rhye", "Product Designer", "Design", "Active"),
-        new("Phoenix Baker", "Engineering Lead", "Engineering", "Active"),
-        new("Lana Steiner", "Product Manager", "Product", "On leave"),
-        new("Demi Wilkinson", "Frontend Engineer", "Engineering", "Active"),
-        new("Candice Wu", "UX Researcher", "Design", "Active")
+        new("Revenue", "US$228,441", "3.3", false),
+        new("Expenses", "US$25,108", "3.3", true),
+        new("Sales", "458", "3.3", false),
+        new("Profit", "US$203,133", "4.1", false)
     };
 
-    private sealed record DashboardEmployee(string Name, string Role, string Department, string Status);
+    private static readonly DashboardEmployee[] DashboardEmployees =
+    {
+        new("#4586936", "linear-gradient(135deg, #69c0ff, #9254de)", "alex@acme.com", "Alex Turner", "Product Manager", "Employee"),
+        new("#4586937", "linear-gradient(135deg, #ffadd2, #eb2f96)", "emma@acme.com", "Emma Davis", "Senior Designer", "Employee"),
+        new("#4586933", "linear-gradient(135deg, #b5f5ec, #1677ff)", "john@acme.com", "John Smith", "Chief Technology Officer", "Employee"),
+        new("#4586932", "linear-gradient(135deg, #d3f261, #5cdbd3)", "kate@acme.com", "Kate Moore", "Chief Executive Officer", "Employee")
+    };
+
+    private sealed record DashboardMetric(string Title, string Value, string Trend, bool IsDown);
+    private sealed record DashboardEmployee(string Id, string Avatar, string Email, string Member, string Role, string Type);
+    private string DashboardEmployeeClass => _styles["dashboardEmployee"];
+    private string DashboardEmployeeMetaClass => _styles["dashboardEmployeeMeta"];
+    private RenderFragment DashboardTableTitle => @<Space><Title Level="4" Class="@_styles["dashboardPanelTitle"]">All Employees</Title><Tag>32</Tag></Space>;
+    private RenderFragment SearchPrefix => @<Icon Type="@IconType.Outline.Search" />;
     private CssStyleSheet _styles = CreatePreviewStyles(CreateThemeShell(CreateThemeConfig("light"), Themes[0]));
     private PreviewThemeDefinition SelectedTheme => Themes.First(item => item.Key == _selected);
 
@@ -308,14 +363,78 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (_themeModeInitialized) return;
-        _themeModeInitialized = true;
-        var savedTheme = await JS.InvokeAsync<string>("localStorage.getItem", "ant-design-blazor-doc-theme");
-        if (savedTheme?.StartsWith("dark", System.StringComparison.Ordinal) == true)
+        if (firstRender)
         {
-            SelectTheme("dark");
+            await LoadContributorsAsync();
+        }
+
+        if (!_themeModeInitialized)
+        {
+            _themeModeInitialized = true;
+            var savedTheme = await JS.InvokeAsync<string>("localStorage.getItem", "ant-design-blazor-doc-theme");
+            if (savedTheme?.StartsWith("dark", System.StringComparison.Ordinal) == true)
+            {
+                SelectTheme("dark");
+                await InvokeAsync(StateHasChanged);
+            }
+        }
+    }
+
+    private async Task LoadContributorsAsync()
+    {
+        try
+        {
+            using var request = new HttpRequestMessage(HttpMethod.Get,
+                "https://api.github.com/repos/ant-design/ant-design/contributors?per_page=100");
+            request.Headers.UserAgent.ParseAdd("ant-design-blazor-docs");
+            request.Headers.Accept.ParseAdd("application/vnd.github+json");
+            using var response = await HttpClient.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+            var contributors = await response.Content.ReadFromJsonAsync<GitHubContributor[]>();
+            var eligible = (contributors ?? Array.Empty<GitHubContributor>())
+                .Where(contributor => !string.Equals(contributor.Type, "Bot", System.StringComparison.OrdinalIgnoreCase)
+                    && !ContributorBotExcludes.Any(excluded => contributor.Login.Contains(excluded, System.StringComparison.OrdinalIgnoreCase)))
+                .OrderBy(_ => Random.Shared.Next())
+                .Take(6)
+                .Select(contributor => new ContributorAvatar(contributor.AvatarUrl, contributor.Login))
+                .ToArray();
+
+            _contributors = eligible.Length > 0 ? eligible : GetFallbackContributors();
+        }
+        catch
+        {
+            _contributors = GetFallbackContributors();
+        }
+        finally
+        {
+            _contributorsLoading = false;
             await InvokeAsync(StateHasChanged);
         }
+    }
+
+    private static IReadOnlyList<ContributorAvatar> GetFallbackContributors() => FallbackContributorAvatars
+        .Select(avatarUrl => new ContributorAvatar(avatarUrl, "Ant Design contributor"))
+        .ToArray();
+
+    private static IReadOnlyDictionary<string, object> GetContributorAvatarAttributes(string login) =>
+        new Dictionary<string, object>
+        {
+            ["aria-label"] = $"Contributor: {login}",
+            ["draggable"] = "false"
+        };
+
+    private sealed record ContributorAvatar(string AvatarUrl, string Login);
+
+    private sealed class GitHubContributor
+    {
+        [JsonPropertyName("avatar_url")]
+        public string AvatarUrl { get; set; }
+
+        [JsonPropertyName("login")]
+        public string Login { get; set; }
+
+        [JsonPropertyName("type")]
+        public string Type { get; set; }
     }
 
     private async Task ChangeThemeFromKeyboard(KeyboardEventArgs args)
@@ -349,15 +468,23 @@
             ["root"] = Css(("--home-theme-primary", theme.Primary), ("--home-theme-bg", theme.Background), ("--home-theme-text", theme.Text), ("--home-theme-border", theme.Border), ("--home-theme-muted", theme.Muted),
                 ("--preview-surface", "var(--home-theme-bg)"), ("--preview-text", "var(--home-theme-text)"), ("--preview-border", "var(--home-theme-border)"),
                 ("boxSizing", "border-box"), ("width", "100%"), ("maxWidth", "none"), ("margin", 0),
-                ("paddingBlock", "calc(var(--ant-margin-xxl) * 5 / 3)"),
-                ("border", 0), ("borderRadius", 0), ("background", string.IsNullOrEmpty(theme.BackgroundImage) ? "linear-gradient(180deg, #ffffff 0%, #F5F8FF 100%)" : $"url('{theme.BackgroundImage}') center / cover no-repeat"), ("color", "var(--preview-text)"),
-                ("boxShadow", "none"), ("transition", "background .2s, color .2s"),
+                ("position", "relative"), ("transition", "all var(--ant-motion-duration-slow)"),
+                ("border", 0), ("borderRadius", 0),
+                ("backgroundImage", string.IsNullOrEmpty(theme.BackgroundImage) ? "linear-gradient(180deg, #ffffff 0%, #F5F8FF 100%)" : $"url('{theme.BackgroundImage}')"),
+                ("backgroundSize", "cover"), ("backgroundPosition", "50% 0%"), ("backgroundRepeat", "no-repeat"), ("color", "var(--preview-text)"),
+                ("boxShadow", "none"),
                 ("@media(max-width:600px)", Css(("maxWidth", "none")))),
+            ["groupContainer"] = Css(("position", "absolute"), ("inset", 0), ("overflow", "hidden")),
+            ["groupMask"] = Css(("position", "relative"), ("zIndex", 1), ("paddingBlock", "var(--ant-margin-far-sm, 80px)")),
+            ["typographyWrapper"] = Css(("textAlign", "center")),
+            ["groupChildren"] = Css(("width", "100%"), ("display", "flex"), ("justifyContent", "center"), ("alignItems", "center")),
+            ["themeContainer"] = Css(("width", "100%"), ("display", "flex"), ("flexDirection", "column"), ("alignItems", "center")),
             ["wrapper"] = Css(("width", "100%"), ("maxWidth", 1320), ("marginInline", "auto"), ("display", "flex"), ("flexDirection", "column"), ("gap", 16)),
             ["heading"] = Css(("width", "100%"), ("textAlign", "center"),
                 ("& h1", Css(("margin", 0), ("fontSize", "var(--ant-font-size-heading-1)"), ("fontWeight", 900), ("lineHeight", "var(--ant-line-height-heading-1)"), ("color", "var(--preview-text)"))),
                 ("& p", Css(("marginTop", "var(--ant-margin-sm)"), ("marginBottom", "calc(var(--ant-margin-xxl) * 7 / 6)"))),
                 ("@media(width < 768px)", Css(("& h1", Css(("fontSize", "var(--ant-font-size-heading-2)"))), ("& p", Css(("marginBottom", "var(--ant-margin-xxl)")))))),
+            ["headingDark"] = Css(("& h1, & p", Css(("color", "#fff")))),
             ["headingTitle"] = Css(("display", "flex"), ("alignItems", "center"), ("justifyContent", "center"), ("gap", 8)),
             ["controls"] = Css(("display", "flex"), ("width", "100%"), ("alignItems", "center"), ("justifyContent", "space-between"), ("gap", 16),
                 ("@media(max-width:1200px)", Css(("justifyContent", "center"), ("flexDirection", "column")))),
@@ -385,14 +512,14 @@
             ["active"] = Css(("outline", "2px solid var(--ant-color-primary-border)")),
             ["mainCard"] = Css(("width", "100%"), ("maxWidth", 1320), ("margin", "0 auto"), ("padding", 32), ("borderRadius", 16)),
             ["components"] = Css(("display", "flex"), ("gap", 12), ("alignItems", "flex-start"), ("justifyContent", "center"), ("margin", "0 auto")),
-            ["previewColumn"] = Css(("minWidth", 0), ("flex", 1), ("display", "flex"), ("flexDirection", "column"), ("gap", "var(--ant-padding-lg)"),
+            ["previewColumn"] = Css(("flex", 1), ("display", "flex"), ("flexDirection", "column"), ("gap", "var(--ant-padding-lg)"),
                 ("&:first-child", Css(("@media(max-width:768px)", Css(("display", "none")))))),
-            ["centerColumn"] = Css(("minWidth", 0)),
+            ["leftContent"] = Css(("display", "flex"), ("flexDirection", "column"), ("gap", "var(--ant-margin)")),
             ["rightColumn"] = Css(("flex", "0 0 320px"), ("width", 320), ("@media(max-width:1200px)", Css(("display", "none")))),
-            ["controlGrid"] = Css(("display", "flex"), ("flexDirection", "column"), ("gap", 12),
+            ["controlGrid"] = Css(("display", "flex"), ("flexDirection", "column"), ("gap", "var(--ant-margin)"),
                 ("& input::placeholder", Css(("color", "var(--home-theme-muted)"))),
                 ("@media(max-width:700px)", Css(("gap", 8)))),
-            ["controlRow"] = Css(("display", "flex"), ("gap", 12), ("alignItems", "center"),
+            ["controlRow"] = Css(("display", "flex"), ("gap", "var(--ant-margin)"), ("alignItems", "center"),
                 ("& > :first-child", Css(("flex", "1 1 auto"), ("minWidth", 0))),
                 ("& > .ant-select", Css(("flex", "0 0 300px"), ("width", "300px"), ("maxWidth", "100%"))),
                 ("@media(max-width:700px)", Css(
@@ -404,7 +531,7 @@
             ["colorPicker"] = Css(("display", "flex"), ("alignItems", "center"), ("gap", 8), ("& i", Css(("width", 22), ("height", 22), ("borderRadius", 4), ("background", "var(--home-theme-primary)")))),
             ["compact"] = Css(("display", "flex")),
             ["date"] = Css(("textAlign", "left"), ("color", "var(--home-theme-muted) !important")),
-            ["options"] = Css(("display", "flex"), ("alignItems", "center"), ("justifyContent", "space-between"), ("gap", 8), ("fontSize", 12),
+            ["options"] = Css(("display", "flex"), ("alignItems", "center"), ("justifyContent", "space-between"), ("gap", 8), ("fontSize", 12), ("marginBlockStart", 16),
                 ("& label", Css(("whiteSpace", "nowrap"))), ("& input", Css(("accentColor", "var(--home-theme-primary)"))),
                 ("@media(max-width:700px)", Css(("flexWrap", "wrap")))),
             ["toggle"] = Css(("width", 42), ("height", 22), ("padding", 2), ("border", 0), ("borderRadius", 20), ("background", "var(--home-theme-primary)"),
@@ -425,15 +552,16 @@
             ["confirmTitle"] = Css(("fontWeight", 500), ("lineHeight", 1.5)),
             ["confirmActions"] = Css(("display", "flex"), ("justifyContent", "flex-end"), ("gap", 6), ("marginTop", 12), ("& .ant-btn", Css(("height", 28), ("paddingInline", 8), ("fontSize", 12)))),
             ["segments"] = Css(("minWidth", 0)),
-            ["verify"] = Css(("display", "flex"), ("alignItems", "center"), ("flexDirection", "column"), ("textAlign", "center"), ("padding", "2px 0 14px"),
-                ("& strong", Css(("margin", "14px 0 5px"), ("fontSize", 16))), ("& small", Css(("color", "var(--home-theme-muted)"), ("fontSize", 12))), ("& a", Css(("color", "var(--home-theme-primary)")))),
-            ["contributors"] = Css(("width", "100%"), ("& .ant-avatar-group", Css(("display", "flex"), ("justifyContent", "center"))), ("& .ant-avatar", Css(("width", 42), ("height", 42), ("lineHeight", "42px")))),
+            ["verify"] = Css(("display", "flex"), ("alignItems", "center"), ("flexDirection", "column"), ("textAlign", "center"),
+                ("& strong", Css(("margin", "0 0 8px"), ("fontSize", 16), ("lineHeight", "24px"))), ("& small", Css(("color", "var(--home-theme-muted)"), ("fontSize", 14), ("lineHeight", "22px"))), ("& a", Css(("color", "var(--home-theme-primary)")))),
+            ["contributors"] = Css(("width", "100%"), ("display", "flex"), ("justifyContent", "center"), ("marginBlockEnd", 16),
+                ("& .ant-avatar", Css(("position", "relative"), ("width", 46), ("height", 46), ("lineHeight", "46px"))),
+                ("& .ant-avatar-string", Css(("position", "absolute"), ("left", "50%")))),
             ["otp"] = Css(("marginBlock", 16)),
-            ["buttonPairs"] = Css(("display", "grid"), ("gridTemplateColumns", "1fr 1fr"), ("justifyItems", "center"), ("gap", 16)),
             ["profile"] = Css(("& .ant-card-body", Css(("display", "flex"), ("alignItems", "flex-start"), ("gap", "var(--ant-margin)"))),
                 ("& .ant-avatar", Css(("flex", "0 0 60px"), ("width", 60), ("height", 60), ("overflow", "hidden"))),
                 ("& .ant-avatar img", Css(("display", "block"), ("width", "100%"), ("height", "100%"), ("objectFit", "contain"))),
-                ("& strong, & small", Css(("display", "block"))), ("& small", Css(("color", "var(--home-theme-muted)"))), ("& p", Css(("margin", "10px 0 0"), ("fontSize", 12)))),
+                ("& h5", Css(("margin", 0))), ("& .ant-typography-secondary", Css(("fontSize", 13))), ("& p", Css(("margin", "8px 0"), ("fontSize", 14)))),
             ["previewAlert"] = Css(("width", "100%"), ("minWidth", 0), ("& .ant-alert-description", Css(("overflowWrap", "anywhere")))),
             ["brandMark"] = Css(("display", "grid"), ("flex", "0 0 46px"), ("width", 46), ("height", 46), ("placeItems", "center"), ("border", "5px solid var(--home-theme-primary)"), ("borderRadius", 10), ("color", "#ed4b65"), ("fontSize", 24)),
             ["notice"] = Css(("display", "flex"), ("gap", 12), ("padding", 16), ("borderRadius", 8), ("background", "color-mix(in srgb,var(--home-theme-text) 8%,var(--home-theme-bg))"),
@@ -471,23 +599,37 @@
             ["switch"] = Css(("display", "flex"), ("alignItems", "center"), ("justifyContent", "space-between"), ("gap", 8), ("marginTop", 16), ("fontSize", 13),
                 ("& i", Css(("width", 32), ("height", 18), ("borderRadius", 20), ("background", "var(--home-theme-primary)"))),
                 ("& i::after", Css(("display", "block"), ("width", 14), ("height", 14), ("margin", "2px 0 0 16px"), ("borderRadius", "50%"), ("background", "white"), ("content", "\"\"")))),
-            ["dashboard"] = Css(("width", "100%"), ("minHeight", 520), ("border", "1px solid var(--preview-border)"), ("borderRadius", 12), ("overflow", "hidden"),
-                ("background", "color-mix(in srgb,var(--home-theme-bg) 97%,var(--home-theme-primary))"), ("& aside", Css(("display", "flex"), ("flexDirection", "column"), ("gap", 6), ("padding", 20), ("borderRight", "1px solid var(--preview-border)"))),
-                ("& aside strong", Css(("marginBottom", 12))), ("& aside span", Css(("padding", 8), ("borderRadius", 6), ("color", "var(--home-theme-muted)"), ("fontSize", 13))),
-                ("& aside span.active", Css(("background", "color-mix(in srgb,var(--home-theme-primary) 12%,var(--home-theme-bg))"), ("color", "var(--home-theme-primary)"))),
-                ("@media(max-width:600px)", Css(("gridTemplateColumns", "1fr"), ("& aside", Css(("display", "none")))))),
-            ["dashboardHeader"] = Css(("display", "flex"), ("alignItems", "center"), ("justifyContent", "space-between"), ("height", 56), ("paddingInline", 18), ("borderBottom", "1px solid var(--preview-border)"),
-                ("background", "color-mix(in srgb,var(--home-theme-bg) 94%,var(--home-theme-text))"), ("lineHeight", "normal")),
-            ["dashboardLogo"] = Css(("display", "flex"), ("alignItems", "center"), ("gap", 9), ("& img", Css(("width", 28), ("height", 28))), ("& strong", Css(("fontSize", 15)))),
-            ["dashboardMain"] = Css(("minWidth", 0), ("padding", "0 20px 20px"), ("@media(max-width:700px)", Css(("padding", "0 12px 14px")))),
-            ["dashboardBreadcrumb"] = Css(("margin", "14px 0 18px"), ("fontSize", 12)),
-            ["dashboardToolbar"] = Css(("display", "flex"), ("alignItems", "center"), ("justifyContent", "space-between"), ("gap", 12), ("marginBottom", 16),
-                ("& > div", Css(("display", "flex"), ("alignItems", "center"), ("gap", 8))),
-                ("@media(max-width:700px)", Css(("alignItems", "stretch"), ("flexDirection", "column"), ("& > div", Css(("justifyContent", "flex-end")))))),
-            ["dashboardKpis"] = Css(("marginBottom", 16), ("& .ant-card", Css(("height", "100%"), ("borderColor", "var(--preview-border)"), ("background", "var(--home-theme-bg)"))),
-                ("& .ant-card-body", Css(("padding", "14px 16px"))), ("& .ant-statistic-title", Css(("fontSize", 12), ("color", "var(--home-theme-muted)"))),
-                ("& .ant-statistic-content", Css(("fontSize", 23))), ("& .ant-tag", Css(("marginTop", 8), ("marginInlineEnd", 0))),
-                ("@media(max-width:700px)", Css(("rowGap", 12)))),
+            ["dashboard"] = Css(("width", "100%"), ("minHeight", 480), ("overflow", "hidden"), ("borderRadius", 16),
+                ("background", "rgba(240,242,245,.25)"), ("backdropFilter", "blur(50px)"), ("boxShadow", "0 2px 10px 2px rgba(0,0,0,.1)"), ("transition", "all var(--ant-motion-duration-slow)")),
+            ["dashboardDark"] = Css(("background", "#000")),
+            ["dashboardHeaderDark"] = Css(("borderBottomColor", "rgba(255,255,255,.1)")),
+            ["dashboardHeader"] = Css(("display", "flex"), ("alignItems", "center"), ("height", "calc(var(--ant-control-height-lg) * 1.2)"), ("paddingInline", "var(--ant-padding-lg) !important"),
+                ("borderBottom", "1px solid var(--ant-color-split)"), ("lineHeight", "calc(var(--ant-control-height-lg) * 1.2)")),
+            ["dashboardLogo"] = Css(("display", "flex"), ("alignItems", "center"), ("columnGap", "var(--ant-padding)"),
+                ("& > span", Css(("width", 30), ("height", 30), ("overflow", "hidden"))), ("& img", Css(("width", 30), ("height", 30), ("verticalAlign", "top"))),
+                ("& h1", Css(("margin", 0), ("fontWeight", 400), ("fontSize", "var(--ant-font-size-lg)"), ("lineHeight", 1.5)))),
+            ["dashboardMenu"] = Css(("marginInlineStart", "auto")),
+            ["dashboardAvatar"] = Css(("width", 20), ("height", 20), ("borderRadius", "100%"), ("backgroundRepeat", "no-repeat"), ("backgroundPosition", "center"), ("boxShadow", "0 0 2px rgba(0,0,0,.2)")),
+            ["dashboardShell"] = Css(("width", "100%"), ("minHeight", 480), ("overflow", "hidden"), ("transition", "all var(--ant-motion-duration-slow)"),
+                ("& .ant-card", Css(("height", "100%"))), ("& .ant-card-body", Css(("display", "flex"), ("flexDirection", "column"), ("height", "100%")))),
+            ["dashboardToolbar"] = Css(("marginBlockEnd", "var(--ant-margin-md)"),
+                ("@media(max-width:700px)", Css(("flexWrap", "wrap"), ("gap", "var(--ant-margin)")))),
+            ["dashboardTabs"] = Css(("padding", 3), ("borderRadius", 999),
+                ("& .ant-segmented-item", Css(("minWidth", 96), ("borderRadius", 999), ("fontWeight", 600))),
+                ("& .ant-segmented-thumb", Css(("borderRadius", 999)))),
+            ["dashboardMain"] = Css(("minWidth", 0), ("padding", "0 24px 24px")),
+            ["dashboardBreadcrumb"] = Css(("margin", "16px 0")),
+            ["dashboardStatValue"] = Css(("display", "flex"), ("alignItems", "center"), ("justifyContent", "space-between"), ("gap", "var(--ant-margin-sm)"),
+                ("& .ant-statistic-header", Css(("display", "none"))),
+                ("& .ant-statistic-content-value", Css(("fontFeatureSettings", "normal"), ("fontVariantNumeric", "normal"))),
+                ("& .ant-statistic-content-value-int", Css(("fontFeatureSettings", "normal"), ("fontVariantNumeric", "normal")))),
+            ["dashboardStatTrend"] = Css(("marginInlineStart", "auto"), ("border", 0), ("fontWeight", 600)),
+            ["dashboardPanelTitle"] = Css(("margin", "0 !important")),
+            ["dashboardTableCard"] = Css(("marginBlockStart", "var(--ant-margin-md)")),
+            ["dashboardTableActions"] = Css(("marginBlock", "var(--ant-margin-md)")),
+            ["dashboardEmployee"] = Css(("minWidth", 0)),
+            ["dashboardEmployeeMeta"] = Css(("lineHeight", 1.3)),
+            ["dashboardKpis"] = Css(("marginBlockEnd", "var(--ant-margin-md)")),
             ["dashboardTable"] = Css(("borderColor", "var(--preview-border)"), ("background", "var(--home-theme-bg)"),
                 ("& .ant-card-body", Css(("padding", 16))), ("& .ant-table", Css(("background", "var(--home-theme-bg)"))),
                 ("& .ant-table-thead > tr > th", Css(("background", "color-mix(in srgb,var(--home-theme-bg) 92%,var(--home-theme-text))"))),
@@ -495,8 +637,7 @@
             ["dashboardTableHeader"] = Css(("display", "flex"), ("alignItems", "center"), ("gap", 8), ("marginBottom", 12),
                 ("& h4", Css(("margin", 0), ("fontSize", 16))), ("& .ant-input", Css(("width", 170), ("marginLeft", "auto"))),
                 ("@media(max-width:700px)", Css(("flexWrap", "wrap"), ("& .ant-input", Css(("width", "100%"), ("marginLeft", 0)))))),
-            ["dashboardTableActions"] = Css(("display", "flex"), ("justifyContent", "flex-end"), ("gap", 8), ("marginBottom", 12),
-                ("@media(max-width:700px)", Css(("justifyContent", "flex-start"), ("flexWrap", "wrap")))),
+            ["dashboardTableActions"] = Css(("marginBlock", "20px")),
             ["chart"] = Css(("display", "flex"), ("alignItems", "flex-end"), ("gap", 10), ("height", 110), ("marginTop", 18), ("padding", "10px 20px"), ("border", "1px solid var(--preview-border)"), ("borderRadius", 8),
                 ("& span", Css(("height", "45%"), ("flex", 1), ("borderRadius", "4px 4px 0 0"), ("background", "color-mix(in srgb,var(--home-theme-primary) 65%,var(--home-theme-bg))"))),
                 ("& span:nth-child(3n)", Css(("height", "78%"))), ("& span:nth-child(3n + 1)", Css(("height", "60%"))), ("& span:nth-child(3n + 2)", Css(("height", "90%"))),

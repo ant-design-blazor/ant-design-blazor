@@ -1,5 +1,5 @@
 ---
-order: 12
+order: 14
 title:
   zh-CN: 搜索用户
   en-US: Search and Select Users
@@ -13,5 +13,3 @@ Currently not implemented.
 ## en-US
 
 A complete multiple select sample with remote search, debounce fetch, ajax callback order flow, and loading state.
-
-Currently not implemented.

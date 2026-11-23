@@ -1,5 +1,7 @@
 ---
-order: 48
+order: 111
+debug: true
+extension: true
 title:
   zh-CN: 字段映射
   en-US: Field Names

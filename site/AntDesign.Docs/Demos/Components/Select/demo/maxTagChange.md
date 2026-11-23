@@ -1,5 +1,7 @@
 ---
-order: 26
+order: 117
+debug: true
+extension: true
 title:
   zh-CN: Changeable maxTagCount
   en-US: Changeable maxTagCount

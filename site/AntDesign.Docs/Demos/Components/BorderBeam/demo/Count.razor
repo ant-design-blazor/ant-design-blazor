@@ -1,0 +1,9 @@
+<div style="display:flex; flex-direction:column; gap:16px; max-width:480px">
+    @foreach (var count in new[] { 3, 2 })
+    {
+        <Card Title="Multiple beams" @key="count">
+            <Decoration><BorderBeam Count="count" /></Decoration>
+            <ChildContent>Set count to distribute beams evenly around the container border.</ChildContent>
+        </Card>
+    }
+</div>

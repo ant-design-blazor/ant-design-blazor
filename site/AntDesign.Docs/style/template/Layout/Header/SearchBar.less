@@ -1,6 +1,5 @@
 @import '../../../static/theme.less';
 @import './index.less';
-@import './DocSearch.less';
 
 @search-icon-color: #ced4d9;
 
@@ -158,29 +157,4 @@
   #search-box {
     display: none;
   }
-}
-
-.DocSearch {
-  font-family: @font-family;
-}
-
-#antd_algolia_search_modal {
-  // avoid the veritcal scrollbar(looks like a white block)
-  .DocSearch-Hit-title {
-    overflow-y: hidden;
-
-    mark {
-      padding: 0;
-    }
-  }
-
-  // reset original `box-shadow` style
-  .DocSearch-Footer {
-    box-shadow: none;
-  }
-}
-
-// customization DocSearch Modal component in light mode
-body[data-theme='default'] #antd_algolia_search_modal {
-  .customDocSearch();
 }

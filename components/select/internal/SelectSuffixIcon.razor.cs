@@ -2,9 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System.Text.Json;
 using System.Threading.Tasks;
-using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
@@ -14,6 +12,9 @@ namespace AntDesign.Select.Internal
     {
         [Parameter]
         public RenderFragment SuffixIcon { get; set; }
+
+        [Parameter]
+        public RenderFragment SearchIcon { get; set; }
 
         [Parameter] public bool IsOverlayShow { get; set; }
 
@@ -38,39 +39,5 @@ namespace AntDesign.Select.Internal
 
         [CascadingParameter(Name = "LoadingIcon")] internal RenderFragment LoadingIcon { get; set; }
 
-        [Inject] private IDomEventListener DomEventListener { get; set; }
-
-        private string _id = "";
-        private ElementReference _clearRef;
-        protected override Task OnAfterRenderAsync(bool firstRender)
-        {
-            if (firstRender)
-            {
-                _id = _clearRef.Id;
-                if (ShowClearIcon)
-                {
-                    DomEventListener.AddExclusive<JsonElement>(_clearRef, "click", OnClear, true, true);
-                }
-            }
-
-            if (_clearRef.Id != _id)
-            {
-                _id = _clearRef.Id;
-                if (ShowClearIcon)
-                {
-                    DomEventListener.AddExclusive<JsonElement>(_clearRef, "click", OnClear, true, true);
-                }
-            }
-
-            return base.OnAfterRenderAsync(firstRender);
-        }
-
-        private async Task OnClear(JsonElement jsonElement)
-        {
-            if (OnClearClick.HasDelegate)
-            {
-                await OnClearClick.InvokeAsync(null);
-            }
-        }
     }
 }

@@ -294,6 +294,8 @@ namespace AntDesign
             public static string AddOverlayToContainer => $"{FUNC_PREFIX}addOverlayToContainer";
             public static string GetInheritedAntDesignTokenStyle => $"{FUNC_PREFIX}getInheritedAntDesignTokenStyle";
             public static string UpdateOverlayPosition => $"{FUNC_PREFIX}updateOverlayPosition";
+            public static string GetCurrentPlacement => $"{FUNC_PREFIX}getCurrentPlacement";
+            public static string SetPlacementClass => $"{FUNC_PREFIX}setPlacementClass";
             public static string DeleteOverlayFromContainer => $"{FUNC_PREFIX}deleteOverlayFromContainer";
             public static string BindImmediateOpen => $"{FUNC_PREFIX}bindImmediateOpen";
             public static string PrepareOverlayWidthForShow => $"{FUNC_PREFIX}prepareOverlayWidthForShow";
@@ -307,7 +309,7 @@ namespace AntDesign
             public static string UnbindTableRowHover => $"{FUNC_PREFIX}unbindTableRowHover";
             public static string BindTableScroll => $"{FUNC_PREFIX}bindTableScroll";
             public static string UnbindTableScroll => $"{FUNC_PREFIX}unbindTableScroll";
-            public static string ScrollToVirtualIndex => $"{FUNC_PREFIX}scrollToVirtualIndex";
+            public static string ScrollTo => $"{FUNC_PREFIX}scrollTo";
             public static string BindVirtualWindow => $"{FUNC_PREFIX}bindVirtualWindow";
             public static string UnbindVirtualWindow => $"{FUNC_PREFIX}unbindVirtualWindow";
         }

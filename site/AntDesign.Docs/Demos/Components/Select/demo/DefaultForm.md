@@ -1,5 +1,7 @@
 ---
-order: 9
+order: 116
+debug: true
+extension: true
 title:
   zh-CN: Default - Inside a form component
   en-US: Default - Inside a form component

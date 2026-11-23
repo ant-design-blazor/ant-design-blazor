@@ -2,7 +2,7 @@
         TItem="string"
         Mode="SelectMode.Tags"
         EnableSearch
-        Tokenize="@TokenizeInput"
+        TokenSeparators="@((Func<string, IEnumerable<string>>)TokenizeInput)"
         Placeholder='Try paste: "San Francisco, CA", New York'
         Style="width: 100%;">
 </Select>

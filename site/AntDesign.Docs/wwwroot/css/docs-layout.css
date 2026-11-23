@@ -3220,27 +3220,6 @@ ul.anticons-list li.copied::after {
     padding-left: 16px;
   }
 }
-.algolia-autocomplete .ds-dropdown-menu {
-  border: none;
-  box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
-}
-.algolia-autocomplete .ds-dropdown-menu [class^='ds-dataset-'] {
-  background: #fff;
-  border: none;
-}
-.algolia-autocomplete .ds-dropdown-menu [class^='ds-dataset-'] .algolia-docsearch-suggestion {
-  background: #fff;
-}
-.algolia-autocomplete .ds-dropdown-menu::before {
-  display: none;
-}
-.algolia-autocomplete .algolia-docsearch-suggestion--title {
-  color: rgba(0, 0, 0, 0.85);
-}
-.algolia-autocomplete .algolia-docsearch-suggestion--highlight {
-  padding: 0;
-  color: var(--ant-primary-color);
-}
 #nprogress .bar {
   background: var(--ant-primary-color);
 }
@@ -3308,26 +3287,7 @@ ul.anticons-list li.copied::after {
 [data-theme='dark'] .copied-code {
   background: rgba(255, 255, 255, 0.08);
 }
-[data-theme='dark'] .algolia-autocomplete .ds-dropdown-menu [class^='ds-dataset-'] {
-  background: #fff;
-}
-[data-theme='dark'] .algolia-autocomplete .ds-dropdown-menu [class^='ds-dataset-'] .algolia-docsearch-suggestion {
-  background: #fff;
-}
-[data-theme='dark'] .algolia-autocomplete .ds-dropdown-menu .ds-suggestion.ds-cursor .algolia-docsearch-suggestion:not(.suggestion-layout-simple) .algolia-docsearch-suggestion--content {
-  background-color: rgba(255, 255, 255, 0.08);
-}
-[data-theme='dark'] .algolia-autocomplete .algolia-docsearch-suggestion--category-header {
-  color: rgba(255, 255, 255, 0.65);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-}
-[data-theme='dark'] .algolia-autocomplete .algolia-docsearch-suggestion--subcategory-column::before {
-  background: rgba(0, 0, 0, 0.06);
-}
-[data-theme='dark'] .algolia-autocomplete .algolia-docsearch-suggestion--content::before {
-  background: rgba(0, 0, 0, 0.06);
-}
-[data-theme='dark'] .token.comment,
+.token.comment,
 [data-theme='dark'] .token.quote {
   color: #b6b18b;
 }
@@ -3812,4 +3772,240 @@ html.en-us .design-card.main-card {
 html[data-theme="dark"] body {
   background: #000;
   color: rgba(255, 255, 255, 0.85);
+}
+.docs-search-box {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  min-width: 0;
+  max-width: 280px;
+  height: 32px;
+  margin-inline-end: 16px !important;
+  border-radius: 4px;
+  background: transparent;
+  transition: background 0.3s;
+}
+#header #search-box.docs-search-box {
+  flex: 1 1 auto !important;
+  max-width: 280px;
+  height: 32px;
+  margin: 0 16px 0 0 !important;
+  padding: 0;
+  border: 0;
+  position: relative;
+  border-radius: 4px;
+  background: var(--ant-color-bg-container, #fff);
+}
+#header #search-box.docs-search-box:focus-within {
+  background: var(--ant-color-fill-secondary, rgba(0, 0, 0, 0.06));
+}
+.docs-search-box .docs-search-icon {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  inset-inline-start: 16px;
+  width: 14px;
+  color: #ced4d9;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+#header #search-box.docs-search-box .docs-search-input {
+  flex: 1 1 auto;
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  height: 32px;
+  padding: 0 12px 0 32px;
+  color: var(--ant-color-text, #1f1f1f);
+  font-size: 14px;
+  line-height: 32px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  box-shadow: none;
+  outline: none;
+  box-sizing: border-box;
+  transition: all 0.3s;
+}
+#header #search-box.docs-search-box .docs-search-input:focus {
+  background: transparent;
+  box-shadow: none;
+}
+.docs-search-shortcut {
+  position: absolute;
+  inset-inline-end: 10px;
+  padding: 4px 8px;
+  color: var(--ant-color-text-secondary, rgba(0, 0, 0, 0.45));
+  font-size: 12px;
+  line-height: 1;
+  white-space: nowrap;
+  border: 1px solid var(--ant-color-border, #d9d9d9);
+  border-radius: 11px;
+  background: var(--ant-color-bg-container, #fff);
+  pointer-events: none;
+}
+.docs-search-overlay.ant-popover {
+  margin-top: -10px;
+}
+.docs-search-popover::before {
+  position: absolute;
+  z-index: 1;
+  bottom: 100%;
+  inset-inline-start: 100px;
+  width: 0;
+  height: 0;
+  border: 8px solid transparent;
+  border-bottom-color: var(--ant-color-bg-elevated, #fff);
+  content: '';
+  pointer-events: none;
+}
+.docs-search-overlay .ant-popover-arrow {
+  display: none;
+}
+.docs-search-overlay .ant-popover-inner,
+.docs-search-overlay .ant-popover-inner-content {
+  padding: 0;
+}
+.docs-search-overlay .ant-popover-inner {
+  overflow: visible;
+  box-shadow: none;
+  background: transparent;
+}
+.docs-search-popover {
+  position: relative;
+  display: block;
+  width: 540px;
+  max-width: calc(100vw - 32px);
+  max-height: 460px;
+  overflow: auto;
+  border-radius: 8px;
+  background: var(--ant-color-bg-elevated, #fff);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-gutter: stable;
+}
+.docs-search-group {
+  margin: 2px 0;
+}
+.docs-search-group > dt {
+  height: 30px;
+  padding: 0 16px;
+  color: var(--ant-color-text-secondary, rgba(0, 0, 0, 0.65));
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 30px;
+  background: var(--ant-color-fill-tertiary, #f5f5f5);
+}
+.docs-search-group > dt:first-child {
+  margin-top: -2px;
+}
+.docs-search-group > dd {
+  margin: 0 4px;
+  padding: 2px 0;
+}
+.docs-search-group > dd + dd {
+  border-top: 1px dashed var(--ant-color-border-secondary, #f0f0f0);
+}
+.docs-search-result {
+  position: relative;
+  display: flex;
+  height: 60px;
+  flex-direction: column;
+  justify-content: center;
+  padding: 6px 12px 8px 54px;
+  color: var(--ant-color-text-secondary, rgba(0, 0, 0, 0.65));
+  text-decoration: none;
+  box-sizing: border-box;
+  border-radius: 4px;
+}
+.docs-search-result:hover,
+.docs-search-result:focus-visible,
+.docs-search-result[data-active="true"] {
+  background: var(--ant-color-primary, #1677ff);
+  outline: 0;
+}
+.docs-search-result > svg {
+  position: absolute;
+  top: 14px;
+  inset-inline-start: 14px;
+  width: 32px;
+  height: 32px;
+  fill: var(--ant-color-border, #d9d9d9);
+}
+.docs-search-result > h4,
+.docs-search-result > p {
+  align-self: stretch;
+  overflow: hidden;
+  width: 100%;
+  margin: 0;
+  line-height: 1.4;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.docs-search-result > h4 {
+  color: var(--ant-color-text-secondary, rgba(0, 0, 0, 0.65));
+  font-size: 14px;
+  font-weight: 500;
+}
+.docs-search-result > p {
+  margin-top: 2px;
+  color: var(--ant-color-text-tertiary, rgba(0, 0, 0, 0.45));
+  font-size: 13px;
+}
+.docs-search-result:hover > h4,
+.docs-search-result:hover > p,
+.docs-search-result:focus-visible > h4,
+.docs-search-result:focus-visible > p,
+.docs-search-result[data-active="true"] > h4,
+.docs-search-result[data-active="true"] > p {
+  color: #fff;
+}
+.docs-search-result:hover > svg,
+.docs-search-result:focus-visible > svg,
+.docs-search-result[data-active="true"] > svg {
+  fill: #fff;
+}
+.docs-search-result mark {
+  display: inline;
+  padding: 0 2px;
+  color: #484607;
+  border-radius: 2px;
+  background-color: #fff9c5;
+}
+.docs-search-empty {
+  display: flex;
+  min-height: 140px;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  color: var(--ant-color-text-tertiary, rgba(0, 0, 0, 0.45));
+  font-size: 16px;
+}
+.docs-search-empty > .anticon {
+  color: var(--ant-color-text-quaternary, rgba(0, 0, 0, 0.25));
+  font-size: 42px;
+}
+[data-theme="dark"] .docs-search-box .docs-search-input {
+  color: var(--ant-color-text, #fff);
+  border-color: var(--ant-color-border, #424242);
+}
+[data-theme="dark"] .docs-search-box:focus-within {
+  background: var(--ant-color-fill-secondary, rgba(255, 255, 255, 0.08));
+}
+[data-theme="dark"] #header #search-box.docs-search-box:focus-within,
+[data-theme="dark"] #header #search-box.docs-search-box .docs-search-input:focus {
+  background: var(--ant-color-fill-secondary, rgba(255, 255, 255, 0.08));
+}
+[data-theme="dark"] .docs-search-result mark {
+  color: #939147;
+  background-color: #382506;
+}
+[data-theme="dark"] .docs-search-popover::before {
+  border-bottom-color: var(--ant-color-bg-elevated, #1f1f1f);
+}
+@media only screen and (max-width: 767.99px) {
+  .docs-search-box {
+    max-width: 220px;
+  }
 }

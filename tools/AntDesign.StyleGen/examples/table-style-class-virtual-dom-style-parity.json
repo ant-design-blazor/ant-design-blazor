@@ -75,6 +75,7 @@
         "borderBottomStyle",
         "borderBottomColor"
       ],
+      "computedStylePixelToleranceByProperty": { "width": 0.02 },
       "semanticNodes": [
         {
           "path": "root",

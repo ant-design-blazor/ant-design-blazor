@@ -28,6 +28,17 @@ namespace AntDesign.Internal
         [Parameter]
         public string PrefixCls { get; set; } = "ant-dropdown";
 
+        /// <summary>
+        /// Optional direction override for components that expose a local
+        /// direction setting. When omitted, the ConfigProvider direction is used.
+        /// </summary>
+        [Parameter]
+        public string Direction { get; set; }
+
+        internal bool IsRTL => string.IsNullOrWhiteSpace(Direction)
+            ? RTL
+            : string.Equals(Direction, "rtl", StringComparison.OrdinalIgnoreCase);
+
         /// <summary>CSS transition class prefix for the popup motion.</summary>
         [Parameter]
         public string TransitionName { get; set; }
@@ -143,6 +154,13 @@ namespace AntDesign.Internal
         public EventCallback OnMaskClick { get; set; }
 
         /// <summary>
+        /// Whether an outside click closes the popup.
+        /// </summary>
+        /// <default value="true" />
+        [Parameter]
+        public bool CloseOnOutsideClick { get; set; } = true;
+
+        /// <summary>
         /// Callback when mouse enters trigger boundaries.
         /// </summary>
         [Parameter]
@@ -166,6 +184,14 @@ namespace AntDesign.Internal
         [Obsolete("Use VisibleChanged instead")]
         [Parameter]
         public EventCallback<bool> OnVisibleChange { get; set; }
+
+        /// <summary>
+        /// Callback invoked after the popup has been positioned but before it is revealed.
+        /// Components can synchronize trigger content with the opening state before the
+        /// popup's enter motion becomes visible.
+        /// </summary>
+        [Parameter]
+        public EventCallback<bool> OnBeforeVisibleChange { get; set; }
 
         /// <summary>
         /// Overlay content (what will be rendered after trigger is activated)
@@ -210,9 +236,6 @@ namespace AntDesign.Internal
         /// </summary>
         [Parameter]
         public bool ImmediateOpenOnPointerDown { get; set; }
-
-        [Parameter]
-        public string ImmediateOpenClass { get; set; }
 
         /// <summary>Width strategy applied before an immediate-open popup is positioned and revealed.</summary>
         [Parameter]
@@ -271,6 +294,7 @@ namespace AntDesign.Internal
         public Placement Placement { get; set; } = Placement.BottomLeft;
 
         private Placement? _placementWithRTL = null;
+        private Placement? _lastRequestedPlacement;
 
         internal Placement PlacementWithRTL => (Placement)_placementWithRTL;
 
@@ -400,6 +424,7 @@ namespace AntDesign.Internal
         protected Overlay _overlay = null;
         private TriggerType[] _trigger = [TriggerType.Hover];
         private bool _shouldRender = true;
+        private Placement? _lastRenderedPlacement;
         private CancellationTokenSource _mouseEnterDelayCancellation;
         private CancellationTokenSource _mouseLeaveDelayCancellation;
 
@@ -412,6 +437,13 @@ namespace AntDesign.Internal
 
         protected override bool ShouldRender()
         {
+            if (_lastRenderedPlacement != Placement)
+            {
+                _lastRenderedPlacement = Placement;
+                _shouldRender = true;
+                return base.ShouldRender();
+            }
+
             if (_shouldRender)
                 return base.ShouldRender();
             _shouldRender = true;
@@ -420,13 +452,26 @@ namespace AntDesign.Internal
 
         internal bool CheckPlacementChanged()
         {
-            var newPlacement = RTL ? Placement.GetRTLPlacement() : Placement;
+            var newPlacement = IsRTL ? Placement.GetRTLPlacement() : Placement;
             if (_placementWithRTL != newPlacement)
             {
                 _placementWithRTL = newPlacement;
                 return true;
             }
             return false;
+        }
+
+        protected override void OnParametersSet()
+        {
+            var requestedPlacement = IsRTL ? Placement.GetRTLPlacement() : Placement;
+            if (_lastRequestedPlacement != requestedPlacement)
+            {
+                _lastRequestedPlacement = requestedPlacement;
+                _placementWithRTL = requestedPlacement;
+                _actualPlacement = PlacementType.Create(requestedPlacement);
+            }
+
+            base.OnParametersSet();
         }
 
         protected override void OnInitialized()
@@ -494,7 +539,7 @@ namespace AntDesign.Internal
 
             if (firstRender && ImmediateOpenOnPointerDown)
             {
-                await _overlay.BindImmediateOpenAsync(ClickIgnoreSelector, ImmediateOpenClass,
+                await _overlay.BindImmediateOpenAsync(ClickIgnoreSelector,
                     EffectivePopupWidthMode, EffectivePopupWidth, EffectivePopupMaxWidth);
             }
 
@@ -755,6 +800,12 @@ namespace AntDesign.Internal
         /// <param name="element"></param>
         protected virtual async Task OnMouseUp(JsonElement element)
         {
+            if (element.TryGetProperty("__antImmediateOpenTriggerClick", out var immediateOpenTriggerClick)
+                && immediateOpenTriggerClick.ValueKind == JsonValueKind.True)
+            {
+                return;
+            }
+
             if (!IsOverlayShow())
             {
                 return;
@@ -783,6 +834,11 @@ namespace AntDesign.Internal
                     {
                         return;
                     }
+                }
+
+                if (!CloseOnOutsideClick)
+                {
+                    return;
                 }
 
                 if (OnMaskClick.HasDelegate)
@@ -943,6 +999,11 @@ namespace AntDesign.Internal
         public bool IsOverlayShow()
         {
             return _overlay != null ? _overlay.IsPopup() : false;
+        }
+
+        internal bool IsOverlayOpening()
+        {
+            return _overlay?.IsOpening() ?? false;
         }
 
         /// <summary>

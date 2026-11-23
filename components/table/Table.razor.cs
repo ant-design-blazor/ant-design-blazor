@@ -148,10 +148,35 @@ namespace AntDesign
         public bool ShowHeader { get; set; } = true;
 
         /// <summary>
+        /// Callback invoked when the table body is scrolled.
+        /// </summary>
+        [Parameter]
+        public EventCallback<EventArgs> OnScroll { get; set; }
+
+        /// <summary>
         /// Template use for what to display when a row is expanded
         /// </summary>
         [Parameter]
         public RenderFragment<RowData<TItem>> ExpandTemplate { get; set; }
+
+        /// <summary>
+        /// Whether to show a control that expands or collapses all expandable rows on the current page.
+        /// Only applies when <see cref="ExpandTemplate"/> is set.
+        /// </summary>
+        [Parameter]
+        public bool ShowExpandAll { get; set; }
+
+        /// <summary>
+        /// Callback invoked when the expand-all control is clicked.
+        /// </summary>
+        [Parameter]
+        public EventCallback<bool> OnExpandAll { get; set; }
+
+        /// <summary>
+        /// Callback invoked when the expanded row keys change.
+        /// </summary>
+        [Parameter]
+        public EventCallback<IEnumerable<string>> OnExpandedRowsChange { get; set; }
 
         /// <summary>
         /// Initially, whether to expand all rows
@@ -278,6 +303,12 @@ namespace AntDesign
         [Parameter]
         public string ScrollY { get; set; }
 
+        /// <summary>
+        /// Whether scrolling should return to the first row when pagination, sorting, or filtering changes.
+        /// </summary>
+        [Parameter]
+        public bool ScrollToFirstRowOnChange { get; set; } = true;
+
 
         /// <summary>
         /// Automatically raise the table height to full screen display
@@ -326,6 +357,19 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public Func<RowData<TItem>, string> ExpandedRowClassName { get; set; } = _ => "";
+
+        /// <summary>
+        /// Whether rows show a hover highlight when the pointer moves over them.
+        /// </summary>
+        [Parameter]
+        public bool RowHoverable { get; set; } = true;
+
+        /// <summary>
+        /// Gets the container element for popup overlays opened by the table,
+        /// such as column filter menus.
+        /// </summary>
+        [Parameter]
+        public Func<ElementReference, ElementReference> GetPopupContainer { get; set; }
 
         /// <summary>
         /// Callback executed when row expands
@@ -468,6 +512,10 @@ namespace AntDesign
         private readonly ClassMapper _wrapperClassMapper = new();
         private List<GroupResult<TItem>> _groups = [];
 
+        /// <summary>Additional class applied to the Table root wrapper. React-compatible name.</summary>
+        [Parameter]
+        public string RootClassName { get; set; }
+
         /// <summary>Semantic classes keyed by Table semantic slot names such as <c>root</c> and <c>body.cell</c>.</summary>
         [Parameter]
         public IReadOnlyDictionary<string, string> ClassNames { get; set; }
@@ -497,6 +545,10 @@ namespace AntDesign
             if (string.IsNullOrWhiteSpace(semanticClass)) return baseClass;
             return string.IsNullOrWhiteSpace(baseClass) ? semanticClass : $"{baseClass} {semanticClass}";
         }
+
+        private string GetRootClass() => string.IsNullOrWhiteSpace(RootClassName)
+            ? _wrapperClassMapper.Class
+            : $"{_wrapperClassMapper.Class} {RootClassName}";
 
         public string GetSemanticStyle(string slot, string baseStyle = null)
         {
@@ -598,6 +650,11 @@ namespace AntDesign
         private ElementReference _wrapperRef;
         private ElementReference _tableHeaderRef;
         private ElementReference _tableBodyRef;
+
+        /// <summary>
+        /// Gets the root wrapper element of the table.
+        /// </summary>
+        public ElementReference NativeElement => Ref;
         private ElementReference _tableRef;
 
         private decimal _tableWidth;
@@ -607,12 +664,15 @@ namespace AntDesign
         private int _virtualStartIndex;
         private int _virtualEndIndex;
         private bool _virtualWindowRenderRequested;
+        private bool _rowHoverBound;
+        private bool _rowHoverStateInitialized;
 #if NET6_0_OR_GREATER
         private DotNetObjectReference<Table<TItem>> _virtualWindowReference;
         private bool _virtualWindowBound;
         private int _virtualWindowRequestSequence;
 #endif
         private bool _afterFirstRender;
+        private bool _scrollToFirstRowAfterRender;
         private bool _isRebuilding;
         private RenderFragment<TItem> _childContent;
 
@@ -686,6 +746,69 @@ namespace AntDesign
         int? ITable.ExpandedRowOffset => ExpandedRowOffset;
         int ITable.TreeExpandIconColumnIndex => _treeExpandIconColumnIndex;
         bool ITable.HasExpandTemplate => ExpandTemplate != null;
+
+        internal bool ShouldShowExpandAll => ShowExpandAll && ExpandTemplate != null && !_treeMode;
+
+        bool ITable.ShouldShowExpandAll => ShouldShowExpandAll;
+
+        internal bool AreCurrentPageRowsExpanded
+        {
+            get
+            {
+                var expandableRows = GetCurrentPageExpandableRows();
+                return expandableRows.Count > 0 && expandableRows.All(row => row.Expanded);
+            }
+        }
+
+        internal bool CanExpandCurrentPage => GetCurrentPageExpandableRows().Count > 0;
+
+        bool ITable.AreCurrentPageRowsExpanded => AreCurrentPageRowsExpanded;
+
+        bool ITable.CanExpandCurrentPage => CanExpandCurrentPage;
+
+        internal async Task ToggleExpandAllAsync()
+        {
+            var expandableRows = GetCurrentPageExpandableRows();
+            if (expandableRows.Count == 0)
+            {
+                return;
+            }
+
+            var expanded = !expandableRows.All(row => row.Expanded);
+            foreach (var row in expandableRows)
+            {
+                row.SetExpanded(expanded);
+            }
+
+            await OnExpandAll.InvokeAsync(expanded);
+            await OnExpandedRowsChange.InvokeAsync(GetExpandedRowKeys());
+            await InvokeAsync(StateHasChanged);
+        }
+
+        private IEnumerable<string> GetExpandedRowKeys()
+        {
+            return _rootRowDataCache.Values
+                .Where(row => !row.IsGrouping && row.Expanded)
+                .Select(row => row.DataKey)
+                .Where(key => key != null)
+                .Distinct(StringComparer.Ordinal)
+                .ToArray();
+        }
+
+        Task ITable.ToggleExpandAllAsync() => ToggleExpandAllAsync();
+
+        private List<RowData<TItem>> GetCurrentPageExpandableRows()
+        {
+            if (_showItems == null)
+            {
+                return [];
+            }
+
+            return _showItems
+                .Select(item => _rootRowDataCache.TryGetValue(GetHashCode(item), out var rowData) ? rowData : null)
+                .Where(rowData => rowData != null && InternalRowExpandable(rowData))
+                .ToList();
+        }
         bool ITable.HasHeaderTemplate => HeaderTemplate != null;
         bool ITable.HasRowTemplate => RowTemplate != null;
         bool ITable.ServerSide => ServerSide;
@@ -700,6 +823,7 @@ namespace AntDesign
         void ITable.RemoveGroupColumn(IFieldColumn column) => RemoveGroupColumn(column);
 
         TableLocale ITable.Locale => this.Locale;
+        Func<ElementReference, ElementReference> ITable.GetPopupContainer => GetPopupContainer;
 
         RenderFragment<RowData> ITable.GroupTitleTemplate => rowData =>
         {
@@ -742,6 +866,11 @@ namespace AntDesign
             if (OnExpand.HasDelegate)
             {
                 OnExpand.InvokeAsync(rowData as RowData<TItem>);
+            }
+
+            if (OnExpandedRowsChange.HasDelegate)
+            {
+                OnExpandedRowsChange.InvokeAsync(GetExpandedRowKeys());
             }
         }
 
@@ -860,9 +989,55 @@ namespace AntDesign
                 throw new ArgumentOutOfRangeException(nameof(index));
             }
 
-            return IsVirtualEnabled
-                ? JsInvokeAsync(JSInteropConstants.TableComponentHelper.ScrollToVirtualIndex, _tableBodyRef, index)
-                : Task.CompletedTask;
+            return ScrollTo(new TableScrollToOptions { Index = index });
+        }
+
+        /// <summary>
+        /// Scrolls the table to the row matching the supplied key or index, or to an explicit vertical offset.
+        /// </summary>
+        public Task ScrollTo(TableScrollToOptions options)
+        {
+            if (options == null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
+
+            var index = options.Index;
+            if (index.HasValue && index.Value < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(options), index, "Index cannot be negative.");
+            }
+            if (options.Key != null && RowKey != null)
+            {
+                var matchingIndex = (_showItems ?? Enumerable.Empty<TItem>())
+                    .Select((item, itemIndex) => new { item, itemIndex })
+                    .FirstOrDefault(entry => Equals(RowKey(entry.item), options.Key))?.itemIndex;
+                if (matchingIndex.HasValue)
+                {
+                    index = matchingIndex;
+                }
+            }
+
+            var align = string.IsNullOrWhiteSpace(options.Align) ? "nearest" : options.Align.ToLowerInvariant();
+            if (align is not ("start" or "center" or "end" or "nearest"))
+            {
+                throw new ArgumentOutOfRangeException(nameof(options), options.Align, "Align must be start, center, end, or nearest.");
+            }
+
+            if (options.Offset.HasValue && options.Top.HasValue)
+            {
+                throw new ArgumentException("Offset cannot be combined with Top.", nameof(options));
+            }
+
+            if (IsVirtualEnabled && align == "center")
+            {
+                // React Table does not support center alignment in virtual mode.
+                align = "nearest";
+            }
+
+            return JsInvokeAsync(JSInteropConstants.TableComponentHelper.ScrollTo, _tableBodyRef,
+                options.Key?.ToString(), index, options.Top, options.Offset, align,
+                IsVirtualEnabled, ClientVirtualItemHeight);
         }
 
         private QueryModel<TItem> BuildQueryModel()
@@ -898,12 +1073,14 @@ namespace AntDesign
 
         void ITable.ColumnFilterChange()
         {
+            RequestScrollToFirstRow();
             ChangePageIndex(1);
             ReloadAndInvokeChange();
         }
 
         void ITable.ColumnSorterChange(IFieldColumn column)
         {
+            RequestScrollToFirstRow();
             foreach (var col in ColumnContext.HeaderColumns)
             {
                 if (col.ColIndex != column.ColIndex && col is IFieldColumn fieldCol && fieldCol.SorterMultiple <= 0 && fieldCol.Sortable)
@@ -940,6 +1117,14 @@ namespace AntDesign
             if (OnChange.HasDelegate && _pageIndex > 0)
             {
                 OnChange.InvokeAsync(queryModel);
+            }
+        }
+
+        private void RequestScrollToFirstRow()
+        {
+            if (_afterFirstRender && ScrollToFirstRowOnChange && (ScrollX != null || ScrollY != null || IsSticky))
+            {
+                _scrollToFirstRowAfterRender = true;
             }
         }
 
@@ -1213,6 +1398,12 @@ namespace AntDesign
             await base.OnAfterRenderAsync(firstRender);
             var responsiveColumnsInitialized = false;
 
+            if (_scrollToFirstRowAfterRender)
+            {
+                _scrollToFirstRowAfterRender = false;
+                await ScrollTo(new TableScrollToOptions { Top = 0 });
+            }
+
 #if NET6_0_OR_GREATER
             if (UseClientVirtualWindow)
             {
@@ -1241,8 +1432,6 @@ namespace AntDesign
                     _shouldRender = true;
                 }
 
-                await JsInvokeAsync(JSInteropConstants.TableComponentHelper.BindTableRowHover, Ref);
-
                 if (ScrollY != null || ScrollX != null || IsSticky || Resizable || AutoHeight)
                 {
                     await JsInvokeAsync(JSInteropConstants.BindTableScroll, _wrapperRef, _tableBodyRef, _tableRef, _tableHeaderRef, ScrollX != null, ScrollY != null || IsSticky, Resizable, AutoHeight);
@@ -1269,6 +1458,21 @@ namespace AntDesign
                     OnColumnInitialized();
                     return;
                 }
+            }
+
+            if (!_rowHoverStateInitialized || RowHoverable != _rowHoverBound)
+            {
+                if (RowHoverable)
+                {
+                    await JsInvokeAsync(JSInteropConstants.TableComponentHelper.BindTableRowHover, Ref);
+                }
+                else if (_rowHoverBound)
+                {
+                    await JsInvokeAsync(JSInteropConstants.TableComponentHelper.UnbindTableRowHover, Ref);
+                }
+
+                _rowHoverBound = RowHoverable;
+                _rowHoverStateInitialized = true;
             }
 
             if (responsiveColumnsInitialized)
@@ -1359,7 +1563,10 @@ namespace AntDesign
             {
                 if (_afterFirstRender && !_isReloading)
                 {
-                    await JsInvokeAsync(JSInteropConstants.TableComponentHelper.UnbindTableRowHover, Ref);
+                    if (_rowHoverBound)
+                    {
+                        await JsInvokeAsync(JSInteropConstants.TableComponentHelper.UnbindTableRowHover, Ref);
+                    }
 
                     if (ScrollY != null || ScrollX != null || IsSticky || Resizable || AutoHeight)
                     {

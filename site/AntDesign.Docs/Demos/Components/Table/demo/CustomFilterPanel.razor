@@ -11,7 +11,7 @@
                         FilterDropdown="@(context => SearchFilter(context, nameof(Data.Name), "name"))">
             <CellRender Context="cell">@Highlight(cell.FormattedValue, nameof(Data.Name))</CellRender>
             <FilterIcon Context="filtered">
-                <Icon Type="@IconType.Outline.Search" Style="@(filtered ? "color: #1677ff" : null)" />
+                <Icon Type="@IconType.Outline.Search" Style="@(filtered ? "color: rgb(22, 119, 255)" : null)" />
             </FilterIcon>
         </PropertyColumn>
         <PropertyColumn Property="row => row.Age" Title="Age" Width="20%"
@@ -20,7 +20,7 @@
                         FilterDropdown="@(context => SearchFilter(context, nameof(Data.Age), "age"))">
             <CellRender Context="cell">@Highlight(cell.FormattedValue, nameof(Data.Age))</CellRender>
             <FilterIcon Context="filtered">
-                <Icon Type="@IconType.Outline.Search" Style="@(filtered ? "color: #1677ff" : null)" />
+                <Icon Type="@IconType.Outline.Search" Style="@(filtered ? "color: rgb(22, 119, 255)" : null)" />
             </FilterIcon>
         </PropertyColumn>
         <PropertyColumn Property="row => row.Address" Title="Address"
@@ -31,7 +31,7 @@
                         FilterDropdown="@(context => SearchFilter(context, nameof(Data.Address), "address"))">
             <CellRender Context="cell">@Highlight(cell.FormattedValue, nameof(Data.Address))</CellRender>
             <FilterIcon Context="filtered">
-                <Icon Type="@IconType.Outline.Search" Style="@(filtered ? "color: #1677ff" : null)" />
+                <Icon Type="@IconType.Outline.Search" Style="@(filtered ? "color: rgb(22, 119, 255)" : null)" />
             </FilterIcon>
         </PropertyColumn>
     </ColumnDefinitions>
@@ -62,7 +62,7 @@
     private const string InputStyle = "margin-bottom: 8px; display: block;";
 
     private RenderFragment SearchFilter(TableFilterDropdownContext context, string column, string field) => @<div style="padding: 8px;" @onkeydown:stopPropagation>
-        <Input TValue="string" Placeholder="@($"Search {field}")" Value="PendingValue(column)" ValueChanged="value => SetPendingValue(column, value)"
+        <Input TValue="string" BindOnInput="true" Placeholder="@($"Search {field}")" Value="PendingValue(column)" ValueChanged="value => SetPendingValue(column, value)"
                Style="@InputStyle" OnPressEnter="() => ApplySearch(context, column, true)" />
         <Space>
             <SpaceItem><Button Type="ButtonType.Primary" Size="ButtonSize.Small" Icon="@IconType.Outline.Search"
@@ -102,12 +102,16 @@
             return new MarkupString(WebUtility.HtmlEncode(text));
         }
 
+        var before = text[..matchIndex];
+        var after = text[(matchIndex + match.Length)..];
         var highlighted = string.Concat(
-            WebUtility.HtmlEncode(text[..matchIndex]),
-            "<mark class=\"highlight\" style=\"background-color: rgb(255, 192, 105); padding: 0px;\">",
+            "<span>",
+            before.Length > 0 ? $"<span class=\"\">{WebUtility.HtmlEncode(before)}</span>" : string.Empty,
+            "<mark class=\" \" style=\"background-color: rgb(255, 192, 105); padding: 0px;\">",
             WebUtility.HtmlEncode(text.Substring(matchIndex, match.Length)),
             "</mark>",
-            WebUtility.HtmlEncode(text[(matchIndex + match.Length)..]));
+            after.Length > 0 ? $"<span class=\"\">{WebUtility.HtmlEncode(after)}</span>" : string.Empty,
+            "</span>");
         return new MarkupString(highlighted);
     }
 

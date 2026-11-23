@@ -1,5 +1,7 @@
 ---
-order: 9999
+order: 112
+debug: true
+extension: true
 title:
   zh-CN: PopupContainer Selector
   en-US: PopupContainer Selector

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using AntDesign.Docs.Services;
+using AntDesign.Docs;
 using AntDesign.Extensions.Localization;
 using Bunit;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +14,25 @@ namespace AntDesign.Tests.Docs;
 
 public sealed class MenuDocumentationTests : DocumentationTestBase
 {
+    [Fact]
+    public async Task Component_menu_includes_the_version_from_demo_front_matter()
+    {
+        var locale = new Mock<ILocalizationService>();
+        locale.SetupGet(x => x.CurrentCulture).Returns(CultureInfo.GetCultureInfo("en-US"));
+        var navigation = Services.GetService(typeof(Microsoft.AspNetCore.Components.NavigationManager)) as Microsoft.AspNetCore.Components.NavigationManager;
+        var service = new DemoService(locale.Object, new HttpClient(), navigation);
+
+        var menu = await service.GetMenuAsync();
+        var masonry = menu.SelectMany(section => section.Children ?? [])
+            .SelectMany(group => group.Children ?? [])
+            .Single(item => item.Title == "Masonry");
+        var component = await service.GetComponentAsync("components/masonry");
+        var basicDemo = component.DemoList.Single(item => item.Name == "basic");
+
+        Assert.Equal("6.0.0", masonry.Version);
+        Assert.Equal("6.0.0", basicDemo.Version);
+    }
+
     [Fact]
     public async Task Real_demos_render_inside_a_local_scroll_wrapper()
     {
@@ -29,6 +49,26 @@ public sealed class MenuDocumentationTests : DocumentationTestBase
         var cut = RenderComponent<AntDesign.Docs.Shared.CodeBox>(p => p.Add(x => x.Demo, demo).Add(x => x.ComponentName, "Menu"));
         cut.WaitForAssertion(() => Assert.NotNull(cut.Find(".code-box-demo > .demo .ant-menu")));
         Assert.Matches(@"\.code-box-demo\s*>\s*\.demo\s*\{\s*overflow:\s*auto;?\s*\}", string.Join("\n", cut.FindAll("style").Select(x => x.TextContent)));
+    }
+
+    [Fact]
+    public async Task CodeBox_replaces_skeleton_when_visibility_callback_fires()
+    {
+        JSInterop.Mode = JSRuntimeMode.Loose;
+        var locale = new Mock<ILocalizationService>();
+        locale.SetupGet(x => x.CurrentCulture).Returns(CultureInfo.GetCultureInfo("en-US"));
+        Services.AddSingleton(locale.Object);
+        Services.AddSingleton(new HttpClient());
+        Services.AddScoped<DemoService>();
+        var menu = await Services.GetRequiredService<DemoService>().GetComponentAsync("components/menu");
+        var demo = menu.DemoList.Single(x => x.Name == "responsive");
+        var cut = RenderComponent<AntDesign.Docs.Shared.CodeBox>(p => p.Add(x => x.Demo, demo).Add(x => x.ComponentName, "Menu"));
+
+        Assert.NotEmpty(cut.FindAll(".ant-skeleton"));
+        await cut.Instance.RenderDemoWhenVisible();
+
+        cut.WaitForAssertion(() => Assert.NotEmpty(cut.FindAll(".code-box-demo > .demo")));
+        Assert.Empty(cut.FindAll(".code-box-demo > .ant-skeleton"));
     }
 
     // React index explicitly marks seven debug examples; Blazor-only examples

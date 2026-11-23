@@ -34,7 +34,7 @@
 		var cut = Context.Render<AntDesign.Tag>(@<AntDesign.Tag Closable>Tag 1</AntDesign.Tag>);
 		var icon = cut.Find("span.anticon");
 		icon.Click();
-		cut.MarkupMatches(string.Empty);
+		cut.Find(".ant-tag").ClassList.Should().Contain("ant-tag-hidden");
 	}
 
 	[Fact]
@@ -44,16 +44,8 @@
 		var cut = Context.Render<AntDesign.Tag>(@<AntDesign.Tag Closable OnClosing="onClosing">Tag 1</AntDesign.Tag>);
 		var icon = cut.Find("span.anticon");
 		icon.Click();
-		cut.MarkupMatches(@<span class:ignore id:ignore >Tag 1
-			<span role="button" tabindex="0" class="ant-tag-close-icon">
-				<span role="img" class="anticon anticon-close" id:ignore tabindex="-1" >
-					<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;" xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024">
-						<path d:ignore></path>
-					</svg>
-				</span>
-			</span>
-		</span>
-    );
+        cut.Find(".ant-tag").ClassList.Should().NotContain("ant-tag-hidden");
+        cut.Find(".ant-tag-close-icon").Should().NotBeNull();
     }
 
     [Fact]
@@ -68,6 +60,43 @@
 		icon.Click();
 
         called.Should().BeTrue();
+    }
+
+    [Fact]
+    public void OnClose_runs_before_tag_is_hidden()
+    {
+        var visibleDuringClose = false;
+        IRenderedComponent<AntDesign.Tag> cut = null;
+        Action<MouseEventArgs> onClose = _ => visibleDuringClose = !cut.Find(".ant-tag").ClassList.Contains("ant-tag-hidden");
+
+        cut = Context.Render<AntDesign.Tag>(@<AntDesign.Tag Closable OnClose="onClose">Tag 1</AntDesign.Tag>);
+        cut.Find(".ant-tag-close-icon").Click();
+
+        visibleDuringClose.Should().BeTrue();
+        cut.Find(".ant-tag").ClassList.Should().Contain("ant-tag-hidden");
+    }
+
+    [Fact]
+    public void Custom_close_icon_enables_close_control_and_hides_tag()
+    {
+        var cut = Context.Render<AntDesign.Tag>(@<AntDesign.Tag CloseIcon="@((RenderFragment)(builder => builder.AddContent(0, "Remove")))">Tag</AntDesign.Tag>);
+
+        cut.Find(".ant-tag-close-icon").TextContent.Should().Be("Remove");
+        cut.Find(".ant-tag-close-icon").Click();
+        cut.Find(".ant-tag").ClassList.Should().Contain("ant-tag-hidden");
+    }
+
+    [Fact]
+    public void Disabled_link_tag_drops_href_and_uses_disabled_class()
+    {
+        var cut = Context.Render<AntDesign.Tag>(@<AntDesign.Tag Href="https://example.com" Target="_blank" Disabled RootClassName="root-extra">Link</AntDesign.Tag>);
+        var tag = cut.Find("a.ant-tag");
+
+        tag.GetAttribute("href").Should().BeNull();
+        tag.GetAttribute("target").Should().Be("_blank");
+        tag.GetAttribute("aria-disabled").Should().Be("true");
+        tag.ClassList.Should().Contain("ant-tag-disabled");
+        tag.ClassList.Should().Contain("root-extra");
     }
 
     [Fact]
@@ -129,6 +158,23 @@
 	}
 
 	[Fact]
+	public void Checkable_tag_calls_on_key_down_and_only_toggles_with_space()
+	{
+		var keyDownCount = 0;
+		var changed = false;
+		Action<KeyboardEventArgs> onKeyDown = _ => keyDownCount++;
+		Action<bool> onCheckedChanged = value => changed = value;
+		var cut = Context.Render<AntDesign.Tag>(@<AntDesign.Tag Checkable OnKeyDown="onKeyDown" CheckedChanged="onCheckedChanged">Tag</AntDesign.Tag>);
+
+		cut.Find(".ant-tag").TriggerEvent("onkeydown", new KeyboardEventArgs { Key = "Enter" });
+		changed.Should().BeFalse();
+		cut.Find(".ant-tag").TriggerEvent("onkeydown", new KeyboardEventArgs { Key = " " });
+
+		keyDownCount.Should().Be(2);
+		changed.Should().BeTrue();
+	}
+
+	[Fact]
 	public void Checkable_tag_group_renders_options_and_emits_single_selection()
 	{
 		string selected = null;
@@ -140,16 +186,67 @@
 		var cut = Context.Render<CheckableTagGroup>(@<CheckableTagGroup Options="options" Value="@selected" ValueChanged="value => selected = value" />);
 
 		cut.FindAll(".ant-tag-checkable-group-item").Should().HaveCount(2);
-		cut.Find(".ant-tag-checkable-group").GetAttribute("role").Should().Be("group");
+		cut.Find(".ant-tag-checkable-group").GetAttribute("role").Should().BeNull();
 		cut.FindAll(".ant-tag")[1].Click();
 		selected.Should().Be("two");
+	}
+
+	[Fact]
+	public void Checkable_tag_group_forwards_root_attributes_and_applies_root_class()
+	{
+		var options = new[] { new CheckableTagOption { Value = "one", Label = "One" } };
+		var cut = Context.Render<CheckableTagGroup>(@<CheckableTagGroup Options="options" RootClassName="custom-root" role="listgroup" aria-label="Tag choices" data-test-id="tag-group" />);
+		var root = cut.Find(".ant-tag-checkable-group");
+
+		root.ClassList.Should().Contain("custom-root");
+		root.GetAttribute("role").Should().Be("listgroup");
+		root.GetAttribute("aria-label").Should().Be("Tag choices");
+		root.GetAttribute("data-test-id").Should().Be("tag-group");
+	}
+
+	[Fact]
+	public void Checkable_tag_group_uses_default_value_and_updates_uncontrolled_single_selection()
+	{
+		var options = new[]
+		{
+			new CheckableTagOption { Value = "one", Label = "One" },
+			new CheckableTagOption { Value = "two", Label = "Two" },
+		};
+		var cut = Context.Render<CheckableTagGroup>(@<CheckableTagGroup Options="options" DefaultValue="@("two")" />);
+
+		cut.FindAll(".ant-tag")[1].ClassList.Should().Contain("ant-tag-checkable-checked");
+		cut.FindAll(".ant-tag")[0].Click();
+		cut.FindAll(".ant-tag")[0].ClassList.Should().Contain("ant-tag-checkable-checked");
+		cut.FindAll(".ant-tag")[1].ClassList.Should().NotContain("ant-tag-checkable-checked");
+	}
+
+	[Fact]
+	public void Checkable_tag_group_uses_default_values_and_updates_uncontrolled_multiple_selection()
+	{
+		var options = new[]
+		{
+			new CheckableTagOption { Value = "one", Label = "One" },
+			new CheckableTagOption { Value = "two", Label = "Two" },
+		};
+		IReadOnlyList<string> defaults = new[] { "one" };
+		var defaultValue = OneOf.OneOf<string, IReadOnlyList<string>>.FromT1(defaults);
+		var cut = Context.Render<CheckableTagGroup>(@<CheckableTagGroup Multiple Options="options" DefaultValue="defaultValue" />);
+
+		cut.FindAll(".ant-tag")[0].ClassList.Should().Contain("ant-tag-checkable-checked");
+		cut.FindAll(".ant-tag")[1].Click();
+		cut.FindAll(".ant-tag")[0].ClassList.Should().Contain("ant-tag-checkable-checked");
+		cut.FindAll(".ant-tag")[1].ClassList.Should().Contain("ant-tag-checkable-checked");
 	}
 
 	[Fact]
 	public void Renders_custom_style_and_custom_color_tag()
     {
 		var cut = Context.Render(@<AntDesign.Tag Color="@("#108ee9")" Style="margin-left:5px;">Tag 1</AntDesign.Tag>);
-        cut.MarkupMatches(@<span class="ant-tag ant-tag-filled ant-tag-has-color" id:ignore style="margin-left: 5px; background-color: #e7f4fd; color:#108ee9;">Tag 1</span>);
+        var tag = cut.Find(".ant-tag");
+        tag.ClassList.Should().Contain("ant-tag-has-color");
+        tag.GetAttribute("style").Should().Contain("margin-left:5px");
+        tag.GetAttribute("style").Should().Contain("background-color: #e7f4fd");
+        tag.GetAttribute("style").Should().Contain("color:#108ee9");
     }
 
 	[Fact]

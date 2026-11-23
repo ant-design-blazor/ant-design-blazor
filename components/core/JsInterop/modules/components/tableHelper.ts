@@ -2,17 +2,76 @@
 
 export class tableHelper {
 
-  static scrollToVirtualIndex(holderRef, index) {
-    if (!holderRef || !Number.isInteger(index) || index < 0) {
+  static scrollTo(holderRef: HTMLElement, key: string | undefined, index: number | undefined, top: number | undefined,
+    offset: number | undefined, align: string, isVirtual: boolean, itemHeight: number) {
+    if (!holderRef) return;
+
+    let scrollElement: HTMLElement | null = null;
+    let ancestor: HTMLElement | null = holderRef;
+    while (ancestor && ancestor !== document.body) {
+      const style = getComputedStyle(ancestor);
+      if (/(auto|scroll)/.test(style.overflowY)
+        && ancestor.scrollHeight > ancestor.clientHeight) {
+        scrollElement = ancestor;
+        break;
+      }
+      ancestor = ancestor.parentElement;
+    }
+
+    const scrollTarget = (scrollElement || document.scrollingElement || document.documentElement) as HTMLElement;
+    const isWindow = scrollTarget === document.scrollingElement || scrollTarget === document.documentElement;
+    const currentTop = isWindow ? window.scrollY : scrollTarget.scrollTop;
+    const viewportTop = isWindow ? 0 : scrollTarget.getBoundingClientRect().top + scrollTarget.clientTop;
+    const viewportHeight = isWindow ? window.innerHeight : scrollTarget.clientHeight;
+    const rows = Array.from(holderRef.querySelectorAll('[data-row-key]')) as HTMLElement[];
+
+    if (top != null) {
+      this.setVerticalScroll(scrollTarget, isWindow, top);
       return;
     }
 
-    const rows = Array.prototype.slice.call(holderRef.querySelectorAll('.ant-table-tbody-virtual-holder-inner .ant-table-row:not(.ant-table-row-extra)')) as HTMLElement[];
-    const rowHeight = rows.length
-      ? rows.reduce((total: number, row: HTMLElement) => total + row.getBoundingClientRect().height, 0) / rows.length
-      : 54;
-    const targetTop = Math.max(0, (index + 1) * rowHeight - holderRef.clientHeight);
-    holderRef.scrollTo({ top: targetTop, behavior: 'auto' });
+    let row = key != null ? rows.find(candidate => candidate.getAttribute('data-row-key') === String(key)) : null;
+    if (!row && index != null) {
+      const startIndex = isVirtual ? (holderRef as any).virtualWindowBinding?.startIndex ?? 0 : 0;
+      row = rows[index - startIndex] || null;
+    }
+
+    let targetTop: number;
+    if (row) {
+      const rowRect = row.getBoundingClientRect();
+      const rowTop = rowRect.top - viewportTop;
+      const rowBottom = rowRect.bottom - viewportTop;
+      if (offset != null) {
+        targetTop = currentTop + rowTop - offset;
+      } else if (align === 'start') {
+        targetTop = currentTop + rowTop;
+      } else if (align === 'center') {
+        targetTop = currentTop + rowTop - (viewportHeight - rowRect.height) / 2;
+      } else if (align === 'end') {
+        targetTop = currentTop + rowBottom - viewportHeight;
+      } else if (rowTop < 0) {
+        targetTop = currentTop + rowTop;
+      } else if (rowBottom > viewportHeight) {
+        targetTop = currentTop + rowBottom - viewportHeight;
+      } else {
+        return;
+      }
+    } else if (isVirtual && index != null) {
+      const estimatedRowTop = Math.max(0, index * itemHeight);
+      if (offset != null || align === 'start') targetTop = estimatedRowTop - (offset ?? 0);
+      else if (align === 'center') targetTop = estimatedRowTop - (viewportHeight - itemHeight) / 2;
+      else if (align === 'end') targetTop = estimatedRowTop + itemHeight - viewportHeight;
+      else targetTop = estimatedRowTop + itemHeight - viewportHeight;
+    } else {
+      return;
+    }
+
+    this.setVerticalScroll(scrollTarget, isWindow, Math.max(0, targetTop));
+  }
+
+  private static setVerticalScroll(scrollTarget: HTMLElement, isWindow: boolean, top: number) {
+    if (isWindow) window.scrollTo({ top, behavior: 'auto' });
+    else scrollTarget.scrollTo({ top, behavior: 'auto' });
   }
 
   static bindVirtualWindow(holderRef, dotNetRef, itemCount, itemHeight, startIndex, endIndex) {

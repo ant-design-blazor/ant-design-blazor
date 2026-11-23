@@ -1,1 +1,40 @@
-<TableParityDemo Variant="drag-sorting" />
+<div class="table-parity-demo">
+    <div id="table-drag-sorting-instructions" class="table-drag-sorting-instructions">
+        To pick up a draggable item, press the space bar. While dragging, use the arrow keys to move the item. Press space again to drop it in its new position, or press escape to cancel.
+    </div>
+    <Table RefBack="_table" TItem="Row" DataSource="_rows" RowKey="row => row.Key">
+        <ColumnDefinitions>
+            <TableDragSortingColumn TableRef="_table" OnDrop="OnDrop" ShowHandle="false" />
+            <PropertyColumn Property="row => row.Name" Title="Name" Sortable="false" />
+            <PropertyColumn Property="row => row.Age" Title="Age" Sortable="false" />
+            <PropertyColumn Property="row => row.Address" Title="Address" Sortable="false" />
+        </ColumnDefinitions>
+    </Table>
+</div>
+
+@code {
+    private readonly ForwardRef _table = new();
+    private List<Row> _rows =
+    [
+        new("1", "John Brown", 32, "Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text"),
+        new("2", "Jim Green", 42, "London No. 1 Lake Park"),
+        new("3", "Joe Black", 32, "Sidney No. 1 Lake Park")
+    ];
+    private Task OnDrop((string ActiveKey, string OverKey) drop)
+    {
+        var from = _rows.FindIndex(row => row.Key == drop.ActiveKey);
+        var to = _rows.FindIndex(row => row.Key == drop.OverKey);
+        if (from >= 0 && to >= 0 && from != to)
+        {
+            var reordered = _rows.ToList();
+            var row = reordered[from];
+            reordered.RemoveAt(from);
+            reordered.Insert(to, row);
+            _rows = reordered;
+        }
+
+        return Task.CompletedTask;
+    }
+
+    private sealed record Row(string Key, string Name, int Age, string Address);
+}

@@ -1,11 +1,115 @@
 @namespace AntDesign
 @inherits AntDomComponentBase
 
-@if (!_closed)
+@if (!string.IsNullOrEmpty(Href))
 {
-    <span @attributes="AdditionalAttributes" class="@ClassMapper.Class" style="@_style" id="@(HasGeneratedId ? null : Id)" @ref="Ref" @onclick="ClickTag"
+    <a @attributes="AdditionalAttributes" class="@ClassMapper.Class" style="@_style" id="@Id" @ref="Ref"
+       href="@(Disabled ? null : Href)" target="@Target" aria-disabled="@(Disabled ? "true" : null)"
+       @onclick="ClickTag" @onmousedown:preventDefault="PreventMouseDownDefault" @onmousedown:stopPropagation="StopMouseDownPropagation"
+       role="@(Checkable ? "checkbox" : null)" aria-checked="@(Checkable ? Checked.ToString().ToLowerInvariant() : null)"
+       tabindex="@(Checkable && !Disabled ? "0" : null)" @onkeydown="HandleKeyDown">
+        @TagBody
+    </a>
+}
+else
+{
+    <span @attributes="AdditionalAttributes" class="@ClassMapper.Class" style="@_style" id="@Id" @ref="Ref" @onclick="ClickTag"
           @onmousedown:preventDefault="PreventMouseDownDefault" @onmousedown:stopPropagation="StopMouseDownPropagation"
           role="@(Checkable ? "checkbox" : null)" aria-checked="@(Checkable ? Checked.ToString().ToLowerInvariant() : null)"
           aria-disabled="@(Checkable && Disabled ? "true" : null)" tabindex="@(Checkable && !Disabled ? "0" : null)"
-          @onkeydown="HandleCheckableKeyDown">@if (IconTemplate != null) {<span class="@SemanticClass("icon", "ant-tag-icon")" style="@SemanticStyle("icon")">@IconTemplate</span>@if (ChildContent != null) {<span class="@SemanticClass("content", "ant-tag-content")" style="@SemanticStyle("content")">@ChildContent</span>}} else if (!string.IsNullOrEmpty(Icon)) {<span class="@SemanticClass("icon", "ant-tag-icon")" style="@SemanticStyle("icon")"><Icon Type="@Icon" Theme="@IconTheme"></Icon></span>@if (ChildContent != null) {<span class="@SemanticClass("content", "ant-tag-content")" style="@SemanticStyle("content")">@ChildContent</span>}} else {@ChildContent}@if (Closable) {<Icon Type="close" Class="@SemanticClass("close", "ant-tag-close-icon")" Style="@SemanticStyle("close")" Role="button" AriaLabel="Close" TabIndex="@(Disabled ? "-1" : "0")" OnClick="CloseTag" OnKeyDown="CloseTagFromKeyboard" StopPropagation="true" />}</span>
+          @onkeydown="HandleKeyDown">
+        @TagBody
+    </span>
+}
+
+@code {
+    private RenderFragment TagBody => builder =>
+    {
+        var sequence = 0;
+        if (IconTemplate != null)
+        {
+            builder.OpenElement(sequence++, "span");
+            builder.AddAttribute(sequence++, "class", SemanticClass("icon", "ant-tag-icon"));
+            builder.AddAttribute(sequence++, "style", SemanticStyle("icon"));
+            builder.AddContent(sequence++, IconTemplate);
+            builder.CloseElement();
+            if (ChildContent != null)
+            {
+                builder.OpenElement(sequence++, "span");
+                builder.AddAttribute(sequence++, "class", SemanticClass("content", "ant-tag-content"));
+                builder.AddAttribute(sequence++, "style", SemanticStyle("content"));
+                builder.AddContent(sequence++, ChildContent);
+                builder.CloseElement();
+            }
+        }
+        else if (!string.IsNullOrEmpty(Icon))
+        {
+            builder.OpenElement(sequence++, "span");
+            builder.AddAttribute(sequence++, "class", SemanticClass("icon", "ant-tag-icon"));
+            builder.AddAttribute(sequence++, "style", SemanticStyle("icon"));
+            builder.OpenComponent<AntDesign.Icon>(sequence++);
+            builder.AddAttribute(sequence++, nameof(AntDesign.Icon.Type), Icon);
+            builder.AddAttribute(sequence++, nameof(AntDesign.Icon.Theme), IconTheme);
+            builder.CloseComponent();
+            builder.CloseElement();
+            if (ChildContent != null)
+            {
+                builder.OpenElement(sequence++, "span");
+                builder.AddAttribute(sequence++, "class", SemanticClass("content", "ant-tag-content"));
+                builder.AddAttribute(sequence++, "style", SemanticStyle("content"));
+                builder.AddContent(sequence++, ChildContent);
+                builder.CloseElement();
+            }
+        }
+        else
+        {
+            builder.AddContent(sequence++, ChildContent);
+        }
+
+        if (ShowCloseIcon)
+        {
+            if (CloseIcon != null)
+            {
+                builder.OpenElement(sequence++, "span");
+                builder.AddAttribute(sequence++, "class", SemanticClass("close", "ant-tag-close-icon"));
+                builder.AddAttribute(sequence++, "style", SemanticStyle("close"));
+                builder.AddAttribute(sequence++, "role", "button");
+                builder.AddAttribute(sequence++, "aria-label", "Close");
+                if (Disabled)
+                {
+                    builder.AddAttribute(sequence++, "aria-disabled", "true");
+                }
+                builder.AddAttribute(sequence++, "tabindex", Disabled ? "-1" : "0");
+                builder.AddAttribute(sequence++, "onclick", EventCallback.Factory.Create<MouseEventArgs>(this, CloseTag));
+                builder.AddEventStopPropagationAttribute(sequence++, "onclick", true);
+                builder.AddEventPreventDefaultAttribute(sequence++, "onclick", !string.IsNullOrEmpty(Href));
+                builder.AddAttribute(sequence++, "onkeydown", EventCallback.Factory.Create<KeyboardEventArgs>(this, CloseTagFromKeyboard));
+                builder.AddEventStopPropagationAttribute(sequence++, "onkeydown", true);
+                builder.AddContent(sequence++, CloseIcon);
+                builder.CloseElement();
+            }
+            else
+            {
+                builder.OpenElement(sequence++, "span");
+                builder.AddAttribute(sequence++, "class", SemanticClass("close", "ant-tag-close-icon"));
+                builder.AddAttribute(sequence++, "style", SemanticStyle("close"));
+                builder.AddAttribute(sequence++, "role", "button");
+                builder.AddAttribute(sequence++, "aria-label", "Close");
+                if (Disabled)
+                {
+                    builder.AddAttribute(sequence++, "aria-disabled", "true");
+                }
+                builder.AddAttribute(sequence++, "tabindex", Disabled ? "-1" : "0");
+                builder.AddAttribute(sequence++, "onclick", EventCallback.Factory.Create<MouseEventArgs>(this, CloseTag));
+                builder.AddEventStopPropagationAttribute(sequence++, "onclick", true);
+                builder.AddEventPreventDefaultAttribute(sequence++, "onclick", !string.IsNullOrEmpty(Href));
+                builder.AddAttribute(sequence++, "onkeydown", EventCallback.Factory.Create<KeyboardEventArgs>(this, CloseTagFromKeyboard));
+                builder.AddEventStopPropagationAttribute(sequence++, "onkeydown", true);
+                builder.OpenComponent<AntDesign.Icon>(sequence++);
+                builder.AddAttribute(sequence++, nameof(AntDesign.Icon.Type), "close");
+                builder.CloseComponent();
+                builder.CloseElement();
+            }
+        }
+    };
 }

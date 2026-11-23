@@ -24,7 +24,7 @@
     {
         if(SelectParent.SelectOptionItems.Any(i=>i.GroupName==selectOption.GroupName && !i.IsHidden))
         {
-            <div class="@ClassMapper.Class">@selectOption.GroupName</div>
+            <div class="@GetGroupClass(selectOption)" title="@selectOption.GroupTitle">@selectOption.GroupName</div>
         }
         <CascadingValue Value="@selectOption.InternalId" Name="InternalId">
             @selectOptionFragment(selectOption)

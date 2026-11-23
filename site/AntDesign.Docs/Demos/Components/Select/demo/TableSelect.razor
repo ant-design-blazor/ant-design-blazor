@@ -11,8 +11,7 @@ Multiple: <Switch @bind-Value="multiple"></Switch>
         @bind-Values="@selectedRows"
         Mode="@(multiple ? SelectMode.Multiple : SelectMode.Default)"
         DropdownMatchSelectWidth="false"
-        EnableSearch
-        OnSearch="OnSearch">
+        ShowSearch="@(new SelectShowSearchOptions { OnSearch = OnSearch })">
     <DropdownRender>
         <Table @ref="table" TItem="Column" DataSource="@data" @bind-SelectedRows="selectedRows" RowKey="x=>x.Name" OnRowClick="OnRowClick" Size="TableSize.Small">
             <ColumnDefinitions Context="ctx">

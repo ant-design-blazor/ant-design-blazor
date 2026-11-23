@@ -1,8 +1,8 @@
 ---
-order: 35
+order: 20
 title:
   zh-CN: 自定义选中标签
-  en-US: Custom Label Render
+  en-US: Custom Selected Label Render
 ---
 
 ## zh-CN
@@ -11,4 +11,4 @@ title:
 
 ## en-US
 
-Use `LabelRender`, the React-compatible parameter name, to customize the selected option label.
+Allows custom rendering of the currently selected label, which can be used for value backfill but the corresponding option is missing and does not want to directly render the value.

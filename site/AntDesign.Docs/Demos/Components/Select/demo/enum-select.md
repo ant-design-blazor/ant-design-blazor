@@ -1,5 +1,7 @@
 ---
-order: 27
+order: 104
+debug: true
+extension: true
 title:
   zh-CN: 枚举选择器
   en-US: EnumSelect

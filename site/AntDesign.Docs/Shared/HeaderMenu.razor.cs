@@ -11,7 +11,6 @@ using AntDesign.Docs.Services;
 using AntDesign.Extensions.Localization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
-using Microsoft.JSInterop;
 
 namespace AntDesign.Docs.Shared
 {
@@ -48,8 +47,6 @@ namespace AntDesign.Docs.Shared
 
         [Inject] private NavigationManager NavigationManager { get; set; }
 
-        [Inject] public IJSRuntime JsInterop { get; set; }
-
         [CascadingParameter] public ConfigProvider ConfigProvider { get; set; }
 
         private string CurrentLanguage => LocalizationService.CurrentCulture.Name;
@@ -59,9 +56,7 @@ namespace AntDesign.Docs.Shared
         private DemoMenuItem[] _menuItems = { };
         private string[] _openMenuKeys = Array.Empty<string>();
 
-        private bool _firstRender;
         private bool _disposed;
-
         internal void ResetOpenSubmenus()
         {
             if (_openMenuKeys.Length == 0) return;
@@ -137,23 +132,13 @@ namespace AntDesign.Docs.Shared
             NavigationManager.NavigateTo(target.Uri.AbsoluteUri, forceLoad: true);
         }
 
-        protected override async Task OnAfterRenderAsync(bool firstRender)
-        {
-            if (firstRender)
-            {
-                _firstRender = true;
-                if (!IsMobile || ShowSearch) await JsInterop.InvokeVoidAsync("window.DocSearchInit", CurrentLanguage);
-            }
-        }
-
         private async void OnLanguageChanged(object sender, CultureInfo culture)
         {
-            if (!_firstRender || _disposed)
+            if (_disposed)
             {
                 return;
             }
             _menuItems = await DemoService.GetMenuAsync();
-            if (!IsMobile || ShowSearch) await JsInterop.InvokeVoidAsync("window.DocSearchInit", culture.Name);
             await InvokeAsync(StateHasChanged);
         }
 

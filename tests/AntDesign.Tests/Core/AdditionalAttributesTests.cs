@@ -206,7 +206,7 @@ namespace AntDesign.Tests.Core
         public void Ordinary_and_builder_components_forward_to_their_root()
         {
             AssertTarget<Row>("div");
-            AssertTarget<Flex>("div");
+            AssertTarget<AntDesign.Flex>("div");
             AssertTarget<AntDesign.Typography>("article");
             AssertTarget<AntDesign.Layout>("section");
             var icon = RenderComponent<AntDesign.Icon>(p => p.Add(x => x.Type, "save").AddUnmatched("data-testid", "icon"));

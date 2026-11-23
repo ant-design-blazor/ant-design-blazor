@@ -21,6 +21,7 @@ namespace AntDesign
         # region Parameters
         [CascadingParameter(Name = "InternalId")] internal Guid InternalId { get; set; }
         [CascadingParameter(Name = "ItemTemplate")] internal RenderFragment<TItem> ItemTemplate { get; set; }
+        [CascadingParameter(Name = "OptionTemplate")] internal RenderFragment<SelectOptionRenderInfo<TItemValue, TItem>> OptionTemplate { get; set; }
         [CascadingParameter(Name = "Model")] internal SelectOptionItem<TItemValue, TItem> Model { get; set; }
         [CascadingParameter] internal SelectBase<TItemValue, TItem> SelectParent { get; set; }
 
@@ -61,6 +62,13 @@ namespace AntDesign
                 }
             }
         }
+
+        /// <summary>
+        /// Native title attribute for this option. For data-source options, map the source field with
+        /// <see cref="SelectFieldNames.Title"/>.
+        /// </summary>
+        [Parameter]
+        public string Title { get; set; }
 
         /// <summary>
         /// Value of Select after selecting this Option
@@ -263,7 +271,10 @@ namespace AntDesign
 
             SetClassMap();
             await base.OnInitializedAsync();
-            if (isAlreadySelected)
+            // The async initialization can resume after the parent has already
+            // changed or cleared its value. Re-check against current state instead
+            // of replaying the earlier selection snapshot.
+            if (isAlreadySelected && IsAlreadySelected(Model ?? _optionItem))
             {
                 await SelectParent.ProcessSelectedSelectOptions();
             }

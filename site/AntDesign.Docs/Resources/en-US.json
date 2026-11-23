@@ -25,6 +25,7 @@
   "app.content.component-source": "View component source on GitHub",
   "app.content.contributors": "contributors",
   "app.component.examples": "Examples",
+  "app.component.examples.extensions": "Blazor-specific examples",
   "app.component.examples.expand": "Expand all code",
   "app.component.examples.collapse": "Collapse all code",
   "app.component.examples.visible": "Expand debug examples",

@@ -1,5 +1,7 @@
 ---
-order: 40
+order: 121
+debug: true
+extension: true
 title:
   zh-CN: 选择事件
   en-US: Selection events

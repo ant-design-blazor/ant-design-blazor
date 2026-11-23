@@ -29,7 +29,14 @@ else if (ShowArrowIcon || ParentSelect.FeedbackIcon != null)
         {
             if (ShowSearchIcon)
             {
-                <SearchOutlined />
+                @if (SearchIcon != null)
+                {
+                    @SearchIcon
+                }
+                else
+                {
+                    <SearchOutlined />
+                }
             }
         }
         else
@@ -50,7 +57,14 @@ else
         {
             if (ShowSearchIcon)
             {
-                <SearchOutlined />
+                @if (SearchIcon != null)
+                {
+                    @SearchIcon
+                }
+                else
+                {
+                    <SearchOutlined />
+                }
             }
         }
     </div>
@@ -61,9 +75,18 @@ else
     <button class="@ParentSelect.GetSemanticClass("clear", "ant-select-clear")"
           style="@ParentSelect.GetSemanticStyle("clear")"
           type="button"
-          aria-label="Clear"
+          aria-label="@ParentSelect.EffectiveClearLabel"
+          tabindex="@ParentSelect.EffectiveClearTabIndex"
           @onmousedown:preventDefault="true"
-          @ref="@_clearRef">
-        <CloseCircleFilled />
+          @onclick="OnClearClick"
+          @onclick:stopPropagation="true">
+        @if (ParentSelect.EffectiveClearIcon != null)
+        {
+            @ParentSelect.EffectiveClearIcon
+        }
+        else
+        {
+            <CloseCircleFilled />
+        }
     </button>
 }

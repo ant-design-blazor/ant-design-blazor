@@ -8,12 +8,14 @@
 		ValueName="@nameof(Person.Value)"
 		Placeholder="Select a person"
 		DefaultActiveFirstOption="false"
-		EnableSearch
+		ShowSearch="@(new SelectShowSearchOptions<string, Person>
+		{
+			OnSearch = OnSearch,
+			FilterOption = (searchValue, option) => CultureInfo.CurrentCulture.CompareInfo.IndexOf(option.Label, searchValue, CompareOptions.IgnoreNonSpace | CompareOptions.IgnoreCase) >= 0
+		})"
 		OnBlur="OnBlur"
 		OnFocus="OnFocus"
-		OnSelectedItemChanged="OnSelectedItemChangedHandler"
-		OnSearch="OnSearch"
-		FilterExpression="(item, searchValue) => CultureInfo.CurrentCulture.CompareInfo.IndexOf(item.Label, searchValue, CompareOptions.IgnoreNonSpace | CompareOptions.IgnoreCase) >= 0">
+		OnSelectedItemChanged="OnSelectedItemChangedHandler">
 </Select>
 <br /><br />
 <p>
@@ -51,12 +53,12 @@
 		Console.WriteLine($"selected: ${value?.Name}");
 	}
 
-	private void OnBlur()
+	private void OnBlur(FocusEventArgs _)
 	{
 		Console.WriteLine("blur");
 	}
 
-	private void OnFocus()
+	private void OnFocus(FocusEventArgs _)
 	{
 		Console.WriteLine("focus");
 	}
