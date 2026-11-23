@@ -345,7 +345,7 @@
                      @foreach (var row in _summaryRows)
                         {
                             <tr>
-                                @row.ChildContent
+                                @summaryRowContent(row)
                             </tr>
                         }
                     </tfoot>
@@ -353,6 +353,14 @@
         }
 
         return builder => { };
+    }
+
+    RenderFragment summaryRowContent(SummaryRow row)
+    {
+        var context = new SummaryRowContext();
+        return @<CascadingValue Value="context" IsFixed>
+            @row.ChildContent
+        </CascadingValue>;
     }
 
     RenderFragment groupFooter(RowData<TItem> currentRowData)

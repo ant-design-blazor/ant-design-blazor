@@ -516,8 +516,13 @@ namespace AntDesign
         void ITable.AddSummaryRow(SummaryRow summaryRow)
         {
             _summaryRows ??= new List<SummaryRow>();
-            _summaryRows.Add(summaryRow);
+            if (!_summaryRows.Contains(summaryRow))
+            {
+                _summaryRows.Add(summaryRow);
+            }
         }
+
+        void ITable.RemoveSummaryRow(SummaryRow summaryRow) => _summaryRows?.Remove(summaryRow);
 
         private void OnColumnInitialized()
         {

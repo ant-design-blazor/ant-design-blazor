@@ -275,6 +275,10 @@ namespace AntDesign
                 _outerSelectedRows = _selectedRows;
                 SelectedRowsChanged.InvokeAsync(_selectedRows);
             }
+
+            // Selection can change without a parent binding. Keep table-owned content,
+            // including summary and footer templates, in sync with the selected rows.
+            StateHasChanged();
         }
     }
 }

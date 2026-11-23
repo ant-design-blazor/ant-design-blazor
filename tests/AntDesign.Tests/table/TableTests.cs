@@ -158,6 +158,52 @@ namespace AntDesign.Tests.Table
         }
 
         [Fact]
+        public void Summary_cells_with_colspan_do_not_change_table_column_layout()
+        {
+            var persons = new[]
+            {
+                new Person { Id = 1, Name = "John", Surname = "Smith" },
+            };
+
+            var cut = Context.RenderComponent<Table<Person>>(parameters => parameters
+                .Add(table => table.DataSource, persons)
+                .Add(table => table.HidePagination, true)
+                .Add(table => table.ExpandTemplate, _ => (RenderFragment)(builder => builder.AddContent(0, "Expanded")))
+                .Add(table => table.ChildContent, person => builder =>
+                {
+                    builder.OpenComponent<Column<string>>(0);
+                    builder.AddAttribute(1, nameof(Column<string>.Field), person.Name);
+                    builder.CloseComponent();
+
+                    builder.OpenComponent<Column<string>>(2);
+                    builder.AddAttribute(3, nameof(Column<string>.Field), person.Surname);
+                    builder.CloseComponent();
+
+                    builder.OpenComponent<SummaryRow>(4);
+                    builder.AddAttribute(5, nameof(SummaryRow.ChildContent), (RenderFragment)(summaryBuilder =>
+                    {
+                        summaryBuilder.OpenComponent<SummaryCell>(0);
+                        summaryBuilder.AddAttribute(1, nameof(SummaryCell.ChildContent), (RenderFragment)(cellBuilder => cellBuilder.AddContent(0, "Total")));
+                        summaryBuilder.CloseComponent();
+
+                        summaryBuilder.OpenComponent<SummaryCell>(2);
+                        summaryBuilder.AddAttribute(3, nameof(SummaryCell.ColSpan), 2);
+                        summaryBuilder.AddAttribute(4, nameof(SummaryCell.ChildContent), (RenderFragment)(cellBuilder => cellBuilder.AddContent(0, "Combined")));
+                        summaryBuilder.CloseComponent();
+                    }));
+                    builder.CloseComponent();
+                }));
+
+            Assert.Equal(3, cut.FindAll("thead th").Count);
+            var summaryCells = cut.FindAll("tfoot td");
+            Assert.Equal(3, summaryCells.Count);
+            Assert.Equal("", summaryCells[0].TextContent.Trim());
+            Assert.Equal("Total", summaryCells[1].TextContent.Trim());
+            Assert.Equal("Combined", summaryCells[2].TextContent.Trim());
+            Assert.Equal("2", summaryCells[2].GetAttribute("colspan"));
+        }
+
+        [Fact]
         public void Cascaded_pagination_props_override_the_table_internal_pagination()
         {
             var props = new PaginationProps
