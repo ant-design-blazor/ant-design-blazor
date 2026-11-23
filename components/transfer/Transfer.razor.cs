@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using AntDesign.Internal;
 using OneOf;
 
 namespace AntDesign
@@ -140,10 +141,10 @@ namespace AntDesign
         public RenderFragment FooterTemplate { get; set; }
 
         /// <summary>
-        /// Child content
+        /// Custom content rendered inside each side panel. The context provides the current side's data, selection, and direction.
         /// </summary>
         [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        public RenderFragment<TransferSidePanelContext<TransferItem>> ChildContent { get; set; }
 
         /// <summary>
         /// A custom CSS style used for rendering the transfer columns
@@ -175,6 +176,7 @@ namespace AntDesign
         private string _rightFilterValue = string.Empty;
 
         private bool _initialized = false;
+        private bool _selectedKeysControlled;
 
         protected override void OnInitialized()
         {
@@ -185,18 +187,12 @@ namespace AntDesign
 
         public override async Task SetParametersAsync(ParameterView parameters)
         {
-            var needRefreshTargetKeys = false;
+            var hasTargetKeys = parameters.TryGetValue(nameof(TargetKeys), out IEnumerable<string> newTargetKeys);
+            var needRefreshTargetKeys = hasTargetKeys && !_targetKeys.SequenceEqual(newTargetKeys ?? Enumerable.Empty<string>());
             var needRefreshDataSource = false;
-            var needRefreshSelectedKeys = false;
-            if (parameters.TryGetValue(nameof(TargetKeys), out IEnumerable<string> newTargetKeys))
-            {
-                needRefreshTargetKeys |= TargetKeys != newTargetKeys;
-            }
-
-            if (parameters.TryGetValue(nameof(SelectedKeys), out IEnumerable<string> newSelectedKeys))
-            {
-                needRefreshSelectedKeys |= SelectedKeys != newSelectedKeys;
-            }
+            var hasSelectedKeys = parameters.TryGetValue(nameof(SelectedKeys), out IEnumerable<string> newSelectedKeys);
+            var nextSelectedKeys = newSelectedKeys?.ToList() ?? new List<string>();
+            var needRefreshSelectedKeys = hasSelectedKeys && (!_initialized || !_selectedKeys.SequenceEqual(nextSelectedKeys));
 
             if (parameters.TryGetValue(nameof(DataSource), out IEnumerable<TransferItem> dataSource))
             {
@@ -204,6 +200,8 @@ namespace AntDesign
             }
 
             await base.SetParametersAsync(parameters);
+
+            _selectedKeysControlled = hasSelectedKeys;
 
             if (needRefreshDataSource)
             {
@@ -219,14 +217,21 @@ namespace AntDesign
 
             if (needRefreshTargetKeys)
             {
-                _targetKeys = TargetKeys.ToList();
-                _selectedKeys.Clear();
-                RefreshSelectedKeys();
+                _targetKeys = newTargetKeys?.ToList() ?? new List<string>();
+            }
+
+            if (needRefreshDataSource || needRefreshTargetKeys)
+            {
+                RefreshDataSource();
             }
 
             if (needRefreshSelectedKeys)
             {
-                _selectedKeys = SelectedKeys.ToList();
+                _selectedKeys = nextSelectedKeys;
+            }
+
+            if (needRefreshDataSource || needRefreshSelectedKeys || needRefreshTargetKeys)
+            {
                 RefreshSelectedKeys();
             }
         }
@@ -278,7 +283,9 @@ namespace AntDesign
 
         private async Task SelectItem(bool isCheck, TransferDirection direction, string key)
         {
-            var holder = direction == TransferDirection.Left ? _sourceSelectedKeys : _targetSelectedKeys;
+            var sourceSelectedKeys = _sourceSelectedKeys.ToList();
+            var targetSelectedKeys = _targetSelectedKeys.ToList();
+            var holder = direction == TransferDirection.Left ? sourceSelectedKeys : targetSelectedKeys;
             var index = Array.IndexOf(holder.ToArray(), key);
 
             if (index > -1)
@@ -288,16 +295,7 @@ namespace AntDesign
             if (isCheck)
                 holder.Add(key);
 
-            _selectedKeys = _sourceSelectedKeys.Union(_targetSelectedKeys).ToList();
-
-            HandleSelect(direction, holder);
-
-            MathTitleCount();
-
-            if (OnSelectChange.HasDelegate)
-            {
-                await OnSelectChange.InvokeAsync(new TransferSelectChangeArgs(_sourceSelectedKeys.ToArray(), _targetSelectedKeys.ToArray()));
-            }
+            await UpdateSelection(sourceSelectedKeys, targetSelectedKeys);
         }
 
         private async Task SelectAll(bool isCheck, TransferDirection direction)
@@ -309,32 +307,32 @@ namespace AntDesign
             }
 
             var holder = isCheck ? list.Where(a => !a.Disabled).Select(a => a.Key).ToList() : new List<string>(list.Count());
+            var sourceSelectedKeys = direction == TransferDirection.Left ? holder : _sourceSelectedKeys.ToList();
+            var targetSelectedKeys = direction == TransferDirection.Right ? holder : _targetSelectedKeys.ToList();
+            await UpdateSelection(sourceSelectedKeys, targetSelectedKeys);
+        }
 
-            HandleSelect(direction, holder);
+        private async Task UpdateSelection(List<string> sourceSelectedKeys, List<string> targetSelectedKeys)
+        {
+            var selectedKeys = sourceSelectedKeys.Concat(targetSelectedKeys).Distinct(StringComparer.Ordinal).ToArray();
 
-            MathTitleCount();
+            if (!_selectedKeysControlled)
+            {
+                _sourceSelectedKeys = sourceSelectedKeys;
+                _targetSelectedKeys = targetSelectedKeys;
+                _selectedKeys = selectedKeys.ToList();
+                MathTitleCount();
+            }
 
             if (OnSelectChange.HasDelegate)
             {
-                await OnSelectChange.InvokeAsync(new TransferSelectChangeArgs(_sourceSelectedKeys.ToArray(), _targetSelectedKeys.ToArray()));
-            }
-        }
-
-        private void HandleSelect(TransferDirection direction, List<string> keys)
-        {
-            if (direction == TransferDirection.Left)
-            {
-                _sourceSelectedKeys = keys;
-            }
-            else
-            {
-                _targetSelectedKeys = keys;
+                await OnSelectChange.InvokeAsync(new TransferSelectChangeArgs(sourceSelectedKeys.ToArray(), targetSelectedKeys.ToArray()));
             }
         }
 
         private async Task MoveItem(MouseEventArgs e, TransferDirection direction)
         {
-            var moveKeys = direction == TransferDirection.Right ? _sourceSelectedKeys : _targetSelectedKeys;
+            var moveKeys = (direction == TransferDirection.Right ? _sourceSelectedKeys : _targetSelectedKeys).ToList();
 
             if (direction == TransferDirection.Left)
             {
@@ -347,9 +345,9 @@ namespace AntDesign
 
             RefreshDataSource();
 
-            var oppositeDirection = direction == TransferDirection.Right ? TransferDirection.Left : TransferDirection.Right;
-
-            HandleSelect(oppositeDirection, new List<string>());
+            var sourceSelectedKeys = direction == TransferDirection.Right ? new List<string>() : _sourceSelectedKeys.ToList();
+            var targetSelectedKeys = direction == TransferDirection.Left ? new List<string>() : _targetSelectedKeys.ToList();
+            await UpdateSelection(sourceSelectedKeys, targetSelectedKeys);
 
             if (!string.IsNullOrEmpty(_leftFilterValue))
             {
@@ -404,15 +402,18 @@ namespace AntDesign
 
         private async Task HandleSearch(ChangeEventArgs e, TransferDirection direction, bool mathTileCount = true)
         {
+            var filterValue = e.Value?.ToString() ?? string.Empty;
+            bool Matches(TransferItem item) => item.Title.Contains(filterValue, StringComparison.InvariantCultureIgnoreCase);
+
             if (direction == TransferDirection.Left)
             {
-                _leftFilterValue = e.Value.ToString();
-                _leftDataSource = DataSource.Where(a => !_targetKeys.Contains(a.Key) && a.Title.Contains(_leftFilterValue, StringComparison.InvariantCultureIgnoreCase)).ToList();
+                _leftFilterValue = filterValue;
+                _leftDataSource = DataSource.Where(a => !_targetKeys.Contains(a.Key) && Matches(a)).ToList();
             }
             else
             {
-                _rightFilterValue = e.Value.ToString();
-                _rightDataSource = DataSource.Where(a => _targetKeys.Contains(a.Key) && a.Title.Contains(_rightFilterValue, StringComparison.InvariantCultureIgnoreCase)).ToList();
+                _rightFilterValue = filterValue;
+                _rightDataSource = DataSource.Where(a => _targetKeys.Contains(a.Key) && Matches(a)).ToList();
             }
 
             if (mathTileCount)
@@ -420,7 +421,7 @@ namespace AntDesign
 
             if (OnSearch.HasDelegate)
             {
-                await OnSearch.InvokeAsync(new TransferSearchArgs(direction, e.Value.ToString()));
+                await OnSearch.InvokeAsync(new TransferSearchArgs(direction, filterValue));
             }
         }
 

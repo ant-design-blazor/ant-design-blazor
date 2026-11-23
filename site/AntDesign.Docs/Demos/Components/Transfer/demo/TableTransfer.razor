@@ -1,5 +1,60 @@
-﻿<h3>TableTransfer</h3>
+<Flex Gap="FlexGap.Middle" Vertical>
+    <Transfer Class="table-transfer-demo" DataSource="_dataSource" TargetKeys="_targetKeys"
+              SelectedKeys="_selectedKeys" Disabled="_disabled" ShowSearch ShowSelectAll="false"
+              OnChange="HandleTransferChange" OnSelectChange="HandleSelectChange">
+        <ChildContent Context="panel">
+            <Table TItem="TransferItem" DataSource="panel.DataSource" RowKey="row => row.Key"
+                   Size="TableSize.Small" Class="table-transfer-table"
+                   Style="@(panel.Disabled ? "pointer-events: none;" : null)"
+                   SelectedRows="SelectedRows(panel)" SelectedRowsChanged="rows => OnRowsSelected(panel, rows)">
+                <Selection Disabled="panel.Disabled" />
+                <PropertyColumn Property="row => row.Title" Title="Name" />
+                <PropertyColumn Property="row => GetTag(row)" Title="Tag" />
+                <PropertyColumn Property="row => row.Description" Title="Description" />
+            </Table>
+        </ChildContent>
+    </Transfer>
+    <Switch Checked="_disabled" CheckedChanged="value => _disabled = value" UnCheckedChildren="enabled" CheckedChildren="disabled" />
+</Flex>
 
 @code {
+    private static readonly string[] Tags = ["cat", "dog", "bird"];
+    private readonly List<TransferItem> _dataSource = Enumerable.Range(0, 20).Select(i =>
+    {
+        var item = new TransferItem
+        {
+            Key = i.ToString(),
+            Title = $"content{i + 1}",
+            Description = $"description of content{i + 1}"
+        };
+        item["tag"] = Tags[i % Tags.Length];
+        return item;
+    }).ToList();
+    private List<string> _targetKeys = [];
+    private List<string> _selectedKeys = [];
+    private bool _disabled;
 
+    private static string GetTag(TransferItem item) => item["tag"]?.ToString();
+
+    private static IEnumerable<TransferItem> SelectedRows(AntDesign.Internal.TransferSidePanelContext<TransferItem> panel) =>
+        panel.DataSource.Where(item => panel.SelectedKeys.Contains(item.Key));
+
+    private static async Task OnRowsSelected(AntDesign.Internal.TransferSidePanelContext<TransferItem> panel, IEnumerable<TransferItem> rows)
+    {
+        var selectedKeys = rows.Select(item => item.Key).ToHashSet(StringComparer.Ordinal);
+        foreach (var item in panel.DataSource)
+        {
+            var wasSelected = panel.SelectedKeys.Contains(item.Key);
+            var isSelected = selectedKeys.Contains(item.Key);
+            if (wasSelected != isSelected)
+            {
+                await panel.SelectItemAsync(item.Key, isSelected);
+            }
+        }
+    }
+
+    private void HandleTransferChange(TransferChangeArgs args) => _targetKeys = args.TargetKeys.ToList();
+
+    private void HandleSelectChange(TransferSelectChangeArgs args) =>
+        _selectedKeys = args.SourceSelectedKeys.Concat(args.TargetSelectedKeys).Distinct(StringComparer.Ordinal).ToList();
 }

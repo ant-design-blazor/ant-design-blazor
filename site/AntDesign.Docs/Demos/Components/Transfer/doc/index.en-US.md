@@ -32,7 +32,6 @@ One or more elements can be selected from either column, one click on the proper
 | ShowSelectAll | Show select all checkbox on the header | bool | true |  |
 | TargetKeys | A set of keys of elements that are listed on the right column. | string\[] | \[] |  |
 | Titles | A set of titles that are sorted from left to right. | string\[] | - |  |
-| SelectAllLabels | A set of customized labels for select all checkboxs on the header |  |  |  |
 | Locale | The i18n text including filter, empty text, item unit, etc. | TransferLocale |  |  |
 | ListStyle | A custom CSS style used for rendering the transfer columns. | Func<TransferDirection,string> | | |
 | OnChange | A callback function that is executed when the transfer between columns is complete. | TransferSelectChangeArgs |  |  |
@@ -40,18 +39,9 @@ One or more elements can be selected from either column, one click on the proper
 | OnSearch | A callback function which is executed when search field are changed | TransferSearchArgs                                | - |  |
 | OnSelectChange | A callback function which is executed when selected items are changed. | TransferSelectChangeArgs |  |  |
 
-### Render Props
+### Custom panel content
 
-Transfer accept `children` to customize render list, using follow props:
-
-| Property        | Description             | Type                             | Version |
-| --------------- | ----------------------- | -------------------------------- | ------- |
-| direction       | List render direction   | `left` \| `right`                |         |
-| disabled        | Disable list or not     | bool                             |         |
-| filteredItems   | Filtered items          | TransferItem[]                   |         |
-| onItemSelect    | Select item             | (key: string, selected: bool)    |         |
-| onItemSelectAll | Select a group of items | (keys: string[], selected: bool) |         |
-| selectedKeys    | Selected items          | string[]                         |         |
+`ChildContent` is a template rendered in both panels. Its `TransferSidePanelContext<TransferItem>` provides the current panel's `DataSource`, `Direction`, `SelectedKeys`, `TargetKeys`, `Disabled`, and `DefaultContent`. Use `SelectItemAsync` to update selection from custom content. See the Table Transfer and Tree Transfer examples.
 
 ## Warning
 
