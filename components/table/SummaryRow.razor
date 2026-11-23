@@ -1,4 +1,5 @@
 ﻿@namespace AntDesign
+@implements IDisposable
 
 @if (IsSummary)
 {
@@ -31,5 +32,13 @@
             Table.AddSummaryRow(this);
         }
 
+    }
+
+    public void Dispose()
+    {
+        if (IsInitialize)
+        {
+            Table?.RemoveSummaryRow(this);
+        }
     }
 }

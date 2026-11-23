@@ -91,6 +91,8 @@ namespace AntDesign
 
         internal void AddSummaryRow(SummaryRow summaryRow);
 
+        internal void RemoveSummaryRow(SummaryRow summaryRow);
+
         internal void OnColumnInitialized();
 
         IFieldFilterTypeResolver FieldFilterTypeResolver { get; }

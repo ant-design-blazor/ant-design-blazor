@@ -229,7 +229,7 @@ namespace AntDesign
             base.OnInitialized();
 
             // Render Pipeline: Initialize -> ColGroup -> Header ...
-            if (IsInitialize)
+            if (IsInitialize && !IsSummary)
             {
                 if (Table?.RebuildColumns(true) ?? false)
                 {
@@ -251,6 +251,11 @@ namespace AntDesign
                 {
                     Table?.TableLayoutIsFixed();
                 }
+            }
+            else if (IsSummary)
+            {
+                // Summary cells render outside the normal table column pipeline.
+                // Registering them as columns corrupts column indexes and spans.
             }
             else if (IsColGroup/* && Width == null*/)
             {
@@ -285,7 +290,7 @@ namespace AntDesign
             // the column definition fragment changes. Re-register existing
             // component instances as they receive their updated parameters so
             // removed and reordered dynamic columns are reflected in Quick mode.
-            if (IsInitialize)
+            if (IsInitialize && !IsSummary)
             {
                 Context?.AddColumn(this);
             }
@@ -328,7 +333,7 @@ namespace AntDesign
         protected override void Dispose(bool disposing)
         {
             Context?.RemoveColumn(this);
-            if (IsInitialize)
+            if (IsInitialize && !IsSummary)
             {
                 Table?.RebuildColumns(false);
             }
