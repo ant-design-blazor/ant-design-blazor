@@ -560,7 +560,7 @@ namespace AntDesign
                 if (_inputStart.IsOnFocused)
                 {
                     HtmlElement element = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _inputStart.Ref);
-                    _activeBarStyle = $"width: {element.ClientWidth - 10}px; position: absolute; transform: translate3d(0px, 0px, 0px);";
+                    _activeBarStyle = FormattableString.Invariant($"width: {element.ClientWidth - 10}px; position: absolute; transform: translate3d(0px, 0px, 0px);");
                     _rangeArrowStyle = $"left: 12px";
                 }
                 else if (_inputEnd.IsOnFocused)
@@ -574,7 +574,7 @@ namespace AntDesign
                     }
 
                     _activeBarStyle = FormattableString.Invariant($"width: {element.ClientWidth - 10}px; position: absolute; transform: translate3d({translateDistance}px, 0px, 0px);");
-                    _rangeArrowStyle = $"left: {element.ClientWidth + 30}px";
+                    _rangeArrowStyle = FormattableString.Invariant($"left: {element.ClientWidth + 30}px");
                 }
                 else
                 {

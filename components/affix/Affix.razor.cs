@@ -185,7 +185,7 @@ namespace AntDesign
             {
                 if (domRect.Bottom > bottomDist)
                 {
-                    _affixStyle = _hiddenStyle + $"bottom: {window.InnerHeight - bottomDist}px; position: fixed;";
+                    _affixStyle = _hiddenStyle + FormattableString.Invariant($"bottom: {window.InnerHeight - bottomDist}px; position: fixed;");
                     Affixed = true;
                 }
                 else
