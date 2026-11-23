@@ -662,9 +662,12 @@ namespace AntDesign
 
         private RenderFragment RenderQuickCells(RowData rowData) => builder =>
         {
+            var sequence = 0;
             foreach (var column in ColumnContext.Columns.Cast<IQuickRenderColumn>())
             {
+                builder.OpenRegion(sequence++);
                 column.RenderQuickBody(builder, rowData);
+                builder.CloseRegion();
             }
         };
 
@@ -743,7 +746,9 @@ namespace AntDesign
             {
                 if (column is IQuickRenderColumn quickColumn)
                 {
+                    builder.OpenRegion(sequence++);
                     quickColumn.RenderQuickBody(builder, rowData);
+                    builder.CloseRegion();
                 }
                 else
                 {

@@ -218,17 +218,9 @@ else if (IsBody && GetRowSpan(RowData) != 0 && GetColSpan(RowData) != 0)
             {
                 @Table.GroupTitleTemplate(cellData.RowData)
             }
-            else if (CellRender != null)
-            {
-                @CellRender(cellData)
-            }
-            else if (ChildContent != null)
-            {
-                @ChildContent
-            }
             else
             {
-                @cellData.FormattedValue
+                @CellContent(cellData)
             }
         </td>
     }

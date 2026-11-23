@@ -43,11 +43,11 @@
                         </GridCol>
                     </Row>
                 </Form>
-                <Table DataSource="data" PageSize="50" AutoHeight>
-                    <Selection />
+                <Table DataSource="data" PageSize="50" AutoHeight ScrollX="560px">
+                    <Selection Width="60" />
                     <PropertyColumn Property="c=>c.Name" Width="150" />
-                    <PropertyColumn Property="c=>c.Age" Width="150" />
-                    <PropertyColumn Property="c=>c.Address" />
+                    <PropertyColumn Property="c=>c.Age" Width="100" />
+                    <PropertyColumn Property="c=>c.Address" Width="250" />
                 </Table>
             </Content>
         </Layout>

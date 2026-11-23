@@ -295,6 +295,7 @@ namespace AntDesign
 
         private Func<object, TData> _quickValueGetter;
         private Func<RowData, object> _quickItemGetter;
+        private Type _quickRuntimeFilterType;
 
         void IQuickRenderColumn.RenderQuickBody(RenderTreeBuilder __builder, RowData rowData)
         {
@@ -304,6 +305,12 @@ namespace AntDesign
             }
 
             var value = rowData.IsGrouping || GetFieldExpression == null ? default : GetQuickValue(GetQuickItem(rowData));
+            if (typeof(TData) == typeof(object) && value != null && _quickRuntimeFilterType != value.GetType())
+            {
+                _quickRuntimeFilterType = value.GetType();
+                ((IFieldColumn)this).SetHeaderFilter(_quickRuntimeFilterType);
+            }
+
             var cellData = new CellData<TData>(rowData, value, Format);
             var cellAttributes = rowData.IsGrouping ? null : OnCell?.Invoke(cellData);
             var title = Context?.HeaderColumns.LastOrDefault(x => x.ColIndex <= ColIndex && x.ColIndex + x.HeaderColSpan > ColIndex)?.Title;
@@ -572,7 +579,7 @@ namespace AntDesign
                 }
                 // Collect RelationColumnAttribute at Header initialization stage
                 // This allows the RenderFragment to be created once and reused across all rows
-                if (ChildContent == null && GetFieldExpression != null)
+                if (RelationContent == null && ChildContent == null && GetFieldExpression != null)
                 {
                     var member = ColumnExpressionHelper.GetReturnMemberInfo(GetFieldExpression);
                     RelationContent = member?.GetCustomAttribute<RelationColumnAttribute>()?.CreateRelationComponentContent();

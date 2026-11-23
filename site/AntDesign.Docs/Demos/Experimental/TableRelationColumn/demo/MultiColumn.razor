@@ -11,7 +11,7 @@
        Size="@TableSize.Small"
        Loading="@isLoading"
        PageSize="5"
-       Total="30"
+       Total="@total"
        OnChange="@OnChange">
 
     <PropertyColumn Property="c => c.OrderId" Title="Order ID" />
@@ -45,8 +45,16 @@
 
 @code {
     private List<Order> currentPageOrders = new();
+    private List<Order> orders = new();
+    private int total;
 
     private bool isLoading = false;
+
+    protected override void OnInitialized()
+    {
+        orders = GenerateOrders(30);
+        total = orders.Count;
+    }
 
     private async Task OnChange(QueryModel<Order> query)
     {
@@ -56,7 +64,9 @@
         // Simulate loading delay
         await Task.Delay(300);
 
-        currentPageOrders = GenerateOrders(5);
+        var filteredOrders = query.ExecuteQuery(orders.AsQueryable());
+        total = filteredOrders.Count();
+        currentPageOrders = query.CurrentPagedRecords(filteredOrders).ToList();
 
         isLoading = false;
         StateHasChanged();
