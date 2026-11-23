@@ -4,6 +4,8 @@
 
 using Xunit;
 using AntDesign;
+using Bunit;
+using Microsoft.AspNetCore.Components;
 
 namespace AntDesign.Tests.Overlay
 {
@@ -13,6 +15,24 @@ namespace AntDesign.Tests.Overlay
         public void Renders_a_base_overlay_trigger()
         {
             var cut = Context.RenderComponent<AntDesign.Internal.OverlayTrigger>();
+        }
+
+        [Fact]
+        public void Updates_overlay_content_when_the_trigger_renders()
+        {
+            var text = "Before";
+            RenderFragment content = builder => builder.AddContent(0, text);
+            var cut = Context.RenderComponent<AntDesign.Internal.OverlayTrigger>(parameters => parameters
+                .Add(p => p.HiddenMode, true)
+                .Add(p => p.Overlay, content));
+
+            Assert.Contains("Before", cut.Markup);
+
+            text = "After";
+            cut.SetParametersAndRender(parameters => parameters.Add(p => p.Overlay, content));
+
+            Assert.Contains("After", cut.Markup);
+            Assert.DoesNotContain("Before", cut.Markup);
         }
 
         [Fact]
