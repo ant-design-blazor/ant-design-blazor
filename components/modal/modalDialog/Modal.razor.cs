@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Threading.Tasks;
 using AntDesign.Core.Services;
 using AntDesign.Core.Documentation;
@@ -208,7 +209,7 @@ namespace AntDesign
             }
             else
             {
-                return $"{Width.AsT1}px";
+                return FormattableString.Invariant($"{Width.AsT1}px");
             }
         }
 
@@ -396,8 +397,16 @@ namespace AntDesign
                     }
                     else
                     {
-                        ConfirmLoading = false;
-                        await InvokeStateHasChangedAsync();
+                        if (ModalRef != null)
+                        {
+                            ModalRef.Config.ConfirmLoading = false;
+                            await ModalRef.UpdateConfigAsync();
+                        }
+                        else
+                        {
+                            ConfirmLoading = false;
+                            await InvokeStateHasChangedAsync();
+                        }
                     }
                 },
                 OkButtonProps = OkButtonProps,

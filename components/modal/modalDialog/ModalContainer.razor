@@ -5,6 +5,8 @@
 @foreach (ModalRef modalRef in _modalRefs)
 {
     var options = modalRef.Config;
+    // Capture before the deferred child content renders a footer that updates the shared button props.
+    var confirmLoading = options.ConfirmLoading;
 
     <CascadingValue Value="modalRef" Name="ModalRef" IsFixed="true" @key="@options">
         <Modal @key="@options"
@@ -17,7 +19,7 @@
            Draggable="@options.Draggable"
            DragInViewport="@options.DragInViewport"
            CloseIcon="@options.CloseIcon"
-           ConfirmLoading="@options.ConfirmLoading"
+           ConfirmLoading="@confirmLoading"
            DestroyOnClose="@options.DestroyOnClose"
            Footer="@options.Footer"
            GetContainer="@options.GetContainer"

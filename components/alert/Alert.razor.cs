@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
@@ -199,7 +200,7 @@ namespace AntDesign
         private async Task PlayMotion()
         {
             _isClosing = true;
-            _innerStyle = $"max-height:{_height}px;";
+            _innerStyle = FormattableString.Invariant($"max-height:{_height}px;");
             await InvokeAsync(StateHasChanged);
 
             _motionStage = 1;

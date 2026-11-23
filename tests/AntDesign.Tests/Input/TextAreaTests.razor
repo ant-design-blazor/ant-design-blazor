@@ -368,4 +368,35 @@
         //Assert
         textAreaElement.ClassList.Should().Contain(customClass);
     }
+
+    [Fact]
+    public void TextArea_Height_Should_Be_Written_With_A_Dot_Under_A_Comma_Culture()
+    {
+        var culture = System.Globalization.CultureInfo.CurrentCulture;
+        try
+        {
+            // tr-TR writes 24.5 as "24,5", which a browser rejects as a CSS length
+            System.Globalization.CultureInfo.CurrentCulture = new System.Globalization.CultureInfo("tr-TR");
+            JSCommonMock();
+            JSInterop.Setup<AntDesign.Internal.TextAreaInfo>(JSInteropConstants.InputComponentHelper.GetTextAreaInfo, _ => true)
+                .SetResult(new AntDesign.Internal.TextAreaInfo
+                {
+                    LineHeight = 10.25,
+                    PaddingTop = 1,
+                    PaddingBottom = 1,
+                    BorderBottom = 1,
+                    BorderTop = 1
+                });
+
+            var cut = Render<AntDesign.TextArea>(
+                @<AntDesign.TextArea Rows="2" />
+            );
+
+            cut.WaitForAssertion(() => cut.Find("textarea").GetAttribute("style").Should().Contain("height: 24.5px;"));
+        }
+        finally
+        {
+            System.Globalization.CultureInfo.CurrentCulture = culture;
+        }
+    }
 }

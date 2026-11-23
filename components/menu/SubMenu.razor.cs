@@ -238,7 +238,7 @@ namespace AntDesign
             if (firstRender && RootMenu.InternalMode != MenuMode.Inline && _overlayTrigger != null)
             {
                 var domInfo = await _overlayTrigger.GetTriggerDomInfo();
-                _popupMinWidthStyle = $"min-width: {domInfo.ClientWidth}px";
+                _popupMinWidthStyle = FormattableString.Invariant($"min-width: {domInfo.ClientWidth}px");
             }
 
             await base.OnAfterRenderAsync(firstRender);
@@ -324,7 +324,7 @@ namespace AntDesign
                     StateHasChanged();
                     await Task.Delay(100);
 
-                    _warpperStyle = $"height: {_warpperHight}px; opacity: 1;";
+                    _warpperStyle = FormattableString.Invariant($"height: {_warpperHight}px; opacity: 1;");
                     StateHasChanged();
                     await Task.Delay(450);
 
@@ -347,7 +347,7 @@ namespace AntDesign
             {
                 _isCollapseLeavePrepare = false;
                 _isCollapseLeaveStart = true;
-                _warpperStyle = $"height: {_warpperHight}px;";
+                _warpperStyle = FormattableString.Invariant($"height: {_warpperHight}px;");
 
                 CallAfterRender(async () =>
                 {

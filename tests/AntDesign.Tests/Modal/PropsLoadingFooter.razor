@@ -1,0 +1,12 @@
+@namespace AntDesign.Tests.Modal
+
+<Button Type="ButtonType.Primary"
+        Loading="@(ModalProps.OkButtonProps?.Loading ?? false)"
+        OnClick="@ModalProps.OnOk">
+    @ModalProps.OkText
+</Button>
+
+@code {
+    [CascadingParameter]
+    public DialogOptions ModalProps { get; set; } = default!;
+}
