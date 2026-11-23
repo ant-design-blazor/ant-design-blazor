@@ -1,0 +1,214 @@
+@page "/en-US/table-benchmark"
+@page "/zh-CN/table-benchmark"
+@using System.Linq.Expressions
+@using AntDesign.TableModels
+@implements IAsyncDisposable
+@inject IJSRuntime JS
+
+<div id="table-benchmark" data-ready="@_ready.ToString().ToLowerInvariant()">
+    @if (_ready)
+    {
+        <div id="benchmark-case" data-quick="@_quick.ToString().ToLowerInvariant()" data-rows="@_rowCount" data-columns="@_columnCount" data-virtualized="@_virtualized.ToString().ToLowerInvariant()">
+            <Table @key="_caseId" TItem="BenchmarkRow" DataSource="_rows" Quick="_quick"
+                   EnableVirtualization="_virtualized" ScrollY="@(_virtualized ? "400px" : null)"
+                   HidePagination="_hidePagination" PageSize="_pageSize" RowKey="row => row.Id"
+                   TreeChildren="_treeChildren" @bind-SelectedRows="_selectedRows" Responsive="false">
+                @_columns
+            </Table>
+        </div>
+    }
+</div>
+
+@code {
+    private static readonly Expression<Func<BenchmarkRow, string>>[] Selectors =
+    [
+        row => row.Name,
+        row => row.Department,
+        row => row.City,
+        row => row.Email,
+        row => row.Role,
+        row => row.Status,
+        row => row.Region,
+        row => row.Description,
+        row => row.Category,
+        row => row.Phone,
+        row => row.Country,
+        row => row.Code,
+        row => row.Owner,
+        row => row.Team,
+        row => row.Notes,
+        row => row.Updated
+    ];
+
+    private static readonly Dictionary<int, BenchmarkRow[]> DataSets = new();
+
+    private IJSObjectReference _module;
+    private DotNetObjectReference<TableBenchmark> _dotNetReference;
+    private RenderFragment _columns;
+    private BenchmarkRow[] _rows = Array.Empty<BenchmarkRow>();
+    private bool _ready;
+    private bool _renderPending;
+    private bool _quick = true;
+    private bool _virtualized;
+    private bool _hidePagination = true;
+    private int _rowCount = 100;
+    private int _columnCount = 8;
+    private int _pageSize = 100;
+    private int _caseId;
+    private IEnumerable<BenchmarkRow> _selectedRows = Array.Empty<BenchmarkRow>();
+    private Func<BenchmarkRow, IEnumerable<BenchmarkRow>> _treeChildren;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _module = await JS.InvokeAsync<IJSObjectReference>("import", "./table-benchmark.js");
+            _dotNetReference = DotNetObjectReference.Create(this);
+            await _module.InvokeVoidAsync("initialize", _dotNetReference);
+            _ready = true;
+            await InvokeAsync(StateHasChanged);
+            return;
+        }
+
+        if (_renderPending)
+        {
+            _renderPending = false;
+            await _module.InvokeVoidAsync("renderComplete");
+        }
+    }
+
+    [JSInvokable]
+    public Task SetCase(bool quick, int rowCount, int columnCount, bool virtualized)
+    {
+        _quick = quick;
+        _rowCount = rowCount;
+        _columnCount = columnCount;
+        _virtualized = virtualized;
+        _hidePagination = true;
+        _pageSize = rowCount;
+        _treeChildren = null;
+        _selectedRows = Array.Empty<BenchmarkRow>();
+        _rows = GetRows(rowCount);
+        _columns = BuildColumns(columnCount, includeSelection: false);
+        _caseId++;
+        _renderPending = true;
+        return InvokeAsync(StateHasChanged);
+    }
+
+    [JSInvokable]
+    public Task SetInteractionCase(bool quick, string interaction, int rowCount, int columnCount)
+    {
+        _quick = quick;
+        _rowCount = rowCount;
+        _columnCount = columnCount;
+        _virtualized = false;
+        _hidePagination = interaction != "pagination";
+        _pageSize = interaction == "pagination" ? Math.Max(1, rowCount / 2) : rowCount;
+        _selectedRows = Array.Empty<BenchmarkRow>();
+        _treeChildren = interaction.StartsWith("tree-", StringComparison.Ordinal)
+            ? static item => item.Children
+            : null;
+        _rows = interaction.StartsWith("tree-", StringComparison.Ordinal)
+            ? CreateTreeRows(rowCount)
+            : GetRows(rowCount);
+        _columns = BuildColumns(columnCount, interaction.StartsWith("selection-", StringComparison.Ordinal));
+        _caseId++;
+        _renderPending = true;
+        return InvokeAsync(StateHasChanged);
+    }
+
+    private static BenchmarkRow[] GetRows(int count)
+    {
+        if (DataSets.TryGetValue(count, out var rows))
+        {
+            return rows;
+        }
+
+        rows = Enumerable.Range(0, count)
+            .Select(index => new BenchmarkRow
+            {
+                Id = index,
+                Name = $"Person {index}",
+                Department = $"Department {index % 10}",
+                City = $"City {index % 20}",
+                Email = $"person{index}@example.test",
+                Role = $"Role {index % 5}",
+                Status = index % 2 == 0 ? "Active" : "Inactive",
+                Region = $"Region {index % 4}",
+                Description = $"Benchmark row {index}",
+                Category = $"Category {index % 6}",
+                Phone = $"555-{index:0000}",
+                Country = $"Country {index % 3}",
+                Code = $"C{index:0000}",
+                Owner = $"Owner {index % 7}",
+                Team = $"Team {index % 5}",
+                Notes = $"Notes for row {index}",
+                Updated = $"2026-11-{index % 28 + 1:00}"
+            })
+            .ToArray();
+
+        DataSets[count] = rows;
+        return rows;
+    }
+
+    private static BenchmarkRow[] CreateTreeRows(int childCount)
+    {
+        var root = new BenchmarkRow
+        {
+            Id = -1,
+            Name = "Tree root",
+            Children = GetRows(childCount)
+        };
+        return [root];
+    }
+
+    private static RenderFragment BuildColumns(int columnCount, bool includeSelection) => builder =>
+    {
+        var sequence = 0;
+        var columnIndex = 0;
+        if (includeSelection)
+        {
+            builder.OpenComponent<Selection>(sequence++);
+            builder.CloseComponent();
+        }
+        foreach (var selector in Selectors.Take(columnCount))
+        {
+            builder.OpenComponent<PropertyColumn<BenchmarkRow, string>>(sequence++);
+            builder.AddAttribute(sequence++, nameof(PropertyColumn<BenchmarkRow, string>.Title), $"Column {++columnIndex}");
+            builder.AddAttribute(sequence++, nameof(PropertyColumn<BenchmarkRow, string>.Property), selector);
+            builder.AddAttribute(sequence++, nameof(Column<string>.CellRender), (RenderFragment<CellData<string>>)(cell => contentBuilder => contentBuilder.AddContent(0, cell.FieldValue)));
+            builder.CloseComponent();
+        }
+    };
+
+    public async ValueTask DisposeAsync()
+    {
+        _dotNetReference?.Dispose();
+        if (_module != null)
+        {
+            await _module.DisposeAsync();
+        }
+    }
+
+    private sealed class BenchmarkRow
+    {
+        public int Id { get; init; }
+        public string Name { get; init; } = string.Empty;
+        public string Department { get; init; } = string.Empty;
+        public string City { get; init; } = string.Empty;
+        public string Email { get; init; } = string.Empty;
+        public string Role { get; init; } = string.Empty;
+        public string Status { get; init; } = string.Empty;
+        public string Region { get; init; } = string.Empty;
+        public string Description { get; init; } = string.Empty;
+        public string Category { get; init; } = string.Empty;
+        public string Phone { get; init; } = string.Empty;
+        public string Country { get; init; } = string.Empty;
+        public string Code { get; init; } = string.Empty;
+        public string Owner { get; init; } = string.Empty;
+        public string Team { get; init; } = string.Empty;
+        public string Notes { get; init; } = string.Empty;
+        public string Updated { get; init; } = string.Empty;
+        public IEnumerable<BenchmarkRow> Children { get; init; } = Array.Empty<BenchmarkRow>();
+    }
+}

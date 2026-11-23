@@ -9,10 +9,11 @@
 <Table TItem="Data"
        DataSource="data1"
        ScrollY="300px"
+       ScrollX="1000px"
        EnableVirtualization
        HidePagination
        Bordered>
-    <Selection />
+    <Selection Width="60" />
     <PropertyColumn Property="c=>c.Name" Width="400" />
     <PropertyColumn Property="c=>c.Age" Width="150" />
     <PropertyColumn Property="c=>c.Address" />
@@ -23,13 +24,14 @@
 <Table TItem="Data"
        DataSource="data2"
        ScrollY="300px"
+       ScrollX="1000px"
        EnableVirtualization
        OnChange="OnChange"
        Total="total"
        RemoteDataSource
        Bordered
        RowKey="x=>x.Name">
-    <Selection />
+    <Selection Width="60" />
     <PropertyColumn Property="c=>c.Name" Width="400" />
     <PropertyColumn Property="c=>c.Age" Width="150" />
     <PropertyColumn Property="c=>c.Address" />

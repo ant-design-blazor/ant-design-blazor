@@ -1,14 +1,20 @@
 ﻿<Table DataSource="data">
     <PropertyColumn Property="c=>c.Name" Width="150">
-        <a>@context.Name</a>
+        <CellRender Context="cell">
+        <a>@(((dynamic)cell.RowData).Data.Name)</a>
+    
+        </CellRender>
     </PropertyColumn>
     <PropertyColumn Property="c=>c.Age" Width="80" />
     <PropertyColumn Property="c=>c.Address" Ellipsis />
     <PropertyColumn Property="c=>c.Address" Ellipsis Title="Long Column Long Column Long Column" />
     <PropertyColumn Property="c=>c.Address" EllipsisShowTitle="false" Title="Long Column Long Column" >
-        <Tooltip Placement="Placement.TopLeft" Title="@context.Address" Style="display: inline;">
-            @context.Address
+        <CellRender Context="cell">
+        <Tooltip Placement="Placement.TopLeft" Title="@(((dynamic)cell.RowData).Data.Address)" Style="display: inline;">
+            @(((dynamic)cell.RowData).Data.Address)
         </Tooltip>
+    
+        </CellRender>
     </PropertyColumn>
     <PropertyColumn Property="c=>c.Address" Ellipsis Title="Long Column" />
 </Table>

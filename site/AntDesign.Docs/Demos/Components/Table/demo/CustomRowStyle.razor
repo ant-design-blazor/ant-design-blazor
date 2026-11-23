@@ -1,12 +1,17 @@
 @using System.ComponentModel
 @using AntDesign.TableModels
 
-<Table TItem="Data" DataSource="@data" OnRow="OnRow" ScrollX="1000" RowClassName="@(x => x.Data.Score < 70 ? "danger" : "" )">
-    <PropertyColumn Property="c=>c.Name" Fixed="ColumnFixPlacement.Left">
-        <a>@context.Name</a>
+<div style="max-width:450px;">
+<Table TItem="Data" DataSource="@data" OnRow="OnRow" ScrollX="450" RowClassName="@(x => x.Data.Score < 70 ? "danger" : "" )">
+    <PropertyColumn Property="c=>c.Name" Width="300" Fixed="ColumnFixPlacement.Left">
+        <CellRender Context="cell">
+        <a>@(((dynamic)cell.RowData).Data.Name)</a>
+    
+        </CellRender>
     </PropertyColumn>
-    <PropertyColumn Property="c=>c.Score"></PropertyColumn>
+    <PropertyColumn Property="c=>c.Score" Width="150"></PropertyColumn>
 </Table>
+</div>
 
 <style>
     .danger, .danger > td {

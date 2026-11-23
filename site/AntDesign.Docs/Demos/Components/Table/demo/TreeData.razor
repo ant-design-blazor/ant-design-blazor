@@ -15,7 +15,10 @@ CheckStrictly:
     <PropertyColumn Property="c => c.Age" Width="12%" Sortable />
     <PropertyColumn Property="c => c.Address" Width="30%" />
     <ActionColumn>
+        <CellRender Context="cell">
         <Button OnClick="@(() => AddChildren(context))">Add Children</Button>
+    
+        </CellRender>
     </ActionColumn>
 </Table>
 

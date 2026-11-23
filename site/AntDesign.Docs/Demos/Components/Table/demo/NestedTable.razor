@@ -1,25 +1,32 @@
-﻿<Table DataSource="@data" TItem="Data" OnExpand="OnRowExpand">
+﻿<Table DataSource="@data" TItem="Data" OnExpand="OnRowExpand" ScrollX="900px">
   <ColumnDefinitions>
-    <PropertyColumn Property="c=>c.Name" />
-    <PropertyColumn Property="c=>c.Platform" />
-    <PropertyColumn Property="c=>c.Version" />
-    <PropertyColumn Property="c=>c.UpgradeNum" />
-    <PropertyColumn Property="c=>c.Creator" />
-    <PropertyColumn Property="c=>c.CreatedAt" />
-    <ActionColumn Title="Action"> <a>Publish</a> </ActionColumn>
+    <PropertyColumn Property="c=>c.Name" Width="120" />
+    <PropertyColumn Property="c=>c.Platform" Width="100" />
+    <PropertyColumn Property="c=>c.Version" Width="150" />
+    <PropertyColumn Property="c=>c.UpgradeNum" Width="110" />
+    <PropertyColumn Property="c=>c.Creator" Width="100" />
+    <PropertyColumn Property="c=>c.CreatedAt" Width="180" />
+    <ActionColumn Title="Action" Width="120">
+        <CellRender Context="cell"> <a>Publish</a> 
+        </CellRender>
+    </ActionColumn>
   </ColumnDefinitions>
   <ExpandTemplate Context="rowData">
-    <Table DataSource="rowData.Data.NestedData" Loading="rowData.Data.NestedData==null" HidePagination>
-      <PropertyColumn Property="c=>c.Date" />
-      <PropertyColumn Property="c=>c.Name" />
-      <Column TData="string" Title="Status">
+    <Table DataSource="rowData.Data.NestedData" Loading="rowData.Data.NestedData==null" HidePagination ScrollX="850px">
+      <PropertyColumn Property="c=>c.Date" Width="180" />
+      <PropertyColumn Property="c=>c.Name" Width="200" />
+      <Column TData="string" Title="Status" Width="120">
+          <CellRender Context="cell">
         <span>
           <Badge Status="BadgeStatus.Success" />
           Finished
         </span>
+      
+          </CellRender>
       </Column>
-      <PropertyColumn Property="c=>c.UpgradeNum" />
-      <ActionColumn Title="Action">
+      <PropertyColumn Property="c=>c.UpgradeNum" Width="150" />
+      <ActionColumn Title="Action" Width="200">
+          <CellRender Context="cell">
         <Space Size="SpaceSize.Middle">
           <SpaceItem><a>Pause</a></SpaceItem>
           <SpaceItem><a>Stop</a></SpaceItem>
@@ -29,6 +36,8 @@
             </Dropdown>
           </SpaceItem>
         </Space>
+      
+          </CellRender>
       </ActionColumn>
     </Table>
   </ExpandTemplate>

@@ -47,6 +47,20 @@ else if (IsHeader)
 }
 
 @code {
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        if (IsHeader)
+        {
+            Context?.BeginHeaderRow();
+        }
+        else if (IsBody)
+        {
+            Context?.BeginBodyRow();
+        }
+    }
+
     [Parameter]
     public RenderFragment ChildContent { get; set; }
 
@@ -70,5 +84,8 @@ else if (IsHeader)
 
     [CascadingParameter(Name = "AntDesign.TableRow.HasFixRight")]
     public bool HasFixRight { get; set; }
+
+    [CascadingParameter]
+    public ColumnContext Context { get; set; }
 
 }

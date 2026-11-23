@@ -19,7 +19,10 @@
     <Table @ref="table" DataSource="@data" @bind-SelectedRows="selectedRows" RowKey="x => x.Name" OnSelectAll="OnSelectAll">
         <Selection Type="@selectionType" Disabled="@(context.Name == "Disabled User")" />
         <PropertyColumn Property="c=>c.Name">
-            <a>@context.Name</a>
+            <CellRender Context="cell">
+            <a>@(((dynamic)cell.RowData).Data.Name)</a>
+        
+            </CellRender>
         </PropertyColumn>
         <PropertyColumn Property="c=>c.Age" />
         <PropertyColumn Property="c=>c.Address" />

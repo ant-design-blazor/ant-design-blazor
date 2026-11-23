@@ -5,9 +5,7 @@
                         SortDirections="new[] { SortDirection.Descending }"
                         Filtered="!string.IsNullOrWhiteSpace(searchString)">
             <FilterDropdown Context="dropdown">
-                @{
-                    dropdown.PreventClose(); 
-                }
+                @{ dropdown.PreventClose(); }
                 <Search Placeholder="Search Name" WrapperStyle="padding:20px;" @bind-Value="searchString" OnSearch="()=>_table?.ReloadData()" />
                 <Button Size="ButtonSize.Small" OnClick="()=> dropdown.FilterClose()">Cancel</Button>
             </FilterDropdown>

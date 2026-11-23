@@ -1,29 +1,36 @@
-﻿<div>
+﻿@using AntDesign.TableModels
+<div>
   <Button OnClick="addRow" Type="ButtonType.Primary" Style="margin-bottom:16px">
     Add a row
   </Button>
   <Table DataSource="listOfData" RowClassName="@(_=>"editable-row")" Bordered>
     <PropertyColumn Width="30%" Property="c => c.Name">
-      @if (editId == context.Id)
+        <CellRender Context="cell">
+      @if (editId == ((RowData<ItemData>)cell.RowData).Data.Id)
       {
-        <Input Type="InputType.Text" @bind-Value="context.Name" OnBlur="stopEdit" AutoFocus />
+        <Input Type="InputType.Text" @bind-Value="((RowData<ItemData>)cell.RowData).Data.Name" OnBlur="stopEdit" AutoFocus />
       }
       else
       {
-        <div class="editable-cell-value-wrap" style="padding-right:24px" @onclick="() => startEdit(context.Id)">
-          @context.Name
+        <div class="editable-cell-value-wrap" style="padding-right:24px" @onclick="() => startEdit(((RowData<ItemData>)cell.RowData).Data.Id)">
+          @(((RowData<ItemData>)cell.RowData).Data.Name)
         </div>
       }
+    
+        </CellRender>
     </PropertyColumn>
     <PropertyColumn Property="c => c.Age"></PropertyColumn>
     <PropertyColumn Property="c => c.Address"></PropertyColumn>
     <ActionColumn Title="Action">
+        <CellRender Context="cell">
       <Popconfirm Title="Are you sure you want to delete?"
-                  OnConfirm="() => deleteRow(context.Id)"
+                  OnConfirm="() => deleteRow(((RowData<ItemData>)cell.RowData).Data.Id)"
                   OkText="Yes"
                   CancelText="No">
         <a>Delete</a>
       </Popconfirm>
+    
+        </CellRender>
     </ActionColumn>
   </Table>
 </div>

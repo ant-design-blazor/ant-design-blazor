@@ -25,14 +25,16 @@
 
   <br />
 
-  <Table DataSource="fixedData" ScrollX="2000" Bordered HidePagination>
+  <div style="max-width:450px;">
+  <Table DataSource="fixedData" ScrollX="450" Bordered HidePagination>
     <PropertyColumn Title="Name" Property="c=>c.name" Fixed="ColumnFixPlacement.Left" Width="100" />
-    <PropertyColumn Title="Description" Property="c=>c.description" />
+    <PropertyColumn Title="Description" Property="c=>c.description" Width="350" />
     <SummaryRow>
       <SummaryCell Fixed="ColumnFixPlacement.Left">Summary</SummaryCell>
       <SummaryCell>This is a summary content</SummaryCell>
     </SummaryRow>
   </Table>
+  </div>
 
   @code {
 

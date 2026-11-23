@@ -86,6 +86,15 @@ namespace AntDesign
             Placement = Placement.Top;
         }
 
+        protected override void OnParametersSet()
+        {
+            // Overlay content can cascade its own PrefixCls (for example,
+            // Dropdown cascades ant-dropdown-menu). A Tooltip must keep its
+            // own prefix so its placement and arrow styles continue to match.
+            PrefixCls = "ant-tooltip";
+            base.OnParametersSet();
+        }
+
         internal override string GetOverlayEnterClass()
         {
             return "ant-zoom-big-fast-enter ant-zoom-big-fast-enter-active ant-zoom-big-fast";

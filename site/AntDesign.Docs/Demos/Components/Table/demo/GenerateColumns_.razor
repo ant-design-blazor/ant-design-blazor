@@ -7,14 +7,17 @@
     <GenerateColumns Range="1.." HideColumnsByName="@(new []{ "IdCard" })" Definitions=definitions />
 
     <ActionColumn ColIndex="4" Title="Action">
+        <CellRender Context="cell">
         <Space Size=@("middle")>
             <SpaceItem>
-                <a>Invite @context.Name</a>
+                <a>Invite @(((dynamic)cell.RowData).Data.Name)</a>
             </SpaceItem>
             <SpaceItem>
                 <a>Delete</a>
             </SpaceItem>
         </Space>
+    
+        </CellRender>
     </ActionColumn>
 </Table>
 

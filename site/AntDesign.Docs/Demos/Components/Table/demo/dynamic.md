@@ -11,4 +11,4 @@ title:
 
 ## en-US
 
-Generate the table from JSON dynamically.
+Generate the table columns dynamically from JSON loaded asynchronously over HTTP. The example uses a same-origin fixture so the request works in WebAssembly without depending on an external API or its rate limits. Sorting and filtering run locally on the downloaded data.

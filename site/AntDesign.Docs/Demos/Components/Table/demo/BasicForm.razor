@@ -12,8 +12,11 @@
         <Selection />
         <GenerateColumns Definitions="@((n,c) => { c.Filterable = true; c.Sortable = true; })" />
         <ActionColumn Title="Action">
+            <CellRender Context="cell">
             <a @onclick="() => StartEdit(row)">Edit</a>
             <a @onclick="() => Delete(row)">Delete</a>
+        
+            </CellRender>
         </ActionColumn>
     </ColumnDefinitions>
 </Table>

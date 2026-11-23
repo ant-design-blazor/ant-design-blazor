@@ -7,7 +7,7 @@
     PageSize="5" Size="TableSize.Small">
     @foreach (var key in data?.FirstOrDefault()?.Keys.Take(10) ?? new string[0])
     {
-        <PropertyColumn Filterable Sortable Property=@(c=>c[key]) Title="@key" />
+        <PropertyColumn Filterable Sortable Property="@(c => c[key])" Title="@key" />
     }
 </Table>
 
@@ -16,7 +16,7 @@
 
     List<Dictionary<string, object>> data;
 
-    string githubUrl = "https://api.github.com/repos/ant-design-blazor/ant-design-blazor/contributors?per_page=200";
+    string githubUrl = "_content/AntDesign.Docs/data/table-contributors.json";
 
     protected async Task HanleChange(QueryModel<Dictionary<string, object>> query)
     {

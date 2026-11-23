@@ -39,7 +39,7 @@
 
     void OnNavigateAsync(NavigationContext navigationContext)
     {
-        var relativeUri = navigationContext.Path;
+        var relativeUri = navigationContext.Path.TrimStart('/');
         var currentCulture = LocalizationService.CurrentCulture;
 
         var segment = relativeUri.IndexOf('/') > 0 ? relativeUri.Substring(0, relativeUri.IndexOf('/')) : relativeUri;

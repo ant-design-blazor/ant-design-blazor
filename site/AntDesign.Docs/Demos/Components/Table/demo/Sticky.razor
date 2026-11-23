@@ -11,7 +11,10 @@
     <PropertyColumn Property="c=>c.Address" Width="150" Title="Column 7" />
     <PropertyColumn Property="c=>c.Address" Title="Column 8" />
     <ActionColumn Title="Action" Width="100" Fixed="ColumnFixPlacement.Right">
+        <CellRender Context="cell">
         <a>action</a>
+    
+        </CellRender>
     </ActionColumn>
 </Table>
 
