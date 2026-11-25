@@ -1,4 +1,4 @@
-@namespace AntDesign.Internal
+﻿@namespace AntDesign.Internal
 @using AntDesign.Core.Extensions
 @typeparam TValue
 @inherits DatePickerPanelBase<TValue>
@@ -124,7 +124,7 @@
 
     private void OnRowSelect(DateTime viewDate)
     {
-        if (IsWeek)
+        if (IsWeek && DisabledDate?.Invoke(viewDate) != true)
         {
             OnSelectDate(viewDate);
         }
@@ -132,7 +132,7 @@
 
     private void OnValueSelect(DateTime viewDate)
     {
-        if (!IsWeek)
+        if (!IsWeek && DisabledDate?.Invoke(viewDate) != true)
         {
             OnSelectDate(viewDate);
         }

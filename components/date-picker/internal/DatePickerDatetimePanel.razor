@@ -110,7 +110,7 @@
 
                 <ul @ref="@_hoursParent" class="@(PrefixCls)-time-panel-column" style="position: relative;">
 
-                    @for (int hour = 0; hour < (use12Hours ? 12 : 24); hour++)
+                    @for (int hour = 0; hour < (use12Hours ? 12 : 24); hour += Math.Max(1, HourStep))
                     {
                         var viewTime = startTime;
 
@@ -132,14 +132,14 @@
                             selectFirstHour = false;
                         }
 
-                        startTime = startTime.AddHours(1);
+                        startTime = startTime.AddHours(Math.Max(1, HourStep));
                     }
                 </ul>
             }
             @if (timeFormat.Contains("mm", StringComparison.OrdinalIgnoreCase))
             {
                 <ul @ref="@_minutesParent" class="@(PrefixCls)-time-panel-column" style="position: relative;">
-                    @for (int minute = 0; minute < 60; minute++)
+                    @for (int minute = 0; minute < 60; minute += Math.Max(1, MinuteStep))
                     {
                         var viewTime = startTime;
                         bool disabled = disabledTime._disabledMinutes.Contains(minute);
@@ -153,14 +153,14 @@
                             </div>
                         </li>
 
-                        startTime = startTime.AddMinutes(1);
+                        startTime = startTime.AddMinutes(Math.Max(1, MinuteStep));
                     }
                 </ul>
             }
             @if (timeFormat.Contains("ss", StringComparison.OrdinalIgnoreCase))
             {
                 <ul @ref="_secondsParent" class="@(PrefixCls)-time-panel-column" style="position: relative;">
-                    @for (int second = 0; second < 60; second++)
+                    @for (int second = 0; second < 60; second += Math.Max(1, SecondStep))
                     {
                         var viewTime = startTime;
                         bool disabled = disabledTime._disabledSeconds.Contains(second);
@@ -174,7 +174,7 @@
                             </div>
                         </li>
 
-                        startTime = startTime.AddSeconds(1);
+                        startTime = startTime.AddSeconds(Math.Max(1, SecondStep));
                     }
                 </ul>
             }

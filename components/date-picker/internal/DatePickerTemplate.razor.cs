@@ -96,6 +96,17 @@ namespace AntDesign.Internal
 
         private void DateOnMouseEnter(DateTime hoverDateTime)
         {
+            if (DisabledDate?.Invoke(hoverDateTime) == true)
+            {
+                if (IsRange && DatePicker.HoverDateTime is not null)
+                {
+                    DatePicker.HoverDateTime = null;
+                    DatePicker.ResetPreviewValue(_hoveredPickerIndex);
+                    _hoveredDateTime = null;
+                }
+                return;
+            }
+
             if (IsRange)
             {
                 DatePicker.HoverDateTime = hoverDateTime;
@@ -127,6 +138,14 @@ namespace AntDesign.Internal
             }
 
             DatePicker.ResetPreviewValue(pickerIndex);
+        }
+
+        private void OnCellSelect(DateTime currentColDate)
+        {
+            if (DisabledDate?.Invoke(currentColDate) != true)
+            {
+                OnValueSelect?.Invoke(currentColDate);
+            }
         }
 
         private bool IsDateInRange(DateTime currentColDate)
@@ -206,7 +225,7 @@ namespace AntDesign.Internal
 
         private string GetRangeHoverCls(DateTime currentColDate)
         {
-            if (!IsRange || DatePicker.HoverDateTime == null
+            if (!IsRange || !DatePicker.IsRangeSelectionActive || DatePicker.HoverDateTime == null
                 || Picker.IsIn(DatePickerType.Date, DatePickerType.Year, DatePickerType.Month, DatePickerType.Quarter) == false)
             {
                 return "";
@@ -235,9 +254,9 @@ namespace AntDesign.Internal
             {
                 if (startValue != endValue && currentDate == startValue)
                 {
-                    cls.Append($" {PrefixCls}-cell-range-hover-start");
+                    cls.Append($" {PrefixCls}-cell-range-hover-{GetRangeHoverEndpointClass(startValue.Value, hoverDateTime, isAnchor: true)}");
                 }
-                else if (currentDate < hoverDateTime)
+                else if (IsBetweenRangeEndpoints(currentDate, startValue.Value, hoverDateTime))
                 {
                     cls.Append($"{PrefixCls}-cell-range-hover");
 
@@ -254,16 +273,16 @@ namespace AntDesign.Internal
                 }
                 else if (currentDate == hoverDateTime)
                 {
-                    cls.Append($" {PrefixCls}-cell-range-hover-end");
+                    cls.Append($" {PrefixCls}-cell-range-hover-{GetRangeHoverEndpointClass(startValue.Value, hoverDateTime, isAnchor: false)}");
                 }
             }
             else if (onfocusPickerIndex == 0 && endValue != null)
             {
                 if (startValue != endValue && currentDate == endValue)
                 {
-                    cls.Append($" {PrefixCls}-cell-range-hover-end");
+                    cls.Append($" {PrefixCls}-cell-range-hover-{GetRangeHoverEndpointClass(endValue.Value, hoverDateTime, isAnchor: true)}");
                 }
-                else if (currentDate > hoverDateTime)
+                else if (IsBetweenRangeEndpoints(currentDate, endValue.Value, hoverDateTime))
                 {
                     cls.Append($"{PrefixCls}-cell-range-hover");
 
@@ -280,11 +299,24 @@ namespace AntDesign.Internal
                 }
                 else if (currentDate == hoverDateTime)
                 {
-                    cls.Append($" {PrefixCls}-cell-range-hover-start");
+                    cls.Append($" {PrefixCls}-cell-range-hover-{GetRangeHoverEndpointClass(endValue.Value, hoverDateTime, isAnchor: false)}");
                 }
             }
 
             return cls.ToString();
+        }
+
+        internal static bool IsBetweenRangeEndpoints(DateTime currentDate, DateTime anchorDate, DateTime hoverDate)
+        {
+            return anchorDate < hoverDate
+                ? currentDate > anchorDate && currentDate < hoverDate
+                : currentDate < anchorDate && currentDate > hoverDate;
+        }
+
+        internal static string GetRangeHoverEndpointClass(DateTime anchorDate, DateTime hoverDate, bool isAnchor)
+        {
+            var isRangeStart = isAnchor ? anchorDate < hoverDate : hoverDate < anchorDate;
+            return isRangeStart ? "start" : "end";
         }
 
         private string GetRangeStartCls(DateTime currentColDate)
@@ -372,7 +404,16 @@ namespace AntDesign.Internal
 
         private string GetRangeEdgeCls(DateTime currentColDate)
         {
-            if (!IsRange || Picker.IsIn(DatePickerType.Date, DatePickerType.Year, DatePickerType.Month, DatePickerType.Quarter) == false)
+            if (!IsRange || !DatePicker.IsRangeSelectionActive || DatePicker.HoverDateTime == null
+                || Picker.IsIn(DatePickerType.Date, DatePickerType.Year, DatePickerType.Month, DatePickerType.Quarter) == false)
+            {
+                return "";
+            }
+
+            DateTime? hoverDateTime = FormatDateByPicker(DatePicker.HoverDateTime);
+            DateTime? startDate = FormatDateByPicker(GetIndexValue(0));
+            DateTime? endDate = FormatDateByPicker(GetIndexValue(1));
+            if (hoverDateTime == startDate || hoverDateTime == endDate)
             {
                 return "";
             }
@@ -380,8 +421,6 @@ namespace AntDesign.Internal
             StringBuilder cls = new StringBuilder();
 
             DateTime currentDate = FormatDateByPicker(currentColDate);
-            DateTime? hoverDateTime = FormatDateByPicker(DatePicker.HoverDateTime);
-
             DateTime preDate = GetPreDate(currentDate);
             DateTime nextDate = GetNextDate(currentDate);
 
@@ -396,8 +435,6 @@ namespace AntDesign.Internal
                 cls.Append($" {PrefixCls}-cell-range-hover-edge-end");
             }
 
-            DateTime? startDate = FormatDateByPicker(GetIndexValue(0));
-            DateTime? endDate = FormatDateByPicker(GetIndexValue(1));
             if (startDate != null && endDate != null)
             {
                 if (preDate == endDate)

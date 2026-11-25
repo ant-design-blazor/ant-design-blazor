@@ -1,8 +1,94 @@
-@using System.Globalization
+﻿@using System.Globalization
 @using AntDesign.Core.JsInterop.Modules.Components
 @inherits AntDesignTestBase
 
 @code {
+    [Fact]
+    public void Time_range_picker_only_shows_the_panel_for_the_focused_input()
+    {
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        var cut = Render<RangePicker<DateTime[]>>(
+            @<RangePicker TValue="DateTime[]" Picker="DatePickerType.Time" />);
+        var inputStartField = typeof(DatePickerBase<DateTime[]>)
+            .GetField("_inputStart", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
+        var inputEndField = typeof(DatePickerBase<DateTime[]>)
+            .GetField("_inputEnd", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
+        var inputStart = (AntDesign.Internal.DatePickerInput)inputStartField.GetValue(cut.Instance)!;
+        var inputEnd = (AntDesign.Internal.DatePickerInput)inputEndField.GetValue(cut.Instance)!;
+
+        inputStart.IsOnFocused = true;
+        inputEnd.IsOnFocused = false;
+        cut.Instance.ShouldHideRangePanel(0, true).Should().BeFalse();
+        cut.Instance.ShouldHideRangePanel(1, false).Should().BeTrue();
+
+        inputStart.IsOnFocused = false;
+        inputEnd.IsOnFocused = true;
+        cut.Instance.ShouldHideRangePanel(0, true).Should().BeTrue();
+        cut.Instance.ShouldHideRangePanel(1, false).Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task Focusing_end_time_immediately_moves_the_active_bar_and_panel()
+    {
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
+            .SetResult(new HtmlElement { ClientWidth = 120 });
+
+        var cut = Render<RangePicker<DateTime?[]>>(
+            @<RangePicker TValue="DateTime?[]" Picker="DatePickerType.Time" />);
+
+        await cut.FindAll("input")[1].TriggerEventAsync("onfocus", new FocusEventArgs());
+
+        cut.Instance.ShouldHideRangePanel(0, true).Should().BeTrue();
+        cut.Instance.ShouldHideRangePanel(1, false).Should().BeFalse();
+        cut.WaitForAssertion(() => cut.Find(".ant-picker-active-bar").GetAttribute("style")
+            .Should().Contain("translate3d(136px, 0px, 0px)"));
+    }
+
+    [Theory]
+    [InlineData(180, 20, 10, 160, 10)]
+    [InlineData(160, 20, 10, 160, 0)]
+    public void Time_range_panel_offset_keeps_the_active_input_arrow_inside_the_panel(
+        decimal activeInputLeft,
+        decimal anchorLeft,
+        decimal arrowWidth,
+        decimal panelWidth,
+        decimal expectedOffset)
+    {
+        RangePicker<DateTime?[]>.CalculateTimeRangePanelOffset(
+            activeInputLeft, anchorLeft, arrowWidth, panelWidth).Should().Be(expectedOffset);
+    }
+
+    [Fact]
+    public async Task Confirming_both_time_range_endpoints_closes_the_picker()
+    {
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.Blur, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true);
+        var start = new DateTime(2026, 11, 24, 12, 8, 23);
+        var end = start.AddSeconds(5);
+        var cut = Render<RangePicker<DateTime?[]>>(
+            @<RangePicker TValue="DateTime?[]"
+                          Picker="DatePickerType.Time"
+                          Value="@(new DateTime?[] { start, end })" />);
+
+        var inputStart = (AntDesign.Internal.DatePickerInput)typeof(DatePickerBase<DateTime?[]>)
+            .GetField("_inputStart", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!
+            .GetValue(cut.Instance)!;
+        var inputEnd = (AntDesign.Internal.DatePickerInput)typeof(DatePickerBase<DateTime?[]>)
+            .GetField("_inputEnd", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!
+            .GetValue(cut.Instance)!;
+        inputStart.IsOnFocused = false;
+        inputEnd.IsOnFocused = true;
+        cut.Instance.AutoFocus = true;
+        cut.Instance._pickerStatus[0].SelectedValue = start;
+        cut.Instance._pickerStatus[1].SelectedValue = end;
+
+        await cut.Instance.OnOkClick();
+
+        cut.Instance.AutoFocus.Should().BeFalse();
+    }
+
     [Fact]
     public async Task Selecting_a_date_notifies_bound_value()
     {
@@ -17,6 +103,177 @@
         changeValue.Invoke(cut.Instance, new object[] { new DateTime(2026, 1, 2), 0, false });
 
         Assert.NotNull(changed);
+    }
+
+    [Fact]
+    public void Range_order_places_the_earlier_date_in_the_start_input()
+    {
+        var (start, end) = DatePickerBase<DateTime?[]>.OrderRangeDates(
+            new DateTime(2026, 11, 7), new DateTime(2026, 11, 5), DatePickerType.Date);
+
+        start.Should().Be(new DateTime(2026, 11, 5));
+        end.Should().Be(new DateTime(2026, 11, 7));
+    }
+
+    [Fact]
+    public void DisabledDateWithInfo_receives_range_start_and_limits_selection_to_seven_days()
+    {
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        var start = new DateTime(2026, 11, 24);
+        DatePickerDisabledDateInfo? receivedInfo = null;
+
+        var cut = Render<RangePicker<DateTime?[]>>(
+            @<RangePicker TValue="DateTime?[]"
+                          DisabledDateWithInfo="@((date, info) =>
+                          {
+                              receivedInfo = info;
+                              return info.From is DateTime from && Math.Abs((date.Date - from.Date).TotalDays) >= 7;
+                          })" />);
+
+        var changeValue = typeof(RangePicker<DateTime?[]>).GetMethod("ChangeValue", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
+        changeValue.Invoke(cut.Instance, new object[] { start, 0, false });
+
+        cut.Instance.DisabledDate(start.AddDays(6)).Should().BeFalse();
+        receivedInfo!.From.Should().Be(start);
+        receivedInfo.Type.Should().Be(DatePickerType.Date);
+        cut.Instance.DisabledDate(start.AddDays(7)).Should().BeTrue();
+        cut.Instance.DisabledDate(start.AddDays(-7)).Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task Disabled_range_anchor_remains_the_first_selected_date()
+    {
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        DatePickerDisabledDateInfo? receivedInfo = null;
+        var cut = Render<RangePicker<DateTime?[]>>(
+            @<RangePicker TValue="DateTime?[]"
+                          DisabledDateWithInfo="@((date, info) => { receivedInfo = info; return false; })" />);
+
+        var firstSelection = new DateTime(2026, 11, 18);
+        await cut.InvokeAsync(() => cut.Instance.ResetRangeSelectionContext());
+        cut.Instance.SetRangeSelectionAnchor(firstSelection);
+        cut.Instance.SetRangeSelectionAnchor(firstSelection.AddDays(-6));
+        cut.Instance.DisabledDate(firstSelection.AddDays(6));
+
+        receivedInfo!.From.Should().Be(firstSelection);
+    }
+
+    [Theory]
+    [InlineData(DatePickerType.Month, "2026-06-01", false)]
+    [InlineData(DatePickerType.Month, "2026-05-01", true)]
+    [InlineData(DatePickerType.Month, "2027-04-01", false)]
+    [InlineData(DatePickerType.Month, "2027-05-01", true)]
+    [InlineData(DatePickerType.Year, "2024-01-01", true)]
+    [InlineData(DatePickerType.Year, "2025-01-01", false)]
+    [InlineData(DatePickerType.Year, "2026-01-01", false)]
+    [InlineData(DatePickerType.Year, "2027-01-01", true)]
+    public void DisabledDateWithInfo_can_limit_a_six_month_range_by_picker_type(
+        DatePickerType picker, string date, bool expectedDisabled)
+    {
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        var start = new DateTime(2026, 11, 7);
+        Func<DateTime, DatePickerDisabledDateInfo, bool> disabledDate = (current, info) =>
+        {
+            if (info.From is not DateTime from)
+            {
+                return false;
+            }
+
+            var minDate = from.AddMonths(-5);
+            var maxDate = from.AddMonths(5);
+            return info.Type == DatePickerType.Year
+                ? current.Year < minDate.Year || current.Year > maxDate.Year
+                : current.Year * 12 + current.Month < minDate.Year * 12 + minDate.Month
+                    || current.Year * 12 + current.Month > maxDate.Year * 12 + maxDate.Month;
+        };
+        var cut = Render<RangePicker<DateTime?[]>>(
+            @<RangePicker TValue="DateTime?[]" Picker="@picker" DisabledDateWithInfo="@disabledDate" />);
+
+        var changeValue = typeof(RangePicker<DateTime?[]>).GetMethod("ChangeValue", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
+        changeValue.Invoke(cut.Instance, new object[] { start, 0, false });
+
+        cut.Instance.DisabledDate(DateTime.Parse(date, CultureInfo.InvariantCulture)).Should().Be(expectedDisabled);
+    }
+
+    [Fact]
+    public async Task Reopening_range_picker_does_not_reuse_the_completed_range_start()
+    {
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        var start = new DateTime(2026, 11, 7);
+        DatePickerDisabledDateInfo? receivedInfo = null;
+        var cut = Render<RangePicker<DateTime?[]>>(
+            @<RangePicker TValue="DateTime?[]"
+                          Value="@(new DateTime?[] { start, start.AddDays(2) })"
+                          DisabledDateWithInfo="@((date, info) => { receivedInfo = info; return false; })" />);
+
+        var previewValues = (string?[])typeof(DatePickerBase<DateTime?[]>)
+            .GetField("_previewValues", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!
+            .GetValue(cut.Instance)!;
+        previewValues[1] = "10/11/2026";
+
+        ((IDatePicker)cut.Instance).HoverDateTime = start.AddDays(10);
+        cut.Instance._pickerStatus[0].SelectedValue = start;
+        cut.Instance._pickerStatus[1].SelectedValue = start.AddDays(2);
+        cut.Instance._pickerStatus[0].IsValueSelected = true;
+        cut.Instance._pickerStatus[1].IsValueSelected = true;
+
+        await cut.InvokeAsync(() => cut.Instance.ResetRangeSelectionContext());
+        cut.Instance.DisabledDate(start.AddDays(20));
+
+        ((IDatePicker)cut.Instance).IsRangeSelectionActive.Should().BeFalse();
+        cut.Instance._pickerStatus.Should().OnlyContain(status => status.SelectedValue == null && !status.IsValueSelected);
+        previewValues[1].Should().BeNull();
+        ((IDatePicker)cut.Instance).HoverDateTime.Should().BeNull();
+        receivedInfo!.From.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task Previous_end_value_is_preserved_while_waiting_for_a_new_range_end()
+    {
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        var previousStart = new DateTime(2026, 11, 12);
+        var previousEnd = new DateTime(2026, 11, 18);
+        var cut = Render<RangePicker<DateTime?[]>>(
+            @<RangePicker TValue="DateTime?[]" Value="@(new DateTime?[] { previousStart, previousEnd })" />);
+
+        await cut.InvokeAsync(() => cut.Instance.ResetRangeSelectionContext());
+        var newStart = new DateTime(2026, 11, 20);
+        cut.Instance.SetRangeSelectionAnchor(newStart);
+        cut.Instance._pickerStatus[0].SelectedValue = newStart;
+        var inputEndField = typeof(DatePickerBase<DateTime?[]>)
+            .GetField("_inputEnd", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
+        var inputEnd = (AntDesign.Internal.DatePickerInput)inputEndField.GetValue(cut.Instance)!;
+        inputEnd.IsOnFocused = true;
+
+        cut.Instance.GetIndexValue(1).Should().Be(previousEnd);
+    }
+
+    [Theory]
+    [InlineData("2026-11-25", "2026-11-22", "2026-11-28", true)]
+    [InlineData("2026-11-15", "2026-11-22", "2026-11-28", false)]
+    [InlineData("2026-11-25", "2026-11-28", "2026-11-22", true)]
+    [InlineData("2026-11-15", "2026-11-28", "2026-11-22", false)]
+    public void Range_hover_preview_is_bounded_by_the_selected_and_hovered_dates(
+        string currentDate, string anchorDate, string hoverDate, bool expected)
+    {
+        AntDesign.Internal.DatePickerTemplate<DateTime?[]>.IsBetweenRangeEndpoints(
+            DateTime.Parse(currentDate, CultureInfo.InvariantCulture),
+            DateTime.Parse(anchorDate, CultureInfo.InvariantCulture),
+            DateTime.Parse(hoverDate, CultureInfo.InvariantCulture)).Should().Be(expected);
+    }
+
+    [Theory]
+    [InlineData("2026-11-22", "2026-11-28", true, "start")]
+    [InlineData("2026-11-22", "2026-11-28", false, "end")]
+    [InlineData("2026-11-28", "2026-11-22", true, "end")]
+    [InlineData("2026-11-28", "2026-11-22", false, "start")]
+    public void Range_hover_preview_endpoint_class_matches_date_order(
+        string anchorDate, string hoverDate, bool isAnchor, string expected)
+    {
+        AntDesign.Internal.DatePickerTemplate<DateTime?[]>.GetRangeHoverEndpointClass(
+            DateTime.Parse(anchorDate, CultureInfo.InvariantCulture),
+            DateTime.Parse(hoverDate, CultureInfo.InvariantCulture),
+            isAnchor).Should().Be(expected);
     }
 
     [Fact]
@@ -83,6 +340,22 @@
             var input = inputs[i];
             input.GetAttribute("placeholder").Should().Be(placeholders[i]);
         }
+    }
+
+    [Fact]
+    public async Task Clear_button_clears_both_time_range_values()
+    {
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        var cut = Render<RangePicker<TimeOnly?[]>>(
+            @<RangePicker TValue="TimeOnly?[]"
+                          Picker="DatePickerType.Time"
+                          DefaultValue="@(new TimeOnly?[] { new(12, 8, 23), new(12, 8, 23) })" />);
+
+        await cut.Find(".ant-picker-clear").ClickAsync(new MouseEventArgs());
+
+        ((TimeOnly?[])cut.Instance.Value).Should().OnlyContain(value => value == null);
+        cut.FindAll("input").Should().OnlyContain(input => string.IsNullOrEmpty(input.GetAttribute("value")));
+        cut.Instance.ShowClear().Should().BeFalse();
     }
     
     [Theory]

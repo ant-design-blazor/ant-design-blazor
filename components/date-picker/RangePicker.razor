@@ -16,13 +16,13 @@
                     OverlayAnimation="@(new OverlayAnimationOptions { Animation = "slide", Direction = "up" })"
                     Trigger="new[] { Trigger.Click }">
         <Overlay>
-            <div class="@(PrefixCls)-range-arrow" style="@_rangeArrowStyle" />
-            <div class="@(PrefixCls)-panel-container" @onclick="@PickerClicked">
+            <div class="@(PrefixCls)-range-arrow" style="@_rangeArrowStyle" @ref="_rangeArrowRef" />
+            <div class="@(PrefixCls)-panel-container" style="@_rangePanelContainerStyle" @ref="_rangePanelContainerRef" @onclick="@PickerClicked">
                 <div class="@(PrefixCls)-panels">
-                    <div class="@_panelClassMapper.Class" style="@(Picker == DatePickerType.Date && IsShowTime && GetOnFocusPickerIndex() == (RTL ? 0 : 1) ? "display: none;": "")">
+                    <div class="@_panelClassMapper.Class" style="@(ShouldHideRangePanel(RTL ? 1 : 0, true) ? "display: none;" : "")">
                         <DatePickerPanelChooser TValue="TValue" DatePicker="@this" PickerIndex="@(RTL ? 1 : 0)" OnSelect="async (date, index) => await OnSelect(date, index)" />
                     </div>
-                    <div class="@_panelClassMapper.Class">
+                    <div class="@_panelClassMapper.Class" style="@(ShouldHideRangePanel(RTL ? 0 : 1, false) ? "display: none;" : "")">
                         <DatePickerPanelChooser TValue="TValue" DatePicker="@this" PickerIndex="@(RTL ? 0 : 1)" OnSelect="async (date, index) => await OnSelect(date, index)" />
                     </div>
                 </div>

@@ -7,8 +7,8 @@ title:
 
 ## zh-CN
 
-通过 `RangePicker` 使用时间范围选择器。
+使用 `RangePicker` 选择开始和结束时间。
 
 ## en-US
 
-Use time range picker with `RangePicker`.
+Use `RangePicker` to select a start and end time.

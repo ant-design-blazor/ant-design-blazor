@@ -10,6 +10,7 @@ namespace AntDesign
     {
         internal DateTime CurrentDate { get; set; }
         internal DateTime? HoverDateTime { get; set; }
+        internal bool IsRangeSelectionActive { get; }
 
         internal event EventHandler<bool> OverlayVisibleChanged;
         int GetOnFocusPickerIndex();

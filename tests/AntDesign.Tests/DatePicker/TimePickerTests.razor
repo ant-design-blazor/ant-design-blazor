@@ -15,6 +15,26 @@
         cut.Instance.Value.Should().Be(defaultValue);
     }
 
+    [Fact]
+    public void Time_picker_renders_hour_minute_and_second_steps()
+    {
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition());
+
+        var cut = Render<AntDesign.TimePicker<TimeOnly?>>(
+            @<TimePicker TValue="TimeOnly?" Open="true" Format="HH:mm:ss"
+                         HourStep="2" MinuteStep="15" SecondStep="20" />);
+
+        var columns = cut.FindAll(".ant-picker-time-panel-column");
+        columns[0].QuerySelectorAll("li").Should().HaveCount(12);
+        columns[1].QuerySelectorAll("li").Should().HaveCount(4);
+        columns[2].QuerySelectorAll("li").Should().HaveCount(3);
+        columns[1].QuerySelectorAll("li").Select(item => item.TextContent.Trim())
+            .Should().Equal("0", "15", "30", "45");
+
+    }
+
 #if NET6_0_OR_GREATER
     [Theory]
     [MemberData(nameof(DatePickerTestData.TimePickerData), MemberType = typeof(DatePickerTestData))]
