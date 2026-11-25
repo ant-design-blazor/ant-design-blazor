@@ -23,6 +23,7 @@ namespace AntDesign
     {
         DateTime IDatePicker.CurrentDate { get; set; } = DateTime.Now;
         DateTime? IDatePicker.HoverDateTime { get; set; }
+        bool IDatePicker.IsRangeSelectionActive => true;
 
         /// <summary>
         /// Selected value for calendar

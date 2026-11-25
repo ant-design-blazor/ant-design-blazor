@@ -23,6 +23,8 @@ namespace AntDesign
     {
         protected readonly IInputMaskConverter InputMaskConverter = new DateTimeInputMaskConverter();
         DateTime? IDatePicker.HoverDateTime { get; set; }
+        bool IDatePicker.IsRangeSelectionActive => HasActiveRangeSelection;
+        protected virtual bool HasActiveRangeSelection => true;
         private TValue _swpValue;
 
         internal const int START_PICKER_INDEX = 0;
@@ -413,6 +415,18 @@ namespace AntDesign
         [Parameter]
         public bool Use12Hours { get; set; }
 
+        /// <summary>Interval between hours in the time panel.</summary>
+        [Parameter]
+        public int HourStep { get; set; } = 1;
+
+        /// <summary>Interval between minutes in the time panel.</summary>
+        [Parameter]
+        public int MinuteStep { get; set; } = 1;
+
+        /// <summary>Interval between seconds in the time panel.</summary>
+        [Parameter]
+        public int SecondStep { get; set; } = 1;
+
         /// <summary>
         /// When true, will show week column in date panel
         /// </summary>
@@ -555,6 +569,12 @@ namespace AntDesign
                 await Js.InvokeVoidAsync(JSInteropConstants.AddPreventKeys, _inputStart.Ref, new[] { "ArrowUp", "ArrowDown" });
             }
 
+            await RefreshRangeInputPosition();
+
+        }
+
+        protected async Task RefreshRangeInputPosition()
+        {
             if (_needRefresh && IsRange)
             {
                 if (_inputStart.IsOnFocused)
@@ -581,11 +601,13 @@ namespace AntDesign
                     _activeBarStyle = "display: none";
                 }
 
+                await RefreshRangePanelPositionAsync();
                 RefreshComponentState();
+                _needRefresh = false;
             }
-
-            _needRefresh = false;
         }
+
+        protected virtual Task RefreshRangePanelPositionAsync() => Task.CompletedTask;
 
         protected override void Dispose(bool disposing)
         {
@@ -788,14 +810,22 @@ namespace AntDesign
                 {
                     if (!HasTimeInput)
                     {
-                        if (IsValidRange(date, index))
+                        var otherIndex = Math.Abs(index - 1);
+                        if (_pickerStatus[otherIndex].SelectedValue is DateTime otherDate)
                         {
-                            ChangeValue(date, index, false);
-
-                            var otherIndex = Math.Abs(index - 1);
-                            if (_pickerStatus[otherIndex].SelectedValue is not null)
+                            if (IsValidRange(date, index))
                             {
-                                ChangeValue(_pickerStatus[otherIndex].SelectedValue.Value, otherIndex, true);
+                                ChangeValue(date, index, false);
+                                ChangeValue(otherDate, otherIndex, true);
+                            }
+                            else
+                            {
+                                var (orderedStart, orderedEnd) = OrderRangeDates(date, otherDate, Picker);
+
+                                _pickerStatus[0].SelectedValue = orderedStart;
+                                _pickerStatus[1].SelectedValue = orderedEnd;
+                                ChangeValue(orderedStart, 0, false);
+                                ChangeValue(orderedEnd, 1, true);
                             }
                         }
                     }
@@ -848,7 +878,13 @@ namespace AntDesign
                     ChangeValue(_pickerStatus[index].SelectedValue.Value, index);
                 }
 
-                if (!(await SwitchFocus(index)))
+                var completedTimeRange = HasTimeInput
+                    && _pickerStatus[0].SelectedValue is not null
+                    && _pickerStatus[1].SelectedValue is not null
+                    && _pickerStatus[index].SelectedValue is DateTime selectedValue
+                    && IsValidRange(selectedValue, index);
+
+                if (completedTimeRange || !(await SwitchFocus(index)))
                 {
                     Close();
                 }
@@ -1362,6 +1398,13 @@ namespace AntDesign
                 DisabledSeconds = dateTime => isSameDate && startValue?.Hour == endValue?.Hour && startValue?.Minute == endValue?.Minute ?
                    _minutesSeconds.Where(s => s < startValue?.Second).ToArray() : Array.Empty<int>();
             }
+        }
+
+        internal static (DateTime Start, DateTime End) OrderRangeDates(DateTime first, DateTime second, DatePickerType picker)
+        {
+            return DateHelper.FormatDateByPicker(first, picker) <= DateHelper.FormatDateByPicker(second, picker)
+                ? (first, second)
+                : (second, first);
         }
 
         protected bool IsValidRange(DateTime newValue, int newValueIndex)

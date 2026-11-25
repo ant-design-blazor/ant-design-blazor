@@ -9,6 +9,7 @@ using AntDesign.Core.Extensions;
 using AntDesign.Core.Documentation;
 using AntDesign.Core.Extensions;
 using AntDesign.Internal;
+using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
@@ -20,6 +21,9 @@ namespace AntDesign
         private TValue _value;
         private TValue _lastValue;
         private TValue _initValue;
+        private ElementReference _rangeArrowRef;
+        private ElementReference _rangePanelContainerRef;
+        private string _rangePanelContainerStyle = string.Empty;
 
         /// <summary>
         /// Gets or sets the value of the input. This should be used with two-way binding.
@@ -106,18 +110,87 @@ namespace AntDesign
         private readonly Func<DateTime, bool> _defaultDisabledDateCheck;
 
         private Func<DateTime, bool> _disabledDate;
+        private DateTime? _rangeStartForDisabledDate;
+        private bool _suppressPersistedRangeStart;
+        private bool _awaitingRangeEnd;
+        protected override bool HasActiveRangeSelection => !_suppressPersistedRangeStart;
 
         [Parameter]
         public override Func<DateTime, bool> DisabledDate
         {
             get
             {
-                return _disabledDate;
+                return date => _disabledDate?.Invoke(date) == true
+                    || DisabledDateWithInfo?.Invoke(date, new DatePickerDisabledDateInfo(GetRangeStartForDisabledDate(), Picker)) == true
+                    || (DisabledDateWithInfo is null && _defaultDisabledDateCheck(date));
             }
             set
             {
-                _disabledDate = (date) => (value?.Invoke(date) is true) || _defaultDisabledDateCheck(date);
+                _disabledDate = value;
             }
+        }
+
+        /// <summary>Determines whether a date is disabled with the current range start and picker mode.</summary>
+        [Parameter]
+        public Func<DateTime, DatePickerDisabledDateInfo, bool> DisabledDateWithInfo { get; set; }
+
+        internal void ResetRangeSelectionContext()
+        {
+            _rangeStartForDisabledDate = null;
+            _suppressPersistedRangeStart = true;
+            _awaitingRangeEnd = false;
+            ((IDatePicker)this).HoverDateTime = null;
+            ResetPreviewValue();
+
+            foreach (var status in _pickerStatus)
+            {
+                status.SelectedValue = null;
+                status.IsValueSelected = false;
+            }
+        }
+
+        private DateTime? GetRangeStartForDisabledDate()
+        {
+            if (_suppressPersistedRangeStart)
+            {
+                return _rangeStartForDisabledDate;
+            }
+
+            if (_rangeStartForDisabledDate is DateTime rangeStart)
+            {
+                return rangeStart;
+            }
+
+            if (_pickerStatus[0].SelectedValue is DateTime selectedStart)
+            {
+                return selectedStart;
+            }
+
+            return GetIndexValue(0);
+        }
+
+        internal void SetRangeSelectionAnchor(DateTime date)
+        {
+            if (_suppressPersistedRangeStart || _rangeStartForDisabledDate is null)
+            {
+                _rangeStartForDisabledDate = date;
+                _suppressPersistedRangeStart = false;
+                _awaitingRangeEnd = true;
+            }
+        }
+
+        protected override async Task OnSelect(DateTime date, int index)
+        {
+            var wasAwaitingRangeEnd = _awaitingRangeEnd;
+            SetRangeSelectionAnchor(date);
+            await base.OnSelect(date, index);
+            if (wasAwaitingRangeEnd
+                && _pickerStatus[0].SelectedValue is not null
+                && _pickerStatus[1].SelectedValue is not null)
+            {
+                _awaitingRangeEnd = false;
+            }
+            ResetPreviewValue();
         }
 
         /// <summary>
@@ -185,6 +258,63 @@ namespace AntDesign
             DisabledDate = null;
         }
 
+        internal bool ShouldHideRangePanel(int pickerIndex, bool isFirstPanel)
+        {
+            if (Picker == DatePickerType.Time)
+            {
+                return pickerIndex != GetOnFocusPickerIndex();
+            }
+
+            return isFirstPanel
+                && Picker == DatePickerType.Date
+                && IsShowTime
+                && GetOnFocusPickerIndex() == (RTL ? 0 : 1);
+        }
+
+        internal static decimal CalculateTimeRangePanelOffset(
+            decimal activeInputLeft,
+            decimal anchorLeft,
+            decimal arrowWidth,
+            decimal panelWidth)
+        {
+            return Math.Max(0, activeInputLeft + arrowWidth - anchorLeft - panelWidth);
+        }
+
+        protected override async Task RefreshRangePanelPositionAsync()
+        {
+            _rangePanelContainerStyle = string.Empty;
+            if (Picker != DatePickerType.Time
+                || GetOnFocusPickerIndex() == 0
+                || _dropDown?.IsOverlayShow() != true)
+            {
+                return;
+            }
+
+            var anchor = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _inputStart.Ref);
+            var activeInput = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _inputEnd.Ref);
+            var arrow = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _rangeArrowRef);
+            var panel = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _rangePanelContainerRef);
+
+            var offset = RTL
+                ? CalculateTimeRangePanelOffset(
+                    anchor.AbsoluteLeft + anchor.ClientWidth,
+                    activeInput.AbsoluteLeft + activeInput.ClientWidth,
+                    arrow.OffsetWidth,
+                    panel.ClientWidth)
+                : CalculateTimeRangePanelOffset(
+                    activeInput.AbsoluteLeft,
+                    anchor.AbsoluteLeft,
+                    arrow.OffsetWidth,
+                    panel.ClientWidth);
+
+            if (offset > 0)
+            {
+                _rangePanelContainerStyle = RTL
+                    ? FormattableString.Invariant($"margin-right: {offset}px;")
+                    : FormattableString.Invariant($"margin-left: {offset}px;");
+            }
+        }
+
         private async Task OnInputClick(int index)
         {
             if (_duringManualInput)
@@ -192,6 +322,10 @@ namespace AntDesign
                 return;
             }
             _openingOverlay = !_dropDown.IsOverlayShow();
+            if (_openingOverlay)
+            {
+                ResetRangeSelectionContext();
+            }
 
             //Reset Picker to default in case the picker value was changed
             //but no value was selected (for example when a user clicks next
@@ -338,23 +472,10 @@ namespace AntDesign
 
         private async Task OnFocus(int index)
         {
-            if (index == 0)
-            {
-                if (!_inputStart.IsOnFocused)
-                {
-                    await Blur(1);
-                    await Focus(0);
-                }
-            }
-            else
-            {
-                if (!_inputEnd.IsOnFocused)
-                {
-                    await Blur(0);
-                    await Focus(1);
-                }
-            }
+            ChangeFocusTarget(index == 0, index == 1);
             AutoFocus = true;
+            await RefreshRangeInputPosition();
+            StateHasChanged();
         }
 
         protected override async Task OnBlur(int index)
@@ -443,6 +564,7 @@ namespace AntDesign
 
                 if (isFocused && (currentValue = GetValue(index)) is not null
                     && _pickerStatus[Math.Abs(index - 1)].SelectedValue is not null
+                    && !_awaitingRangeEnd
                     && !IsValidRange(currentValue.Value, index))
                 {
                     return null;
@@ -590,11 +712,22 @@ namespace AntDesign
         {
             _isSetPicker = false;
 
+            if (index is -1 or 0)
+            {
+                _rangeStartForDisabledDate = null;
+                _suppressPersistedRangeStart = false;
+            }
+
             var array = Value as Array;
             if (array == null || !_isInitialized)
             {
                 return;
             }
+            var elementType = array.GetType().GetElementType();
+            var clearNonNullableValueRange = index == -1
+                && elementType is { IsValueType: true }
+                && Nullable.GetUnderlyingType(elementType) is null;
+
             ReadOnlySpan<int> indexToClear;
             if (index == -1)
             {
@@ -607,12 +740,12 @@ namespace AntDesign
 
             foreach (var i in indexToClear)
             {
-                if (!IsNullable && DefaultValue != null)
+                if (!clearNonNullableValueRange && !IsNullable && DefaultValue != null)
                 {
                     var defaults = DefaultValue as Array;
                     array.SetValue(defaults.GetValue(i), i);
                 }
-                else
+                else if (!clearNonNullableValueRange)
                 {
                     array.SetValue(default, i);
                 }
@@ -628,8 +761,14 @@ namespace AntDesign
                 Close();
             }
 
+            if (clearNonNullableValueRange)
+            {
+                CurrentValue = default;
+                _lastValue = default;
+                InvokeOnChange();
+            }
             // Only update CurrentValue and trigger validation when both range values are null
-            if (array.GetValue(0) is null && array.GetValue(1) is null)
+            else if (array.GetValue(0) is null && array.GetValue(1) is null)
             {
                 // Use a cloned instance so assignment changes reference and triggers CurrentValue change detection
                 var newValue = (TValue)array.Clone();

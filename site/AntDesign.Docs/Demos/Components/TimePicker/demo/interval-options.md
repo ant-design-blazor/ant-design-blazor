@@ -2,14 +2,13 @@
 order: 5
 title:
   zh-CN: 步长选项
-  en-US: interval option
+  en-US: Interval options
 ---
 
 ## zh-CN
 
-可以使用 `hourStep` `minuteStep` `secondStep` 按步长展示可选的时分秒。
+可以使用 `HourStep`、`MinuteStep` 和 `SecondStep` 设置时、分、秒列表的选项间隔。
 
 ## en-US
 
-Show stepped options by `hourStep` `minuteStep` `secondStep`.
-
+Set the option intervals for hours, minutes, and seconds with `HourStep`, `MinuteStep`, and `SecondStep`.

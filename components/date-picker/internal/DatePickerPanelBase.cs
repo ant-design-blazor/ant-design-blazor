@@ -106,6 +106,15 @@ namespace AntDesign
         public bool Use12Hours { get; set; }
 
         [Parameter]
+        public int HourStep { get; set; } = 1;
+
+        [Parameter]
+        public int MinuteStep { get; set; } = 1;
+
+        [Parameter]
+        public int SecondStep { get; set; } = 1;
+
+        [Parameter]
         public bool ShowWeek { get; set; }
 
         protected Dictionary<string, object> GetAttributes() => new Dictionary<string, object>()
@@ -132,7 +141,11 @@ namespace AntDesign
                 { "IsCalendar", IsCalendar },
                 { "IsShowHeader", IsShowHeader },
                 { "IsShowTime", IsShowTime },
-                { "ShowWeek", ShowWeek} 
+                { "ShowWeek", ShowWeek},
+                { "Use12Hours", Use12Hours },
+                { "HourStep", HourStep },
+                { "MinuteStep", MinuteStep },
+                { "SecondStep", SecondStep }
             };
 
         protected static Dictionary<DatePickerType, string> PickerTypeMap = new()

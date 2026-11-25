@@ -1,4 +1,4 @@
-@picker-cell-inner-cls: ~'@{picker-prefix-cls}-cell-inner';
+﻿@picker-cell-inner-cls: ~'@{picker-prefix-cls}-cell-inner';
 
 .@{picker-prefix-cls} {
   @picker-arrow-size: 7px;
@@ -348,7 +348,8 @@
     // >>> Disabled
     &-disabled {
       color: @disabled-color;
-      pointer-events: none;
+      cursor: not-allowed;
+      pointer-events: auto;
 
       .@{cellClassName} {
         background: transparent;
