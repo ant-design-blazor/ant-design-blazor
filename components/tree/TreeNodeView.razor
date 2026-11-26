@@ -1,0 +1,32 @@
+@namespace AntDesign
+@typeparam TItem
+
+<CascadingValue Value="Node" Name="SelfNode">
+    <div @attributes="Node.AdditionalAttributes" @key="Context.NodeId" class="@Node.NodeClass" style="@Node.Style">
+        <TreeIndent TreeLevel="@Context.Level" TItem="TItem"></TreeIndent>
+
+        @if (TreeComponent.ShowExpand)
+        {
+            <TreeNodeSwitcher OnSwitcherClick="OnSwitcherClick" TItem="TItem"></TreeNodeSwitcher>
+        }
+
+        @if (Node.Checkable)
+        {
+            <TreeNodeCheckbox OnCheckBoxClick="Node.OnCheckBoxClick" TItem="TItem"></TreeNodeCheckbox>
+        }
+
+        <TreeNodeTitle TItem="TItem"></TreeNodeTitle>
+    </div>
+</CascadingValue>
+
+@code {
+    [CascadingParameter(Name = "Tree")]
+    private Tree<TItem> TreeComponent { get; set; }
+
+    [Parameter, EditorRequired]
+    public TreeNodeRenderContext<TItem> Context { get; set; }
+
+    private TreeNode<TItem> Node => TreeComponent.GetNodeById(Context.NodeId);
+
+    private void OnSwitcherClick(MouseEventArgs args) => Node.OnSwitcherClick(args);
+}

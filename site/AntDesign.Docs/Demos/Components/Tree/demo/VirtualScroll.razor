@@ -1,5 +1,21 @@
-﻿<h3>VirtualScroll</h3>
+﻿@using System.Collections.Generic
+@using System.Linq
+
+<p>Scroll the list below to explore 10,000 tree nodes rendered with virtualization.</p>
+
+<div style="height: 280px; overflow: auto; border: 1px solid #f0f0f0;">
+    <Tree TItem="TreeItem"
+          DataSource="_items"
+          Virtualize="true"
+          ItemSize="24"
+          TitleExpression="node => node.DataItem.Title"
+          KeyExpression="node => node.DataItem.Key" />
+</div>
 
 @code {
+    private readonly List<TreeItem> _items = Enumerable.Range(1, 10_000)
+        .Select(index => new TreeItem($"node-{index}", $"Node {index}"))
+        .ToList();
 
+    private sealed record TreeItem(string Key, string Title);
 }

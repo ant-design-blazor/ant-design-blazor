@@ -8,6 +8,48 @@
     };
 
     [Fact]
+    public async Task Virtualized_tree_keeps_all_nodes_and_updates_visible_nodes_on_expand()
+    {
+        JSInterop.SetupVoid("Blazor._internal.Virtualize.init", _ => true);
+        var data = new List<Item>
+        {
+            new("Parent")
+            {
+                Children = new List<Item> { new("Child"), new("Second child") }
+            },
+            new("Other root")
+        };
+
+        var cut = Render<Tree<Item>>(@<Tree TItem="Item"
+            DataSource="data"
+            ChildrenExpression="node => node.DataItem.Children"
+            Virtualize="true" />);
+
+        var virtualize = cut.FindComponent<Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize<TreeNode<Item>>>();
+        cut.Instance.AllNodes.Should().HaveCount(4, "virtualization must retain the complete node model");
+        cut.Instance.VisibleNodes.Should().HaveCount(2, "collapsed descendants should not occupy virtual rows");
+        virtualize.Instance.Items.Should().HaveCount(2, "the virtualizer should receive visible nodes after node registration");
+
+        await cut.InvokeAsync(() => cut.Instance.AllNodes.First().Expand(true));
+
+        cut.Instance.VisibleNodes.Should().HaveCount(4, "expanding a parent should add its descendants to the virtual list");
+        virtualize.Instance.Items.Should().HaveCount(4, "the virtualizer should refresh after a node expands");
+    }
+
+    [Fact]
+    public void Virtualized_tree_supplies_a_large_flat_data_source()
+    {
+        JSInterop.SetupVoid("Blazor._internal.Virtualize.init", _ => true);
+        var data = Enumerable.Range(0, 200).Select(index => new Item($"Node {index}")).ToList();
+
+        var cut = Render<Tree<Item>>(@<Tree TItem="Item" DataSource="data" Virtualize="true" />);
+
+        cut.Instance.AllNodes.Should().HaveCount(200, "the tree model should keep every item");
+        cut.FindComponent<Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize<TreeNode<Item>>>()
+            .Instance.Items.Should().HaveCount(200, "the virtualizer should receive the complete visible source");
+    }
+
+    [Fact]
     public async Task Parent_MoveDown_item_mutate_datasource()
     {
         var data = new List<Item>

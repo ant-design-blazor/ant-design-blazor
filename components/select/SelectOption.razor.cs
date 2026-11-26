@@ -30,6 +30,7 @@ namespace AntDesign
         /// and it will be assigned to the underlying SelectOptionItem.LabelTemplate so the Select's
         /// selected-item display can reuse it when Select.LabelTemplate is not set.
         /// </summary>
+        [PublicApi("1.5.0")]
         [Parameter]
         public RenderFragment<TItem> ChildContent { get; set; }
 
@@ -94,13 +95,6 @@ namespace AntDesign
                 _itemSet = true;
             }
         }
-
-        /// <summary>
-        /// Gets or sets the content to be rendered inside the option.
-        /// </summary>
-        [PublicApi("1.5.0")]
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
 
         #endregion
 

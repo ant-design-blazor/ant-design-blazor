@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
+    public readonly record struct TreeNodeRenderContext<TItem>(TItem DataItem, int Level, long NodeId);
+
     /**
     <summary>
     <para>A hierarchical list structure component.</para>
@@ -55,6 +57,90 @@ namespace AntDesign
         private ConcurrentDictionary<long, TreeNode<TItem>> _checkedNodes = new ConcurrentDictionary<long, TreeNode<TItem>>();
 
         private bool _nodeHasChanged;
+        private bool _virtualTreeNeedsRefresh;
+        private bool _dataSourceNodesDirty = true;
+        private bool _dataSourceReferenceChanged;
+
+        /// <summary>Render visible nodes through Blazor's virtualized list.</summary>
+        [Parameter]
+        public bool Virtualize { get; set; }
+
+        /// <summary>Estimated height of one tree row when virtualization is enabled.</summary>
+        [Parameter]
+        public float ItemSize { get; set; } = 24;
+
+        internal List<TreeNode<TItem>> VisibleNodes => _allNodes.Where(node => node.RealDisplay).ToList();
+
+        internal List<TreeNodeRenderContext<TItem>> VisibleRenderItems
+        {
+            get
+            {
+                EnsureDataSourceNodes();
+                return _allNodes.Where(node => node.RealDisplay)
+                    .Select(node => new TreeNodeRenderContext<TItem>(node.DataItem, node.TreeLevel, node.NodeId))
+                    .ToList();
+            }
+        }
+
+        private void EnsureDataSourceNodes()
+        {
+            if (!_dataSourceNodesDirty)
+                return;
+
+            if (_allNodes.Count > 0 && !_dataSourceReferenceChanged)
+            {
+                CachedSelectedKeys ??= _allNodes.Where(node => node.Selected).Select(node => node.Key).ToArray();
+                CachedCheckedKeys ??= _allNodes.Where(node => node.Checked).Select(node => node.Key).ToArray();
+                CachedExpandedKeys ??= _allNodes.Where(node => node.Expanded).Select(node => node.Key).ToArray();
+            }
+
+            _allNodes.Clear();
+            ChildNodes.Clear();
+
+            if (DataSource != null)
+            {
+                foreach (var item in DataSource)
+                    CreateDataSourceNode(item, null);
+            }
+
+            _dataSourceNodesDirty = false;
+            _dataSourceReferenceChanged = false;
+            _virtualTreeNeedsRefresh = false;
+            CachedSelectedKeys = null;
+            CachedCheckedKeys = null;
+            CachedExpandedKeys = null;
+
+            if (!string.IsNullOrWhiteSpace(_searchValue))
+                SearchNodes();
+        }
+
+        private TreeNode<TItem> CreateDataSourceNode(TItem item, TreeNode<TItem> parent)
+        {
+            var node = new TreeNode<TItem>();
+            node.InitializeDataSourceNode(this, parent, item);
+
+            var children = ChildrenExpression?.Invoke(node);
+            if (children != null)
+            {
+                foreach (var child in children)
+                    CreateDataSourceNode(child, node);
+            }
+
+            return node;
+        }
+
+        internal void RefreshDataSourceView()
+        {
+            if (!_dataSourceNodesDirty)
+                StateHasChanged();
+        }
+
+        internal void InvalidateDataSourceNodes()
+        {
+            _dataSourceNodesDirty = true;
+            _dataSourceReferenceChanged = false;
+            StateHasChanged();
+        }
 
         #endregion fields
 
@@ -192,6 +278,7 @@ namespace AntDesign
         {
             _allNodes.Add(treeNode);
             _nodeHasChanged = true;
+            _virtualTreeNeedsRefresh = true;
             CallAfterRender(() =>
             {
                 if (_nodeHasChanged)
@@ -585,18 +672,37 @@ namespace AntDesign
         [Parameter]
         public string MatchedClass { get; set; }
 
+        private bool _hideUnmatched;
+
         [Parameter]
-        public bool HideUnmatched { get; set; }
+        public bool HideUnmatched
+        {
+            get => _hideUnmatched;
+            set
+            {
+                if (value != _hideUnmatched)
+                {
+                    _hideUnmatched = value;
+                    SearchNodes();
+                }
+            }
+        }
 
         private void SearchNodes()
         {
+            var allList = _allNodes.ToList();
+            allList.ForEach(m =>
+            {
+                m.Matched = false;
+                m.Hidden = false;
+            });
+
             if (string.IsNullOrWhiteSpace(_searchValue))
             {
-                _allNodes.ForEach(m => { _ = m.Expand(true); m.Matched = false; m.Hidden = false; });
+                allList.ForEach(m => _ = m.Expand(true));
                 return;
             }
 
-            var allList = _allNodes.ToList();
             List<TreeNode<TItem>> searchDatas = null, exceptList = null;
 
             if (SearchExpression != null)
@@ -616,7 +722,6 @@ namespace AntDesign
                 exceptList?.ForEach(m =>
                 {
                     _ = m.Expand(false);
-                    m.Matched = false;
                     if (HideUnmatched)
                         m.Hidden = true;
                 });
@@ -634,7 +739,6 @@ namespace AntDesign
                 allList.ForEach(m =>
                 {
                     _ = m.Expand(expand);
-                    m.Matched = false;
                     m.Hidden = hide;
                 });
             }
@@ -648,8 +752,20 @@ namespace AntDesign
         /// Datasource for the tree. Can be a list of any custom object type by providing the expressions to get children, leafs, titles, etc. Use either this or <see cref="ChildContent"/>
         /// Use either this, <see cref="Nodes"/>, or <see cref="ChildContent"/>
         /// </summary>
+        private IEnumerable<TItem> _dataSource;
+
         [Parameter]
-        public IEnumerable<TItem> DataSource { get; set; }
+        public IEnumerable<TItem> DataSource
+        {
+            get => _dataSource;
+            set
+            {
+                _dataSourceReferenceChanged = !ReferenceEquals(_dataSource, value);
+                _dataSource = value;
+                if (_dataSourceReferenceChanged)
+                    _dataSourceNodesDirty = true;
+            }
+        }
 
         /// <summary>
         /// Specifies a method that returns the text of the node.
@@ -678,8 +794,21 @@ namespace AntDesign
         /// <summary>
         /// Specifies a method to return the children of a node
         /// </summary>
+        private Func<TreeNode<TItem>, IEnumerable<TItem>> _childrenExpression;
+
         [Parameter]
-        public Func<TreeNode<TItem>, IEnumerable<TItem>> ChildrenExpression { get; set; }
+        public Func<TreeNode<TItem>, IEnumerable<TItem>> ChildrenExpression
+        {
+            get => _childrenExpression;
+            set
+            {
+                if (!Equals(_childrenExpression, value))
+                {
+                    _childrenExpression = value;
+                    _dataSourceNodesDirty = true;
+                }
+            }
+        }
 
         /// <summary>
         /// Specifies a method to return a disabled node
@@ -965,6 +1094,8 @@ namespace AntDesign
         /// <param name="key">Key</param>
         public TreeNode<TItem> GetNode(string key) => _allNodes.FirstOrDefault(x => x.Key == key);
 
+        internal TreeNode<TItem> GetNodeById(long nodeId) => _allNodes.FirstOrDefault(node => node.NodeId == nodeId);
+
         /// <summary>
         /// Find Node
         /// </summary>
@@ -1092,6 +1223,11 @@ namespace AntDesign
             {
                 node.ParentNode?.DoExpand(true);
             }
+
+            if (Virtualize)
+            {
+                StateHasChanged();
+            }
         }
 
         #endregion Expand
@@ -1125,6 +1261,14 @@ namespace AntDesign
                 if (_allNodes.FirstOrDefault(n => n.Expanded) != null)
                     _ = UpdateExpandedKeys();
                 _updateAllKeysAfterRender = false;
+            }
+
+            if (Virtualize && _virtualTreeNeedsRefresh)
+            {
+                // Child TreeNode components register during rendering. Render once more so the
+                // virtualizer receives the complete, flattened node list after registration.
+                _virtualTreeNeedsRefresh = false;
+                StateHasChanged();
             }
 
             base.OnAfterRender(firstRender);

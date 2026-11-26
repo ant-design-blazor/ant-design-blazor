@@ -2,7 +2,7 @@
 @inherits AntDomComponentBase
 @typeparam TItem
 
-@if (RealDisplay)
+@if (RealDisplay && !TreeComponent.Virtualize)
 {
     <CascadingValue Value="this" Name="SelfNode">
         <div @key="NodeId" class="@ClassMapper.Class" style="@Style">
