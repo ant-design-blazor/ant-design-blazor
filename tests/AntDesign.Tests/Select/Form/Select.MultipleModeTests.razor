@@ -5,13 +5,16 @@
     {
         [MinLength(1, ErrorMessage = "At least 1 is required")]
         public IEnumerable<string> Name { get; set; } = Array.Empty<string>();
+
+        [Required(ErrorMessage = "At least 1 is required")]
+        public IEnumerable<string> Selection { get; set; }
     }
     Persons _model = new();
     IEnumerable<string> _datasource = new List<string>{ "Lucy", "John", "Jack", "Emily" };	
 
 #if NET6_0_OR_GREATER
     [Fact]
-	public void Select_Validation_Shown() 
+	public async Task Select_Revalidates_When_Selection_Changes()
     {
         //Arrange
         JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
@@ -23,7 +26,7 @@
 			@<Form Model="@_model" ValidateOnChange="@true">       
 				<FormItem Label="Allowed Email Domains">
 						<Select TItem="string" TItemValue="string" Mode="SelectMode.Multiple"
-								@bind-Values=@context.Name>
+								@bind-Values=@context.Selection>
 							<SelectOptions>
 								@foreach (var item in _datasource)
 								{
@@ -34,11 +37,25 @@
 				</FormItem>
 			</Form>
 		);
-        //Act
-		cut.InvokeAsync(() =>  cut.Instance.Validate());
-		var validationError = cut.Find("div.ant-form-item-explain-error");
-		//Assert		
-		validationError.Text().Trim().Should().Be("At least 1 is required");
+
+        await cut.InvokeAsync(() => cut.Instance.Validate());
+        const string errorSelector = "div.ant-form-item-explain-error";
+        cut.Find(errorSelector).Text().Trim().Should().Be("At least 1 is required");
+
+        await cut.InvokeAsync(() => cut.Find(".ant-select-item-option").Click());
+        cut.WaitForAssertion(() =>
+        {
+            _model.Selection.Should().Equal("Lucy");
+            cut.FindAll(errorSelector).Should().BeEmpty();
+        });
+
+        await cut.InvokeAsync(() => cut.Find(".ant-select-selection-item-remove").MouseDown());
+        cut.WaitForAssertion(() =>
+        {
+            _model.Selection.Should().BeEmpty();
+            cut.FindAll(errorSelector).Should().ContainSingle()
+                .Which.Text().Trim().Should().Be("At least 1 is required");
+        });
 	}
 
     [Fact]
