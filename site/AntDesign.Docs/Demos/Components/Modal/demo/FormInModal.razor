@@ -9,9 +9,11 @@
 </Button>
 
 <Modal Title="@("BasicModal")"
-       Visible="@_visible"
-       OnOk="HandleOk"
-       OnCancel="HandleCancel">
+       @bind-Visible="_visible"
+       @ref="_modal"
+       CloseOnOk="false"
+       ConfirmLoading="_submitting"
+       OnOk="HandleOk">
          @FormTemplate()
 </Modal>
 
@@ -39,6 +41,7 @@
 
     bool _visible = false;
     bool _submitting = false;
+    private Modal _modal;
     private Form<Model> _form;
 
     private Model model = new Model();
@@ -63,29 +66,27 @@
     /// <param name="e"></param>
     private async Task HandleOk(MouseEventArgs e)
     {
-        if (!_form.Validate())
-        {
-            return;
-        }
         _submitting = true;
-        await Task.Delay(1000);
-        _form.Submit();
-        _visible = false;
-    }
-
-    private void HandleCancel(MouseEventArgs e)
-    {
-        _visible = false;
+        try
+        {
+            await _form.SubmitAsync();
+        }
+        finally
+        {
+            _submitting = false;
+        }
     }
 
     /// <summary>
     /// when form is submited, close the modal
     /// </summary>
     /// <param name="args"></param>
-    private void OnFinish(EditContext editContext)
+    private async Task OnFinish(EditContext editContext)
     {
-        _submitting = false;
-        _visible = false;
+        if (_visible)
+        {
+            await _modal.CloseAsync();
+        }
     }
 
     private void OnFinishFailed(EditContext editContext)
