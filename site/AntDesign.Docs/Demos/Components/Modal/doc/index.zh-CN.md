@@ -24,6 +24,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/3StSdUlSH/Modal.svg
 | Centered | 垂直居中展示 Modal | bool | `false` |
 | Closable | 是否显示右上角的关闭按钮 | bool | true |
 | CloseIcon | 自定义关闭图标 | RenderFragment | - |
+| CloseOnOk | 使用 `@bind-Visible` 时，点击确定是否自动关闭。设为 `false` 后可在 `OnOk` 中校验，通过后调用 `CloseAsync()`。 | bool | true |
 | ConfirmLoading | 确定按钮 loading | bool | false |
 | DestroyOnClose | 关闭时销毁 Modal 里的子元素 | bool | false |
 | Header | 头部内容，当不需要头部时，可以设置为`null` | RenderFragment | - |

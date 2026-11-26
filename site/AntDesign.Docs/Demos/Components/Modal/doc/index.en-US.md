@@ -21,6 +21,7 @@ When requiring users to interact with the application, but without jumping to a 
 | Centered          | Centered Modal                                               | bool                          | false         |
 | Closable          | Whether a close (x) button is  visible on top right of the modal dialog or not | bool                          | true          |
 | CloseIcon         | custom close icon                                            | RenderFragment                | -             |
+| CloseOnOk         | Whether OK automatically closes a modal using `@bind-Visible`. Set to `false` to validate in `OnOk` and call `CloseAsync()` after success. | bool | true |
 | ConfirmLoading    | Whether to apply loading  visual effect for OK button or not | bool                          | false         |
 | DestroyOnClose    | Whether to unmount child  components on onClose              | bool                          | false         |
 | Header            | Header content, set as Header="null" when you don't need default header      | RenderFragment                | -             |

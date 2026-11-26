@@ -95,6 +95,14 @@ namespace AntDesign
         public RenderFragment CloseIcon { get; set; } = DialogOptions.DefaultCloseIcon;
 
         /// <summary>
+        /// Whether clicking OK automatically requests closing a modal with a bound <see cref="Visible"/> parameter.
+        /// Set this to <c>false</c> to validate or save in <see cref="OnOk"/> before calling <see cref="CloseAsync"/>.
+        /// </summary>
+        /// <default value="true" />
+        [Parameter]
+        public bool CloseOnOk { get; set; } = true;
+
+        /// <summary>
         /// Whether to apply loading visual effect for OK button or not
         /// </summary>
         [Parameter]
@@ -322,6 +330,48 @@ namespace AntDesign
         private DialogWrapper _dialogWrapper;
 #pragma warning restore 649
 
+        private bool _closedProgrammatically;
+        private bool IsVisible => Visible && !_closedProgrammatically;
+
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+
+            if (!Visible || VisibleChanged.HasDelegate)
+            {
+                _closedProgrammatically = false;
+            }
+        }
+
+        /// <summary>
+        /// Close the modal programmatically. When <see cref="Visible"/> is bound, the binding receives the new value.
+        /// </summary>
+        /// <remarks>With one-way visibility, set <see cref="Visible"/> to false and then true to reopen the modal.</remarks>
+        public Task CloseAsync()
+        {
+            return InvokeAsync(async () =>
+            {
+                if (IsDisposed || !IsVisible)
+                {
+                    return;
+                }
+
+                if (ModalRef != null)
+                {
+                    await ModalRef.CloseAsync();
+                }
+                else if (VisibleChanged.HasDelegate)
+                {
+                    await VisibleChanged.InvokeAsync(false);
+                }
+                else
+                {
+                    _closedProgrammatically = true;
+                    StateHasChanged();
+                }
+            });
+        }
+
         private DialogOptions BuildDialogOptions()
         {
             DialogOptions options = new DialogOptions()
@@ -385,7 +435,7 @@ namespace AntDesign
                     {
                         await (ModalRef?.OnOk?.Invoke() ?? Task.CompletedTask);
 
-                        if (VisibleChanged.HasDelegate)
+                        if (CloseOnOk && VisibleChanged.HasDelegate)
                         {
                             await VisibleChanged.InvokeAsync(false);
                         }
