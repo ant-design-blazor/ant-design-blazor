@@ -1,0 +1,61 @@
+@namespace AntDesign.Tests.Table
+
+<Table DataSource="_items" ScrollX="1000" ScrollY="160" ScrollBarWidth="@ScrollBarWidth" Quick="Quick" HidePagination>
+    <ColumnDefinitions>
+        <PropertyColumn Property="item => item.Code" Width="100" Fixed="ColumnFixPlacement.Left" />
+        <PropertyColumn Property="item => item.Name" Width="120" Fixed="ColumnFixPlacement.Left" />
+        <PropertyColumn Property="item => item.Address" Width="580" />
+        <PropertyColumn Property="item => item.City" Width="110" Fixed="ColumnFixPlacement.Right" />
+        <PropertyColumn Property="item => item.Country" Width="90" Fixed="ColumnFixPlacement.Right" />
+    </ColumnDefinitions>
+    <HeaderTemplate>
+        @if (ExpiringRowSpan)
+        {
+            <TableRow>
+                <SimpleTableHeader RowSpan="2">Code</SimpleTableHeader>
+                <SimpleTableHeader>Name</SimpleTableHeader>
+                <SimpleTableHeader>Address</SimpleTableHeader>
+                <SimpleTableHeader>City</SimpleTableHeader>
+                <SimpleTableHeader RowSpan="3">Country</SimpleTableHeader>
+            </TableRow>
+            <TableRow>
+                <SimpleTableHeader RowSpan="2">Full name</SimpleTableHeader>
+                <SimpleTableHeader RowSpan="2">Street address</SimpleTableHeader>
+                <SimpleTableHeader>City</SimpleTableHeader>
+            </TableRow>
+            <TableRow>
+                <SimpleTableHeader>Code details</SimpleTableHeader>
+                <SimpleTableHeader>City details</SimpleTableHeader>
+            </TableRow>
+        }
+        else
+        {
+            <TableRow>
+                <SimpleTableHeader ColSpan="2">Identity</SimpleTableHeader>
+                <SimpleTableHeader RowSpan="2">Address</SimpleTableHeader>
+                <SimpleTableHeader ColSpan="2">Location</SimpleTableHeader>
+            </TableRow>
+            <TableRow>
+                <SimpleTableHeader>Code</SimpleTableHeader>
+                <SimpleTableHeader>Name</SimpleTableHeader>
+                <SimpleTableHeader>City</SimpleTableHeader>
+                <SimpleTableHeader>Country</SimpleTableHeader>
+            </TableRow>
+        }
+    </HeaderTemplate>
+</Table>
+
+@code {
+    [Parameter]
+    public bool ExpiringRowSpan { get; set; }
+
+    [Parameter]
+    public string? ScrollBarWidth { get; set; } = "15";
+
+    [Parameter]
+    public bool Quick { get; set; }
+
+    private record Item(string Code, string Name, string Address, string City, string Country);
+
+    private readonly Item[] _items = { new("C1", "Dana", "Example Street", "Paris", "France") };
+}

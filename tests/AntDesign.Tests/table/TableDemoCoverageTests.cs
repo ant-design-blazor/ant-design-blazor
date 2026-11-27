@@ -180,6 +180,62 @@ namespace AntDesign.Tests.Table
         }
 
         [Fact]
+        public void Grouped_header_reuses_columns_after_row_spans_end()
+        {
+            var cut = Context.RenderComponent<GroupedFixedTable>(parameters => parameters
+                .Add(table => table.ExpiringRowSpan, true));
+
+            var finalRow = cut.FindAll("thead tr:last-child th:not(.ant-table-cell-scrollbar)");
+            Assert.Collection(finalRow,
+                code =>
+                {
+                    Assert.Equal("Code details", code.TextContent.Trim());
+                    Assert.Contains("ant-table-cell-fix-left", code.ClassList);
+                    Assert.Contains("left: 0px", code.GetAttribute("style"));
+                },
+                city =>
+                {
+                    Assert.Equal("City details", city.TextContent.Trim());
+                    Assert.Contains("ant-table-cell-fix-right", city.ClassList);
+                    Assert.Contains("right: calc(90px + 15px)", city.GetAttribute("style"));
+                });
+        }
+
+        [Fact]
+        public void Right_fixed_group_excludes_its_own_columns_from_the_sticky_offset()
+        {
+            var cut = Context.RenderComponent<GroupedFixedTable>();
+            var group = cut.FindAll("thead th").Single(header => header.TextContent.Trim() == "Location");
+
+            Assert.Contains("ant-table-cell-fix-right", group.ClassList);
+            Assert.Contains("right: 15px", group.GetAttribute("style"));
+        }
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public void Right_fixed_headers_and_header_gutter_use_the_measured_scrollbar_width(bool quick)
+        {
+            JSInterop.SetupVoid(JSInteropConstants.BindTableScroll, _ => true).SetVoidResult();
+            var measurement = JSInterop.Setup<double>(JSInteropConstants.DomMainpulationHelper.GetScrollBarSize, _ => true);
+            var cut = Context.RenderComponent<GroupedFixedTable>(parameters => parameters
+                .Add(table => table.Quick, quick)
+                .Add(table => table.ScrollBarWidth, (string?)null));
+
+            measurement.SetResult(0);
+
+            cut.WaitForAssertion(() =>
+            {
+                var headers = cut.FindAll("thead th.ant-table-cell-fix-right:not(.ant-table-cell-scrollbar)")
+                    .ToDictionary(header => header.TextContent.Trim(), header => header.GetAttribute("style"));
+                Assert.Contains("right: 0px", headers["Location"]);
+                Assert.Contains("right: calc(90px + 0px)", headers["City"]);
+                Assert.Contains("right: 0px", headers["Country"]);
+                Assert.Contains("width: 0px", cut.Find(".ant-table-header colgroup col:last-child").GetAttribute("style"));
+            });
+        }
+
+        [Fact]
         public void Custom_row_and_cell_attributes_are_applied()
         {
             // CustomRowStyle, OnRowAndOnCell.

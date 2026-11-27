@@ -1125,11 +1125,26 @@ namespace AntDesign
                     await JsInvokeAsync(JSInteropConstants.BindTableScroll, _wrapperRef, _tableBodyRef, _tableRef, _tableHeaderRef, ScrollX != null, ScrollY != null, Resizable, AutoHeight);
                 }
 
-                if (ScrollY != null && ScrollY != null && _scrollBarWidth == null)
+                if (ScrollY != null && _scrollBarWidth == null)
                 {
+                    var initialWidth = ((ITable)this).ScrollBarWidth;
                     var scrollBarSize = await ClientDimensionService.GetScrollBarSizeAsync();
                     _scrollBarWidth = $"{scrollBarSize}px";
-                    ColumnContext.HeaderColumns.LastOrDefault()?.UpdateFixedStyle();
+
+                    if (_scrollBarWidth != initialWidth)
+                    {
+                        if (ScrollX != null)
+                        {
+                            var rightHeaders = ColumnContext.HeaderColumns
+                                .Where(column => column.Fixed == ColumnFixPlacement.Right).ToArray();
+                            foreach (var column in rightHeaders)
+                            {
+                                column.UpdateFixedStyle();
+                            }
+                        }
+
+                        ForceReRender();
+                    }
                 }
 
                 // To handle the case where JS is called asynchronously and does not render when there is a fixed header or are any fixed columns.
