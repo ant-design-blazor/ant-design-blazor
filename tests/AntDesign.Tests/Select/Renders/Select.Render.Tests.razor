@@ -25,6 +25,7 @@
     {
         JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
                     .SetResult(new AntDesign.JsInterop.DomRect());  
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
     }
 
     [Fact]
@@ -52,6 +53,281 @@
 
         // Assert
         arrow.Should().NotBeNull();
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void EnumSelect_Multiple_renders_one_tag_per_value(bool setInitialValues)
+    {
+        var values = new[] { City.Beijing, City.Zhejiang, City.Beijing };
+        var cut = Render<EnumSelect<City>>(
+            @<EnumSelect TEnum="City" Mode="SelectMode.Multiple" Values="@(setInitialValues ? values : null)" />);
+
+        if (!setInitialValues)
+        {
+            cut.SetParametersAndRender(parameters => parameters.Add(p => p.Values, values));
+        }
+
+        cut.FindAll(".ant-select-selection-item-content")
+            .Select(tag => tag.TextContent.Trim()).Should().Equal("Beijing", "Zhejiang");
+        var option = cut.FindAll(".ant-select-item-option-selected")
+            .Single(item => item.TextContent.Trim() == "Beijing");
+
+        option.Click();
+
+        cut.Instance.Values.Should().Equal(City.Zhejiang);
+        cut.Render();
+        cut.FindAll(".ant-select-selection-item-content").Select(tag => tag.TextContent.Trim()).Should().Equal("Zhejiang");
+        cut.FindAll(".ant-select-item-option-selected").Select(item => item.TextContent.Trim()).Should().Equal("Zhejiang");
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void EnumSelect_Multiple_clears_selection_when_values_become_null(bool hideSelected)
+    {
+        var values = new[] { City.Beijing, City.Zhejiang };
+        var cut = Render<EnumSelect<City>>(
+            @<EnumSelect TEnum="City" Mode="SelectMode.Multiple" HideSelected="@hideSelected" Values="@values" />);
+        cut.FindAll(".ant-select-selection-item-content").Should().HaveCount(2);
+        cut.FindAll(".ant-select-item-option-selected").Should().HaveCount(2);
+
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.Values, null));
+
+        cut.FindAll(".ant-select-selection-item-content").Should().BeEmpty();
+        cut.FindAll(".ant-select-item-option-selected").Should().BeEmpty();
+        cut.FindAll(".ant-select-item-option").Should()
+            .OnlyContain(option => !(option.GetAttribute("style") ?? "").Contains("display:none"));
+        cut.Instance.Values.Should().BeNull();
+
+        cut.FindAll(".ant-select-item-option").Single(option => option.TextContent.Trim() == "Beijing").Click();
+
+        cut.Instance.Values.Should().Equal(City.Beijing);
+        cut.Render();
+        cut.FindAll(".ant-select-selection-item-content").Select(tag => tag.TextContent.Trim()).Should().Equal("Beijing");
+    }
+
+    [Fact]
+    public void Select_Multiple_clears_selected_option_with_null_value()
+    {
+        var dataSource = new[] { new PersonNullable(null, "Unassigned"), new PersonNullable("2", "Assigned") };
+        var values = new string?[] { null, "2" };
+        var cut = Render<Select<string?, PersonNullable>>(
+            @<Select TItemValue="string" TItem="PersonNullable" Mode="SelectMode.Multiple"
+                     DataSource="@dataSource" Values="@values"
+                     LabelName="@nameof(PersonNullable.Name)" ValueName="@nameof(PersonNullable.Id)" />);
+        cut.FindAll(".ant-select-item-option-selected").Should().HaveCount(2);
+
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.Values, null));
+
+        cut.FindAll(".ant-select-selection-item-content").Should().BeEmpty();
+        cut.FindAll(".ant-select-item-option-selected").Should().BeEmpty();
+    }
+
+    private static readonly PersonNullable[] DuplicateValueOptions =
+    {
+        new("1", "First"),
+        new("1", "Second"),
+        new("2", "Third"),
+    };
+
+    [Theory]
+    [InlineData("First", "Second")]
+    [InlineData("Second", "First")]
+    public void Select_Multiple_keeps_a_selected_label_for_the_remaining_option_after_data_source_refresh(
+        string removedLabel, string remainingLabel)
+    {
+        var values = new[] { "1" };
+        var cut = Render<Select<string, PersonNullable>>(
+            @<Select TItemValue="string" TItem="PersonNullable" Mode="SelectMode.Multiple"
+                     DataSource="@DuplicateValueOptions" Values="@values"
+                     LabelName="@nameof(PersonNullable.Name)" ValueName="@nameof(PersonNullable.Id)" />);
+        cut.FindAll(".ant-select-selection-item-content").Select(tag => tag.TextContent.Trim()).Should().Equal("Second");
+
+        var refreshedOptions = DuplicateValueOptions.Where(option => option.Name != removedLabel).ToArray();
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.DataSource, refreshedOptions));
+
+        cut.Instance.Values.Should().Equal("1");
+        cut.FindAll(".ant-select-item-option-selected").Select(option => option.TextContent.Trim()).Should().Equal(remainingLabel);
+        cut.FindAll(".ant-select-selection-item-content").Select(tag => tag.TextContent.Trim()).Should().Equal(remainingLabel);
+        cut.Instance.SelectedOptionItems["1"].Label.Should().Be(remainingLabel);
+    }
+
+    [Fact]
+    public void Select_Tags_clears_all_options_for_a_value_removed_from_the_binding()
+    {
+        var values = new[] { "1" };
+        var cut = Render<Select<string, PersonNullable>>(
+            @<Select TItemValue="string" TItem="PersonNullable" Mode="SelectMode.Tags"
+                     DataSource="@DuplicateValueOptions" Values="@values"
+                     LabelName="@nameof(PersonNullable.Name)" ValueName="@nameof(PersonNullable.Id)" />);
+        cut.FindAll(".ant-select-item-option-selected").Select(option => option.TextContent.Trim())
+            .Should().Equal("First", "Second");
+
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.Values, new[] { "2" }));
+
+        cut.FindAll(".ant-select-item-option-selected").Select(option => option.TextContent.Trim()).Should().Equal("Third");
+        cut.FindAll(".ant-select-selection-item-content").Select(tag => tag.TextContent.Trim()).Should().Equal("Third");
+    }
+
+    [Theory]
+    [InlineData(SelectMode.Multiple, true)]
+    [InlineData(SelectMode.Multiple, false)]
+    [InlineData(SelectMode.Tags, true)]
+    [InlineData(SelectMode.Tags, false)]
+    public void Select_does_not_reapply_default_values_after_clearing_a_bound_selection(SelectMode mode, bool clearWithNull)
+    {
+        var dataSource = new[] { "Default", "Controlled" };
+        var defaultValues = new[] { "Default" };
+        var values = new[] { "Controlled" };
+        var cut = Render<Select<string, string>>(
+            @<Select TItemValue="string" TItem="string" Mode="@mode"
+                     DataSource="@dataSource" DefaultValues="@defaultValues" Values="@values" />);
+        cut.FindAll(".ant-select-item-option-selected").Select(option => option.TextContent.Trim()).Should().Equal("Controlled");
+
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.Values, clearWithNull ? null : Array.Empty<string>()));
+
+        cut.FindAll(".ant-select-item-option-selected").Should().BeEmpty();
+        cut.FindAll(".ant-select-selection-item-content").Should().BeEmpty();
+        if (clearWithNull)
+            cut.Instance.Values.Should().BeNull();
+        else
+            cut.Instance.Values.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void Select_applies_default_values_at_initialization_when_values_are_unset()
+    {
+        var dataSource = new[] { "Default", "Other" };
+        var defaultValues = new[] { "Default" };
+        var cut = Render<Select<string, string>>(
+            @<Select TItemValue="string" TItem="string" Mode="SelectMode.Multiple"
+                     DataSource="@dataSource" DefaultValues="@defaultValues" />);
+
+        cut.FindAll(".ant-select-item-option-selected").Select(option => option.TextContent.Trim()).Should().Equal("Default");
+        cut.Instance.Values.Should().Equal("Default");
+    }
+
+    private sealed class SelectFormModel
+    {
+        public IEnumerable<string> Selection { get; set; } = new[] { "Controlled" };
+    }
+
+    [Fact]
+    public async Task Form_reset_still_applies_default_values_to_a_bound_multiple_select()
+    {
+        var model = new SelectFormModel();
+        var dataSource = new[] { "Default", "Controlled" };
+        var defaultValues = new[] { "Default" };
+        var cut = Render<Form<SelectFormModel>>(
+            @<Form Model="@model">
+                <FormItem>
+                    <Select TItemValue="string" TItem="string" Mode="SelectMode.Multiple"
+                            DataSource="@dataSource" DefaultValues="@defaultValues" @bind-Values="@model.Selection" />
+                </FormItem>
+            </Form>);
+        cut.FindAll(".ant-select-selection-item-content").Select(tag => tag.TextContent.Trim()).Should().Equal("Controlled");
+
+        await cut.InvokeAsync(cut.Instance.Reset);
+        cut.Render();
+
+        model.Selection.Should().Equal("Default");
+        cut.FindAll(".ant-select-selection-item-content").Select(tag => tag.TextContent.Trim()).Should().Equal("Default");
+    }
+
+    [Fact]
+    public void Select_Multiple_initializes_every_selected_value_with_duplicate_options()
+    {
+        var values = new[] { "1", "2", "1" };
+        var cut = Render<Select<string, PersonNullable>>(
+            @<Select TItemValue="string" TItem="PersonNullable" Mode="SelectMode.Multiple"
+                     DataSource="@DuplicateValueOptions" Values="@values"
+                     LabelName="@nameof(PersonNullable.Name)" ValueName="@nameof(PersonNullable.Id)" />);
+
+        cut.Instance.Values.Should().Equal("1", "2");
+        cut.FindAll(".ant-select-item-option-selected").Select(option => option.TextContent.Trim())
+            .Should().Equal("First", "Second", "Third");
+        cut.FindAll(".ant-select-selection-item-content").Should().HaveCount(2);
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void Select_Multiple_clears_all_selected_options_with_the_same_value(bool clearWithNull)
+    {
+        var values = new[] { "1", "2" };
+        var cut = Render<Select<string, PersonNullable>>(
+            @<Select TItemValue="string" TItem="PersonNullable" Mode="SelectMode.Multiple"
+                     DataSource="@DuplicateValueOptions" Values="@values"
+                     LabelName="@nameof(PersonNullable.Name)" ValueName="@nameof(PersonNullable.Id)" />);
+        cut.FindAll(".ant-select-item-option-selected").Select(option => option.TextContent.Trim())
+            .Should().Contain("First", "Second");
+
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.Values, clearWithNull ? null : Array.Empty<string>()));
+
+        cut.FindAll(".ant-select-selection-item-content").Should().BeEmpty();
+        cut.FindAll(".ant-select-item-option-selected").Should().BeEmpty();
+        cut.FindAll(".ant-select-item-option").Should().HaveCount(DuplicateValueOptions.Length);
+    }
+
+    [Fact]
+    public void Select_Multiple_reports_value_when_a_duplicate_option_is_reselected_after_clearing()
+    {
+        var values = new[] { "1", "2" };
+        IEnumerable<string>? changedValues = null;
+        var cut = Render<Select<string, PersonNullable>>(
+            @<Select TItemValue="string" TItem="PersonNullable" Mode="SelectMode.Multiple"
+                     DataSource="@DuplicateValueOptions" Values="@values"
+                     LabelName="@nameof(PersonNullable.Name)" ValueName="@nameof(PersonNullable.Id)"
+                     ValuesChanged="@(selection => changedValues = selection)" />);
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.Values, null));
+
+        cut.FindAll(".ant-select-item-option").Single(option => option.TextContent.Trim() == "First").Click();
+
+        changedValues.Should().Equal("1");
+        cut.Render();
+        cut.FindAll(".ant-select-item-option-selected").Select(option => option.TextContent.Trim())
+            .Should().Equal("First", "Second");
+        cut.FindAll(".ant-select-selection-item-content").Select(tag => tag.TextContent.Trim()).Should().Equal("First");
+
+        cut.FindAll(".ant-select-item-option").Single(option => option.TextContent.Trim() == "Second").Click();
+
+        changedValues.Should().BeEmpty();
+        cut.Render();
+        cut.FindAll(".ant-select-item-option-selected").Should().BeEmpty();
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void EnumSelect_Multiple_restores_matching_options_when_values_become_null_during_search(bool useCustomFilter)
+    {
+        JSInterop.Mode = JSRuntimeMode.Loose;
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition { Placement = Placement.BottomLeft });
+
+        var values = new[] { City.Beijing, City.Zhejiang };
+        var cut = Render<EnumSelect<City>>(
+            @<EnumSelect TEnum="City" Mode="SelectMode.Multiple" HideSelected EnableSearch
+                         AutoClearSearchValue="false" SearchDebounceMilliseconds="0" Values="@values" />);
+        if (useCustomFilter)
+        {
+            cut.SetParametersAndRender(parameters => parameters.Add(p => p.FilterExpression,
+                (option, search) => option.Value == City.Beijing && search == "capital"));
+        }
+        var searchValue = useCustomFilter ? "capital" : "Beij";
+
+        cut.Find("input[type=search]").Input(searchValue);
+        cut.WaitForAssertion(() => cut.Instance.SelectOptionItems.Should().OnlyContain(option => option.IsHidden));
+
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.Values, null));
+
+        cut.FindAll(".ant-select-selection-item-content").Should().BeEmpty();
+        cut.FindAll(".ant-select-item-option-selected").Should().BeEmpty();
+        cut.WaitForAssertion(() => cut.FindAll(".ant-select-item-option")
+            .Where(option => !(option.GetAttribute("style") ?? "").Contains("display:none"))
+            .Select(option => option.TextContent.Trim()).Should().Equal("Beijing"));
     }
 
     [Fact]

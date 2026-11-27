@@ -280,6 +280,30 @@ namespace AntDesign
 
         private List<SelectOptionItem<TItemValue, TItem>> _cachedOrderedSelectedItems = null;
 
+        internal void RebuildSelectedOptionIndex()
+        {
+            var selectedOptions = SelectOptionItems.Where(option => option.IsSelected).ToArray();
+            var existingOptions = new HashSet<SelectOptionItem<TItemValue, TItem>>(selectedOptions);
+            foreach (var entry in SelectedOptionItems.ToArray())
+            {
+                if (!existingOptions.Contains(entry.Value))
+                {
+                    SelectedOptionItems.Remove(entry.Key);
+                }
+            }
+
+            var retainedValues = new HashSet<TItemValue>(SelectedOptionItems.Select(entry => entry.Key));
+            foreach (var option in selectedOptions)
+            {
+                if (!retainedValues.Contains(option.Value))
+                {
+                    SelectedOptionItems[option.Value] = option;
+                }
+            }
+
+            _cachedOrderedSelectedItems = null;
+        }
+
         internal virtual List<SelectOptionItem<TItemValue, TItem>> GetOrderedSelectedItems()
         {
             if (_cachedOrderedSelectedItems != null) return _cachedOrderedSelectedItems;
@@ -338,7 +362,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Get or set the selected values.
+        /// Get or set the selected values. Duplicate values are ignored.
         /// </summary>
         [Parameter]
         public virtual IEnumerable<TItemValue> Values
@@ -346,42 +370,19 @@ namespace AntDesign
             get => _selectedValues;
             set
             {
-                if (value != null)
+                if (ReferenceEquals(value, _selectedValues))
                 {
-                    if (_selectedValues != null)
-                    {
-                        var hasChanged = !value.SequenceEqual(_selectedValues);
-
-                        if (!hasChanged)
-                        {
-                            return;
-                        }
-
-                        _selectedValues = value.ToArray();
-                        _ = OnValuesChangeAsync(value);
-                    }
-                    else
-                    {
-                        _selectedValues = value.ToArray();
-
-                        _ = OnValuesChangeAsync(value);
-                    }
+                    return;
                 }
-                else
+
+                var selectedValues = value?.Distinct().ToArray();
+                if (selectedValues != null && _selectedValues != null && selectedValues.SequenceEqual(_selectedValues))
                 {
-                    // value is null
-                    if (_selectedValues != null)
-                    {
-                        _selectedValues = null;
-
-                        _ = OnValuesChangeAsync(null);
-                    }
-                    else
-                    {
-                        // Don't notify that the field changed (as both values are null)
-                        return;
-                    }
+                    return;
                 }
+
+                _selectedValues = selectedValues;
+                _ = OnValuesChangeAsync(selectedValues);
 
                 if (_isNotifyFieldChanged && Form?.ValidateOnChange == true && FieldIdentifier is { Model: not null, FieldName: not null })
                 {
@@ -591,35 +592,26 @@ namespace AntDesign
                 return;
             }
 
-            if (values == null)
+            var hasValues = values?.Any() == true;
+            if (hasValues && SelectOptionItems.Count == 0)
             {
-                await ValuesChanged.InvokeAsync(default);
-                await OnSelectedItemsChanged.InvokeAsync(default);
                 return;
             }
-            if (!SelectOptionItems.Any())
-            {
-                if (!values.Any())
-                {
-                    _cachedOrderedSelectedItems = null;
-                    if (ValuesChanged.HasDelegate)
-                        await ValuesChanged.InvokeAsync(Values);
-                    if (OnSelectedItemsChanged.HasDelegate)
-                        await OnSelectedItemsChanged.InvokeAsync(Enumerable.Empty<TItem>());
-                }
-                return;
-            }
+
             _cachedOrderedSelectedItems = null;
-            EvaluateValuesChangedOutsideComponent(values);
+            if (values != null || Mode != SelectMode.Default)
+            {
+                EvaluateValuesChangedOutsideComponent(values ?? Array.Empty<TItemValue>());
+            }
 
             if (ValuesChanged.HasDelegate)
-                await ValuesChanged.InvokeAsync(Values);
-            var orderedSelectedItems = GetOrderedSelectedItems();
+                await ValuesChanged.InvokeAsync(values == null ? null : Values);
             if (OnSelectedItemsChanged.HasDelegate)
-                await OnSelectedItemsChanged.InvokeAsync(orderedSelectedItems.Select(s => s.Item));
+                await OnSelectedItemsChanged.InvokeAsync(values == null ? null : GetOrderedSelectedItems().Select(item => item.Item));
 
             if (_dropDown != null && _dropDown.IsOverlayShow())
             {
+                RefreshComponentState();
                 //A delay forces a refresh better than StateHasChanged().
                 //For example when a tag is added that is causing SelectContent to grow,
                 //this Task.Delay will actually allow to reposition the Overlay to match
@@ -632,64 +624,117 @@ namespace AntDesign
         /// <summary>
         ///     When bind-Values is changed outside of the component, then component
         ///     selected items have to be reselected according to new values passed.
-        ///     TODO: (Perf) Consider using hash to identify if the passed values are different from currently selected.
         /// </summary>
         /// <param name="values">The values that need to be selected.</param>
         private void EvaluateValuesChangedOutsideComponent(IEnumerable<TItemValue> values)
         {
-            var newSelectedItems = new List<TItem>();
-            var deselectList = SelectedOptionItems.ToDictionary(item => item.Key, item => item.Value);
-            foreach (var value in values.ToList())
+            var selectedValues = new HashSet<TItemValue>(values);
+            if (Mode != SelectMode.Multiple)
             {
-                SelectOptionItem<TItemValue, TItem> result;
-                if (Mode == SelectMode.Multiple)
-                {
-                    result = SelectOptionItems.FirstOrDefault(x =>
-                        !x.IsSelected && EqualityComparer<TItemValue>.Default.Equals(x.Value, value));
-                    if (result != null && !result.IsDisabled)
-                    {
-                        result.IsSelected = true;
-                        SelectedOptionItems.Add(result.Value, result);
-                    }
-
-                    deselectList.Remove(value);
-                }
-                else
-                {
-                    result = SelectOptionItems.FirstOrDefault(x =>
-                        EqualityComparer<TItemValue>.Default.Equals(x.Value, value));
-                    if (result is null) //tag delivered from outside, needs to be added to the list of options
-                    {
-                        result = CreateSelectOptionItem(value.ToString(), true);
-                        result.IsSelected = true;
-                        AddedTags.Add(result);
-                        SelectOptionItems.Add(result);
-                        AddEqualityToNoValue(result);
-                        SelectedOptionItems.Add(result.Value, result);
-                    }
-                    else if (result != null && !result.IsSelected && !result.IsDisabled)
-                    {
-                        result.IsSelected = true;
-                        SelectedOptionItems.Add(result.Value, result);
-                    }
-
-                    deselectList.Remove(value);
-                }
+                EnsureTagOptions(values, selectedValues);
             }
 
-            if (deselectList.Count > 0)
+            DeselectOptionsOutsideSelection(selectedValues);
+            if (Mode != SelectMode.Default)
             {
-                foreach (var item in deselectList)
+                SelectMatchingOptions(selectedValues);
+            }
+        }
+
+        private void EnsureTagOptions(IEnumerable<TItemValue> values, HashSet<TItemValue> selectedValues)
+        {
+            foreach (var value in values)
+            {
+                var result = SelectOptionItems.FirstOrDefault(x =>
+                    EqualityComparer<TItemValue>.Default.Equals(x.Value, value));
+                if (result is null) //tag delivered from outside, needs to be added to the list of options
                 {
-                    item.Value.IsSelected = false;
-                    SelectedOptionItems.Remove(item.Key);
-                    RemoveEqualityToNoValue(item.Value);
-                    if (item.Value.IsAddedTag)
+                    if (value is null)
                     {
-                        SelectOptionItems.Remove(item.Value);
-                        AddedTags.Remove(item.Value);
+                        continue;
+                    }
+                    result = CreateSelectOptionItem(value.ToString(), true);
+                    result.IsSelected = true;
+                    AddedTags.Add(result);
+                    SelectOptionItems.Add(result);
+                    AddEqualityToNoValue(result);
+                    SelectedOptionItems[result.Value] = result;
+                    selectedValues.Add(result.Value);
+                }
+                else if (Mode == SelectMode.Default && !result.IsSelected && !result.IsDisabled)
+                {
+                    result.IsSelected = true;
+                    SelectedOptionItems[result.Value] = result;
+                }
+            }
+        }
+
+        private void DeselectOptionsOutsideSelection(HashSet<TItemValue> selectedValues)
+        {
+            var deselectedOptions = SelectOptionItems.Concat(AddedTags)
+                .Where(option => option.IsSelected && !selectedValues.Contains(option.Value)).Distinct().ToArray();
+            foreach (var option in deselectedOptions)
+            {
+                DeselectOption(option);
+            }
+
+            var deselectedValues = SelectedOptionItems.Select(option => option.Key)
+                .Where(value => !selectedValues.Contains(value)).ToArray();
+            foreach (var value in deselectedValues)
+            {
+                SelectedOptionItems.Remove(value);
+            }
+        }
+
+        private void SelectMatchingOptions(HashSet<TItemValue> selectedValues)
+        {
+            foreach (var option in SelectOptionItems)
+            {
+                if (!selectedValues.Contains(option.Value) || (option.IsDisabled && !option.IsSelected))
+                {
+                    continue;
+                }
+
+                if (!option.IsSelected)
+                {
+                    option.IsSelected = true;
+                    if (HideSelected)
+                    {
+                        option.IsHidden = true;
                     }
                 }
+
+                if (!SelectedOptionItems.TryGetValue(option.Value, out _))
+                {
+                    SelectedOptionItems.Add(option.Value, option);
+                }
+            }
+        }
+
+        private void DeselectOption(SelectOptionItem<TItemValue, TItem> option)
+        {
+            option.IsSelected = false;
+            RemoveEqualityToNoValue(option);
+            if (option.IsAddedTag)
+            {
+                if (ReferenceEquals(ActiveOption, option))
+                {
+                    ActiveOption = null;
+                }
+                SelectOptionItems.Remove(option);
+                AddedTags.Remove(option);
+            }
+            else
+            {
+                UpdateDeselectedOptionVisibility(option);
+            }
+        }
+
+        internal virtual void UpdateDeselectedOptionVisibility(SelectOptionItem<TItemValue, TItem> option)
+        {
+            if (HideSelected && string.IsNullOrWhiteSpace(_searchValue))
+            {
+                option.IsHidden = false;
             }
         }
 
@@ -1035,7 +1080,7 @@ namespace AntDesign
                     .ForEach(item =>
                     {
                         newSelectedValues.Add(item.Value);
-                        SelectedOptionItems.Add(item.Value, item);
+                        SelectedOptionItems[item.Value] = item;
                     });
             }
             else
@@ -1044,7 +1089,7 @@ namespace AntDesign
                 if (newSelection.IsSelected)
                 {
                     newSelectedValues.Add(newSelection.Value);
-                    SelectedOptionItems.Add(newSelection.Value, newSelection);
+                    SelectedOptionItems[newSelection.Value] = newSelection;
                 }
                 else
                 {

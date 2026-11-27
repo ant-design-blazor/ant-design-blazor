@@ -123,6 +123,32 @@
             .BeEquivalentTo(new[] { "Tag1", "Tag2" }));
     }
 
+    [Fact]
+    public void Pressing_Enter_after_clearing_does_not_restore_the_old_custom_tag()
+    {
+        JSInterop.Mode = JSRuntimeMode.Loose;
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition { Placement = Placement.BottomLeft });
+
+        var dataSource = new[] { "Existing" };
+        var cut = Render<Select<string, string>>(
+            @<Select Mode="SelectMode.Tags" TItemValue="string" TItem="string"
+                     DataSource="@dataSource" SearchDebounceMilliseconds="0" />);
+
+        cut.Find("input[type=search]").Input("Temporary");
+        cut.WaitForState(() => cut.Instance.ActiveOption?.Value == "Temporary");
+        cut.Find("input[type=search]").KeyUp("Enter");
+        cut.WaitForAssertion(() => cut.Instance.Values.Should().Equal("Temporary"));
+        cut.Find("input[type=search]").Input(string.Empty);
+
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.Values, null));
+        cut.Find("input[type=search]").KeyUp("Enter");
+
+        cut.Instance.Values.Should().BeNull();
+        cut.FindAll(".ant-select-selection-item-content").Should().BeEmpty();
+        cut.Instance.SelectOptionItems.Should().NotContain(option => option.Value == "Temporary");
+    }
+
     [Fact] // Issue: #4818
     public async Task Removing_last_tag_updates_bound_values()
     {

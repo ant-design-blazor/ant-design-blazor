@@ -352,6 +352,7 @@ namespace AntDesign
         private bool _optionsHasInitialized;
         private bool _defaultValueApplied;
         private bool _defaultActiveFirstOptionApplied;
+        private bool _skipInitialMultipleDefaults;
         private bool _waitingForStateChange;
         private bool _isValueEnum;
         private bool _isToken;
@@ -435,6 +436,11 @@ namespace AntDesign
 
         protected override async Task OnParametersSetAsync()
         {
+            if (Mode != SelectMode.Default && _selectedValues?.Length > 0)
+            {
+                _skipInitialMultipleDefaults = true;
+            }
+
             EvaluateDataSourceChange();
 
             if (SelectOptions == null)
@@ -475,7 +481,7 @@ namespace AntDesign
             if (DataSource == null && _datasource != null)
             {
                 SelectOptionItems.Clear();
-                SelectedOptionItems.Clear();
+                RebuildSelectedOptionIndex();
                 Value = default;
 
                 _datasource = null;
@@ -588,13 +594,10 @@ namespace AntDesign
                         await TrySetDefaultValueAsync();
                     }
                 }
-                else
+                else if (!_skipInitialMultipleDefaults && !HasValue && SelectOptionItems.Any()
+                    && (_defaultValuesHasItems || DefaultActiveFirstOption))
                 {
-                    if (_defaultValuesHasItems && !HasValue && SelectOptionItems.Any()
-                        || DefaultActiveFirstOption && !HasValue && SelectOptionItems.Any())
-                    {
-                        await TrySetDefaultValuesAsync();
-                    }
+                    await TrySetDefaultValuesAsync();
                 }
             }
 
@@ -653,7 +656,7 @@ namespace AntDesign
                             }
                             RemoveEqualityToNoValue(selectOption);
 
-                            if (selectOption.IsSelected)
+                            if (Mode == SelectMode.Default && selectOption.IsSelected)
                                 SelectedOptionItems.Remove(selectOption.Value);
                         }
                         else
@@ -666,13 +669,10 @@ namespace AntDesign
                 SelectOptionItems.Clear();
             }
 
-            //A simple approach to avoid unnecessary scanning through _selectedValues once
-            //all of SelectOptionItem where already marked as selected
-            int processedSelectedCount = 0;
-            if (Mode == SelectMode.Default && _selectedValue != null)
-                processedSelectedCount = 1;
-            else if (Mode != SelectMode.Default && _selectedValues != null)
-                processedSelectedCount = _selectedValues.Count();
+            var selectSingleOption = Mode == SelectMode.Default && _selectedValue != null;
+            var selectedValues = Mode != SelectMode.Default && _selectedValues != null
+                ? new HashSet<TItemValue>(_selectedValues)
+                : null;
 
             foreach (var item in _datasource)
             {
@@ -697,14 +697,9 @@ namespace AntDesign
                 var groupName = string.Empty;
                 var label = _getLabel == null ? GetLabel(item) : _getLabel(item);
 
-                bool isSelected = false;
-                if (processedSelectedCount > 0)
-                {
-                    if (Mode == SelectMode.Default)
-                        isSelected = ReferenceEquals(value, _selectedValue) || value?.Equals(_selectedValue) == true;
-                    else
-                        isSelected = _selectedValues.Contains(value);
-                }
+                var isSelected = Mode == SelectMode.Default
+                    ? selectSingleOption && (ReferenceEquals(value, _selectedValue) || value?.Equals(_selectedValue) == true)
+                    : selectedValues?.Contains(value) == true;
 
                 if (_getDisabled != default)
                     disabled = _getDisabled(item);
@@ -727,9 +722,9 @@ namespace AntDesign
 
                     SelectOptionItems.Add(newItem);
                     AddEqualityToNoValue(newItem);
-                    if (isSelected)
+                    if (isSelected && Mode == SelectMode.Default)
                     {
-                        processedSelectedCount--;
+                        selectSingleOption = false;
                         SelectedOptionItems[newItem.Value] = newItem;
                     }
                 }
@@ -740,14 +735,9 @@ namespace AntDesign
                     updateSelectOption.GroupName = groupName;
                     updateSelectOption.IsHidden = isSelected && HideSelected;
                     SelectOptionItems.Add(updateSelectOption);
-                    if (isSelected)
+                    if (isSelected && Mode == SelectMode.Default)
                     {
-                        if (!updateSelectOption.IsSelected)
-                        {
-                            //updateSelectOption.IsSelected = isSelected;
-                            //SelectedOptionItems.Add(updateSelectOption);
-                        }
-                        processedSelectedCount--;
+                        selectSingleOption = false;
                     }
                 }
             }
@@ -759,12 +749,16 @@ namespace AntDesign
                 {
                     SelectOptionItems.Add(tag);
 
-                    if (tag.IsSelected)
+                    if (tag.IsSelected && Mode == SelectMode.Default)
                     {
-                        processedSelectedCount--;
                         SelectedOptionItems[tag.Value] = tag;
                     }
                 }
+            }
+
+            if (Mode != SelectMode.Default)
+            {
+                RebuildSelectedOptionIndex();
             }
         }
 
@@ -861,6 +855,7 @@ namespace AntDesign
         /// </summary>
         internal override void ResetValue()
         {
+            _skipInitialMultipleDefaults = false;
             _ = ClearSelectedAsync();
         }
 
@@ -1024,25 +1019,12 @@ namespace AntDesign
                     }
                 }
             }
-            else
+            else if (_selectedValues?.Contains(selectOptionItem.Value) == true && !selectOptionItem.IsDisabled)
             {
-                if (_selectedValues != null)
-                {
-                    foreach (var value in _selectedValues)
-                    {
-                        var result = EqualityComparer<TItemValue>.Default.Equals(selectOptionItem.Value, value);
-
-                        if (result && !selectOptionItem.IsDisabled)
-                        {
-                            selectOptionItem.IsSelected = true;
-
-                            if (HideSelected)
-                                selectOptionItem.IsHidden = true;
-
-                            SelectedOptionItems.Add(selectOptionItem.Value, selectOptionItem);
-                        }
-                    }
-                }
+                selectOptionItem.IsSelected = true;
+                if (HideSelected)
+                    selectOptionItem.IsHidden = true;
+                SelectedOptionItems[selectOptionItem.Value] = selectOptionItem;
             }
         }
 
@@ -1265,6 +1247,26 @@ namespace AntDesign
             await SetInputBlurAsync();
         }
 
+        internal override void UpdateDeselectedOptionVisibility(SelectOptionItem<TItemValue, TItem> option)
+        {
+            option.IsHidden = IsSearchEnabled && !string.IsNullOrEmpty(_searchValue) && !MatchesSearch(option, _searchValue);
+        }
+
+        private bool MatchesSearch(SelectOptionItem<TItemValue, TItem> option, string searchValue)
+        {
+            try
+            {
+                return FilterExpression != null
+                    ? FilterExpression(option, searchValue)
+                    : option.Label?.Contains(searchValue, StringComparison.InvariantCultureIgnoreCase) == true;
+            }
+            catch
+            {
+                // A filter that throws does not match this option.
+                return false;
+            }
+        }
+
         private void FilterOptionItems(string searchValue)
         {
             if (Mode != SelectMode.Tags)
@@ -1272,26 +1274,7 @@ namespace AntDesign
                 bool firstDone = false;
                 foreach (var item in SelectOptionItems)
                 {
-                    bool matches = false;
-                    try
-                    {
-                        if (FilterExpression != null)
-                        {
-                            matches = FilterExpression(item, searchValue);
-                        }
-                        else
-                        {
-                            // Default filter logic
-                            matches = item.Label?.Contains(searchValue, StringComparison.InvariantCultureIgnoreCase) ?? false;
-                        }
-                    }
-                    catch
-                    {
-                        // If filter expression fails, default to false
-                        matches = false;
-                    }
-
-                    if (matches)
+                    if (MatchesSearch(item, searchValue))
                     {
                         if (!firstDone)
                         {
@@ -1337,26 +1320,7 @@ namespace AntDesign
             {
                 if (!(CustomTagSelectOptionItem != null && item.Equals(CustomTagSelectOptionItem))) //ignore if analyzing CustomTagSelectOptionItem
                 {
-                    bool matches = false;
-                    try
-                    {
-                        if (FilterExpression != null)
-                        {
-                            matches = FilterExpression(item, searchValue);
-                        }
-                        else
-                        {
-                            // Default filter logic
-                            matches = item.Label?.Contains(searchValue, StringComparison.InvariantCultureIgnoreCase) ?? false;
-                        }
-                    }
-                    catch
-                    {
-                        // If filter expression fails, default to false
-                        matches = false;
-                    }
-
-                    if (matches)
+                    if (MatchesSearch(item, searchValue))
                     {
                         if (item.Label.Equals(searchValue, StringComparison.InvariantCulture))
                         {
@@ -1400,6 +1364,35 @@ namespace AntDesign
             }
         }
 
+        private async Task SelectActiveTagAsync()
+        {
+            var activeTag = ActiveOption;
+            if (activeTag?.IsAddedTag == true)
+            {
+                var activeValue = activeTag.Value;
+                activeTag = SelectOptionItems.FirstOrDefault(option =>
+                    EqualityComparer<TItemValue>.Default.Equals(option.Value, activeValue));
+            }
+
+            if (AllOptionsHidden() || activeTag is null)
+            {
+                var newTag = AppendLabelValue(_searchValue);
+                if (newTag != null)
+                {
+                    await SetValueAsync(newTag);
+                    OnCreateCustomTag?.Invoke(_searchValue);
+                }
+            }
+            else if (!activeTag.IsDisabled)
+            {
+                if (_isToken)
+                {
+                    CustomTagSelectOptionItem = null;
+                }
+                await SetValueAsync(activeTag);
+            }
+        }
+
         /// <summary>
         /// Method is called via EventCallBack if the keyboard key is no longer pressed inside the Input element.
         /// </summary>
@@ -1422,30 +1415,7 @@ namespace AntDesign
                 if (!SelectOptionItems.Any())
                     return;
 
-                SelectOptionItem<TItemValue, TItem> firstActive;
-                if (ActiveOption.IsAddedTag)
-                {
-                    firstActive = SelectOptionItems.FirstOrDefault(x => x.Value.Equals(ActiveOption.Value));
-                    if (firstActive is null)
-                        firstActive = ActiveOption;
-                }
-                else
-                    firstActive = ActiveOption; // SelectOptionItems.FirstOrDefault(x => x.IsActive);
-
-                if (AllOptionsHidden() || firstActive is null)
-                {
-                    var newItem = AppendLabelValue(_searchValue);
-
-                    await SetValueAsync(newItem);
-
-                    OnCreateCustomTag?.Invoke(_searchValue);
-                }
-                else if (firstActive != null && !firstActive.IsDisabled)
-                {
-                    CustomTagSelectOptionItem = null;
-                    await SetValueAsync(firstActive);
-                }
-
+                await SelectActiveTagAsync();
                 ClearSearch();
 
                 return;
@@ -1491,27 +1461,7 @@ namespace AntDesign
 
                 if (Mode == SelectMode.Tags)
                 {
-                    SelectOptionItem<TItemValue, TItem> firstActive;
-                    if (ActiveOption.IsAddedTag)
-                    {
-                        firstActive = SelectOptionItems.FirstOrDefault(x => x.Value.Equals(ActiveOption.Value));
-                        if (firstActive is null)
-                            firstActive = ActiveOption;
-                    }
-                    else
-                        firstActive = ActiveOption;
-
-                    if (AllOptionsHidden() || firstActive is null)
-                    {
-                        var newItem = AppendLabelValue(_searchValue);
-                        await SetValueAsync(newItem);
-                        OnCreateCustomTag?.Invoke(_searchValue);
-                    }
-                    else if (firstActive != null && !firstActive.IsDisabled)
-                    {
-                        await SetValueAsync(firstActive);
-                    }
-
+                    await SelectActiveTagAsync();
                     return;
                 }
             }
