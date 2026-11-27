@@ -37,6 +37,14 @@
 }
 else if (IsHeader)
 {
+    if (!_headerRowStarted)
+    {
+        // Rows initialize as siblings before their cells initialize. Start each
+        // row as it renders, after the preceding row has registered its spans.
+        Context?.BeginHeaderRow();
+        _headerRowStarted = true;
+    }
+
     <tr @attributes="attributes" class="@Class @RowAttributes?.GetValueOrDefault("class")">
         @ChildContent
         @if (ScrollY != null)
@@ -47,15 +55,13 @@ else if (IsHeader)
 }
 
 @code {
+    private bool _headerRowStarted;
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
-        if (IsHeader)
-        {
-            Context?.BeginHeaderRow();
-        }
-        else if (IsBody)
+        if (IsBody && !IsHeader)
         {
             Context?.BeginBodyRow();
         }

@@ -362,6 +362,7 @@ namespace AntDesign
                 return cssStyleBuilder.Build();
             }
 
+            var renderAsHeader = isHeader ?? IsHeader;
             var fixedWidths = Array.Empty<string>();
 
             if (Fixed == ColumnFixPlacement.Left && Context?.Columns.Count >= ColIndex)
@@ -376,7 +377,8 @@ namespace AntDesign
             }
             else if (Fixed == ColumnFixPlacement.Right)
             {
-                for (int i = (Context?.Columns.Count ?? 1) - 1; i > ColIndex; i--)
+                var lastColumn = renderAsHeader ? Math.Max(ColIndex, ColEndIndex - 1) : ColIndex;
+                for (int i = (Context?.Columns.Count ?? 1) - 1; i > lastColumn; i--)
                 {
                     if (Context?.Columns[i].Fixed != null)
                     {
@@ -385,7 +387,7 @@ namespace AntDesign
                 }
             }
 
-            if ((isHeader ?? IsHeader) && Table.ScrollY != null && Table.ScrollX != null && Fixed == ColumnFixPlacement.Right)
+            if (renderAsHeader && Table.ScrollY != null && Table.ScrollX != null && Fixed == ColumnFixPlacement.Right)
             {
                 fixedWidths = fixedWidths.Append($"{(CssSizeLength)Table.ScrollBarWidth}");
             }
