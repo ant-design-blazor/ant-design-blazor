@@ -18,6 +18,7 @@ namespace AntDesign.Locales
             _currentCulture = new(cultureName);
             this.DatePicker.GetCultureInfo = () => _currentCulture;
             this.DatePicker.Lang.GetCultureInfo = () => _currentCulture;
+            this.AdvancedFilter ??= new();
         }
 
         [JsonPropertyName("locale")]
@@ -34,6 +35,8 @@ namespace AntDesign.Locales
         public DatePickerLocale Calendar { get; set; } = new();
 
         public TableLocale Table { get; set; } = new();
+
+        public AdvancedFilterLocale AdvancedFilter { get; set; } = new();
 
         public ModalLocale Modal { get; set; } = new();
 

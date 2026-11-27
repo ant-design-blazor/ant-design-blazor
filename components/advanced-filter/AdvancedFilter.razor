@@ -1,0 +1,70 @@
+@namespace AntDesign
+@inherits AntDomComponentBase
+@typeparam TItem
+
+<CascadingValue Value="@Locale">
+    <div class="@ClassMapper.Class" style="@Style" id="@Id">
+        @if (ShowHeader)
+        {
+            <Space Align="SpaceAlign.Center" Style="margin-bottom: 8px;">
+                <SpaceItem>
+                    <span>@Locale.MatchingPrefix</span>
+                </SpaceItem>
+                <SpaceItem>
+                    <Select TItem="TableFilterCondition" TItemValue="TableFilterCondition"
+                            Value="@_rootNode.LogicalOperator" ValueChanged="@OnLogicalOperatorChanged" Style="width: 80px;"
+                            Bordered="@false">
+                        <SelectOption TItem="TableFilterCondition" TItemValue="TableFilterCondition"
+                                      Value="TableFilterCondition.And" Label="@FilterOptionsLocale.And" />
+                        <SelectOption TItem="TableFilterCondition" TItemValue="TableFilterCondition"
+                                      Value="TableFilterCondition.Or" Label="@FilterOptionsLocale.Or" />
+                    </Select>
+                </SpaceItem>
+                <SpaceItem>
+                    <span>@Locale.MatchingSuffix</span>
+                </SpaceItem>
+            </Space>
+        }
+
+        @foreach (var child in _rootNode.Children)
+        {
+            var node = child;
+            if (node.NodeType == FilterNodeType.Condition)
+            {
+                <AdvancedFilterCondition Fields="@_fieldList" FieldMap="@_fieldMap" Node="@node" InputResolver="@InputResolver"
+                                         FilterOptionsLocale="@FilterOptionsLocale" OnChanged="@OnConditionChanged"
+                                         OnRemove="@(() => RemoveNode(node))" />
+            }
+            else
+            {
+                <AdvancedFilterGroup Fields="@_fieldList" FieldMap="@_fieldMap" Node="@node" InputResolver="@InputResolver"
+                                     FilterOptionsLocale="@FilterOptionsLocale" OnChanged="@OnConditionChanged"
+                                     OnRemoveGroup="@(() => RemoveNode(node))" />
+            }
+        }
+
+        <Space Style="margin-top: 8px;">
+            <SpaceItem>
+                <Button Type="@ButtonType.Link" Icon="plus" OnClick="@AddCondition">
+                    @Locale.AddCondition
+                </Button>
+            </SpaceItem>
+            @if (AllowGroup)
+            {
+                <SpaceItem>
+                    <Button Type="@ButtonType.Link" Icon="plus-circle" OnClick="@AddGroup">
+                        @Locale.AddGroup
+                    </Button>
+                </SpaceItem>
+            }
+            @if (_rootNode.Children.Count > 0)
+            {
+                <SpaceItem>
+                    <Button Type="@ButtonType.Link" Danger Icon="delete" OnClick="@ClearAll">
+                        @Locale.ClearAll
+                    </Button>
+                </SpaceItem>
+            }
+        </Space>
+    </div>
+</CascadingValue>

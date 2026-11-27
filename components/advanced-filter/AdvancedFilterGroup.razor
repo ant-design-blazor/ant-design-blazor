@@ -1,0 +1,38 @@
+@namespace AntDesign
+@inherits AntDomComponentBase
+
+<div style="border: 1px solid #d9d9d9; border-radius: 6px; padding: 8px 12px; margin-bottom: 4px; background: #fafafa;">
+    <Space Align="SpaceAlign.Center" Style="margin-bottom: 4px;">
+        <SpaceItem>
+            <Select TItem="TableFilterCondition" TItemValue="TableFilterCondition" Value="@Node.LogicalOperator"
+                    ValueChanged="@OnLogicalOperatorChanged" Style="width: 80px;" Bordered="@false">
+                <SelectOption TItem="TableFilterCondition" TItemValue="TableFilterCondition"
+                              Value="TableFilterCondition.And" Label="@FilterOptionsLocale.And" />
+                <SelectOption TItem="TableFilterCondition" TItemValue="TableFilterCondition"
+                              Value="TableFilterCondition.Or" Label="@FilterOptionsLocale.Or" />
+            </Select>
+        </SpaceItem>
+        <SpaceItem>
+            <Button Type="@ButtonType.Text" Danger Icon="close" OnClick="@(() => OnRemoveGroup.InvokeAsync())" />
+        </SpaceItem>
+    </Space>
+
+    @foreach (var child in Node.Children)
+    {
+        var node = child;
+        if (node.NodeType == FilterNodeType.Condition)
+        {
+            <AdvancedFilterCondition Fields="@Fields" FieldMap="@FieldMap" Node="@node" InputResolver="@InputResolver"
+                                     FilterOptionsLocale="@FilterOptionsLocale" OnChanged="@OnChanged" OnRemove="@(() => RemoveChild(node))" />
+        }
+        else
+        {
+            <AdvancedFilterGroup Fields="@Fields" FieldMap="@FieldMap" Node="@node" FilterOptionsLocale="@FilterOptionsLocale"
+                                 InputResolver="@InputResolver" OnChanged="@OnChanged" OnRemoveGroup="@(() => RemoveChild(node))" />
+        }
+    }
+
+    <Button Type="@ButtonType.Link" Icon="plus" OnClick="@AddCondition" Style="padding-left: 0;">
+        @_locale.AddCondition
+    </Button>
+</div>

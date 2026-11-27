@@ -1,0 +1,84 @@
+@page "/experimental/advanced-filter/grouping"
+@using System.Linq.Expressions
+
+<Space Direction="SpaceDirection.Vertical" Style="width: 100%;">
+    <SpaceItem>
+        <Alert
+        Message="Condition grouping with AND/OR nesting. Example: (Category = Electronics AND Price < 500) OR (InStock = true AND Stock > 20)"
+        Type="AlertType.Info" ShowIcon="true" />
+    </SpaceItem>
+    <SpaceItem>
+        <Card Title="Advanced Filter with Grouping" Size="@CardSize.Small">
+
+            <Body>
+                <AdvancedFilter TItem="Order" @ref="filterRef" ShowHeader="true" AllowGroup="true"
+                                OnFilterChanged="@OnFilterChanged" />
+            </Body>
+        </Card>
+    </SpaceItem>
+    <SpaceItem>
+        <Card Title="Filtered Orders" Size="@CardSize.Small">
+
+            <Body>
+                <Table TItem="Order" DataSource="@_filteredData" HidePagination>
+                    <Column @bind-Field="@context.OrderId" Title="Order ID" Width="100px" />
+                    <Column @bind-Field="@context.CustomerName" Title="Customer" />
+                    <Column @bind-Field="@context.Status" Title="Status" />
+                    <Column @bind-Field="@context.Amount" Title="Amount" Format="C" />
+                    <Column @bind-Field="@context.Quantity" Title="Qty" />
+                    <Column @bind-Field="@context.OrderDate" Title="Order Date" Format="yyyy-MM-dd" />
+                </Table>
+            </Body>
+        </Card>
+    </SpaceItem>
+</Space>
+
+@code {
+    private AdvancedFilter<Order> filterRef;
+    private List<Order> _allData;
+    private List<Order> _filteredData;
+
+    public class Order
+    {
+        public int OrderId { get; set; }
+        public string CustomerName { get; set; }
+        public string Status { get; set; }
+        public decimal Amount { get; set; }
+        public int Quantity { get; set; }
+        public DateTime OrderDate { get; set; }
+    }
+
+    protected override void OnInitialized()
+    {
+        _allData = new List<Order>
+        {
+            new() { OrderId = 1001, CustomerName = "Alice Johnson", Status = "Pending", Amount = 250.50m, Quantity = 3, OrderDate =
+new DateTime(2024, 11, 15) },
+            new() { OrderId = 1002, CustomerName = "Bob Smith", Status = "Shipped", Amount = 1200.00m, Quantity = 5, OrderDate = new
+DateTime(2024, 11, 10) },
+            new() { OrderId = 1003, CustomerName = "Charlie Brown", Status = "Delivered", Amount = 450.75m, Quantity = 2, OrderDate
+= new DateTime(2024, 10, 20) },
+            new() { OrderId = 1004, CustomerName = "Diana Prince", Status = "Cancelled", Amount = 180.00m, Quantity = 1, OrderDate =
+new DateTime(2024, 11, 5) },
+            new() { OrderId = 1005, CustomerName = "Eve Wilson", Status = "Pending", Amount = 890.25m, Quantity = 4, OrderDate = new
+DateTime(2024, 11, 18) },
+            new() { OrderId = 1006, CustomerName = "Frank Miller", Status = "Shipped", Amount = 320.00m, Quantity = 2, OrderDate =
+new DateTime(2024, 11, 12) },
+        };
+
+        _filteredData = new List<Order>(_allData);
+    }
+
+    private void OnFilterChanged(Expression<Func<Order, bool>> filterExpression)
+    {
+        if (filterExpression != null)
+        {
+            var compiled = filterExpression.Compile();
+            _filteredData = _allData.Where(compiled).ToList();
+        }
+        else
+        {
+            _filteredData = new List<Order>(_allData);
+        }
+    }
+}
