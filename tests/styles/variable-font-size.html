@@ -1,0 +1,60 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Variable theme base font size</title>
+<link rel="stylesheet" href="../../publish/ant-design-blazor.variable.css">
+<style>
+  *, *::after { transition: none !important; }
+</style>
+
+<button class="ant-btn" id="plain">Button</button>
+<div class="ant-card">
+  <form class="ant-form"><button class="ant-btn" id="nested">Nested button</button></form>
+</div>
+<input class="ant-input" id="input" aria-label="Input">
+<div class="ant-select ant-select-multiple ant-select-sm">
+  <div class="ant-select-selector">
+    <div class="ant-select-selection-overflow">
+      <div class="ant-select-selection-overflow-item">
+        <span class="ant-select-selection-item"><span class="ant-select-selection-item-content">Tag</span></span>
+      </div>
+    </div>
+  </div>
+</div>
+<pre id="results"></pre>
+
+<script>
+  window.addEventListener('load', () => {
+    const failures = [];
+
+    function checkFontSizes(expected) {
+      for (const element of document.querySelectorAll('body, #plain, #nested, #input')) {
+        const actual = getComputedStyle(element).fontSize;
+        if (actual !== expected) {
+          failures.push(`${element.id || 'body'}: expected ${expected}, got ${actual}`);
+        }
+      }
+    }
+
+    function checkSmallSelect() {
+      const selector = document.querySelector('.ant-select-selector');
+      const tag = document.querySelector('.ant-select-selection-item');
+      // clientHeight excludes the border, whose CSS pixel width depends on browser zoom.
+      if (selector.clientHeight !== 22 || getComputedStyle(tag).height !== '16px') {
+        failures.push(`Small Select: inner height ${selector.clientHeight}px, tag height ${getComputedStyle(tag).height}`);
+      }
+    }
+
+    checkFontSizes('14px');
+    checkSmallSelect();
+    const override = document.createElement('style');
+    override.textContent = ':root { --ant-font-size-base: 20px; }';
+    document.head.appendChild(override);
+    checkFontSizes('20px');
+    override.remove();
+    checkFontSizes('14px');
+    checkSmallSelect();
+
+    document.querySelector('#results').textContent = failures.length ? failures.join('\n') : 'PASS';
+    if (failures.length) throw new Error(failures.join('\n'));
+  });
+</script>

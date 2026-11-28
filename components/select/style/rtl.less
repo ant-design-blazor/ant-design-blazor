@@ -111,7 +111,7 @@
 }
 
 // single
-@selection-item-padding: ceil(@font-size-base * 1.25);
+@selection-item-padding: ceil(@font-size-base-layout * 1.25);
 
 .@{select-prefix-cls}-single {
   // ========================= Selector =========================
@@ -130,7 +130,7 @@
   &.@{select-prefix-cls}-show-arrow .@{select-prefix-cls}-selection-search {
     .@{select-prefix-cls}-rtl& {
       right: @input-padding-horizontal-base;
-      left: @input-padding-horizontal-base + @font-size-base;
+      left: @input-padding-horizontal-base + @font-size-base-layout;
     }
   }
 
@@ -160,7 +160,7 @@
       &.@{select-prefix-cls}-show-arrow .@{select-prefix-cls}-selection-placeholder {
         .@{select-prefix-cls}-rtl& {
           padding-right: 0;
-          padding-left: @font-size-base * 1.5;
+          padding-left: @font-size-base-layout * 1.5;
         }
       }
     }

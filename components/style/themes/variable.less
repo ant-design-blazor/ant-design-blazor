@@ -12,6 +12,8 @@
 @{html-selector} {
   @base-primary: @blue-6;
 
+  --@{ant-prefix}-font-size-base: @font-size-base-layout;
+
   // ========= Primary Color =========
   --@{ant-prefix}-primary-color: @base-primary;
   --@{ant-prefix}-primary-color-hover: color(~`colorPalette('@{base-primary}', 5) `);
@@ -150,14 +152,24 @@
 @text-selection-bg: @primary-color;
 @font-variant-base: tabular-nums;
 @font-feature-settings-base: 'tnum';
-@font-size-base: 14px;
-@font-size-lg: @font-size-base + 2px;
+// Less layout calculations need numeric values. Rendered font sizes can use CSS variables.
+@font-size-base-default: 14px;
+@font-size-base: ~'var(--@{ant-prefix}-font-size-base, @{font-size-base-default})';
+@font-size-base-layout: if(isnumber(@font-size-base), @font-size-base, @font-size-base-default);
+@font-size-lg: calc(@font-size-base + 2px);
+@font-size-lg-layout: if(isnumber(@font-size-lg), @font-size-lg, @font-size-base-layout + 2px);
 @font-size-sm: 12px;
-@heading-1-size: ceil(@font-size-base * 2.71);
-@heading-2-size: ceil(@font-size-base * 2.14);
-@heading-3-size: ceil(@font-size-base * 1.71);
-@heading-4-size: ceil(@font-size-base * 1.42);
-@heading-5-size: ceil(@font-size-base * 1.14);
+// Scale the rounded defaults so headings keep their original sizes at the default base.
+.heading-font-size(@scale) {
+  @base: unit(@font-size-base-layout);
+  @rounded: ceil(@base * @scale);
+  @size: calc(@font-size-base * @rounded / @base);
+}
+@heading-1-size: .heading-font-size(2.71)[@size];
+@heading-2-size: .heading-font-size(2.14)[@size];
+@heading-3-size: .heading-font-size(1.71)[@size];
+@heading-4-size: .heading-font-size(1.42)[@size];
+@heading-5-size: .heading-font-size(1.14)[@size];
 // https://github.com/ant-design/ant-design/issues/20210
 @line-height-base: 1.5715;
 @border-radius-base: 2px;
@@ -310,9 +322,9 @@
 @btn-square-size: @btn-height-base;
 @btn-square-size-lg: @btn-height-lg;
 @btn-square-size-sm: @btn-height-sm;
-@btn-square-only-icon-size: @font-size-base + 2px;
+@btn-square-only-icon-size: if(isnumber(@font-size-base), (@font-size-base + 2px), calc(@font-size-base + 2px));
 @btn-square-only-icon-size-sm: @font-size-base;
-@btn-square-only-icon-size-lg: @btn-font-size-lg + 2px;
+@btn-square-only-icon-size-lg: calc(@btn-font-size-lg + 2px);
 
 @btn-group-border: @primary-5;
 
@@ -488,17 +500,17 @@
 @input-padding-horizontal-sm: @control-padding-horizontal-sm - 1px;
 @input-padding-horizontal-lg: @input-padding-horizontal;
 @input-padding-vertical-base: max(
-  (round(((@input-height-base - @font-size-base * @line-height-base) / 2) * 10) / 10) -
+  (round(((@input-height-base - @font-size-base-layout * @line-height-base) / 2) * 10) / 10) -
     @border-width-base,
   3px
 );
 @input-padding-vertical-sm: max(
-  (round(((@input-height-sm - @font-size-base * @line-height-base) / 2) * 10) / 10) -
+  (round(((@input-height-sm - @font-size-base-layout * @line-height-base) / 2) * 10) / 10) -
     @border-width-base,
   0
 );
 @input-padding-vertical-lg: (
-    ceil(((@input-height-lg - @font-size-lg * @line-height-base) / 2) * 10) / 10
+    ceil(((@input-height-lg - @font-size-lg-layout * @line-height-base) / 2) * 10) / 10
   ) - @border-width-base;
 @input-placeholder-color: hsv(0, 0, 75%);
 @input-color: @text-color;
@@ -834,13 +846,16 @@
 @tabs-card-height: 40px;
 @tabs-card-active-color: @primary-color;
 @tabs-card-horizontal-padding: (
-    (@tabs-card-height - floor(@font-size-base * @line-height-base)) / 2
+    (@tabs-card-height - floor(@font-size-base-layout * @line-height-base)) / 2
   ) - @border-width-base @padding-md;
 @tabs-card-horizontal-padding-sm: 6px @padding-md;
 @tabs-card-horizontal-padding-lg: 7px @padding-md 6px;
 @tabs-title-font-size: @font-size-base;
 @tabs-title-font-size-lg: @font-size-lg;
 @tabs-title-font-size-sm: @font-size-base;
+@tabs-title-font-size-layout: if(isnumber(@tabs-title-font-size), @tabs-title-font-size, @font-size-base-layout);
+@tabs-title-font-size-lg-layout: if(isnumber(@tabs-title-font-size-lg), @tabs-title-font-size-lg, @font-size-lg-layout);
+@tabs-title-font-size-sm-layout: if(isnumber(@tabs-title-font-size-sm), @tabs-title-font-size-sm, @font-size-base-layout);
 @tabs-ink-bar-color: @primary-color;
 @tabs-bar-margin: 0 0 @margin-md 0;
 @tabs-horizontal-gutter: 32px;
@@ -1028,7 +1043,7 @@
 @alert-with-description-padding-vertical: @padding-md - 1px;
 @alert-with-description-padding: @alert-with-description-padding-vertical 15px
   @alert-with-description-no-icon-padding-vertical @alert-with-description-icon-size;
-@alert-icon-top: 8px + @font-size-base * (@line-height-base / 2) - (@font-size-base / 2);
+@alert-icon-top: 8px + @font-size-base-layout * (@line-height-base / 2) - (@font-size-base-layout / 2);
 @alert-with-description-icon-size: 24px;
 
 // List

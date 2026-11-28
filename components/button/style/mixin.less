@@ -1,9 +1,9 @@
 // mixins for button
 // ------------------------
 .button-size(@height; @padding-horizontal; @font-size; @border-radius) {
-  @padding-vertical: max(
-    (round(((@height - @font-size * @line-height-base) / 2) * 10) / 10) - @border-width-base,
-    0
+  @padding-vertical: if(isnumber(@font-size),
+    max((round(((@height - @font-size * @line-height-base) / 2) * 10) / 10) - @border-width-base, 0),
+    ~'max(0px, calc((@{height} - 1em * @{line-height-base}) / 2 - @{border-width-base}))'
   );
   height: @height;
   padding: @padding-vertical @padding-horizontal;

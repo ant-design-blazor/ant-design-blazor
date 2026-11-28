@@ -25,7 +25,7 @@
   &-description {
     display: none;
     font-size: @font-size-base;
-    line-height: @font-size-base + 8px;
+    line-height: if(isnumber(@font-size-base), (@font-size-base + 8px), calc(@font-size-base + 8px));
   }
 
   &-success {

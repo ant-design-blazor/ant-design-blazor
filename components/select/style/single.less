@@ -1,7 +1,7 @@
 @import (reference) '../../style/themes/index';
 @select-prefix-cls: ~'@{ant-prefix}-select';
 
-@selection-item-padding: ceil(@font-size-base * 1.25);
+@selection-item-padding: ceil(@font-size-base-layout * 1.25);
 
 .@{select-prefix-cls}-single {
   // ========================= Selector =========================
@@ -52,7 +52,7 @@
 
   // With arrow should provides `padding-right` to show the arrow
   &.@{select-prefix-cls}-show-arrow .@{select-prefix-cls}-selection-search {
-    right: @input-padding-horizontal-base + @font-size-base;
+    right: @input-padding-horizontal-base + @font-size-base-layout;
   }
 
   &.@{select-prefix-cls}-show-arrow .@{select-prefix-cls}-selection-item,
@@ -152,12 +152,12 @@
 
       // With arrow should provides `padding-right` to show the arrow
       &.@{select-prefix-cls}-show-arrow .@{select-prefix-cls}-selection-search {
-        right: @input-padding-horizontal-sm + @font-size-base * 1.5;
+        right: @input-padding-horizontal-sm + @font-size-base-layout * 1.5;
       }
 
       &.@{select-prefix-cls}-show-arrow .@{select-prefix-cls}-selection-item,
       &.@{select-prefix-cls}-show-arrow .@{select-prefix-cls}-selection-placeholder {
-        padding-right: @font-size-base * 1.5;
+        padding-right: @font-size-base-layout * 1.5;
       }
     }
   }

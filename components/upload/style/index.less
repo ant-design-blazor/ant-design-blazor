@@ -5,6 +5,8 @@
 @upload-item: ~'@{ant-prefix}-upload-list-item';
 @upload-picture-card-size: 104px;
 @upload-picture-card-border-style: @border-style-base;
+@upload-list-item-height: if(isnumber(@font-size-base),
+  (@line-height-base * @font-size-base), calc(@line-height-base * @font-size-base));
 
 .@{upload-prefix-cls} {
   .reset-component();
@@ -148,14 +150,14 @@
   // ============================ Item ============================
   &-item {
     position: relative;
-    height: @line-height-base * @font-size-base;
+    height: @upload-list-item-height;
     margin-top: @margin-xs;
     font-size: @font-size-base;
 
     &-name {
       display: inline-block;
       width: 100%;
-      padding-left: @font-size-base + 8px;
+      padding-left: @font-size-base-layout + 8px;
       overflow: hidden;
       line-height: @line-height-base;
       white-space: nowrap;
@@ -171,7 +173,7 @@
       }
 
       &-btn.@{ant-prefix}-btn-sm {
-        height: @line-height-base * @font-size-base;
+        height: @upload-list-item-height;
         line-height: 1;
         vertical-align: top;
       }
@@ -210,7 +212,7 @@
       .@{upload-prefix-cls}-text-icon {
         .@{iconfont-css-prefix} {
           position: absolute;
-          top: (@font-size-base / 2) - 2px;
+          top: (@font-size-base-layout / 2) - 2px;
           color: @text-color-secondary;
           font-size: @font-size-base;
         }
@@ -245,7 +247,7 @@
       position: absolute;
       bottom: -12px;
       width: 100%;
-      padding-left: @font-size-base + 12px;
+      padding-left: @font-size-base-layout + 12px;
       font-size: @font-size-base;
       line-height: 0;
     }

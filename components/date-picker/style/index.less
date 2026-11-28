@@ -17,7 +17,7 @@
   @arrow-size: @popover-arrow-width;
 
   .reset-component();
-  .picker-padding(@input-height-base, @font-size-base, @input-padding-horizontal-base);
+  .picker-padding(@input-height-base, @font-size-base-layout, @input-padding-horizontal-base);
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -95,7 +95,7 @@
 
   // Size
   &-large {
-    .picker-padding(@input-height-lg, @font-size-lg, @input-padding-horizontal-lg);
+    .picker-padding(@input-height-lg, @font-size-lg-layout, @input-padding-horizontal-lg);
 
     .@{picker-prefix-cls}-input > input {
       font-size: @font-size-lg;
@@ -103,7 +103,7 @@
   }
 
   &-small {
-    .picker-padding(@input-height-sm, @font-size-base, @input-padding-horizontal-sm);
+    .picker-padding(@input-height-sm, @font-size-base-layout, @input-padding-horizontal-sm);
   }
 
   &-suffix {
