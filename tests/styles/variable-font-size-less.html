@@ -1,0 +1,73 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Variable theme Less font size override</title>
+<script>window.less = { onReady: false };</script>
+<script src="../../node_modules/less/dist/less.min.js"></script>
+<style>*, *::after { transition: none !important; }</style>
+<div class="ant-select ant-select-single ant-select-show-arrow">
+  <div class="ant-select-selector"><span class="ant-select-selection-item">Selected</span></div>
+</div>
+<input class="ant-input ant-input-lg" aria-label="Large input">
+<div class="ant-picker ant-picker-large"></div>
+<button class="ant-btn ant-btn-icon-only"><span>+</span></button>
+<div class="ant-tabs"><div class="ant-tabs-extra-content">Extra</div></div>
+<div class="ant-tabs ant-tabs-large"><div class="ant-tabs-extra-content">Extra</div></div>
+<div class="ant-tabs ant-tabs-small"><div class="ant-tabs-extra-content">Extra</div></div>
+<pre id="results">Compiling…</pre>
+<script>
+  async function applyTheme(entry, source, modifyVars) {
+    const { css } = await less.render(source, {
+      filename: entry.href,
+      javascriptEnabled: true,
+      modifyVars
+    });
+    const sheet = document.createElement('style');
+    sheet.textContent = css;
+    const loaded = new Promise((resolve, reject) => {
+      sheet.onload = resolve;
+      sheet.onerror = () => reject(new Error('Could not apply the compiled theme'));
+    });
+    document.head.appendChild(sheet);
+    await loaded;
+    return sheet;
+  }
+
+  async function checkLessOverride() {
+    const entry = new URL('../../components/ant-design-blazor.variable.less', location.href);
+    const source = await (await fetch(entry)).text();
+    const failures = [];
+    function expectPixels(selector, property, expected) {
+      const actual = getComputedStyle(document.querySelector(selector))[property];
+      if (!actual.endsWith('px') || Math.abs(parseFloat(actual) - expected) > 0.01) {
+        failures.push(`${selector} ${property}: expected ${expected}px, got ${actual}`);
+      }
+    }
+
+    const baseTheme = await applyTheme(entry, source, { 'font-size-base': '20px' });
+    expectPixels('.ant-select-selection-item', 'fontSize', 20);
+    expectPixels('.ant-select-selection-item', 'paddingRight', 25);
+    baseTheme.remove();
+
+    // The legacy card stylesheet is a separate Less entry.
+    await applyTheme(entry, source + '\n@import "./tabs/style/card-style.less";', {
+      'font-size-lg': '20px',
+      'tabs-title-font-size': '18px',
+      'tabs-title-font-size-lg': '24px',
+      'tabs-title-font-size-sm': '15px'
+    });
+    expectPixels('.ant-input-lg', 'paddingTop', 3.3);
+    expectPixels('.ant-picker-large', 'paddingTop', 3.5);
+    expectPixels('.ant-btn-icon-only > span', 'fontSize', 16);
+    expectPixels('.ant-tabs:not(.ant-tabs-large):not(.ant-tabs-small) .ant-tabs-extra-content', 'lineHeight', 18 * 1.5715 + 24);
+    expectPixels('.ant-tabs-large .ant-tabs-extra-content', 'lineHeight', 24 * 1.5715 + 32);
+    expectPixels('.ant-tabs-small .ant-tabs-extra-content', 'lineHeight', 15 * 1.5715 + 16);
+    if (failures.length) throw new Error(failures.join('\n'));
+  }
+
+  checkLessOverride().then(() => {
+    document.querySelector('#results').textContent = 'PASS';
+  }).catch(error => {
+    document.querySelector('#results').textContent = error.message;
+    throw error;
+  });
+</script>
