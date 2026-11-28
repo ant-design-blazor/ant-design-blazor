@@ -15,6 +15,14 @@ namespace AntDesign
 {
     public partial class TreeNode<TItem> : AntDomComponentBase
     {
+        private bool _usesDataSourceRenderer;
+        private bool _initializingDataSourceNode;
+
+        internal string NodeClass => ClassMapper.Class;
+
+        [Parameter(CaptureUnmatchedValues = true)]
+        public IReadOnlyDictionary<string, object> AdditionalAttributes { get; set; }
+
         #region Node
 
         /// <summary>
@@ -39,6 +47,28 @@ namespace AntDesign
         public RenderFragment ChildContent { get; set; }
 
         internal List<TreeNode<TItem>> ChildNodes { get; set; } = new List<TreeNode<TItem>>();
+
+        internal void InitializeDataSourceNode(Tree<TItem> tree, TreeNode<TItem> parent, TItem dataItem)
+        {
+            TreeComponent = tree;
+            ParentNode = parent;
+            DataItem = dataItem;
+            _usesDataSourceRenderer = true;
+            _initializingDataSourceNode = true;
+            InitializeNode();
+            _initializingDataSourceNode = false;
+        }
+
+        private void RequestNodeRender()
+        {
+            if (_usesDataSourceRenderer)
+            {
+                if (!_initializingDataSourceNode)
+                    TreeComponent?.RefreshDataSourceView();
+            }
+            else
+                StateHasChanged();
+        }
 
         /// <summary>
         /// Whether child nodes exist
@@ -249,7 +279,7 @@ namespace AntDesign
             }
             if (SelectedChanged.HasDelegate)
                 SelectedChanged.InvokeAsync(_actualSelected);
-            StateHasChanged();
+            RequestNodeRender();
             return;
         }
 
@@ -270,7 +300,7 @@ namespace AntDesign
             set
             {
                 _dragTarget = value;
-                StateHasChanged();
+                RequestNodeRender();
             }
         }
 
@@ -287,7 +317,7 @@ namespace AntDesign
         {
             if (DragTargetBottom == value) return;
             DragTargetBottom = value;
-            StateHasChanged();
+            RequestNodeRender();
         }
 
         /// <summary>
@@ -303,7 +333,7 @@ namespace AntDesign
             if (ParentNode == null) return;
             if (ParentNode.TargetContainer == value) return;
             ParentNode.TargetContainer = value;
-            ParentNode.StateHasChanged();
+            ParentNode.RequestNodeRender();
         }
 
         /// <summary>
@@ -356,7 +386,7 @@ namespace AntDesign
             {
                 if (_isLeaf == value) return;
                 _isLeaf = value;
-                StateHasChanged();
+                RequestNodeRender();
             }
         }
 
@@ -385,7 +415,7 @@ namespace AntDesign
         {
             await DoExpand(expanded);
             await TreeComponent?.UpdateExpandedKeys();
-            StateHasChanged();
+            RequestNodeRender();
         }
 
         internal async Task DoExpand(bool expanded)
@@ -451,7 +481,7 @@ namespace AntDesign
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        private void OnSwitcherClick(MouseEventArgs args)
+        internal void OnSwitcherClick(MouseEventArgs args)
         {
             _ = Expand(!_actualExpanded);
         }
@@ -551,7 +581,7 @@ namespace AntDesign
         /// <summary>
         /// Triggered when the selection box is clicked
         /// </summary>
-        private async Task OnCheckBoxClick(MouseEventArgs args)
+        internal async Task OnCheckBoxClick(MouseEventArgs args)
         {
             if (Disabled || DisableCheckbox)
                 return;
@@ -588,14 +618,14 @@ namespace AntDesign
                 SetChildChecked(this, check, isManual);
                 ParentNode?.UpdateCheckState();
             }
-            StateHasChanged();
+            RequestNodeRender();
             return true;
         }
 
         internal void DoCheckAllChildren()
         {
             SetChildChecked(this, true, true, true);
-            StateHasChanged();
+            RequestNodeRender();
         }
 
         /// <summary>
@@ -611,7 +641,7 @@ namespace AntDesign
         internal void DoUnCheckAllChildren()
         {
             SetChildChecked(this, false, true, true);
-            StateHasChanged();
+            RequestNodeRender();
         }
 
         /// <summary>
@@ -733,7 +763,7 @@ namespace AntDesign
                 ParentNode.UpdateCheckState(Indeterminate);
 
             if (ParentNode == null)
-                StateHasChanged();
+                RequestNodeRender();
         }
 
         private void NotifyCheckedChanged()
@@ -881,6 +911,7 @@ namespace AntDesign
         internal void AddChildNode(TItem dataItem)
         {
             ChildDataItems.Add(dataItem);
+            TreeComponent.InvalidateDataSourceNodes();
         }
 
         /// <summary>
@@ -894,6 +925,7 @@ namespace AntDesign
             parentChildDataItems.Insert(index + 1, dataItem);
 
             AddNodeAndSelect(dataItem);
+            TreeComponent.InvalidateDataSourceNodes();
         }
 
         /// <summary>
@@ -907,6 +939,7 @@ namespace AntDesign
             parentChildDataItems.Insert(index, dataItem);
 
             AddNodeAndSelect(dataItem);
+            TreeComponent.InvalidateDataSourceNodes();
         }
 
         /// <summary>
@@ -916,6 +949,7 @@ namespace AntDesign
         {
             var parentChildDataItems = GetParentChildDataItems();
             parentChildDataItems.Remove(DataItem);
+            TreeComponent.InvalidateDataSourceNodes();
         }
 
         /// <summary>
@@ -940,6 +974,7 @@ namespace AntDesign
             if (index == 0) return;
             parentChildDataItems.RemoveAt(index);
             parentChildDataItems.Insert(index - 1, DataItem);
+            TreeComponent.InvalidateDataSourceNodes();
         }
 
         /// <summary>
@@ -952,6 +987,7 @@ namespace AntDesign
             if (index == parentChildDataItems.Count - 1) return;
             parentChildDataItems.RemoveAt(index);
             parentChildDataItems.Insert(index + 1, DataItem);
+            TreeComponent.InvalidateDataSourceNodes();
         }
 
         /// <summary>
@@ -1042,6 +1078,12 @@ namespace AntDesign
 
         protected override void OnInitialized()
         {
+            _usesDataSourceRenderer = false;
+            InitializeNode();
+        }
+
+        private void InitializeNode()
+        {
             SetTreeNodeClassMapper();
             if (ParentNode != null)
                 ParentNode.AddNode(this);
@@ -1117,7 +1159,8 @@ namespace AntDesign
                 }
                 DoSelect(isSelected, TreeComponent.Multiple, false);
             }
-            base.OnInitialized();
+            if (!_usesDataSourceRenderer)
+                base.OnInitialized();
         }
 
         private IEnumerable<string> GetAncestorKeys()

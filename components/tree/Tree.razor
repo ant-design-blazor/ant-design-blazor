@@ -1,6 +1,7 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
 @typeparam TItem
+@using Microsoft.AspNetCore.Components.Web.Virtualization
 
 <div class="@ClassMapper.Class" style="@Style" @ref="Ref">
     <div class="ant-tree-list">
@@ -8,10 +9,14 @@
             <CascadingValue Value="this" Name="Tree" IsFixed="@true">
                 @if (DataSource != null)
                 {
-                    foreach (var item in DataSource)
+                    @if (Virtualize)
                     {
-                        <TreeNode DataItem="@item" @key="item.GetHashCode()"></TreeNode>
-				    }
+                        <Virtualize TItem="TreeNodeRenderContext<TItem>" Items="@VisibleRenderItems" ItemSize="@ItemSize" ItemContent="RenderDataSourceNode" />
+                    }
+                    else
+                    {
+                        @VisibleRenderItems.ForeachLoop(RenderDataSourceNode)
+                    }
                 }
                 else if (ChildContent!=null)
 				{
@@ -21,7 +26,12 @@
 				{
                     @Nodes
                 }
+
             </CascadingValue>
         </div>
     </div>
 </div>
+
+@code {
+    private RenderFragment<TreeNodeRenderContext<TItem>> RenderDataSourceNode => context => @<TreeNodeView TItem="TItem" Context="context" />;
+}
